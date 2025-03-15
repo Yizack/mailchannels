@@ -80,7 +80,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  bcc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string;
+  bcc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string[] | string;
   /**
    * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -95,7 +95,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  cc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string;
+  cc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string[] | string;
   /**
    * The sender of the email. Can be a string or an object with email and name properties.
    * @example
