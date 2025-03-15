@@ -24,7 +24,7 @@ export class Emails {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
-    if (!parsedFrom.email) {
+    if (!parsedFrom || !parsedFrom.email) {
       throw new Error("No MailChannels sender provided. Use the `from` option to specify a sender");
     }
 

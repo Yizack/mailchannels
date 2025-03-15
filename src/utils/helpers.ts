@@ -21,7 +21,9 @@ export const parseRecipient = (recipient?: MailChannelsEmailRecipient | string) 
     return parseRecipientString(recipient);
   }
 
-  return { email: "", ...recipient };
+  if (recipient?.email) {
+    return { email: recipient.email, name: recipient.name };
+  }
 };
 
 /**
@@ -35,7 +37,9 @@ export const parseArrayRecipients = (recipients?: MailChannelsEmailRecipient | M
   }
 
   if (Array.isArray(recipients)) {
-    return recipients.map(recipient => parseRecipient(recipient));
+    return recipients
+      .map((recipient) => parseRecipient(recipient))
+      .filter((recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient));
   }
 
   return [recipients];
