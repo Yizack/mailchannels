@@ -1,6 +1,6 @@
 {
   "name": "@yizack/mailchannels",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MailChannels API library",
   "type": "module",
   "license": "MIT",
