@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { includeIgnoreFile } from "@eslint/compat";
 import stylistic from "@stylistic/eslint-plugin";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,7 +14,8 @@ export default [
   {
     files: ["**/*.js", "**/*.mjs", "**/*.ts"],
     plugins: {
-      "@stylistic": stylistic
+      "@stylistic": stylistic,
+      "@typescript-eslint": tsPlugin
     },
     languageOptions: {
       parser: parserTs
@@ -48,7 +50,8 @@ export default [
       "@stylistic/require-default-prop": "off",
       "@stylistic/space-in-parens": ["error", "never"],
       "@stylistic/template-curly-spacing": "error",
-      "@stylistic/quote-props": ["error", "consistent-as-needed"]
+      "@stylistic/quote-props": ["error", "consistent-as-needed"],
+      "@typescript-eslint/no-explicit-any": "error"
     }
   }
 ];
