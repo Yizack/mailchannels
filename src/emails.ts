@@ -49,9 +49,9 @@ export class Emails {
         bcc: parseArrayRecipients(bcc),
         cc: parseArrayRecipients(cc),
         to: parsedTo,
-        dkim_domain: dkim?.domain,
-        dkim_private_key: dkim?.privateKey,
-        dkim_selector: dkim?.selector,
+        dkim_domain: dkim?.domain || undefined,
+        dkim_private_key: dkim?.privateKey || undefined,
+        dkim_selector: dkim?.selector || undefined,
         dynamic_template_data: options.mustaches
       }],
       reply_to: parseRecipient(options.replyTo),
