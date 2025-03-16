@@ -1,4 +1,4 @@
-export interface MailChannelsEmailRecipient {
+export interface EmailsSendRecipient {
   /**
    * The email address of the recipient
    */
@@ -9,13 +9,13 @@ export interface MailChannelsEmailRecipient {
   name?: string;
 }
 
-export interface MailChannelsEmailContent {
+export interface EmailsSendContent {
   template_type?: "mustache";
   type: "text/html" | "text/plain";
   value: string;
 }
 
-interface MailChannelsEmailAttachment {
+interface EmailsSendAttachment {
   /**
    * The attachment data, encoded in base64
    */
@@ -30,18 +30,18 @@ interface MailChannelsEmailAttachment {
   type: string;
 }
 
-interface MailChannelsEmailPersonalization {
-  bcc?: MailChannelsEmailRecipient[];
-  cc?: MailChannelsEmailRecipient[];
+interface EmailsSendPersonalization {
+  bcc?: EmailsSendRecipient[];
+  cc?: EmailsSendRecipient[];
   dkim_domain?: string;
   dkim_private_key?: string;
   dkim_selector?: string;
   dynamic_template_data?: Record<string, unknown>;
-  from?: MailChannelsEmailRecipient;
+  from?: EmailsSendRecipient;
   headers?: Record<string, string>;
-  reply_to?: MailChannelsEmailRecipient;
+  reply_to?: EmailsSendRecipient;
   subject?: string;
-  to: MailChannelsEmailRecipient[];
+  to: EmailsSendRecipient[];
 }
 
 interface MailChannelsEmailTrackingSettings {
@@ -49,23 +49,23 @@ interface MailChannelsEmailTrackingSettings {
   open_tracking?: boolean;
 }
 
-export interface MailChannelsEmailPayload {
-  attachments?: MailChannelsEmailAttachment[];
-  content: MailChannelsEmailContent[];
-  from: MailChannelsEmailRecipient;
+export interface EmailsSendPayload {
+  attachments?: EmailsSendAttachment[];
+  content: EmailsSendContent[];
+  from: EmailsSendRecipient;
   headers?: Record<string, string>;
-  mailfrom?: MailChannelsEmailRecipient;
-  personalizations: MailChannelsEmailPersonalization[];
-  reply_to?: MailChannelsEmailRecipient;
+  mailfrom?: EmailsSendRecipient;
+  personalizations: EmailsSendPersonalization[];
+  reply_to?: EmailsSendRecipient;
   subject: string;
   tracking_settings?: MailChannelsEmailTrackingSettings;
 }
 
-interface MailChannelsEmailOptionsBase {
+interface EmailsSendOptionsBase {
   /**
    * An array of attachments to be sent with the email
    */
-  attachments?: MailChannelsEmailAttachment[];
+  attachments?: EmailsSendAttachment[];
   /**
    * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -80,7 +80,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  bcc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string[] | string;
+  bcc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
    * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -95,7 +95,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  cc?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string[] | string;
+  cc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   dkim?: {
     domain: string;
     privateKey: string;
@@ -108,7 +108,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  from?: MailChannelsEmailRecipient | string;
+  from?: EmailsSendRecipient | string;
   /**
    * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
    * @example
@@ -123,7 +123,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  to?: MailChannelsEmailRecipient[] | MailChannelsEmailRecipient | string[] | string;
+  to?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
    * A single `replyTo` recipient object, or a single email address.
    * @example
@@ -131,7 +131,7 @@ interface MailChannelsEmailOptionsBase {
    * @example
    * 'email@example.com'
    */
-  replyTo?: MailChannelsEmailRecipient | string;
+  replyTo?: EmailsSendRecipient | string;
   /**
    * The subject of the email
    */
@@ -149,7 +149,7 @@ interface MailChannelsEmailOptionsBase {
   mustaches?: Record<string, unknown>;
 }
 
-export type MailChannelsEmailOptions = MailChannelsEmailOptionsBase & (
+export type EmailsSendOptions = EmailsSendOptionsBase & (
   | {
     /**
      * The HTML content of the email

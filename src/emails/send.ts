@@ -1,10 +1,8 @@
-import type { MailChannels } from "./mailchannels";
-import type { MailChannelsEmailOptions, MailChannelsEmailPayload, MailChannelsEmailContent } from "./types/emails";
-import { parseRecipient, parseArrayRecipients } from "./utils/helpers";
+import type { MailChannels } from "../mailchannels";
+import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent } from "../types/emails";
+import { parseRecipient, parseArrayRecipients } from "../utils/helpers";
 
-export class Emails {
-  constructor (private readonly mailchannels: MailChannels) {}
-
+export default (mailchannels: MailChannels) => {
   /**
    * Send an email using MailChannels Email API
    * @param options - The email options to send
@@ -20,7 +18,7 @@ export class Emails {
    * })
    * ```
    */
-  async send (options: MailChannelsEmailOptions, dryRun = false) {
+  return async (options: EmailsSendOptions, dryRun = false) => {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
@@ -33,7 +31,7 @@ export class Emails {
       throw new Error("No MailChannels recipients provided. Use the `to` option to specify at least one recipient");
     }
 
-    const content: MailChannelsEmailContent[] = [];
+    const content: EmailsSendContent[] = [];
     const template_type = mustaches ? "mustache" : undefined;
 
     // Plain text must come first if provided
@@ -43,7 +41,7 @@ export class Emails {
       throw new Error("No email content provided");
     }
 
-    const payload: MailChannelsEmailPayload = {
+    const payload: EmailsSendPayload = {
       attachments: options.attachments,
       personalizations: [{
         bcc: parseArrayRecipients(bcc),
@@ -62,7 +60,7 @@ export class Emails {
 
     let success = true;
 
-    const res = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
+    const res = await mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
       onResponseError: async ({ response }) => {
@@ -83,5 +81,5 @@ export class Emails {
       payload,
       data: res?.data
     };
-  }
-}
+  };
+};

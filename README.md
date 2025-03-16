@@ -260,7 +260,7 @@ I plan to implement the following features in the future. Already implemented fe
   - 🚧 Delete Sub-account API Key
   - 🚧 Delete Sub-account SMTP password
   - 🚧 Delete Sub-account
-  - 🚧 DKIM, SPF & Domain Lockdown Check
+  - ✅ DKIM, SPF & Domain Lockdown Check
   - 🚧 Enroll for Webhook Notifications
   - 🚧 Retrieve Customer Webhooks
   - 🚧 Retrieve Sub-account API Keys
