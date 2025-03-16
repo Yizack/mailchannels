@@ -36,4 +36,8 @@ export class MailChannels {
   async post<T>(path: string, options?: FetchOptions<"json">) {
     return this._fetch<T>(path, { method: "POST", ...options });
   }
+
+  async get<T>(path: string, options?: FetchOptions<"json">) {
+    return this._fetch<T>(path, { method: "GET", ...options });
+  }
 }

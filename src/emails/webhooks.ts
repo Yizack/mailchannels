@@ -18,3 +18,20 @@ export const enrollWebhook = (mailchannels: MailChannels) => {
     });
   };
 };
+
+export const getWebhooks = (mailchannels: MailChannels) => {
+  /**
+   * Retrieves all registered webhook endpoints associated with the customer.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const webhooks = await mailchannels.emails.getWebhooks();
+   * ```
+   */
+  return async () => {
+    const response = await mailchannels.get<{ webhooks: string }[]>("/tx/v1/webhook");
+    return {
+      webhooks: response.map(({ webhooks }) => webhooks)
+    };
+  };
+};
