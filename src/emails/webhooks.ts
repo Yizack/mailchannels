@@ -29,9 +29,9 @@ export const getWebhooks = (mailchannels: MailChannels) => {
    * ```
    */
   return async () => {
-    const response = await mailchannels.get<{ webhooks: string }[]>("/tx/v1/webhook");
+    const response = await mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook");
     return {
-      webhooks: response.map(({ webhooks }) => webhooks)
+      webhooks: response.map(({ webhook }) => webhook)
     };
   };
 };
