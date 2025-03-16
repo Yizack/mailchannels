@@ -260,7 +260,7 @@ I plan to implement the following features in the future. Already implemented fe
   - 🚧 Retrieve Sub-account API Keys
   - 🚧 Retrieve Sub-account SMTP Passwords
   - 🚧 Retrieve Sub-accounts
-  - 🚧 Retrieve Webhook Signing Key
+  - ✅ Retrieve Webhook Signing Key
   - ✅ Send an Email
   - 🚧 Suspend Sub-account
 

@@ -49,3 +49,22 @@ export const deleteWebhooks = (mailchannels: MailChannels) => {
     return mailchannels.delete<void>("/tx/v1/webhook");
   };
 };
+
+export const getSigningKey = (mailchannels: MailChannels) => {
+  /**
+   * Retrieves the public key used to verify signatures on incoming webhook payloads.
+   * @param id - the ID of the key
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { key } = await mailchannels.emails.getSigningKey("key-id");
+   * ```
+   */
+  return async (id: string) => {
+    return await mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
+      query: {
+        id
+      }
+    });
+  };
+};
