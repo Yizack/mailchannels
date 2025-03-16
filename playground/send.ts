@@ -4,10 +4,10 @@ process.loadEnvFile();
 
 const {
   MAILCHANNELS_API_KEY: apiKey
-} = process.env;
+} = process.env as Record<string, string>;
 
-const mailchannels = new MailChannels(apiKey!);
-const response = await mailchannels.emails.send({
+const mailchannels = new MailChannels(apiKey);
+const { success } = await mailchannels.emails.send({
   from: "Name From <from@example.com>",
   to: "to@example.com",
   subject: "Test",
@@ -18,4 +18,4 @@ const response = await mailchannels.emails.send({
   }
 }, true);
 
-console.info(response);
+console.info(JSON.stringify(success, null, 2));
