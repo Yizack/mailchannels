@@ -1,10 +1,10 @@
 import type { MailChannels } from "../mailchannels";
-import checkDomain from "./check-domain";
-import send from "./send";
+import { send } from "./send";
+import { checkDomain } from "./check-domain";
+import { applyMailChannels } from "../utils/core";
 
-export function defineEmails (mailchannels: MailChannels) {
-  return {
-    send: send(mailchannels),
-    checkDomain: checkDomain(mailchannels)
-  };
-}
+
+export const defineEmails = (mailchannels: MailChannels) => applyMailChannels(mailchannels, {
+  send,
+  checkDomain
+});

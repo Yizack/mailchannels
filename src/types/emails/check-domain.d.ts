@@ -5,7 +5,7 @@ interface EmailsCheckDomainDkim {
 }
 
 export interface EmailsCheckDomainOptions {
-  dkim: EmailsCheckDomainDkim;
+  dkim: EmailsCheckDomainDkim[] | EmailsCheckDomainDkim;
   domain: string;
   senderId: string;
 }
@@ -20,12 +20,10 @@ export interface EmailsCheckDomainResponse {
     domain_lockdown: {
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
-    dkim: [
-      {
-        dkim_domain: "mappedlove.com";
-        dkim_selector: "mailchannels";
-        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-      }
-    ];
+    dkim: {
+      dkim_domain: "mappedlove.com";
+      dkim_selector: "mailchannels";
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+    }[];
   };
 }

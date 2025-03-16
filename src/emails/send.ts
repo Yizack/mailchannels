@@ -1,8 +1,8 @@
 import type { MailChannels } from "../mailchannels";
 import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent } from "../types/emails";
-import { parseRecipient, parseArrayRecipients } from "../utils/helpers";
+import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
-export default (mailchannels: MailChannels) => {
+export const send = (mailchannels: MailChannels) => {
   /**
    * Send an email using MailChannels Email API
    * @param options - The email options to send
