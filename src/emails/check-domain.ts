@@ -1,5 +1,5 @@
 import type { MailChannels } from "../mailchannels";
-import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails";
+import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types";
 
 export const checkDomain = (mailchannels: MailChannels) => {
   /**

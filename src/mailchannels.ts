@@ -1,7 +1,7 @@
 import { $fetch, type FetchOptions } from "ofetch";
 import { defineEmails } from "./emails";
 
-export * from "./emails";
+export type * from "./types";
 
 export class MailChannels {
   #setup: {

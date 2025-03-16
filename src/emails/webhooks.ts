@@ -1,4 +1,5 @@
 import type { MailChannels } from "../mailchannels";
+import type { EmailsWebhook, EmailsWebhookSigningKey } from "../types/emails/webhooks";
 
 export const enrollWebhook = (mailchannels: MailChannels) => {
   /**
@@ -29,7 +30,7 @@ export const getWebhooks = (mailchannels: MailChannels) => {
    * ```
    */
   return async () => {
-    const response = await mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook");
+    const response = await mailchannels.get<EmailsWebhook[]>("/tx/v1/webhook");
     return {
       webhooks: response.map(({ webhook }) => webhook)
     };
@@ -61,7 +62,7 @@ export const getSigningKey = (mailchannels: MailChannels) => {
    * ```
    */
   return async (id: string) => {
-    return await mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
+    return await mailchannels.get<EmailsWebhookSigningKey>("/tx/v1/webhook/public-key", {
       query: {
         id
       }

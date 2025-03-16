@@ -1,5 +1,5 @@
 import type { MailChannels } from "../mailchannels";
-import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent } from "../types/emails";
+import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent } from "../types";
 import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
 export const send = (mailchannels: MailChannels) => {

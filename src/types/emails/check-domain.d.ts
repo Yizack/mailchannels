@@ -10,7 +10,7 @@ export interface EmailsCheckDomainOptions {
   senderId: string;
 }
 
-type EmailsCheckDomainVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
+export type EmailsCheckDomainVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
 
 export interface EmailsCheckDomainResponse {
   check_results: {
