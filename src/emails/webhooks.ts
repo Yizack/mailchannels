@@ -35,3 +35,17 @@ export const getWebhooks = (mailchannels: MailChannels) => {
     };
   };
 };
+
+export const deleteWebhooks = (mailchannels: MailChannels) => {
+  /**
+   * Deletes all registered webhook endpoints for the customer.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * await mailchannels.emails.deleteWebhooks();
+   * ```
+   */
+  return async () => {
+    return mailchannels.delete<void>("/tx/v1/webhook");
+  };
+};

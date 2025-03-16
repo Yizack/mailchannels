@@ -40,4 +40,8 @@ export class MailChannels {
   async get<T>(path: string, options?: FetchOptions<"json">) {
     return this._fetch<T>(path, { method: "GET", ...options });
   }
+
+  async delete<T>(path: string, options?: FetchOptions<"json">) {
+    return this._fetch<T>(path, { method: "DELETE", ...options });
+  }
 }
