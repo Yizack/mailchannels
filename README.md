@@ -250,13 +250,13 @@ I plan to implement the following features in the future. Already implemented fe
   - 🚧 Create Sub-account API Key
   - 🚧 Create Sub-account SMTP password
   - 🚧 Create Sub-account
-  - 🚧 Delete Customer Webhooks
+  - ✅ Delete Customer Webhooks
   - 🚧 Delete Sub-account API Key
   - 🚧 Delete Sub-account SMTP password
   - 🚧 Delete Sub-account
   - ✅ DKIM, SPF & Domain Lockdown Check
   - ✅ Enroll for Webhook Notifications
-  - 🚧 Retrieve Customer Webhooks
+  - ✅ Retrieve Customer Webhooks
   - 🚧 Retrieve Sub-account API Keys
   - 🚧 Retrieve Sub-account SMTP Passwords
   - 🚧 Retrieve Sub-accounts
