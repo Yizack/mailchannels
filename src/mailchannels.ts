@@ -4,11 +4,15 @@ import { Emails } from "./emails";
 export * from "./types";
 
 export class MailChannels {
-  private setup: FetchOptions;
+  #setup: {
+    baseURL: string;
+    headers: Record<string, string>;
+  };
+
   readonly emails = new Emails(this);
 
   constructor (key: string) {
-    this.setup = {
+    this.#setup = {
       baseURL: "https://api.mailchannels.net",
       headers: {
         "X-API-Key": key,
@@ -20,10 +24,10 @@ export class MailChannels {
 
   protected async _fetch<T>(path: string, options?: FetchOptions<"json">) {
     return $fetch<T>(path, {
-      baseURL: this.setup.baseURL,
+      baseURL: this.#setup.baseURL,
       ...options,
       headers: {
-        ...this.setup.headers,
+        ...this.#setup.headers,
         ...options?.headers
       }
     });
