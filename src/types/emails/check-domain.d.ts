@@ -18,13 +18,13 @@ export interface EmailsCheckDomainResponse {
       verdict: EmailsCheckDomainVerdict;
     };
     domain_lockdown: {
-      verdict: Pick<EmailsCheckDomainVerdict, "passed" | "failed">;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     dkim: [
       {
         dkim_domain: "mappedlove.com";
         dkim_selector: "mailchannels";
-        verdict: Pick<EmailsCheckDomainVerdict, "passed" | "failed">;
+        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
       }
     ];
   };
