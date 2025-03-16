@@ -19,12 +19,6 @@ MailChannels API library for Node.js.
   - [Options](#options)
   - [Response](#response)
   - [Examples](#examples)
-    - [Using object recipients (recommended)](#using-object-recipients-recommended)
-    - [Using string recipients](#using-string-recipients)
-    - [Array of recipients](#array-of-recipients)
-    - [Mustache templates](#using-mustache-templates)
-    - [Dry run](#dry-run)
-    - [Name-address pairs](#name-address-pairs)
 - [Roadmap](#roadmap)
 - [Contribution](#contribution)
 
