@@ -23,16 +23,18 @@ export const checkDomain = (mailchannels: MailChannels) => {
     const { dkim, domain, senderId } = options;
     const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
 
+    const payload = {
+      dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
+        dkim_domain: domain,
+        dkim_private_key: privateKey,
+        dkim_selector: selector
+      })),
+      domain,
+      sender_id: senderId
+    };
+
     const check = await mailchannels.post<EmailsCheckDomainResponse>("/tx/v1/check-domain", {
-      body: {
-        dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
-          dkim_domain: domain,
-          dkim_private_key: privateKey,
-          dkim_selector: selector
-        })),
-        domain,
-        sender_id: senderId
-      }
+      body: payload
     });
 
     return {
@@ -44,7 +46,8 @@ export const checkDomain = (mailchannels: MailChannels) => {
           dkimSelector: dkim_selector,
           verdict
         }))
-      }
+      },
+      payload
     };
   };
 };
