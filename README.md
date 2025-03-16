@@ -25,6 +25,8 @@ MailChannels API library for Node.js.
     - [Mustache templates](#using-mustache-templates)
     - [Dry run](#dry-run)
     - [Name-address pairs](#name-address-pairs)
+- [Roadmap](#roadmap)
+- [Contribution](#contribution)
 
 ## Features
 
