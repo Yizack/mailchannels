@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.1...v0.1.2)
+
+### 💅 Refactors
+
+- Separate functionalities in modules in favor of tree shaking ([5256148](https://github.com/Yizack/mailchannels/commit/5256148))
+
+### 📖 Documentation
+
+- Initial files ([38743ec](https://github.com/Yizack/mailchannels/commit/38743ec))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.1.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.0...v0.1.1)
