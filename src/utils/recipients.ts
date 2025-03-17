@@ -1,4 +1,4 @@
-import type { EmailsSendRecipient } from "../types";
+import type { SendRecipient } from "../types";
 
 /**
  * Parses name-address pair string to MailChannels format
@@ -16,7 +16,7 @@ export const parseRecipientString = (input: string) => {
 /**
  * Parses any recipient format to MailChannels format
  */
-export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
+export const parseRecipient = (recipient?: SendRecipient | string) => {
   if (typeof recipient === "string") {
     return parseRecipientString(recipient);
   }
@@ -29,7 +29,7 @@ export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
 /**
  * Parses any array of recipients format to MailChannels format
  */
-export const parseArrayRecipients = (recipients?: EmailsSendRecipient | EmailsSendRecipient[] | string[] | string) => {
+export const parseArrayRecipients = (recipients?: SendRecipient | SendRecipient[] | string[] | string) => {
   if (!recipients) return;
 
   if (typeof recipients === "string") {

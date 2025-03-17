@@ -1,5 +1,5 @@
 import type { MailChannels } from "../mailchannels";
-import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types";
+import type { CheckDomainOptions, CheckDomainPayload, CheckDomainApiResponse, CheckDomainResponse } from "../types";
 
 export const checkDomain = (mailchannels: MailChannels) => {
   /**
@@ -19,11 +19,11 @@ export const checkDomain = (mailchannels: MailChannels) => {
    * })
    * ```
    */
-  return async (options: EmailsCheckDomainOptions) => {
+  return async (options: CheckDomainOptions): Promise<CheckDomainResponse> => {
     const { dkim, domain, senderId } = options;
     const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
 
-    const payload = {
+    const payload: CheckDomainPayload = {
       dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
         dkim_domain: domain,
         dkim_private_key: privateKey,
@@ -33,7 +33,7 @@ export const checkDomain = (mailchannels: MailChannels) => {
       sender_id: senderId
     };
 
-    const check = await mailchannels.post<EmailsCheckDomainResponse>("/tx/v1/check-domain", {
+    const check = await mailchannels.post<CheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload
     });
 
@@ -42,8 +42,8 @@ export const checkDomain = (mailchannels: MailChannels) => {
         spf: check.check_results.spf,
         domainLockdown: check.check_results.domain_lockdown,
         dkim: check.check_results.dkim.map(({ dkim_domain, dkim_selector, verdict }) => ({
-          dkimDomain: dkim_domain,
-          dkimSelector: dkim_selector,
+          domain: dkim_domain,
+          selector: dkim_selector,
           verdict
         }))
       },

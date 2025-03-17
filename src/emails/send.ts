@@ -1,5 +1,5 @@
 import type { MailChannels } from "../mailchannels";
-import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent } from "../types";
+import type { SendOptions, SendPayload, SendContent, SendResponse } from "../types";
 import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
 export const send = (mailchannels: MailChannels) => {
@@ -18,7 +18,7 @@ export const send = (mailchannels: MailChannels) => {
    * })
    * ```
    */
-  return async (options: EmailsSendOptions, dryRun = false) => {
+  return async (options: SendOptions, dryRun = false): Promise<SendResponse> => {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
@@ -31,7 +31,7 @@ export const send = (mailchannels: MailChannels) => {
       throw new Error("No MailChannels recipients provided. Use the `to` option to specify at least one recipient");
     }
 
-    const content: EmailsSendContent[] = [];
+    const content: SendContent[] = [];
     const template_type = mustaches ? "mustache" : undefined;
 
     // Plain text must come first if provided
@@ -41,7 +41,7 @@ export const send = (mailchannels: MailChannels) => {
       throw new Error("No email content provided");
     }
 
-    const payload: EmailsSendPayload = {
+    const payload: SendPayload = {
       attachments: options.attachments,
       personalizations: [{
         bcc: parseArrayRecipients(bcc),

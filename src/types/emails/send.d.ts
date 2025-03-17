@@ -1,4 +1,4 @@
-export interface EmailsSendRecipient {
+export interface SendRecipient {
   /**
    * The email address of the recipient
    */
@@ -9,13 +9,13 @@ export interface EmailsSendRecipient {
   name?: string;
 }
 
-export interface EmailsSendContent {
+export interface SendContent {
   template_type?: "mustache";
   type: "text/html" | "text/plain";
   value: string;
 }
 
-interface EmailsSendAttachment {
+interface SendAttachment {
   /**
    * The attachment data, encoded in base64
    */
@@ -30,42 +30,42 @@ interface EmailsSendAttachment {
   type: string;
 }
 
-interface EmailsSendPersonalization {
-  bcc?: EmailsSendRecipient[];
-  cc?: EmailsSendRecipient[];
+interface SendPersonalization {
+  bcc?: SendRecipient[];
+  cc?: SendRecipient[];
   dkim_domain?: string;
   dkim_private_key?: string;
   dkim_selector?: string;
   dynamic_template_data?: Record<string, unknown>;
-  from?: EmailsSendRecipient;
+  from?: SendRecipient;
   headers?: Record<string, string>;
-  reply_to?: EmailsSendRecipient;
+  reply_to?: SendRecipient;
   subject?: string;
-  to: EmailsSendRecipient[];
+  to: SendRecipient[];
 }
 
-interface MailChannelsEmailTrackingSettings {
+interface TrackingSettings {
   click_tracking?: boolean;
   open_tracking?: boolean;
 }
 
-export interface EmailsSendPayload {
-  attachments?: EmailsSendAttachment[];
-  content: EmailsSendContent[];
-  from: EmailsSendRecipient;
+export interface SendPayload {
+  attachments?: SendAttachment[];
+  content: SendContent[];
+  from: SendRecipient;
   headers?: Record<string, string>;
-  mailfrom?: EmailsSendRecipient;
-  personalizations: EmailsSendPersonalization[];
-  reply_to?: EmailsSendRecipient;
+  mailfrom?: SendRecipient;
+  personalizations: SendPersonalization[];
+  reply_to?: SendRecipient;
   subject: string;
-  tracking_settings?: MailChannelsEmailTrackingSettings;
+  tracking_settings?: TrackingSettings;
 }
 
-interface EmailsSendOptionsBase {
+interface SendOptionsBase {
   /**
    * An array of attachments to be sent with the email
    */
-  attachments?: EmailsSendAttachment[];
+  attachments?: SendAttachment[];
   /**
    * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -80,7 +80,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  bcc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  bcc?: SendRecipient[] | SendRecipient | string[] | string;
   /**
    * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -95,7 +95,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  cc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  cc?: SendRecipient[] | SendRecipient | string[] | string;
   dkim?: {
     domain: string;
     privateKey: string;
@@ -108,7 +108,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  from?: EmailsSendRecipient | string;
+  from?: SendRecipient | string;
   /**
    * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
    * @example
@@ -123,7 +123,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  to?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  to?: SendRecipient[] | SendRecipient | string[] | string;
   /**
    * A single `replyTo` recipient object, or a single email address.
    * @example
@@ -131,7 +131,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  replyTo?: EmailsSendRecipient | string;
+  replyTo?: SendRecipient | string;
   /**
    * The subject of the email
    */
@@ -149,7 +149,7 @@ interface EmailsSendOptionsBase {
   mustaches?: Record<string, unknown>;
 }
 
-export type EmailsSendOptions = EmailsSendOptionsBase & (
+export type SendOptions = SendOptionsBase & (
   | {
     /**
      * The HTML content of the email
@@ -179,3 +179,9 @@ export type EmailsSendOptions = EmailsSendOptionsBase & (
     text: string;
   }
 );
+
+export interface SendResponse {
+  success: boolean;
+  payload: SendPayload;
+  data: string[] | undefined;
+}

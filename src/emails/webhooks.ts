@@ -1,5 +1,5 @@
 import type { MailChannels } from "../mailchannels";
-import type { EmailsWebhook, EmailsWebhookSigningKey } from "../types/emails/webhooks";
+import type { WebhookGetApiResponse, WebhookGetResponse, WebhookSigningKeyResponse } from "../types/emails/webhooks";
 
 export const enrollWebhook = (mailchannels: MailChannels) => {
   /**
@@ -11,7 +11,7 @@ export const enrollWebhook = (mailchannels: MailChannels) => {
    * await mailchannels.emails.enrollWebhook("https://example.com/webhook");
    * ```
    */
-  return async (endpoint: string) => {
+  return async (endpoint: string): Promise<void> => {
     return mailchannels.post<void>("/tx/v1/webhook", {
       query: {
         endpoint
@@ -29,8 +29,8 @@ export const getWebhooks = (mailchannels: MailChannels) => {
    * const webhooks = await mailchannels.emails.getWebhooks();
    * ```
    */
-  return async () => {
-    const response = await mailchannels.get<EmailsWebhook[]>("/tx/v1/webhook");
+  return async (): Promise<WebhookGetResponse> => {
+    const response = await mailchannels.get<WebhookGetApiResponse>("/tx/v1/webhook");
     return {
       webhooks: response.map(({ webhook }) => webhook)
     };
@@ -61,8 +61,8 @@ export const getSigningKey = (mailchannels: MailChannels) => {
    * const { key } = await mailchannels.emails.getSigningKey("key-id");
    * ```
    */
-  return async (id: string) => {
-    return await mailchannels.get<EmailsWebhookSigningKey>("/tx/v1/webhook/public-key", {
+  return async (id: string): Promise<WebhookSigningKeyResponse> => {
+    return await mailchannels.get<WebhookSigningKeyResponse>("/tx/v1/webhook/public-key", {
       query: {
         id
       }
