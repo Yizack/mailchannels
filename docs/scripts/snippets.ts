@@ -1,8 +1,7 @@
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
 import { isTypeAliasDeclaration, isInterfaceDeclaration, isClassDeclaration, createSourceFile, ScriptTarget, forEachChild, SyntaxKind, type Node } from "typescript";
-import { fileURLToPath } from "url";
-import path from "path";
 import { kebabCase } from "scule";
+import path from "path";
 
 const cleanCode = (code: string) => {
   return code
@@ -13,7 +12,7 @@ const cleanCode = (code: string) => {
     .trim();
 };
 
-// Function to extract types and interfaces using TypeScript compiler API
+// Function to extract types, interfaces, and classes using TypeScript compiler API
 const extract = (code: string) => {
   const sourceFile = createSourceFile("temp.ts", code, ScriptTarget.Latest, true);
   const types: { name: string, content: string }[] = [];
@@ -69,6 +68,7 @@ const generateSnippets = async (inputDir: string, outputDir) => {
       await writeFile(outputFilePath, content);
     }
   });
+  console.info(`Generated snippets for ${inputDir}`);
 };
 
 const typesDir = path.join(__dirname, "../../src/types");
