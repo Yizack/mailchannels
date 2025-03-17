@@ -17,6 +17,9 @@
     "declaration": true
   },
   "include": [
-    "src",
+    "src"
+  ],
+  "exclude": [
+    "docs/snippets"
   ]
 }

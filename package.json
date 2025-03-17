@@ -48,7 +48,8 @@
     "test:watch": "vitest watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "(git fetch --unshallow || git fetch --all) && vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "docs:snippets": "jiti docs/scripts/snippets"
   },
   "dependencies": {
     "ofetch": "^1.4.1"
@@ -62,6 +63,7 @@
     "changelogen": "^0.6.1",
     "eslint": "^9.22.0",
     "jiti": "^2.4.2",
+    "scule": "^1.3.0",
     "typescript": "^5.8.2",
     "unbuild": "^3.5.0",
     "vitepress": "^1.6.3",
