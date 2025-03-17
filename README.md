@@ -5,28 +5,32 @@
 
 MailChannels API library for Node.js.
 
+This library provides a simple way to interact with the MailChannels API. It is written in TypeScript and can be used in both TypeScript and JavaScript projects and in different runtimes.
+
 - [✨ Release Notes](CHANGELOG.md)
+- [📖 Documentation](https://mailchannels.yizack.com)
 
 ## Contents
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Quick setup](#quick-setup)
-- [Roadmap](#roadmap)
-- [Contribution](#contribution)
+- 🚀 [Features](#features)
+- 📏 [Requirements](#requirements)
+- 🏃 [Quick setup](#quick-setup)
+- 🚧 [Roadmap](#roadmap)
+- ⚖️ [License](LICENSE.md)
+- 💻 [Development](#development)
 
-## Features
+## <a name="features">🚀 Features</a>
 
-- Send emails using [MailChannels Email API](https://docs.mailchannels.net/email-api)
-- Email DKIM signing
-- Supports mustache templates
-- Text and HTML content types
+- Send transactional emails
+- Check DKIM, SPF & Domain Lockdown
+- Webhook notifications
 
-## Requirements
+## <a name="requirements">📏 Requirements</a>
 
-- MailChannels account and Email API key
+- MailChannels account
+- Email API key
 
-## Quick setup
+## <a name="quick-setup">🏃 Quick setup</a>
 
 1. Add `@yizack/mailchannels` dependency to your project
 
@@ -40,8 +44,13 @@ yarn add @yizack/mailchannels
 # pnpm
 pnpm add @yizack/mailchannels
 ```
+
+## <a name="license">⚖️ License</a>
+
+[MIT License](LICENSE.md)
+
 <!-- #region roadmap -->
-## Roadmap
+## <a name="roadmap">🚧 Roadmap</a>
 
 I plan to implement the following features in the future. Already implemented features are marked with a checkmark.
 
@@ -65,7 +74,7 @@ I plan to implement the following features in the future. Already implemented fe
   - 🚧 Suspend Sub-account
 <!-- #endregion roadmap -->
 
-## Contribution
+## <a name="development">💻 Development</a>
 
 <details>
   <summary>Local development</summary>
