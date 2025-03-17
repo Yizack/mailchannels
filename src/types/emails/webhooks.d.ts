@@ -1,12 +1,12 @@
-export interface WebhookSigningKeyResponse {
+export interface WebhooksSigningKeyResponse {
   id: string;
   key: string;
 }
 
-export type WebhookGetApiResponse = {
+export type WebhooksListApiResponse = {
   webhook: string;
 }[];
 
-export interface WebhookGetResponse {
+export interface WebhooksListResponse {
   webhooks: string[];
 }
