@@ -1,0 +1,108 @@
+# Send
+
+Sends an email message to one or more recipients.
+
+## Params
+
+- `options`: The email message to send.
+  - `attachments`: An array of attachments to be sent with the email.
+    - `content`: The attachment data, encoded in base64
+    - `filename`: The name of the attachment file
+    - `type`: The MIME type of the attachment
+  - `bcc`: The BCC recipients of the email.
+  - `cc`: The CC recipients of the email.
+  - `dkim`: The DKIM settings for the email.
+    - `domain`: The domain to sign the email with.
+    - `privateKey`: The private key to sign the email with.
+    - `selector`: The DKIM selector to use.
+  - `from`: The sender of the email.
+  - `to`: The recipients of the email.
+  - `replyTo`: The reply-to address of the email.
+  - `subject`: The subject of the email.
+  - `html`: The HTML content of the email.
+  - `text`: The plain text content of the email.
+  > [!IMPORTANT]
+  > Either `html` or `text` must be provided.
+  - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
+- `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response.
+  > [!TIP]
+  > Use `dryRun` to test your email message before sending it.
+
+## Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Send } from '@yizack/mailchannels/emails'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Send(mailchannels)
+
+const { success } = await emails.send({
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'Your subject',
+  html: '<p>Your email content</p>',
+  text: 'Your email content',
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.emails.send({
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'Your subject',
+  html: '<p>Your email content</p>',
+  text: 'Your email content',
+})
+:::
+```
+
+## Type declarations
+
+```ts
+declare class Send {
+  constructor(mailchannels: MailChannelsClient);
+  send(options: SendOptions, dryRun?: boolean): Promise<SendResponse>;
+}
+
+interface SendOptionsBase {
+  attachments?: SendAttachment[];
+  bcc?: SendRecipient[] | SendRecipient | string[] | string;
+  cc?: SendRecipient[] | SendRecipient | string[] | string;
+  dkim?: {
+    domain: string;
+    privateKey: string;
+    selector: string;
+  };
+  from?: SendRecipient | string;
+  to?: SendRecipient[] | SendRecipient | string[] | string;
+  replyTo?: SendRecipient | string;
+  subject: string;
+  mustaches?: Record<string, unknown>;
+}
+
+type SendOptions = SendOptionsBase & (
+  | {
+    html: string;
+    text?: string;
+  }
+  | {
+    html?: string;
+    text: string;
+  }
+);
+
+interface SendResponse {
+  success: boolean;
+  payload: SendPayload;
+  data: string[] | undefined;
+}
+```
+
+## Source
+
+[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/emails/send.ts)

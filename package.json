@@ -45,7 +45,10 @@
     "lint:fix": "eslint --fix",
     "test": "vitest run --reporter=verbose",
     "test:types": "tsc --noEmit",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "(git fetch --unshallow || git fetch --all) && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "ofetch": "^1.4.1"
@@ -61,6 +64,8 @@
     "jiti": "^2.4.2",
     "typescript": "^5.8.2",
     "unbuild": "^3.5.0",
+    "vitepress": "^1.6.3",
+    "vitepress-plugin-group-icons": "^1.3.7",
     "vitest": "^3.0.8"
   },
   "packageManager": "pnpm@10.6.3"
