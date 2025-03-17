@@ -14,3 +14,5 @@ hero:
       text: View on GitHub
       link: https://github.com/Yizack/mailchannels
 ---
+
+<!-- @include: ../README.md#roadmap -->
