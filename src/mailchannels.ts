@@ -1,5 +1,5 @@
 import { $fetch, type FetchOptions } from "ofetch";
-import { defineEmails } from "./emails";
+import { createEmailAPI } from "./emails";
 
 export type * from "./types";
 
@@ -9,7 +9,7 @@ export class MailChannels {
     headers: Record<string, string>;
   };
 
-  readonly emails = defineEmails(this);
+  readonly emails = createEmailAPI(this);
 
   constructor (key: string) {
     this.#setup = {

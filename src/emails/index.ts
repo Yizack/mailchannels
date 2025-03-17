@@ -1,14 +1,15 @@
 import type { MailChannels } from "../mailchannels";
-import { send } from "./send";
-import { checkDomain } from "./check-domain";
-import { enrollWebhook, getWebhooks, deleteWebhooks, getSigningKey } from "./webhooks";
-import { applyMailChannels } from "../utils/core";
+import { createInstances, extractMethods } from "../utils/core";
+import Send from "./send";
+import CheckDomain from "./check-domain";
+import Webhooks from "./webhooks";
 
-export const defineEmails = (mailchannels: MailChannels) => applyMailChannels(mailchannels, {
-  send,
-  checkDomain,
-  enrollWebhook,
-  getWebhooks,
-  deleteWebhooks,
-  getSigningKey
-});
+export const createEmailAPI = (mailchannels: MailChannels) => {
+  const instances = createInstances(mailchannels, [
+    Send,
+    CheckDomain,
+    Webhooks
+  ]);
+  const methods = extractMethods(instances);
+  return methods;
+};

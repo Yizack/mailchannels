@@ -2,7 +2,8 @@ import type { MailChannels } from "../mailchannels";
 import type { SendOptions, SendPayload, SendContent, SendResponse } from "../types";
 import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
-export const send = (mailchannels: MailChannels) => {
+export default class Send {
+  constructor (protected mailchannels: MailChannels) {}
   /**
    * Send an email using MailChannels Email API
    * @param options - The email options to send
@@ -18,7 +19,7 @@ export const send = (mailchannels: MailChannels) => {
    * })
    * ```
    */
-  return async (options: SendOptions, dryRun = false): Promise<SendResponse> => {
+  async send (options: SendOptions, dryRun = false): Promise<SendResponse> {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
@@ -60,7 +61,7 @@ export const send = (mailchannels: MailChannels) => {
 
     let success = true;
 
-    const res = await mailchannels.post<{ data: string[] }>("/tx/v1/send", {
+    const res = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
       onResponseError: async ({ response }) => {
@@ -81,5 +82,5 @@ export const send = (mailchannels: MailChannels) => {
       payload,
       data: res?.data
     };
-  };
-};
+  }
+}

@@ -1,7 +1,8 @@
 import type { MailChannels } from "../mailchannels";
 import type { CheckDomainOptions, CheckDomainPayload, CheckDomainApiResponse, CheckDomainResponse } from "../types";
 
-export const checkDomain = (mailchannels: MailChannels) => {
+export default class CheckDomain {
+  constructor (protected mailchannels: MailChannels) {}
   /**
    * Validates a domain's email authentication setup by retrieving its DKIM, SPF, and Domain Lockdown status. This endpoint checks whether the domain is properly configured for secure email delivery.
    * @param options - The domain options to check
@@ -19,7 +20,7 @@ export const checkDomain = (mailchannels: MailChannels) => {
    * })
    * ```
    */
-  return async (options: CheckDomainOptions): Promise<CheckDomainResponse> => {
+  async checkDomain (options: CheckDomainOptions): Promise<CheckDomainResponse> {
     const { dkim, domain, senderId } = options;
     const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
 
@@ -33,7 +34,7 @@ export const checkDomain = (mailchannels: MailChannels) => {
       sender_id: senderId
     };
 
-    const check = await mailchannels.post<CheckDomainApiResponse>("/tx/v1/check-domain", {
+    const check = await this.mailchannels.post<CheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload
     });
 
@@ -49,5 +50,5 @@ export const checkDomain = (mailchannels: MailChannels) => {
       },
       payload
     };
-  };
-};
+  }
+}
