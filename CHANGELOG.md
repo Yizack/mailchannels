@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.2...v0.1.3)
+
+### 🩹 Fixes
+
+- Emails module exports ([f37b9d8](https://github.com/Yizack/mailchannels/commit/f37b9d8))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.1.2
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.1...v0.1.2)
