@@ -16,7 +16,7 @@ This library provides a simple way to interact with the MailChannels API. It is 
 - 📏 [Requirements](#requirements)
 - 🏃 [Quick setup](#quick-setup)
 - 🚧 [Roadmap](#roadmap)
-- ⚖️ [License](LICENSE.md)
+- ⚖️ [License](#license)
 - 💻 [Development](#development)
 
 ## <a name="features">🚀 Features</a>
@@ -47,7 +47,7 @@ pnpm add @yizack/mailchannels
 
 ## <a name="license">⚖️ License</a>
 
-[MIT License](LICENSE.md)
+[MIT License](LICENSE)
 
 <!-- #region roadmap -->
 ## <a name="roadmap">🚧 Roadmap</a>
