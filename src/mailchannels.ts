@@ -1,47 +1,25 @@
-import { $fetch, type FetchOptions } from "ofetch";
-import { createEmailAPI } from "./emails";
+import { MailChannelsClient } from "./client";
+import { Send, CheckDomain, Webhooks } from "./modules/emails";
+import { createInstances, extractMethods } from "./utils/core";
 
-export type * from "./types";
+export { MailChannelsClient };
+export type * from "./types/emails";
 
-export class MailChannels {
-  #setup: {
-    baseURL: string;
-    headers: Record<string, string>;
-  };
+const createEmailAPI = (mailchannels: MailChannels) => {
+  const instances = createInstances(mailchannels, [
+    Send,
+    CheckDomain,
+    Webhooks
+  ]);
+  const methods = extractMethods(instances);
+  return methods;
+};
 
+
+export class MailChannels extends MailChannelsClient {
   readonly emails = createEmailAPI(this);
 
   constructor (key: string) {
-    this.#setup = {
-      baseURL: "https://api.mailchannels.net",
-      headers: {
-        "X-API-Key": key,
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }
-    };
-  }
-
-  protected async _fetch<T>(path: string, options?: FetchOptions<"json">) {
-    return $fetch<T>(path, {
-      baseURL: this.#setup.baseURL,
-      ...options,
-      headers: {
-        ...this.#setup.headers,
-        ...options?.headers
-      }
-    });
-  }
-
-  async post<T>(path: string, options?: FetchOptions<"json">) {
-    return this._fetch<T>(path, { method: "POST", ...options });
-  }
-
-  async get<T>(path: string, options?: FetchOptions<"json">) {
-    return this._fetch<T>(path, { method: "GET", ...options });
-  }
-
-  async delete<T>(path: string, options?: FetchOptions<"json">) {
-    return this._fetch<T>(path, { method: "DELETE", ...options });
+    super(key);
   }
 }

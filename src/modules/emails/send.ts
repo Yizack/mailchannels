@@ -1,9 +1,9 @@
-import type { MailChannels } from "../mailchannels";
-import type { SendOptions, SendPayload, SendContent, SendResponse } from "../types";
-import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
+import type { MailChannelsClient } from "../../client";
+import type { SendOptions, SendPayload, SendContent, SendResponse } from "../../types/emails/send";
+import { parseRecipient, parseArrayRecipients } from "../../utils/recipients";
 
-export default class Send {
-  constructor (protected mailchannels: MailChannels) {}
+export class Send {
+  constructor (protected mailchannels: MailChannelsClient) {}
   /**
    * Send an email using MailChannels Email API
    * @param options - The email options to send

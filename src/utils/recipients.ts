@@ -1,4 +1,4 @@
-import type { SendRecipient } from "../types";
+import type { SendRecipient } from "../types/emails/send";
 
 /**
  * Parses name-address pair string to MailChannels format

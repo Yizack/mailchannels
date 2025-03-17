@@ -26,6 +26,12 @@
         "types": "./dist/mailchannels.d.mts",
         "default": "./dist/mailchannels.mjs"
       }
+    },
+    "./email": {
+      "import": {
+        "types": "./dist/modules/emails/index.d.mts",
+        "default": "./dist/modules/emails/index.mjs"
+      }
     }
   },
   "types": "./dist/mailchannels.d.ts",

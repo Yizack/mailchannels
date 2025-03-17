@@ -1,8 +1,8 @@
-import type { MailChannels } from "../mailchannels";
-import type { CheckDomainOptions, CheckDomainPayload, CheckDomainApiResponse, CheckDomainResponse } from "../types";
+import type { MailChannelsClient } from "../../client";
+import type { CheckDomainOptions, CheckDomainPayload, CheckDomainApiResponse, CheckDomainResponse } from "../../types/emails/check-domain";
 
-export default class CheckDomain {
-  constructor (protected mailchannels: MailChannels) {}
+export class CheckDomain {
+  constructor (protected mailchannels: MailChannelsClient) {}
   /**
    * Validates a domain's email authentication setup by retrieving its DKIM, SPF, and Domain Lockdown status. This endpoint checks whether the domain is properly configured for secure email delivery.
    * @param options - The domain options to check
