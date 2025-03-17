@@ -56,7 +56,11 @@ export class Send {
       reply_to: parseRecipient(options.replyTo),
       from: parsedFrom,
       subject: options.subject,
-      content
+      content,
+      tracking_settings: options.tracking ? {
+        click_tracking: options.tracking.click ? { enable: options.tracking.click } : undefined,
+        open_tracking: options.tracking.open ? { enable: options.tracking.open } : undefined
+      } : undefined
     };
 
     let success = true;

@@ -44,9 +44,15 @@ interface SendPersonalization {
   to: SendRecipient[];
 }
 
-interface TrackingSettings {
-  click_tracking?: boolean;
-  open_tracking?: boolean;
+interface SendTracking {
+  /**
+   * Track when a recipient clicks a link in your email.
+   */
+  click?: boolean;
+  /**
+   * Track when a recipient opens your email. Please note that some email clients may not support open tracking.
+   */
+  open?: boolean;
 }
 
 export interface SendPayload {
@@ -58,7 +64,14 @@ export interface SendPayload {
   personalizations: SendPersonalization[];
   reply_to?: SendRecipient;
   subject: string;
-  tracking_settings?: TrackingSettings;
+  tracking_settings?: {
+    click_tracking?: {
+      enable: SendTracking["click"];
+    };
+    open_tracking?: {
+      enable: SendTracking["open"];
+    };
+  };
 }
 
 interface SendOptionsBase {
@@ -124,6 +137,10 @@ interface SendOptionsBase {
    * 'email@example.com'
    */
   to?: SendRecipient[] | SendRecipient | string[] | string;
+  /**
+   * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking.
+   */
+  tracking?: SendTracking;
   /**
    * A single `replyTo` recipient object, or a single email address.
    * @example

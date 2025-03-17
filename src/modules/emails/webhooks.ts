@@ -2,7 +2,7 @@ import type { MailChannelsClient } from "../../client";
 import type { WebhookGetApiResponse, WebhookGetResponse, WebhookSigningKeyResponse } from "../../types/emails/webhooks";
 
 export class Webhooks {
-  constructor (private mailchannels: MailChannelsClient) {}
+  constructor (protected mailchannels: MailChannelsClient) {}
   /**
    * Enrolls the customer to receive event notifications via webhooks.
    * @param endpoint - The URL to receive event notifications
