@@ -1,0 +1,37 @@
+:root {
+  --vp-c-brand-1: #35a047;
+  --vp-c-brand-2: #35a047;
+  --vp-button-brand-bg: #35a047;
+  --vp-button-brand-hover-bg: #2a8039;
+}
+
+html.dark {
+  --vp-c-brand-1: #50c463;
+  --vp-c-brand-2: #50c463;
+}
+
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--accent);
+}
+
+*::-webkit-scrollbar-thumb {
+  height: 56px;
+  border-radius: 8px;
+  border: 0 solid transparent;
+  background-clip: content-box;
+  background-color: var(--vp-c-brand-1);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--vp-c-brand-1);
+}
+
+::selection {
+  background: var(--vp-c-brand-1);
+  color: var(--vp-sidebar-bg-color);
+}
