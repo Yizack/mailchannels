@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.0...v0.1.1)
+
+### 💅 Refactors
+
+- Extract all methods automatically ([bd0fc43](https://github.com/Yizack/mailchannels/commit/bd0fc43))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.1.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.0.3...v0.1.0)
