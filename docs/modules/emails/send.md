@@ -17,12 +17,20 @@ Sends an email message to one or more recipients.
     - `selector`: The DKIM selector to use.
   - `from`: The sender of the email.
   - `to`: The recipients of the email.
+  - `tracking` Adjust open and click tracking for the message.
+    > [!INFO]
+    > Tracking for your messages requires a [subscription](https://www.mailchannels.com/pricing/#for_devs) that supports open and click tracking.
+    >
+    > Only links (`<a>` tags) meeting all of the following conditions are processed for click tracking:
+    > - The URL is non-empty.
+    > - The URL starts with `http` or `https`.
+    > - The link does not have a `clicktracking` attribute set to `off`.
   - `replyTo`: The reply-to address of the email.
   - `subject`: The subject of the email.
   - `html`: The HTML content of the email.
   - `text`: The plain text content of the email.
-  > [!IMPORTANT]
-  > Either `html` or `text` must be provided.
+    > [!IMPORTANT]
+    > Either `html` or `text` must be provided.
   - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
 - `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response.
   > [!TIP]
@@ -58,50 +66,29 @@ const { success } = await mailchannels.emails.send({
   html: '<p>Your email content</p>',
   text: 'Your email content',
 })
-:::
 ```
+:::
 
 ## Type declarations
 
-```ts
-declare class Send {
-  constructor(mailchannels: MailChannelsClient);
-  send(options: SendOptions, dryRun?: boolean): Promise<SendResponse>;
-}
+<<< @/snippets/send.ts
 
-interface SendOptionsBase {
-  attachments?: SendAttachment[];
-  bcc?: SendRecipient[] | SendRecipient | string[] | string;
-  cc?: SendRecipient[] | SendRecipient | string[] | string;
-  dkim?: {
-    domain: string;
-    privateKey: string;
-    selector: string;
-  };
-  from?: SendRecipient | string;
-  to?: SendRecipient[] | SendRecipient | string[] | string;
-  replyTo?: SendRecipient | string;
-  subject: string;
-  mustaches?: Record<string, unknown>;
-}
+<details>
+<summary>All type declarations</summary>
 
-type SendOptions = SendOptionsBase & (
-  | {
-    html: string;
-    text?: string;
-  }
-  | {
-    html?: string;
-    text: string;
-  }
-);
+<<< @/snippets/send-options.ts
+<<< @/snippets/send-options-base.ts
+<<< @/snippets/send-attachment.ts
+<<< @/snippets/send-content.ts
+<<< @/snippets/send-recipient.ts
+<<< @/snippets/send-tracking.ts
+<<< @/snippets/send-response.ts
+<<< @/snippets/send-personalization.ts
+<<< @/snippets/send-payload.ts
 
-interface SendResponse {
-  success: boolean;
-  payload: SendPayload;
-  data: string[] | undefined;
-}
-```
+> [!INFO]
+> `SendPayload` is the body sent to the MailChannels API. Reference: [Send an Email](https://docs.mailchannels.net/email-api/api-reference/send-an-email)
+</details>
 
 ## Source
 
