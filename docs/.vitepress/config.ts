@@ -20,13 +20,13 @@ export default defineConfig({
       ["meta", { property: "og:type", content: "website" }],
       ["meta", { property: "og:title", content: `${pageData.title} | ${SITE.name}` }],
       ["meta", { property: "og:description", content: SITE.description }],
-      // ["meta", { property: "og:image", content: `${SITE.host}/${SITE.cover}` }],
-      // ["meta", { property: "og:image:width", content: "750" }],
-      // ["meta", { property: "og:image:height", content: "375" }],
-      // ["meta", { property: "og:image:alt", content: "" }],
+      ["meta", { property: "og:image", content: `${SITE.host}/${SITE.cover}` }],
+      ["meta", { property: "og:image:width", content: "750" }],
+      ["meta", { property: "og:image:height", content: "375" }],
+      ["meta", { property: "og:image:alt", content: "" }],
       ["meta", { name: "twitter:card", content: "summary_large_image" }],
       ["meta", { name: "twitter:title", content: `${pageData.title} | ${SITE.name}` }],
-      // ["meta", { name: "twitter:image", content: `${SITE.host}/${SITE.cover}` }],
+      ["meta", { name: "twitter:image", content: `${SITE.host}/${SITE.cover}` }],
       ["link", { rel: "canonical", href: `${SITE.host}` + path }]
     ];
     head.push(...tags);
