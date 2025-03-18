@@ -7,23 +7,29 @@ export default [
     text: "Email API",
     collapsed: false,
     items: [
-      { text: "Send", link: "/modules/emails/send" },
-      { text: "Check Domain", link: "/modules/emails/check-domain" },
       {
-        text: "Webhooks",
-        collapsed: true,
+        text: "Emails",
+        collapsed: false,
         items: [
-          { text: "Enroll for Webhook", link: "/modules/emails/webhooks#enroll-method" },
-          { text: "List Webhooks", link: "/modules/emails/webhooks#list-method" },
-          { text: "Delete Webhooks", link: "/modules/emails/webhooks#delete-method" },
-          { text: "Get Signing Key", link: "/modules/emails/webhooks#signing-key-method" }
+          { text: "Send", link: "/modules/emails#send" },
+          { text: "Check Domain", link: "/modules/emails#check-domain" }
         ]
       },
       {
-        text: "Sub Accounts",
-        collapsed: true,
+        text: "Webhooks",
+        collapsed: false,
         items: [
-          { text: "List Sub Accounts", link: "/modules/emails/sub-accounts#list-method" }
+          { text: "Enroll for Webhook", link: "/modules/webhooks#enroll" },
+          { text: "List Webhooks", link: "/modules/webhooks#list" },
+          { text: "Delete Webhooks", link: "/modules/webhooks#delete" },
+          { text: "Get Signing Key", link: "/modules/webhooks#signing-key" }
+        ]
+      },
+      {
+        text: "Sub-accounts",
+        collapsed: false,
+        items: [
+          { text: "List Sub-accounts", link: "/modules/sub-accounts#list" }
         ]
       }
     ]

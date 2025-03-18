@@ -1,24 +1,14 @@
 import { MailChannelsClient } from "./client";
-import { Send, CheckDomain, Webhooks, SubAccounts } from "./modules/emails";
-import { createInstances, extractMethods } from "./utils/core";
+import { Emails, Webhooks, SubAccounts } from "./modules";
 
 export { MailChannelsClient };
-export type * from "./types/emails";
-
-const createEmailAPI = (mailchannels: MailChannels) => {
-  const instances = createInstances(mailchannels, [
-    Send,
-    CheckDomain,
-    Webhooks,
-    SubAccounts
-  ]);
-  const methods = extractMethods(instances);
-  return methods;
-};
+export type * from "./types";
 
 
 export class MailChannels extends MailChannelsClient {
-  readonly emails = createEmailAPI(this);
+  readonly emails = new Emails(this);
+  readonly webhooks = new Webhooks(this);
+  readonly subAccounts = new SubAccounts(this);
 
   constructor (key: string) {
     super(key);

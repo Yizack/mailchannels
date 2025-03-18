@@ -1,5 +1,6 @@
-import type { MailChannelsClient } from "../../client";
-import type { WebhooksListApiResponse, WebhooksListResponse, WebhooksSigningKeyResponse } from "../../types/emails/webhooks";
+import type { MailChannelsClient } from "../client";
+import type { WebhooksListApiResponse, WebhooksListResponse } from "../types/webhooks/list";
+import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -9,10 +10,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * await mailchannels.emails.enrollWebhook("https://example.com/webhook");
+   * await mailchannels.webhooks.enroll("https://example.com/webhook");
    * ```
    */
-  async enrollWebhook (endpoint: string): Promise<void> {
+  async enroll (endpoint: string): Promise<void> {
     return this.mailchannels.post<void>("/tx/v1/webhook", {
       query: {
         endpoint
@@ -25,10 +26,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * const { webhooks } = await mailchannels.emails.listWebhooks();
+   * const { webhooks } = await mailchannels.webhooks.list();
    * ```
    */
-  async listWebhooks (): Promise<WebhooksListResponse> {
+  async list (): Promise<WebhooksListResponse> {
     const response = await this.mailchannels.get<WebhooksListApiResponse>("/tx/v1/webhook");
     return {
       webhooks: response.map(({ webhook }) => webhook)
@@ -40,10 +41,10 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * await mailchannels.emails.deleteWebhooks();
+   * await mailchannels.webhooks.delete();
    * ```
    */
-  async deleteWebhooks (): Promise<void> {
+  async delete (): Promise<void> {
     return this.mailchannels.delete<void>("/tx/v1/webhook");
   }
 
@@ -53,11 +54,11 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * const { key } = await mailchannels.emails.getSigningKey("key-id");
+   * const { key } = await mailchannels.webhooks.getSigningKey("key-id");
    * ```
    */
   async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
-    return await this.mailchannels.get<WebhooksSigningKeyResponse>("/tx/v1/webhook/public-key", {
+    return this.mailchannels.get<WebhooksSigningKeyResponse>("/tx/v1/webhook/public-key", {
       query: {
         id
       }

@@ -1,8 +1,9 @@
-import type { MailChannelsClient } from "../../client";
-import type { SendOptions, SendPayload, SendContent, SendResponse } from "../../types/emails/send";
-import { parseRecipient, parseArrayRecipients } from "../../utils/recipients";
+import type { MailChannelsClient } from "../client";
+import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsCheckDomainOptions, EmailsCheckDomainPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainResponse } from "../types/emails/check-domain";
+import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
-export class Send {
+export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
   /**
    * Send an email using MailChannels Email API
@@ -19,7 +20,7 @@ export class Send {
    * })
    * ```
    */
-  async send (options: SendOptions, dryRun = false): Promise<SendResponse> {
+  async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
@@ -32,7 +33,7 @@ export class Send {
       throw new Error("No MailChannels recipients provided. Use the `to` option to specify at least one recipient");
     }
 
-    const content: SendContent[] = [];
+    const content: EmailsSendContent[] = [];
     const template_type = mustaches ? "mustache" : undefined;
 
     // Plain text must come first if provided
@@ -42,7 +43,7 @@ export class Send {
       throw new Error("No email content provided");
     }
 
-    const payload: SendPayload = {
+    const payload: EmailsSendPayload = {
       attachments: options.attachments,
       personalizations: [{
         bcc: parseArrayRecipients(bcc),
@@ -85,6 +86,55 @@ export class Send {
       success,
       payload,
       data: res?.data
+    };
+  }
+
+  /**
+   * Validates a domain's email authentication setup by retrieving its DKIM, SPF, and Domain Lockdown status. This endpoint checks whether the domain is properly configured for secure email delivery.
+   * @param options - The domain options to check
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { results } = await mailchannels.emails.checkDomain({
+   *   dkim: [{
+   *     domain: "example.com",
+   *     privateKey
+   *     selector: "mailchannels"
+   *   }],
+   *   domain: "example.com",
+   *   senderId: "sender-id"
+   * })
+   * ```
+   */
+  async checkDomain (options: EmailsCheckDomainOptions): Promise<EmailsCheckDomainResponse> {
+    const { dkim, domain, senderId } = options;
+    const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
+
+    const payload: EmailsCheckDomainPayload = {
+      dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
+        dkim_domain: domain,
+        dkim_private_key: privateKey,
+        dkim_selector: selector
+      })),
+      domain,
+      sender_id: senderId
+    };
+
+    const check = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
+      body: payload
+    });
+
+    return {
+      results: {
+        spf: check.check_results.spf,
+        domainLockdown: check.check_results.domain_lockdown,
+        dkim: check.check_results.dkim.map(({ dkim_domain, dkim_selector, verdict }) => ({
+          domain: dkim_domain,
+          selector: dkim_selector,
+          verdict
+        }))
+      },
+      payload
     };
   }
 }

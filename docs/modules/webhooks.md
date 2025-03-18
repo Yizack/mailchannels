@@ -2,11 +2,11 @@
 outline: deep
 ---
 
-# Webhooks
+# Webhooks <Badge type="tip" text="module" />
 
 Receive notifications of your email events via webhooks.
 
-## Enroll method
+## Enroll <Badge type="info" text="method" />
 
 Enrolls the user to receive event notifications via webhooks.
 
@@ -15,19 +15,19 @@ Enrolls the user to receive event notifications via webhooks.
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from '@yizack/mailchannels'
-import { Webhooks } from '@yizack/mailchannels/emails'
+import { Webhooks } from '@yizack/mailchannels/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new Webhooks(mailchannels)
+const webhooks = new Webhooks(mailchannels)
 
-await emails.enrollWebhook("https://example.com/api/webhooks/mailchannels");
+await webhooks.enroll("https://example.com/api/webhooks/mailchannels");
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-await mailchannel.emails.enrollWebhook("https://example.com/api/webhooks/mailchannels");
+await mailchannel.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
 ```
 :::
 
@@ -35,7 +35,7 @@ await mailchannel.emails.enrollWebhook("https://example.com/api/webhooks/mailcha
 
 - `endpoint`: The URL to receive the webhook notifications.
 
-## List method
+## List <Badge type="info" text="method" />
 
 Lists all the webhook endpoints that are enrolled to receive event notifications.
 
@@ -44,23 +44,23 @@ Lists all the webhook endpoints that are enrolled to receive event notifications
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from '@yizack/mailchannels'
-import { Webhooks } from '@yizack/mailchannels/emails'
+import { Webhooks } from '@yizack/mailchannels/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new Webhooks(mailchannels)
+const webhooks = new Webhooks(mailchannels)
 
-const { webhooks } = await emails.listWebhooks();
+const { webhooks: webhooksList } = await webhooks.list();
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { webhooks } = await mailchannels.emails.listWebhooks();
+const { webhooks } = await mailchannels.webhooks.list();
 ```
 :::
 
-## Delete method
+## Delete <Badge type="info" text="method" />
 
 Deletes all registered webhook endpoints for the user.
 
@@ -69,23 +69,23 @@ Deletes all registered webhook endpoints for the user.
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from '@yizack/mailchannels'
-import { Webhooks } from '@yizack/mailchannels/emails'
+import { Webhooks } from '@yizack/mailchannels/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new Webhooks(mailchannels)
+const webhooks = new Webhooks(mailchannels)
 
-await emails.deleteWebhooks();
+await webhooks.delete();
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-await mailchannels.emails.deleteWebhooks();
+await mailchannels.webhooks.delete();
 ```
 :::
 
-## Signing key method
+## Signing Key <Badge type="info" text="method" />
 
 Retrieves the public key used to verify signatures on incoming webhook payloads.
 
@@ -97,16 +97,16 @@ import { MailChannelsClient } from '@yizack/mailchannels'
 import { Webhooks } from '@yizack/mailchannels/emails'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new Webhooks(mailchannels)
+const webhooks = new Webhooks(mailchannels)
 
-const { webhooks } = await emails.getSigningKey('key-id');
+const { key } = await webhooks.getSigningKey('key-id');
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { webhooks } = await mailchannels.emails.getSigningKey('key-id');
+const { key } = await mailchannels.webhooks.getSigningKey('key-id');
 ```
 :::
 
@@ -123,10 +123,15 @@ const { webhooks } = await mailchannels.emails.getSigningKey('key-id');
 <details>
   <summary>All type declarations</summary>
 
+  **List type declarations**
+
   <<< @/snippets/webhooks-list-response.ts
+
+  **Signing Key type declarations**
+
   <<< @/snippets/webhooks-signing-key-response.ts
 </details>
 
 ## Source
 
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/emails/webhooks.ts)
+[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/webhooks.ts)

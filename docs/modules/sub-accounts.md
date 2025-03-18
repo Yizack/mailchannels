@@ -2,30 +2,30 @@
 outline: deep
 ---
 
-# Sub Accounts
+# Sub-Accounts <Badge type="tip" text="module" />
 
 Manage your sub-accounts associated with your MailChannels account.
 
-## List method
+## List <Badge type="info" text="method" />
 
 ### Usage
 
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from '@yizack/mailchannels'
-import { SubAccounts } from '@yizack/mailchannels/emails'
+import { SubAccounts } from '@yizack/mailchannels/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new CheckDomain(mailchannels)
+const subAccounts = new SubAccounts(mailchannels)
 
-const { results } = await emails.listSubAccounts();
+const { accounts } = await subAccounts.list();
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.emails.listSubAccounts();
+const { accounts } = await mailchannels.subAccounts.list();
 ```
 :::
 
@@ -48,4 +48,4 @@ const { success } = await mailchannels.emails.listSubAccounts();
 
 ## Source
 
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/emails/check-domain.ts)
+[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/sub-accounts.ts)

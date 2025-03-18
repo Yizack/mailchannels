@@ -1,16 +1,16 @@
-interface CheckDomainDkim {
+interface EmailsCheckDomainDkim {
   domain: string;
   privateKey: string;
   selector: string;
 }
 
-export interface CheckDomainOptions {
-  dkim: CheckDomainDkim[] | CheckDomainDkim;
+export interface EmailsCheckDomainOptions {
+  dkim: EmailsCheckDomainDkim[] | EmailsCheckDomainDkim;
   domain: string;
   senderId: string;
 }
 
-export interface CheckDomainPayload {
+export interface EmailsCheckDomainPayload {
   dkim_settings: {
     dkim_domain: string;
     dkim_private_key: string;
@@ -20,37 +20,37 @@ export interface CheckDomainPayload {
   sender_id: string;
 }
 
-export type CheckDomainVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
+export type EmailsCheckDomainVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
 
-export interface CheckDomainApiResponse {
+export interface EmailsCheckDomainApiResponse {
   check_results: {
     spf: {
-      verdict: CheckDomainVerdict;
+      verdict: EmailsCheckDomainVerdict;
     };
     domain_lockdown: {
-      verdict: Extract<CheckDomainVerdict, "passed" | "failed">;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     dkim: {
       dkim_domain: string;
       dkim_selector: string;
-      verdict: Extract<CheckDomainVerdict, "passed" | "failed">;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     }[];
   };
 }
 
-export interface CheckDomainResponse {
+export interface EmailsCheckDomainResponse {
   results: {
     spf: {
-      verdict: CheckDomainVerdict;
+      verdict: EmailsCheckDomainVerdict;
     };
     domainLockdown: {
-      verdict: Extract<CheckDomainVerdict, "passed" | "failed">;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     dkim: {
       domain: string;
       selector: string;
-      verdict: Extract<CheckDomainVerdict, "passed" | "failed">;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     }[];
   };
-  payload: CheckDomainPayload;
+  payload: EmailsCheckDomainPayload;
 }

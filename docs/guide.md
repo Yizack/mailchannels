@@ -51,10 +51,10 @@ In this example, we import the `MailChannelsClient` and the `Send` module to sen
 
 ```ts{1,2}
 import { MailChannelsClient } from '@yizack/mailchannels'
-import { Send } from '@yizack/mailchannels/emails'
+import { Emails } from '@yizack/mailchannels/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
-const emails = new Send(mailchannels)
+const emails = new Emails(mailchannels)
 const { success } = await emails.send({
   // ...
 })

@@ -1,5 +1,5 @@
-import type { MailChannelsClient } from "../../client";
-import type { SubAccountsListResponse, SubAccountsListOptions } from "../../types/emails/sub-accounts";
+import type { MailChannelsClient } from "../client";
+import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
 
 export class SubAccounts {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -9,13 +9,14 @@ export class SubAccounts {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * const { accounts } = await mailchannels.emails.listSubAccounts()
+   * const { accounts } = await mailchannels.subAccounts.list()
    * ```
    */
-  async listSubAccounts (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
+  async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
     const response = await this.mailchannels.get<SubAccountsListResponse["accounts"]>("/tx/v1/sub-account", {
       query: options
     });
+
     return {
       accounts: response
     };

@@ -8,9 +8,9 @@ const {
 
 const mailchannels = new MailChannels(apiKey);
 
-// await mailchannels.emails.enrollWebhook("https://example.com/webhook");
-const { webhooks } = await mailchannels.emails.listWebhooks();
-// await mailchannels.emails.deleteWebhooks();
-// const { key } = await mailchannels.emails.getSigningKey("key-id");
+// await mailchannels.webhooks.enroll("https://example.com/webhook");
+const { webhooks } = await mailchannels.webhooks.list();
+// await mailchannels.webhooks.delete();
+// const { key } = await mailchannels.webhooks.getSigningKey("key-id");
 
 console.info(JSON.stringify(webhooks, null, 2));
