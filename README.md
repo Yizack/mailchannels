@@ -109,11 +109,11 @@ npm run release
 </details>
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@yizack/mailchannels.svg?style=flat
+[npm-version-src]: https://img.shields.io/npm/v/@yizack/mailchannels.svg?style=flat&colorA=070a30&colorB=35a047
 [npm-version-href]: https://npmjs.com/package/@yizack/mailchannels
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-mailchannels.svg?style=flat
+[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-mailchannels.svg?style=flat&colorA=070a30&colorB=35a047
 [npm-downloads-href]: https://npmjs.com/package/nuxt-mailchannels
 
-[codecov-coverage-src]: https://codecov.io/gh/Yizack/mailchannels/graph/badge.svg?token=HTSBRHSJ5M
+[codecov-coverage-src]: https://img.shields.io/codecov/c/github/yizack/mailchannels?style=flat&colorA=070a30&token=HTSBRHSJ5M
 [codecov-coverage-href]: https://codecov.io/gh/Yizack/mailchannels
