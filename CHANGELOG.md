@@ -1,6 +1,49 @@
 # Changelog
 
 
+## v0.2.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.3...v0.2.0)
+
+### 🚀 Enhancements
+
+- **send:** Tracking settings support ([0b3f82f](https://github.com/Yizack/mailchannels/commit/0b3f82f))
+- Add `sub-accounts` module and list sub accounts method ([9e410bb](https://github.com/Yizack/mailchannels/commit/9e410bb))
+
+### 💅 Refactors
+
+- Rename `getWebhooks` to `listWebhooks` ([7de2a25](https://github.com/Yizack/mailchannels/commit/7de2a25))
+- ⚠️  Package rewrite separate features in modules ([b69856a](https://github.com/Yizack/mailchannels/commit/b69856a))
+
+### 📖 Documentation
+
+- Snippets generation script ([b1ca183](https://github.com/Yizack/mailchannels/commit/b1ca183))
+- **send:** Add tracking and snippets ([4d6f6c2](https://github.com/Yizack/mailchannels/commit/4d6f6c2))
+- **send:** Outline deep and send method usage etc ([e823c1f](https://github.com/Yizack/mailchannels/commit/e823c1f))
+- **check-domain:** Add check-domain info ([1878079](https://github.com/Yizack/mailchannels/commit/1878079))
+- **webhooks:** Add webhooks info ([a99f2c3](https://github.com/Yizack/mailchannels/commit/a99f2c3))
+- Update readme and docs index ([3e879a3](https://github.com/Yizack/mailchannels/commit/3e879a3))
+- Improve readme ([227c5b4](https://github.com/Yizack/mailchannels/commit/227c5b4))
+- Add theme colors ([f0b8516](https://github.com/Yizack/mailchannels/commit/f0b8516))
+- Update readme ([50e959a](https://github.com/Yizack/mailchannels/commit/50e959a))
+- Update package descriptions ([b746846](https://github.com/Yizack/mailchannels/commit/b746846))
+- Adjust badge tip bg color ([4d8633f](https://github.com/Yizack/mailchannels/commit/4d8633f))
+- Update readme roadmap ([10dfff4](https://github.com/Yizack/mailchannels/commit/10dfff4))
+
+### 🏡 Chore
+
+- **docs:** Sidebar config ([f7c46ef](https://github.com/Yizack/mailchannels/commit/f7c46ef))
+- Add info logger ([240c5d6](https://github.com/Yizack/mailchannels/commit/240c5d6))
+- Add license ([851f2ad](https://github.com/Yizack/mailchannels/commit/851f2ad))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Package rewrite separate features in modules ([b69856a](https://github.com/Yizack/mailchannels/commit/b69856a))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.1.3
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.2...v0.1.3)
