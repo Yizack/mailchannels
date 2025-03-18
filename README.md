@@ -2,6 +2,7 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![codecov][codecov-coverage-src]][codecov-coverage-href]
 
 Node.js SDK to integrate MailChannels API into your JavaScript or Typescript server-side applications.
 
@@ -108,8 +109,11 @@ npm run release
 </details>
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@yizack/mailchannels/latest.svg?style=flat&colorA=333333&colorB=ca0000
+[npm-version-src]: https://img.shields.io/npm/v/@yizack/mailchannels.svg?style=flat
 [npm-version-href]: https://npmjs.com/package/@yizack/mailchannels
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-mailchannels.svg?style=flat&colorA=333333&colorB=ca0000
+[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-mailchannels.svg?style=flat
 [npm-downloads-href]: https://npmjs.com/package/nuxt-mailchannels
+
+[codecov-coverage-src]: https://codecov.io/gh/Yizack/mailchannels/graph/badge.svg?token=HTSBRHSJ5M
+[codecov-coverage-href]: https://codecov.io/gh/Yizack/mailchannels

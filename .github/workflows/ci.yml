@@ -56,8 +56,16 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
-    # - name: 🧪 Run test suite
-    #   run: pnpm test
+      - name: 🧪 Run test suite
+        run: pnpm test
 
       - name: 🧪 Test types
         run: pnpm test:types
+
+      - name: 📊 Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          name: codecov-umbrella
+          flags: unittests
