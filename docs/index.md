@@ -6,6 +6,9 @@ hero:
   name: "MailChannels"
   text: "Node.js SDK"
   tagline: "Integrate MailChannels API into your Javascript or Typescript server-side applications."
+  image:
+    src: /favicon.svg
+    alt: "@yizack/mailchannels"
   actions:
     - theme: brand
       text: Get Started

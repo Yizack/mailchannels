@@ -4,6 +4,10 @@ export default [
     link: "/guide"
   },
   {
+    text: "Contributors",
+    link: "/contributors"
+  },
+  {
     text: "Modules",
     collapsed: false,
     link: "/modules",

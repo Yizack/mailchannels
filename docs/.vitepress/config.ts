@@ -1,15 +1,47 @@
-import { defineConfig } from "vitepress";
+import { defineConfig, type HeadConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
+import { SITE } from "./theme/site";
 import sidebarConfig from "./theme/sidebar";
 import navbarConfig from "./theme/navbar";
 
 export default defineConfig({
-  title: "@yizack/mailchannels",
+  title: SITE.name,
   dir: ".",
   lang: "en-US",
-  description: "MailChannels API library",
+  description: SITE.description,
   cleanUrls: true,
   lastUpdated: true,
+  transformHead: ({ pageData }) => {
+    const head: HeadConfig[] = [];
+    const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
+    const path = relativePath === "index" ? "" : `/${relativePath}`;
+    const tags: HeadConfig[] = [
+      ["meta", { property: "og:url", content: `${SITE.host}` + path }],
+      ["meta", { property: "og:type", content: "website" }],
+      ["meta", { property: "og:title", content: `${pageData.title} | ${SITE.name}` }],
+      ["meta", { property: "og:description", content: SITE.description }],
+      // ["meta", { property: "og:image", content: `${SITE.host}/${SITE.cover}` }],
+      // ["meta", { property: "og:image:width", content: "750" }],
+      // ["meta", { property: "og:image:height", content: "375" }],
+      // ["meta", { property: "og:image:alt", content: "" }],
+      ["meta", { name: "twitter:card", content: "summary_large_image" }],
+      ["meta", { name: "twitter:title", content: `${pageData.title} | ${SITE.name}` }],
+      // ["meta", { name: "twitter:image", content: `${SITE.host}/${SITE.cover}` }],
+      ["link", { rel: "canonical", href: `${SITE.host}` + path }]
+    ];
+    head.push(...tags);
+    return head;
+  },
+  head: [
+    ["meta", { name: "robots", content: "index, follow" }],
+    ["meta", { name: "theme-color", content: "#35a047" }],
+    ["link", { rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" }],
+    ["link", { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+    ["link", { rel: "shortcut icon", href: "/favicon.ico" }],
+    ["link", { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }],
+    ["meta", { name: "apple-mobile-web-app-title", content: SITE.name }],
+    ["link", { rel: "manifest", href: "/site.webmanifest" }]
+  ],
   markdown: {
     config (md) {
       md.use(groupIconMdPlugin);

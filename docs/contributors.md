@@ -29,7 +29,7 @@ const members = [
       Contributors
     </template>
     <template #lead>
-      All the people who have contributed to this project
+      All the people who have contributed to this package.
     </template>
   </VPTeamPageTitle>
   <VPTeamMembers
