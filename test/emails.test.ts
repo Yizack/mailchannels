@@ -6,13 +6,19 @@ import type { EmailsSendOptions } from "../src/types/emails/send";
 const fake = {
   send: {
     apiResponse: { data: ["mock data"] },
+    errorResponse: {
+      status: 400,
+      statusText: "Bad Request",
+      json: async () => ({ errors: ["Invalid request"] })
+    },
     options: {
       to: "recipient@example.com",
       from: "sender@example.com",
       subject: "Test Subject",
       html: "<p>Test content</p>",
-      text: "Test content"
-    },
+      text: "Test content",
+      tracking: { click: true, open: true }
+    } as EmailsSendOptions,
     query: { "dry-run": false },
     payload: expect.objectContaining({
       from: { email: "sender@example.com" },
@@ -25,7 +31,11 @@ const fake = {
         expect.objectContaining({
           to: [{ email: "recipient@example.com" }]
         })
-      ])
+      ]),
+      tracking_settings: expect.objectContaining({
+        click_tracking: { enable: true },
+        open_tracking: { enable: true }
+      })
     })
   },
   checkDomain: {
@@ -53,7 +63,7 @@ const fake = {
   }
 };
 
-describe("Emails", () => {
+describe("send", () => {
   it("should successfully send an email with required fields", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValue(fake.send.apiResponse)
@@ -79,18 +89,79 @@ describe("Emails", () => {
     const mockClient = {} as MailChannelsClient;
     const emails = new Emails(mockClient);
 
-    const emailOptions = {
-      to: "recipient@example.com",
-      subject: "Test Subject",
-      html: "<p>Test content</p>"
-    } as EmailsSendOptions;
+    const options = { ...fake.send.options };
+    delete options.from;
 
-    await expect(emails.send(emailOptions)).rejects.toThrow(
+    await expect(emails.send(options)).rejects.toThrow(
       "No MailChannels sender provided. Use the `from` option to specify a sender"
     );
   });
 
-  it("should check a domain", async () => {
+  it("should throw an error when to field is missing", async () => {
+    const mockClient = {} as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const options = { ...fake.send.options };
+    delete options.to;
+
+    await expect(emails.send(options)).rejects.toThrow(
+      "No MailChannels recipients provided. Use the `to` option to specify at least one recipient"
+    );
+  });
+
+  it("should throw an error when no content provided", async () => {
+    const mockClient = {} as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const options = { ...fake.send.options };
+    delete options.html;
+    delete options.text;
+
+    await expect(emails.send(options)).rejects.toThrow(
+      "No email content provided"
+    );
+  });
+
+  it("should log errors on response status 4XX correctly", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponseError }) => {
+        await onResponseError({ response: fake.send.errorResponse });
+        return null;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await emails.send(fake.send.options);
+
+    expect(result.success).toBe(false);
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    expect(consoleSpy).toHaveBeenCalledWith(400, "Bad Request");
+    consoleSpy.mockRestore();
+  });
+
+  it("should log errors on response status 500 correctly", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponseError }) => {
+        await onResponseError({ response: { ...fake.send.errorResponse, status: 500 } });
+        return null;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const result = await emails.send(fake.send.options);
+
+    expect(result.success).toBe(false);
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    expect(consoleSpy).toHaveBeenCalledWith(500, "Bad Request", ["Invalid request"]);
+    consoleSpy.mockRestore();
+  });
+});
+
+
+describe("checkDomain", () => {
+  it("should successfully check a domain", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValue(fake.checkDomain.apiResponse)
     } as unknown as MailChannelsClient;
