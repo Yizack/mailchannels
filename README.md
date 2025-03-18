@@ -3,9 +3,11 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-MailChannels API library. Node.js SDK to integrate MailChannels into your JavasScript or TypeScript applications.
+Node.js SDK to integrate MailChannels API into your JavaScript or Typescript server-side applications.
 
-This library provides a simple way to interact with the MailChannels API. It is written in TypeScript and can be used in both TypeScript and JavaScript projects and in different runtimes.
+<!-- #region overview -->
+This library provides a simple way to interact with the MailChannels API. It is written in Typescript and can be used in both Javascript and Typescript projects and in different runtimes.
+<!-- #endregion overview -->
 
 - [✨ Release Notes](CHANGELOG.md)
 - [📖 Documentation](https://mailchannels.yizack.com)

@@ -4,8 +4,8 @@ layout: home
 
 hero:
   name: "MailChannels"
-  text: "Node.js API library"
-  tagline: "Effortlessly integrate MailChannels into your JavasScript or TypeScript applications"
+  text: "Node.js SDK"
+  tagline: "Integrate MailChannels API into your Javascript or Typescript server-side applications."
   actions:
     - theme: brand
       text: Get Started

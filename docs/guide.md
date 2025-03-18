@@ -4,7 +4,7 @@ Getting started with `@yizack/mailchannels`
 
 ## Overview
 
-This library provides a simple way to interact with the MailChannels API. It is written in TypeScript and can be used in both TypeScript and JavaScript projects and in different runtimes.
+<!-- @include: ../README.md#overview -->
 
 ## Installation
 
