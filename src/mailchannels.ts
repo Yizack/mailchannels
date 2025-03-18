@@ -1,5 +1,5 @@
 import { MailChannelsClient } from "./client";
-import { Send, CheckDomain, Webhooks } from "./modules/emails";
+import { Send, CheckDomain, Webhooks, SubAccounts } from "./modules/emails";
 import { createInstances, extractMethods } from "./utils/core";
 
 export { MailChannelsClient };
@@ -9,7 +9,8 @@ const createEmailAPI = (mailchannels: MailChannels) => {
   const instances = createInstances(mailchannels, [
     Send,
     CheckDomain,
-    Webhooks
+    Webhooks,
+    SubAccounts
   ]);
   const methods = extractMethods(instances);
   return methods;

@@ -18,6 +18,13 @@ export default [
           { text: "Delete Webhooks", link: "/modules/emails/webhooks#delete-method" },
           { text: "Get Signing Key", link: "/modules/emails/webhooks#signing-key-method" }
         ]
+      },
+      {
+        text: "Sub Accounts",
+        collapsed: true,
+        items: [
+          { text: "List Sub Accounts", link: "/modules/emails/sub-accounts#list-method" }
+        ]
       }
     ]
   }

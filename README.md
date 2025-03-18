@@ -54,24 +54,28 @@ pnpm add @yizack/mailchannels
 
 I plan to implement the following features in the future. Already implemented features are marked with a checkmark.
 
-- [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
-  - 🚧 Activate Sub-account
-  - 🚧 Create Sub-account API Key
-  - 🚧 Create Sub-account SMTP password
-  - 🚧 Create Sub-account
-  - ✅ Delete Customer Webhooks
-  - 🚧 Delete Sub-account API Key
-  - 🚧 Delete Sub-account SMTP password
-  - 🚧 Delete Sub-account
+### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
+- Send
+  - ✅ Send an Email
+- Check Domain
   - ✅ DKIM, SPF & Domain Lockdown Check
+- Webhooks
   - ✅ Enroll for Webhook Notifications
   - ✅ Retrieve Customer Webhooks
-  - 🚧 Retrieve Sub-account API Keys
-  - 🚧 Retrieve Sub-account SMTP Passwords
-  - 🚧 Retrieve Sub-accounts
+  - ✅ Delete Customer Webhooks
   - ✅ Retrieve Webhook Signing Key
-  - ✅ Send an Email
+- Sub Accounts
+  - 🚧 Create Sub-account
+  - ✅ Retrieve Sub-accounts
+  - 🚧 Delete Sub-account
+  - 🚧 Activate Sub-account
   - 🚧 Suspend Sub-account
+  - 🚧 Create Sub-account API Key
+  - 🚧 Delete Sub-account API Key
+  - 🚧 Retrieve Sub-account API Keys
+  - 🚧 Create Sub-account SMTP password
+  - 🚧 Delete Sub-account SMTP password
+  - 🚧 Retrieve Sub-account SMTP Passwords
 <!-- #endregion roadmap -->
 
 ## <a name="development">💻 Development</a>
