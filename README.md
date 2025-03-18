@@ -57,16 +57,15 @@ pnpm add @yizack/mailchannels
 I plan to implement the following features in the future. Already implemented features are marked with a checkmark.
 
 ### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
-- Send
+- Emails
   - ✅ Send an Email
-- Check Domain
   - ✅ DKIM, SPF & Domain Lockdown Check
 - Webhooks
   - ✅ Enroll for Webhook Notifications
   - ✅ Retrieve Customer Webhooks
   - ✅ Delete Customer Webhooks
   - ✅ Retrieve Webhook Signing Key
-- Sub Accounts
+- Sub-accounts
   - 🚧 Create Sub-account
   - ✅ Retrieve Sub-accounts
   - 🚧 Delete Sub-account
