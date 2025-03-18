@@ -34,7 +34,7 @@ export default defineConfig({
   },
   head: [
     ["meta", { name: "robots", content: "index, follow" }],
-    ["meta", { name: "theme-color", content: "#35a047" }],
+    ["meta", { name: "theme-color", content: "#319B42" }],
     ["link", { rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" }],
     ["link", { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
     ["link", { rel: "shortcut icon", href: "/favicon.ico" }],

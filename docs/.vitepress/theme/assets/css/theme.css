@@ -1,11 +1,14 @@
 :root {
   --vp-font-family-base: 'Montserrat', sans-serif;
-  --vp-c-brand-1: #35a047;
-  --vp-c-brand-2: #35a047;
-  --vp-button-brand-bg: #35a047;
+  --vp-c-brand-1: #319B42;
+  --vp-c-brand-2: var(--vp-c-brand-1);
+  --vp-button-brand-bg: #319B42;
   --vp-button-brand-hover-bg: #2a8039;
-  --vp-home-hero-image-background-image: linear-gradient(-45deg, #35a04780 30%, #070a3080);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg,  var(--vp-c-brand-1) 30%, #070a3080);
   --vp-home-hero-image-filter: blur(30px);
+  --vp-badge-tip-bg: var(--vp-c-green-soft);
+  --vp-custom-block-tip-bg: var(--vp-c-green-soft);
+  --vp-custom-block-tip-code-bg: var(--vp-c-green-soft);
 }
 
 html.dark {
@@ -24,11 +27,6 @@ html.dark {
     --vp-home-hero-image-filter: blur(72px);
   }
 }
-
-.VPBadge.tip {
-  background-color: var(--vp-c-green-soft);
-}
-
 
 *::-webkit-scrollbar {
   width: 8px;

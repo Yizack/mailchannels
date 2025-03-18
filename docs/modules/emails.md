@@ -80,7 +80,6 @@ const { success } = await mailchannels.emails.send({
     >
     > You can use the [`html-to-text`](https://www.npmjs.com/package/html-to-text) package to convert your HTML content to plain text.
   - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
-  > [!TIP]
 - `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response.
   > [!TIP]
   > Use `dryRun` to test your email message before sending it.
