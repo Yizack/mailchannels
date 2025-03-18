@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
 import sidebarConfig from "./theme/sidebar";
+import navbarConfig from "./theme/navbar";
 
 export default defineConfig({
   title: "@yizack/mailchannels",
@@ -20,11 +21,7 @@ export default defineConfig({
     ]
   },
   themeConfig: {
-    nav: [
-      { text: "Guide", link: "/guide" },
-      { text: "Modules", link: "/modules" },
-      { text: "Examples", link: "/examples" }
-    ],
+    nav: navbarConfig,
     sidebar: sidebarConfig,
     socialLinks: [
       { icon: "github", link: "https://github.com/Yizack/mailchannels" }

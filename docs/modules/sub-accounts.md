@@ -4,7 +4,9 @@ outline: deep
 
 # Sub-Accounts <Badge type="tip" text="module" />
 
+<!-- #region description -->
 Manage your sub-accounts associated with your MailChannels account.
+<!-- #endregion description -->
 
 ## List <Badge type="info" text="method" />
 

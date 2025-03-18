@@ -4,7 +4,9 @@ outline: deep
 
 # Webhooks <Badge type="tip" text="module" />
 
+<!-- #region description -->
 Receive notifications of your email events via webhooks.
+<!-- #endregion description -->
 
 ## Enroll <Badge type="info" text="method" />
 

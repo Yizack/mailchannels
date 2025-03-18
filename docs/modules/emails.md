@@ -2,9 +2,11 @@
 outline: deep
 ---
 
-# Emails <Badge type="tip" text="module" />
+# 📧 Emails <Badge type="tip" text="module" />
 
-Emails module allows you to send emails and check domain settings for secure email delivery.
+<!-- #region description -->
+This module allows you to send emails and check domain settings for secure email delivery.
+<!-- #endregion description -->
 
 ## Send <Badge type="info" text="method" />
 

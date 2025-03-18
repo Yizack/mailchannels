@@ -4,20 +4,23 @@ export default [
     link: "/guide"
   },
   {
-    text: "Email API",
+    text: "Modules",
     collapsed: false,
+    link: "/modules",
     items: [
       {
-        text: "Emails",
+        text: "📧 Emails",
         collapsed: false,
+        link: "/modules/emails",
         items: [
           { text: "Send", link: "/modules/emails#send" },
           { text: "Check Domain", link: "/modules/emails#check-domain" }
         ]
       },
       {
-        text: "Webhooks",
+        text: "📢 Webhooks",
         collapsed: false,
+        link: "/modules/webhooks",
         items: [
           { text: "Enroll for Webhook", link: "/modules/webhooks#enroll" },
           { text: "List Webhooks", link: "/modules/webhooks#list" },
@@ -26,8 +29,9 @@ export default [
         ]
       },
       {
-        text: "Sub-accounts",
+        text: "🪪 Sub-accounts",
         collapsed: false,
+        link: "/modules/sub-accounts",
         items: [
           { text: "List Sub-accounts", link: "/modules/sub-accounts#list" }
         ]

@@ -47,7 +47,7 @@ This method is useful when building an application on top of MailChannels and yo
 
 ### Importing only the modules you need
 
-In this example, we import the `MailChannelsClient` and the `Send` module to send an email.
+In this example, we import the `MailChannelsClient` and the `Emails` module to send an email.
 
 ```ts{1,2}
 import { MailChannelsClient } from '@yizack/mailchannels'
