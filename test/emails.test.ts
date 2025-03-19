@@ -89,6 +89,7 @@ describe("send", () => {
     const emails = new Emails(mockClient);
 
     const options = { ...fake.send.options };
+    // @ts-expect-error Testing missing from error
     delete options.from;
 
     await expect(emails.send(options)).rejects.toThrow(
@@ -101,6 +102,7 @@ describe("send", () => {
     const emails = new Emails(mockClient);
 
     const options = { ...fake.send.options };
+    // @ts-expect-error Testing missing to error
     delete options.to;
 
     await expect(emails.send(options)).rejects.toThrow(
@@ -170,7 +172,7 @@ describe("checkDomain", () => {
 
     expect(results.spf.verdict).toBe("passed");
     expect(results.domainLockdown.verdict).toBe("passed");
-    expect(results.dkim[0].verdict).toBe("passed");
+    expect(results.dkim[0]!.verdict).toBe("passed");
     expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/check-domain", expect.objectContaining({
       body: fake.checkDomain.payload
     }));
