@@ -1,3 +1,5 @@
+import type { SubAccountsAccount } from "./create";
+
 export interface SubAccountsListOptions {
   /**
    * Possible values: >= 1 and <= 1000
@@ -11,8 +13,5 @@ export interface SubAccountsListOptions {
 }
 
 export interface SubAccountsListResponse {
-  accounts: {
-    enabled: boolean;
-    handle: string;
-  }[];
+  accounts: SubAccountsAccount[];
 }

@@ -81,6 +81,11 @@ const { accounts } = await mailchannels.subAccounts.list();
 <details>
   <summary>All type declarations</summary>
 
+  **Create type declarations**
+
+  <<< @/snippets/sub-accounts-account.ts
+  <<< @/snippets/sub-accounts-create-response.ts
+
   **List type declarations**
 
   <<< @/snippets/sub-accounts-list-options.ts

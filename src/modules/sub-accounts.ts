@@ -1,4 +1,5 @@
 import type { MailChannelsClient } from "../client";
+import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
 
 export class SubAccounts {
@@ -14,7 +15,7 @@ export class SubAccounts {
    * const { account } = await mailchannels.subAccounts.create("validhandle123");
    * ```
    */
-  async create (handle?: string): Promise<{ account: { enabled: boolean, handle: string } }> {
+  async create (handle?: string): Promise<SubAccountsCreateResponse> {
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
@@ -22,7 +23,7 @@ export class SubAccounts {
       }
     }
 
-    const response = await this.mailchannels.post<{ enabled: boolean, handle: string }>("/tx/v1/sub-account", {
+    const response = await this.mailchannels.post<SubAccountsAccount>("/tx/v1/sub-account", {
       body: handle ? { handle } : undefined
     });
 
@@ -40,7 +41,7 @@ export class SubAccounts {
    * ```
    */
   async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
-    const response = await this.mailchannels.get<SubAccountsListResponse["accounts"]>("/tx/v1/sub-account", {
+    const response = await this.mailchannels.get<SubAccountsAccount[]>("/tx/v1/sub-account", {
       query: options
     });
 
