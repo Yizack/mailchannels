@@ -4,6 +4,7 @@ import { includeIgnoreFile } from "@eslint/compat";
 import stylistic from "@stylistic/eslint-plugin";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
+import pluginImport from "eslint-plugin-import-x";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,7 +16,8 @@ export default [
     files: ["**/*.js", "**/*.mjs", "**/*.ts"],
     plugins: {
       "@stylistic": stylistic,
-      "@typescript-eslint": tsPlugin
+      "@typescript-eslint": tsPlugin,
+      "import": pluginImport
     },
     languageOptions: {
       parser: parserTs
@@ -23,6 +25,13 @@ export default [
     rules: {
       "camelcase": "off",
       "no-console": ["error", { allow: ["info", "warn", "error"] }],
+      "import/first": "error",
+      "import/no-duplicates": "error",
+      "import/no-mutable-exports": "error",
+      "import/no-named-default": "error",
+      "import/no-self-import": "error",
+      "import/order": "error",
+      "import/newline-after-import": ["error", { count: 1 }],
       "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
       "@stylistic/linebreak-style": ["error", process.platform === "win32" ? "windows" : "unix"],
       "@stylistic/quotes": ["error", "double"],

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
+import { camelCase } from "scule";
 import { MailChannels, MailChannelsClient } from "../src/mailchannels";
 import * as modules from "../src/modules";
-import { camelCase } from "scule";
 
 const apiKey = "test-api-key";
 

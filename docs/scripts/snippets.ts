@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
-import { isTypeAliasDeclaration, isInterfaceDeclaration, isClassDeclaration, createSourceFile, ScriptTarget, forEachChild, SyntaxKind, type Node } from "typescript";
-import { kebabCase } from "scule";
 import path from "path";
 import { fileURLToPath } from "url";
+import { isTypeAliasDeclaration, isInterfaceDeclaration, isClassDeclaration, createSourceFile, ScriptTarget, forEachChild, SyntaxKind, type Node } from "typescript";
+import { kebabCase } from "scule";
 
 // Clean code by removing comments, empty lines, export keywords, and trimming whitespace
 const cleanCode = (code: string) => code

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { MailChannelsClient } from "../src/client";
 import { $fetch } from "ofetch";
+import { MailChannelsClient } from "../src/client";
 
 const fake = {
   baseURL: "https://api.mailchannels.net",
