@@ -60,7 +60,7 @@ export interface EmailsCheckDomainResponse {
     };
   };
   /**
-   * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
+   * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed
    */
   references?: string[];
 }

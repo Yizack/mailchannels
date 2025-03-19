@@ -26,11 +26,13 @@ interface EmailsSendAttachment {
 
 interface EmailsSendTracking {
   /**
-   * Track when a recipient clicks a link in your email.
+   * Track when a recipient clicks a link in your email
+   * @default false
    */
   click?: boolean;
   /**
-   * Track when a recipient opens your email. Please note that some email clients may not support open tracking.
+   * Track when a recipient opens your email. Please note that some email clients may not support open tracking
+   * @default false
    */
   open?: boolean;
 }
@@ -41,7 +43,7 @@ interface EmailsSendOptionsBase {
    */
   attachments?: EmailsSendAttachment[];
   /**
-   * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
+   * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
@@ -56,7 +58,7 @@ interface EmailsSendOptionsBase {
    */
   bcc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
-   * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
+   * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
@@ -70,13 +72,25 @@ interface EmailsSendOptionsBase {
    * 'email@example.com'
    */
   cc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  /**
+   * The DKIM settings for the email
+   */
   dkim?: {
+    /**
+     * Domain used for DKIM signing
+     */
     domain: string;
+    /**
+     * DKIM private key encoded in Base64
+     */
     privateKey: string;
+    /**
+     * DKIM selector in the domain DNS records
+     */
     selector: string;
   };
   /**
-   * The sender of the email. Can be a string or an object with email and name properties.
+   * The sender of the email. Can be a string or an object with email and name properties
    * @example
    * { email: 'email@example.com', name: 'Example' }
    * @example
@@ -84,7 +98,7 @@ interface EmailsSendOptionsBase {
    */
   from?: EmailsSendRecipient | string;
   /**
-   * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
+   * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
@@ -99,11 +113,11 @@ interface EmailsSendOptionsBase {
    */
   to?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
-   * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking.
+   * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking
    */
   tracking?: EmailsSendTracking;
   /**
-   * A single `replyTo` recipient object, or a single email address.
+   * A single `replyTo` recipient object, or a single email address
    * @example
    * { email: 'email@example.com', name: 'Example' }
    * @example
@@ -159,6 +173,12 @@ export type EmailsSendOptions = EmailsSendOptionsBase & (
 );
 
 export interface EmailsSendResponse {
+  /**
+   * Indicates if the email was successfully sent
+   */
   success: boolean;
+  /**
+   * Fully rendered message if `dryRun` was set to `true`
+   */
   data: string[] | undefined;
 }

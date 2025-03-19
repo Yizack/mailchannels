@@ -11,7 +11,7 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels("your-api-key");
-   * await mailchannels.webhooks.enroll("https://example.com/webhook");
+   * await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
    * ```
    */
   async enroll (endpoint: string): Promise<void> {
