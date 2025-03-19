@@ -27,6 +27,7 @@ This library provides a simple way to interact with the MailChannels API. It is 
 - Send transactional emails
 - Check DKIM, SPF & Domain Lockdown
 - Webhook notifications
+- Manage sub-accounts
 
 ## <a name="requirements">📏 Requirements</a>
 
