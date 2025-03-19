@@ -37,6 +37,7 @@ export default [
         collapsed: false,
         link: "/modules/sub-accounts",
         items: [
+          { text: "Create Sub-account", link: "/modules/sub-accounts#create" },
           { text: "List Sub-accounts", link: "/modules/sub-accounts#list" }
         ]
       }

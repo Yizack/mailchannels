@@ -67,7 +67,7 @@ I plan to implement the following features in the future. Already implemented fe
   - ✅ Delete Customer Webhooks
   - ✅ Retrieve Webhook Signing Key
 - Sub-accounts
-  - 🚧 Create Sub-account
+  - ✅ Create Sub-account
   - ✅ Retrieve Sub-accounts
   - 🚧 Delete Sub-account
   - 🚧 Activate Sub-account

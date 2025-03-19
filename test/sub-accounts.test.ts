@@ -4,6 +4,11 @@ import { SubAccounts } from "../src/modules/sub-accounts";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
 
 const fake = {
+  create: {
+    validHandle: "validhandle123",
+    invalidHandle: "Invalid_Handle!",
+    apiResponse: { enabled: true, handle: "validhandle123" }
+  },
   list: {
     options: { limit: 10, offset: 0 } as SubAccountsListOptions,
     apiResponse: [
@@ -19,6 +24,48 @@ const fake = {
   }
 };
 
+describe("create", () => {
+  it("should successfully create a sub-account with a valid handle", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.create.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.create(fake.create.validHandle);
+
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/sub-account", {
+      body: { handle: fake.create.validHandle }
+    });
+    expect(result).toEqual({ account: fake.create.apiResponse });
+  });
+
+  it("should throw an error for an invalid handle", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+
+    await expect(subAccounts.create(fake.create.invalidHandle)).rejects.toThrow(
+      "Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}"
+    );
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should create a sub-account without a handle (random handle)", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.create.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.create();
+
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/sub-account", {
+      body: undefined
+    });
+    expect(result).toEqual({ account: fake.create.apiResponse });
+  });
+});
 
 describe("list", () => {
   it("should retrieve a list of sub-accounts with default options", async () => {

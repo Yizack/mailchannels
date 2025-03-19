@@ -31,6 +31,7 @@ export class Webhooks {
    */
   async list (): Promise<WebhooksListResponse> {
     const response = await this.mailchannels.get<WebhooksListApiResponse>("/tx/v1/webhook");
+
     return {
       webhooks: response.map(({ webhook }) => webhook)
     };
