@@ -6,11 +6,6 @@ import type { EmailsSendOptions } from "../src/types/emails/send";
 const fake = {
   send: {
     apiResponse: { data: ["mock data"] },
-    errorResponse: {
-      status: 400,
-      statusText: "Bad Request",
-      json: async () => ({ errors: ["Invalid request"] })
-    },
     options: {
       to: "recipient@example.com",
       from: "sender@example.com",
@@ -93,7 +88,7 @@ describe("send", () => {
     delete options.from;
 
     await expect(emails.send(options)).rejects.toThrow(
-      "No MailChannels sender provided. Use the `from` option to specify a sender"
+      "No sender provided. Use the `from` option to specify a sender"
     );
   });
 
@@ -106,7 +101,7 @@ describe("send", () => {
     delete options.to;
 
     await expect(emails.send(options)).rejects.toThrow(
-      "No MailChannels recipients provided. Use the `to` option to specify at least one recipient"
+      "No recipients provided. Use the `to` option to specify at least one recipient"
     );
   });
 
@@ -123,40 +118,17 @@ describe("send", () => {
     );
   });
 
-  it("should log errors on response status 4XX correctly", async () => {
+  it("should return success false when an error occurs", async () => {
     const mockClient = {
       post: vi.fn().mockImplementation(async (url, { onResponseError }) => {
-        await onResponseError({ response: fake.send.errorResponse });
         return null;
       })
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const result = await emails.send(fake.send.options);
 
     expect(result.success).toBe(false);
-    expect(consoleSpy).toHaveBeenCalledTimes(1);
-    expect(consoleSpy).toHaveBeenCalledWith(400, "Bad Request");
-    consoleSpy.mockRestore();
-  });
-
-  it("should log errors on response status 500 correctly", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementation(async (url, { onResponseError }) => {
-        await onResponseError({ response: { ...fake.send.errorResponse, status: 500 } });
-        return null;
-      })
-    } as unknown as MailChannelsClient;
-
-    const emails = new Emails(mockClient);
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const result = await emails.send(fake.send.options);
-
-    expect(result.success).toBe(false);
-    expect(consoleSpy).toHaveBeenCalledTimes(1);
-    expect(consoleSpy).toHaveBeenCalledWith(500, "Bad Request", ["Invalid request"]);
-    consoleSpy.mockRestore();
   });
 });
 

@@ -1,4 +1,5 @@
 import type { MailChannelsClient } from "../client";
+import { mcError } from "../utils/errors";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
@@ -22,7 +23,7 @@ export class SubAccounts {
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        throw new Error("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+        throw mcError("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
       }
     }
 

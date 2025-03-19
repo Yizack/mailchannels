@@ -1,4 +1,5 @@
 import type { MailChannelsClient } from "../client";
+import { mcError } from "../utils/errors";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsSendContent, EmailsSendPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainPayload } from "../types/emails/internal";
@@ -26,12 +27,12 @@ export class Emails {
 
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
-      throw new Error("No MailChannels sender provided. Use the `from` option to specify a sender");
+      throw mcError("No sender provided. Use the `from` option to specify a sender");
     }
 
     const parsedTo = parseArrayRecipients(to);
     if (!parsedTo || !parsedTo.length) {
-      throw new Error("No MailChannels recipients provided. Use the `to` option to specify at least one recipient");
+      throw mcError("No recipients provided. Use the `to` option to specify at least one recipient");
     }
 
     const content: EmailsSendContent[] = [];
@@ -41,7 +42,7 @@ export class Emails {
     if (text) content.push({ type: "text/plain", value: text, template_type });
     if (html) content.push({ type: "text/html", value: html, template_type });
     if (!content.length) {
-      throw new Error("No email content provided");
+      throw mcError("No email content provided");
     }
 
     const payload: EmailsSendPayload = {
@@ -67,25 +68,18 @@ export class Emails {
 
     let success = true;
 
-    const res = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
+    const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
-      body: payload,
-      onResponseError: async ({ response }) => {
-        success = false;
-        if (response.status !== 500 && response.status !== 502) {
-          console.error(response.status, response.statusText);
-          return;
-        }
-        const body = await response.json() as { errors: string[] };
-        if (body && Array.isArray(body.errors)) {
-          console.error(response.status, response.statusText, body.errors);
-        }
-      }
+      body: payload
     }).catch(() => null);
+
+    if (!response) {
+      success = false;
+    }
 
     return {
       success,
-      data: res?.data
+      data: response?.data
     };
   }
 
