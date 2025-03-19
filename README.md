@@ -1,3 +1,5 @@
+![MailChannels](/docs/public/images/presentation.png)
+
 # MailChannels
 
 [![npm version][npm-version-src]][npm-version-href]
