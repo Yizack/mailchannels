@@ -15,19 +15,22 @@ export default defineConfig({
     const head: HeadConfig[] = [];
     const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
     const path = relativePath === "index" ? "" : `/${relativePath}`;
+    const title = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
+    const url = `${SITE.host}` + path;
+    const cover = `${SITE.host}/${SITE.cover}`;
     const tags: HeadConfig[] = [
-      ["meta", { property: "og:url", content: `${SITE.host}` + path }],
+      ["meta", { property: "og:url", content: url }],
       ["meta", { property: "og:type", content: "website" }],
-      ["meta", { property: "og:title", content: `${pageData.title} | ${SITE.name}` }],
+      ["meta", { property: "og:title", content: title }],
       ["meta", { property: "og:description", content: SITE.description }],
-      ["meta", { property: "og:image", content: `${SITE.host}/${SITE.cover}` }],
+      ["meta", { property: "og:image", content: cover }],
       ["meta", { property: "og:image:width", content: "750" }],
       ["meta", { property: "og:image:height", content: "375" }],
-      ["meta", { property: "og:image:alt", content: "" }],
+      ["meta", { property: "og:image:alt", content: SITE.name }],
       ["meta", { name: "twitter:card", content: "summary_large_image" }],
-      ["meta", { name: "twitter:title", content: `${pageData.title} | ${SITE.name}` }],
-      ["meta", { name: "twitter:image", content: `${SITE.host}/${SITE.cover}` }],
-      ["link", { rel: "canonical", href: `${SITE.host}` + path }]
+      ["meta", { name: "twitter:title", content: title }],
+      ["meta", { name: "twitter:image", content: cover }],
+      ["link", { rel: "canonical", href: url }]
     ];
     head.push(...tags);
     return head;
