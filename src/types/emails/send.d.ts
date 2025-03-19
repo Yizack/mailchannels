@@ -96,7 +96,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  from?: EmailsSendRecipient | string;
+  from: EmailsSendRecipient | string;
   /**
    * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties
    * @example
@@ -111,7 +111,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'email@example.com'
    */
-  to?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  to: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
    * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking
    */
