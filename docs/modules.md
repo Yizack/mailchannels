@@ -1,5 +1,5 @@
 <script setup>
-import { VPButton } from 'vitepress/theme'
+import { VPButton } from 'vitepress/theme-without-fonts'
 </script>
 
 # Modules
