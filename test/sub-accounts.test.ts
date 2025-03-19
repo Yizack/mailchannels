@@ -2,6 +2,9 @@ import { describe, it, expect, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { SubAccounts } from "../src/modules/sub-accounts";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
+import type { SubAccountsCreateApiKeyResponse } from "../src/types/sub-accounts/create-api-key";
+import type { SubAccountsCreateSmtpPasswordResponse } from "../src/types/sub-accounts/create-smtp-password";
+import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
 
 const fake = {
   create: {
@@ -21,6 +24,21 @@ const fake = {
         { enabled: false, handle: "sub-account-2" }
       ]
     } as SubAccountsListResponse
+  },
+  createApiKey: {
+    apiResponse: { id: 1, key: "api-key-value" } as SubAccountsCreateApiKeyResponse
+  },
+  createSmtpPassword: {
+    apiResponse: {
+      enabled: true,
+      id: 1,
+      smtp_password: "smtp-password-value"
+    } as SubAccountsCreateSmtpPasswordApiResponse,
+    expectedResponse: {
+      enabled: true,
+      id: 1,
+      password: "smtp-password-value"
+    } as SubAccountsCreateSmtpPasswordResponse
   }
 };
 
@@ -94,5 +112,33 @@ describe("list", () => {
       query: fake.list.options
     });
     expect(result).toEqual(fake.list.expectedResponse);
+  });
+});
+
+describe("createApiKey", () => {
+  it("should successfully create an API key for a valid sub-account handle", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.createApiKey.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.createApiKey(fake.create.validHandle);
+
+    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${fake.create.validHandle}/api-key`);
+    expect(result).toEqual(fake.createApiKey.apiResponse);
+  });
+});
+
+describe("createSmtpPassword", () => {
+  it("should successfully create an SMTP password for a valid sub-account handle", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.createSmtpPassword.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.createSmtpPassword(fake.create.validHandle);
+
+    expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${fake.create.validHandle}/smtp-password`);
+    expect(result).toEqual(fake.createSmtpPassword.expectedResponse);
   });
 });
