@@ -1,6 +1,9 @@
 import type { MailChannelsClient } from "../client";
+import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
+import type { SubAccountsCreateApiKeyResponse } from "../types/sub-accounts/create-api-key";
+import type { SubAccountsCreateSmtpPasswordResponse } from "../types/sub-accounts/create-smtp-password";
 
 export class SubAccounts {
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
@@ -47,6 +50,37 @@ export class SubAccounts {
 
     return {
       accounts: response
+    };
+  }
+
+  /**
+   * Creates a new API key for the specified sub-account.
+   * @param handle - Handle of the sub-account to create API key for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { id, key } = await mailchannels.subAccounts.createApiKey("validhandle123");
+   * ```
+   */
+  async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
+    return this.mailchannels.post<SubAccountsCreateApiKeyResponse>(`/tx/v1/sub-account/${handle}/api-key`);
+  }
+
+  /**
+   * Creates a new SMTP password for the specified sub-account.
+   * @param handle - Handle of the sub-account to create SMTP password for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { id, password } = await mailchannels.subAccounts.createSmtpPassword("validhandle123");
+   */
+  async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
+    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`);
+
+    return {
+      enabled: response.enabled,
+      id: response.id,
+      password: response.smtp_password
     };
   }
 }

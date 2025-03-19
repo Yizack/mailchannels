@@ -74,6 +74,64 @@ const { accounts } = await mailchannels.subAccounts.list();
   > [!TIP]
   > If no options are provided, the default limit is `1000` and the offset is `0`.
 
+## Create API Key <Badge type="info" text="method" />
+
+Creates a new API key for the specified sub-account.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { id, key } = await subAccounts.createApiKey('validhandle123');
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { id, key } = await mailchannels.subAccounts.createApiKey('validhandle123');
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to create API key for.
+
+## Create SMTP Password <Badge type="info" text="method" />
+
+Creates a new API key for the specified sub-account.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { id, password } = await subAccounts.createSmtpPassword('validhandle123');
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { id, password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123');
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to create SMTP password for.
+
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
@@ -90,6 +148,14 @@ const { accounts } = await mailchannels.subAccounts.list();
 
   <<< @/snippets/sub-accounts-list-options.ts
   <<< @/snippets/sub-accounts-list-response.ts
+
+  **Create API Key type declarations**
+
+  <<< @/snippets/sub-accounts-create-api-key-response.ts
+
+  **Create SMTP Password type declarations**
+
+  <<< @/snippets/sub-accounts-create-smtp-password-response.ts
 </details>
 
 ## Source

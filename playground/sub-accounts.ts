@@ -7,7 +7,9 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-// await mailchannels.subAccounts.create("test");
+// await mailchannels.subAccounts.create("validhandle1234");
 const { accounts } = await mailchannels.subAccounts.list();
+// await mailchannels.subAccounts.createApiKey("validhandle1234");
+// await mailchannels.subAccounts.createSmtpPassword("validhandle1234");
 
 console.info(JSON.stringify(accounts, null, 2));

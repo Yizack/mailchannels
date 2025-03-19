@@ -38,7 +38,9 @@ export default [
         link: "/modules/sub-accounts",
         items: [
           { text: "Create Sub-account", link: "/modules/sub-accounts#create" },
-          { text: "List Sub-accounts", link: "/modules/sub-accounts#list" }
+          { text: "List Sub-accounts", link: "/modules/sub-accounts#list" },
+          { text: "Create API Key", link: "/modules/sub-accounts#create-api-key" },
+          { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" }
         ]
       }
     ]
