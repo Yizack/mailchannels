@@ -1,5 +1,5 @@
 :root {
-  --vp-font-family-base: 'Montserrat', sans-serif;
+  --vp-font-family-base: montserrat, -apple-system,blinkmacsystemfont,"Segoe UI",roboto,oxygen,ubuntu,cantarell,"Open Sans","Helvetica Neue",sans-serif;
   --vp-c-brand-1: #319B42;
   --vp-c-brand-2: var(--vp-c-brand-1);
   --vp-button-brand-bg: #319B42;

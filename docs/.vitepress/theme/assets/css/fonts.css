@@ -1,5 +1,6 @@
 @font-face {
-  font-family: 'Montserrat';
+  font-family: Montserrat;
+  font-display: swap;
   src:
     url('../fonts/Montserrat.ttf') format('truetype supports variations'),
     url('../fonts/Montserrat.ttf') format('truetype-variations');
