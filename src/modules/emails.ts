@@ -70,12 +70,11 @@ export class Emails {
 
     const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
-      body: payload
+      body: payload,
+      onResponseError: async () => {
+        success = false;
+      }
     }).catch(() => null);
-
-    if (!response) {
-      success = false;
-    }
 
     return {
       success,

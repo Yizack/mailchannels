@@ -121,6 +121,7 @@ describe("send", () => {
   it("should return success false when an error occurs", async () => {
     const mockClient = {
       post: vi.fn().mockImplementation(async (url, { onResponseError }) => {
+        onResponseError();
         return null;
       })
     } as unknown as MailChannelsClient;
