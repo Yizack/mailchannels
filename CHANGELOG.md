@@ -1,6 +1,61 @@
 # Changelog
 
 
+## v0.2.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.0...v0.2.1)
+
+### 🚀 Enhancements
+
+- **sub-accounts:** Add create sub-account ([8d4c98d](https://github.com/Yizack/mailchannels/commit/8d4c98d))
+- **sub-accounts:** Create api keys and smtp passwords ([b79ee31](https://github.com/Yizack/mailchannels/commit/b79ee31))
+
+### 🩹 Fixes
+
+- **emails:** Add missing check domain response props ([3beb39b](https://github.com/Yizack/mailchannels/commit/3beb39b))
+- **types:** `to` and `from` must be required ([b91067e](https://github.com/Yizack/mailchannels/commit/b91067e))
+
+### 💅 Refactors
+
+- No payloads in responses + don't export internal types ([78d4c3a](https://github.com/Yizack/mailchannels/commit/78d4c3a))
+
+### 📖 Documentation
+
+- Add mailchannels colors to badges ([cb9ce8d](https://github.com/Yizack/mailchannels/commit/cb9ce8d))
+- Improve docs ([84d9dc0](https://github.com/Yizack/mailchannels/commit/84d9dc0))
+- Add custom favicon and contributors section ([b3538b9](https://github.com/Yizack/mailchannels/commit/b3538b9))
+- Update description ([9360471](https://github.com/Yizack/mailchannels/commit/9360471))
+- Use mailchannels brand ([85165db](https://github.com/Yizack/mailchannels/commit/85165db))
+- Add promo cover ([e254ec6](https://github.com/Yizack/mailchannels/commit/e254ec6))
+- **seo:** Fix heads ([cb8b922](https://github.com/Yizack/mailchannels/commit/cb8b922))
+- Add sub-accounts in readme ([8daf9d8](https://github.com/Yizack/mailchannels/commit/8daf9d8))
+
+### 🏡 Chore
+
+- Fix sub-accounts file name ([5e1ff4e](https://github.com/Yizack/mailchannels/commit/5e1ff4e))
+- **snippets:** Improve snippets types extractor ([4061b81](https://github.com/Yizack/mailchannels/commit/4061b81))
+- **types:** Sub-accounts create types ([28fd89c](https://github.com/Yizack/mailchannels/commit/28fd89c))
+- **types:** Improve type comments ([33d2eca](https://github.com/Yizack/mailchannels/commit/33d2eca))
+- Add issue templates ([29c2bf4](https://github.com/Yizack/mailchannels/commit/29c2bf4))
+- **eslint:** Add import rules ([f60f070](https://github.com/Yizack/mailchannels/commit/f60f070))
+- Improve tsconfig and eslint ([f2c4bdd](https://github.com/Yizack/mailchannels/commit/f2c4bdd))
+- Custom error name ([c65a2c8](https://github.com/Yizack/mailchannels/commit/c65a2c8))
+- **playground:** Correct sub-accounts script ([a1a5bac](https://github.com/Yizack/mailchannels/commit/a1a5bac))
+
+### ✅ Tests
+
+- Add more emails test ([cfc3319](https://github.com/Yizack/mailchannels/commit/cfc3319))
+- Add client tests ([7873118](https://github.com/Yizack/mailchannels/commit/7873118))
+- Add mailchannels instance and modules test ([7b652f1](https://github.com/Yizack/mailchannels/commit/7b652f1))
+- Add test for webhooks ([f4d6573](https://github.com/Yizack/mailchannels/commit/f4d6573))
+- Add sub-accounts test ([c42cb9c](https://github.com/Yizack/mailchannels/commit/c42cb9c))
+- Add missing create api key and smtp password test ([a2f92ba](https://github.com/Yizack/mailchannels/commit/a2f92ba))
+- Add missing recipient util tests ([adc8491](https://github.com/Yizack/mailchannels/commit/adc8491))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.2.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.1.3...v0.2.0)
