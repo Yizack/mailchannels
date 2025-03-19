@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.2.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.1...v0.2.2)
+
+### 🩹 Fixes
+
+- **send:** Success response regression ([1c0bffb](https://github.com/Yizack/mailchannels/commit/1c0bffb))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.2.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.0...v0.2.1)
