@@ -9,12 +9,6 @@ export interface EmailsSendRecipient {
   name?: string;
 }
 
-export interface EmailsSendContent {
-  template_type?: "mustache";
-  type: "text/html" | "text/plain";
-  value: string;
-}
-
 interface EmailsSendAttachment {
   /**
    * The attachment data, encoded in base64
@@ -30,20 +24,6 @@ interface EmailsSendAttachment {
   type: string;
 }
 
-interface EmailsSendPersonalization {
-  bcc?: EmailsSendRecipient[];
-  cc?: EmailsSendRecipient[];
-  dkim_domain?: string;
-  dkim_private_key?: string;
-  dkim_selector?: string;
-  dynamic_template_data?: Record<string, unknown>;
-  from?: EmailsSendRecipient;
-  headers?: Record<string, string>;
-  reply_to?: EmailsSendRecipient;
-  subject?: string;
-  to: EmailsSendRecipient[];
-}
-
 interface EmailsSendTracking {
   /**
    * Track when a recipient clicks a link in your email.
@@ -53,25 +33,6 @@ interface EmailsSendTracking {
    * Track when a recipient opens your email. Please note that some email clients may not support open tracking.
    */
   open?: boolean;
-}
-
-export interface EmailsSendPayload {
-  attachments?: EmailsSendAttachment[];
-  content: EmailsSendContent[];
-  from: EmailsSendRecipient;
-  headers?: Record<string, string>;
-  mailfrom?: EmailsSendRecipient;
-  personalizations: EmailsSendPersonalization[];
-  reply_to?: EmailsSendRecipient;
-  subject: string;
-  tracking_settings?: {
-    click_tracking?: {
-      enable: EmailsSendTracking["click"];
-    };
-    open_tracking?: {
-      enable: EmailsSendTracking["open"];
-    };
-  };
 }
 
 interface EmailsSendOptionsBase {
@@ -199,6 +160,5 @@ export type EmailsSendOptions = EmailsSendOptionsBase & (
 
 export interface EmailsSendResponse {
   success: boolean;
-  payload: EmailsSendPayload;
   data: string[] | undefined;
 }

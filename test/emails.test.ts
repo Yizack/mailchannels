@@ -79,7 +79,6 @@ describe("send", () => {
 
     expect(result).toEqual({
       success: true,
-      payload: expect.any(Object),
       data: ["mock data"]
     });
   });

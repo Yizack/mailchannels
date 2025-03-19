@@ -151,15 +151,9 @@ const { success } = await mailchannels.emails.checkDomain({
   <<< @/snippets/emails-send-options.ts
   <<< @/snippets/emails-send-options-base.ts
   <<< @/snippets/emails-send-attachment.ts
-  <<< @/snippets/emails-send-content.ts
   <<< @/snippets/emails-send-recipient.ts
   <<< @/snippets/emails-send-tracking.ts
   <<< @/snippets/emails-send-response.ts
-  <<< @/snippets/emails-send-personalization.ts
-  <<< @/snippets/emails-send-payload.ts
-
-  > [!INFO]
-  > `EmailsSendPayload` is the body sent to the MailChannels API. Reference: [Send an Email](https://docs.mailchannels.net/email-api/api-reference/send-an-email)
 
   **Check Domain type declarations**
 
@@ -167,10 +161,6 @@ const { success } = await mailchannels.emails.checkDomain({
   <<< @/snippets/emails-check-domain-response.ts
   <<< @/snippets/emails-check-domain-verdict.ts
   <<< @/snippets/emails-check-domain-dkim.ts
-  <<< @/snippets/emails-check-domain-payload.ts
-
-  > [!INFO]
-  > `EmailsCheckDomainPayload` is the body sent to the MailChannels API. Reference: [DKIM, SPF & Domain Lockdown Check](https://docs.mailchannels.net/email-api/api-reference/dkim-spf-domain-lockdown-check)
 </details>
 
 ## Source

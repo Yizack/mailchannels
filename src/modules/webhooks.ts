@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import type { WebhooksListApiResponse, WebhooksListResponse } from "../types/webhooks/list";
+import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
+import type { WebhooksListApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}

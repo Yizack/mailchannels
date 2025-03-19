@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import type { EmailsSendOptions, EmailsSendPayload, EmailsSendContent, EmailsSendResponse } from "../types/emails/send";
-import type { EmailsCheckDomainOptions, EmailsCheckDomainPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainResponse } from "../types/emails/check-domain";
+import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
+import type { EmailsSendContent, EmailsSendPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainPayload } from "../types/emails/internal";
 import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 
 export class Emails {
@@ -84,7 +85,6 @@ export class Emails {
 
     return {
       success,
-      payload,
       data: res?.data
     };
   }
@@ -133,8 +133,7 @@ export class Emails {
           selector: dkim_selector,
           verdict
         }))
-      },
-      payload
+      }
     };
   }
 }
