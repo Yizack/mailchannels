@@ -120,20 +120,22 @@ export class Emails {
       sender_id: senderId
     };
 
-    const check = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
+    const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload
     });
 
     return {
       results: {
-        spf: check.check_results.spf,
-        domainLockdown: check.check_results.domain_lockdown,
-        dkim: check.check_results.dkim.map(({ dkim_domain, dkim_selector, verdict }) => ({
+        dkim: response.check_results.dkim.map(({ dkim_domain, dkim_selector, reason, verdict }) => ({
           domain: dkim_domain,
           selector: dkim_selector,
+          reason,
           verdict
-        }))
-      }
+        })),
+        domainLockdown: response.check_results.domain_lockdown,
+        spf: response.check_results.spf
+      },
+      references: response.references
     };
   }
 }

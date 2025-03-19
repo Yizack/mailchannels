@@ -52,16 +52,20 @@ export interface EmailsCheckDomainPayload {
 
 export interface EmailsCheckDomainApiResponse {
   check_results: {
-    spf: {
-      verdict: EmailsCheckDomainVerdict;
-    };
-    domain_lockdown: {
-      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-    };
     dkim: {
       dkim_domain: string;
       dkim_selector: string;
+      reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     }[];
+    domain_lockdown: {
+      reason?: string;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+    };
+    spf: {
+      reason?: string;
+      verdict: EmailsCheckDomainVerdict;
+    };
   };
+  references?: string[];
 }
