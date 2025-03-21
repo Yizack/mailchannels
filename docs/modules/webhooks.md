@@ -22,14 +22,14 @@ import { Webhooks } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-await webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+const { success } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels");
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-await mailchannel.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+const { success } = await mailchannel.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
 ```
 :::
 
@@ -76,14 +76,14 @@ import { Webhooks } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-await webhooks.delete();
+const { success } = await webhooks.delete();
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-await mailchannels.webhooks.delete();
+const { success } = await mailchannels.webhooks.delete();
 ```
 :::
 
@@ -121,18 +121,6 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id');
 ## Type declarations
 
 <<< @/snippets/webhooks.ts
-
-<details>
-  <summary>All type declarations</summary>
-
-  **List type declarations**
-
-  <<< @/snippets/webhooks-list-response.ts
-
-  **Signing Key type declarations**
-
-  <<< @/snippets/webhooks-signing-key-response.ts
-</details>
 
 ## Source
 

@@ -1,7 +1,6 @@
 import type { MailChannelsClient } from "../client";
-import type { WebhooksListResponse } from "../types/webhooks/list";
-import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
-import type { WebhooksListApiResponse } from "../types/webhooks/internal";
+import { ErrorCode } from "../utils/errors";
+import { Logger } from "../utils/logger";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -11,15 +10,36 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * await mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
+   * const { success } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
-  async enroll (endpoint: string): Promise<void> {
-    return this.mailchannels.post<void>("/tx/v1/webhook", {
+  async enroll (endpoint: string): Promise<{ success: boolean }> {
+    const enrollResponse = { success: false };
+
+    if (!endpoint) {
+      Logger.error("No endpoint provided.");
+      return enrollResponse;
+    }
+
+    await this.mailchannels.post<void>("/tx/v1/webhook", {
       query: {
         endpoint
+      },
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          enrollResponse.success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.Conflict:
+            return Logger.error(`${endpoint} is already enrolled to receive notifications.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
       }
     });
+    return enrollResponse;
   }
 
   /**
@@ -30,8 +50,12 @@ export class Webhooks {
    * const { webhooks } = await mailchannels.webhooks.list()
    * ```
    */
-  async list (): Promise<WebhooksListResponse> {
-    const response = await this.mailchannels.get<WebhooksListApiResponse>("/tx/v1/webhook");
+  async list (): Promise<{ webhooks: string[] }> {
+    const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
+      onResponseError: async () => {
+        Logger.error("Unknown error.");
+      }
+    }).catch(() => []);
 
     return {
       webhooks: response.map(({ webhook }) => webhook)
@@ -43,11 +67,24 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * await mailchannels.webhooks.delete()
+   * const { success } = await mailchannels.webhooks.delete()
    * ```
    */
-  async delete (): Promise<void> {
-    return this.mailchannels.delete<void>("/tx/v1/webhook");
+  async delete (): Promise<{ success: boolean }> {
+    const deleteResponse = { success: false };
+
+    await this.mailchannels.delete<void>("/tx/v1/webhook", {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (!response.ok) {
+          Logger.error("Unknown error.");
+          return;
+        }
+        deleteResponse.success = true;
+      }
+    });
+
+    return deleteResponse;
   }
 
   /**
@@ -59,11 +96,23 @@ export class Webhooks {
    * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
-  async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
-    return this.mailchannels.get<WebhooksSigningKeyResponse>("/tx/v1/webhook/public-key", {
+  async getSigningKey (id: string): Promise<{ key?: string }> {
+    const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
       query: {
         id
+      },
+      onResponseError: ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.NotFound:
+            return Logger.error(`The key '${id}' is not found.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
       }
-    });
+    }).catch(() => undefined);
+
+    return {
+      key: response?.key
+    };
   }
 }

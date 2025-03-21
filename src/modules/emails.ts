@@ -1,9 +1,10 @@
 import type { MailChannelsClient } from "../client";
-import { mcError } from "../utils/errors";
+import { ErrorCode } from "../utils/errors";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsSendContent, EmailsSendPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainPayload } from "../types/emails/internal";
 import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
+import { Logger } from "../utils/logger";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -25,14 +26,23 @@ export class Emails {
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
+    const sendResponse: EmailsSendResponse = { success: false };
+
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
-      throw mcError("No sender provided. Use the `from` option to specify a sender");
+      Logger.error("No sender provided. Use the `from` option to specify a sender");
+      return sendResponse;
     }
 
     const parsedTo = parseArrayRecipients(to);
     if (!parsedTo || !parsedTo.length) {
-      throw mcError("No recipients provided. Use the `to` option to specify at least one recipient");
+      Logger.error("No recipients provided. Use the `to` option to specify at least one recipient");
+      return sendResponse;
+    }
+
+    if (!text && !html) {
+      Logger.error("No email content provided");
+      return sendResponse;
     }
 
     const content: EmailsSendContent[] = [];
@@ -41,9 +51,6 @@ export class Emails {
     // Plain text must come first if provided
     if (text) content.push({ type: "text/plain", value: text, template_type });
     if (html) content.push({ type: "text/html", value: html, template_type });
-    if (!content.length) {
-      throw mcError("No email content provided");
-    }
 
     const payload: EmailsSendPayload = {
       attachments: options.attachments,
@@ -66,20 +73,29 @@ export class Emails {
       } : undefined
     };
 
-    let success = true;
-
     const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
-      onResponseError: async () => {
-        success = false;
+      onResponse: ({ response }) => {
+        if (response.ok) {
+          sendResponse.success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.BadRequest:
+            return Logger.error("Bad Request.");
+          case ErrorCode.Forbidden:
+            return Logger.error("User does not have access to this feature.");
+          case ErrorCode.PayloadTooLarge:
+            return Logger.error("The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments.");
+          default:
+            return Logger.error("Unknown error.");
+        }
       }
-    }).catch(() => null);
+    }).catch(() => undefined);
 
-    return {
-      success,
-      data: response?.data
-    };
+    sendResponse.data = response?.data;
+    return sendResponse;
   }
 
   /**
@@ -114,8 +130,20 @@ export class Emails {
     };
 
     const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
-      body: payload
-    });
+      body: payload,
+      onResponseError: async ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.BadRequest:
+            return Logger.error("Bad Request.");
+          case ErrorCode.Forbidden:
+            return Logger.error("User does not have access to this feature.");
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    }).catch(() => undefined);
+
+    if (!response) return { results: response };
 
     return {
       results: {

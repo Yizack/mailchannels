@@ -34,7 +34,7 @@ export interface EmailsCheckDomainResponse {
   /**
    * The results of the domain checks.
    */
-  results: {
+  results?: {
     dkim: {
       domain: string;
       selector: string;

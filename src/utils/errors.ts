@@ -1,6 +1,9 @@
-export const mcError = (message: string): Error => {
-  const error = new Error(message);
-  error.name = "MailChannelsError";
-  if (Error.captureStackTrace) Error.captureStackTrace(error, mcError);
-  return error;
-};
+export enum ErrorCode {
+  BadRequest = 400,
+  Unauthorized = 401,
+  Forbidden = 403,
+  NotFound = 404,
+  Conflict = 409,
+  PayloadTooLarge = 413,
+  UnprocessableEntity = 422
+}

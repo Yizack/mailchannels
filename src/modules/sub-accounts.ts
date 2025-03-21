@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
-import { mcError } from "../utils/errors";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
-import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
-import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
+import type { SubAccountsAccount } from "../types/sub-accounts/create";
+import type { SubAccountsListOptions } from "../types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../types/sub-accounts/smtp-password";
+import { ErrorCode } from "../utils/errors";
+import { Logger } from "../utils/logger";
 
 export class SubAccounts {
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
@@ -19,17 +20,26 @@ export class SubAccounts {
    * const { account } = await mailchannels.subAccounts.create('validhandle123')
    * ```
    */
-  async create (handle?: string): Promise<SubAccountsCreateResponse> {
+  async create (handle?: string): Promise<{ account?: SubAccountsAccount }> {
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        throw mcError("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+        Logger.error("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+        return { account: undefined };
       }
     }
 
     const response = await this.mailchannels.post<SubAccountsAccount>("/tx/v1/sub-account", {
-      body: handle ? { handle } : undefined
-    });
+      body: handle ? { handle } : undefined,
+      onResponseError: ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.Forbidden:
+            return Logger.error("The parent account does not have permission to create sub-accounts.");
+          case ErrorCode.Conflict:
+            return Logger.error(`Sub-account with handle ${handle} already exists.`);
+        }
+      }
+    }).catch(() => undefined);
 
     return {
       account: response
@@ -44,10 +54,18 @@ export class SubAccounts {
    * const { accounts } = await mailchannels.subAccounts.list()
    * ```
    */
-  async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
+  async list (options?: SubAccountsListOptions): Promise<{ accounts: SubAccountsAccount[] }> {
+    if (options?.limit && (options.limit < 1 || options.limit > 1000)) {
+      Logger.error("The limit and/or offset query parameter are invalid.");
+      return { accounts: [] };
+    }
+
     const response = await this.mailchannels.get<SubAccountsAccount[]>("/tx/v1/sub-account", {
-      query: options
-    });
+      query: options,
+      onResponseError: async () => {
+        Logger.error("Unknown error.");
+      }
+    }).catch(() => []);
 
     return {
       accounts: response
@@ -60,11 +78,33 @@ export class SubAccounts {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { id, key } = await mailchannels.subAccounts.createApiKey('validhandle123')
+   * const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
    * ```
    */
-  async createApiKey (handle: string): Promise<SubAccountsApiKey> {
-    return this.mailchannels.post<SubAccountsApiKey>(`/tx/v1/sub-account/${handle}/api-key`);
+  async createApiKey (handle: string): Promise<{ key?: SubAccountsApiKey }> {
+    const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
+      onResponseError: async ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.Forbidden:
+            return Logger.error("You can't create API keys for this sub-account.");
+          case ErrorCode.NotFound:
+            return Logger.error(`Sub-account with handle '${handle}' not found.`);
+          case ErrorCode.UnprocessableEntity:
+            return Logger.error("You have reached the limit of API keys you can create for this sub-account.");
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    }).catch(() => undefined);
+
+    if (!response) return { key: undefined };
+
+    return {
+      key: {
+        id: response.id,
+        value: response.key
+      }
+    };
   }
 
   /**
@@ -77,8 +117,23 @@ export class SubAccounts {
    * ```
    */
   async listApiKeys (handle: string): Promise<{ keys: SubAccountsApiKey[] }> {
-    const response = await this.mailchannels.get<SubAccountsApiKey[]>(`/tx/v1/sub-account/${handle}/api-key`);
-    return { keys: response };
+    const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
+      onResponseError: async ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.NotFound:
+            return Logger.error(`Sub-account with handle '${handle}' not found.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    }).catch(() => []);
+
+    return {
+      keys: response.map(key => ({
+        id: key.id,
+        value: key.key
+      }))
+    };
   }
 
   /**
@@ -87,16 +142,33 @@ export class SubAccounts {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { id, password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
+   * const { password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
    * ```
    */
-  async createSmtpPassword (handle: string): Promise<SubAccountsSmtpPassword> {
-    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`);
+  async createSmtpPassword (handle: string): Promise<{ password?: SubAccountsSmtpPassword }> {
+    const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
+      onResponseError: async ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.Forbidden:
+            return Logger.error("You can't create SMTP passwords for this sub-account.");
+          case ErrorCode.NotFound:
+            return Logger.error(`Sub-account with handle '${handle}' not found.`);
+          case ErrorCode.UnprocessableEntity:
+            return Logger.error("You have reached the limit of SMTP passwords you can create for this sub-account.");
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    }).catch(() => undefined);
+
+    if (!response) return { password: undefined };
 
     return {
-      enabled: response.enabled,
-      id: response.id,
-      password: response.smtp_password
+      password: {
+        enabled: response.enabled,
+        id: response.id,
+        value: response.smtp_password
+      }
     };
   }
 
@@ -110,12 +182,22 @@ export class SubAccounts {
    * ```
    */
   async listSmtpPasswords (handle: string): Promise<{ passwords: SubAccountsSmtpPassword[] }> {
-    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`);
+    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
+      onResponseError: async ({ response }) => {
+        switch (response.status) {
+          case ErrorCode.NotFound:
+            return Logger.error(`Sub-account with handle '${handle}' not found.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    }).catch(() => []);
+
     return {
       passwords: response.map(password => ({
         enabled: password.enabled,
         id: password.id,
-        password: password.smtp_password
+        value: password.smtp_password
       }))
     };
   }

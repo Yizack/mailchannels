@@ -6,5 +6,5 @@ export interface SubAccountsApiKey {
   /**
    * API key for the sub-account.
    */
-  key: string;
+  value: string;
 }

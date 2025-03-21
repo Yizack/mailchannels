@@ -88,14 +88,14 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { id, key } = await subAccounts.createApiKey('validhandle123')
+const { key } = await subAccounts.createApiKey('validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { id, key } = await mailchannels.subAccounts.createApiKey('validhandle123')
+const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
 ```
 :::
 
@@ -146,14 +146,14 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { id, password } = await subAccounts.createSmtpPassword('validhandle123')
+const { password } = await subAccounts.createSmtpPassword('validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { id, password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
+const { password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
 ```
 :::
 
@@ -200,12 +200,10 @@ const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle12
   **Create type declarations**
 
   <<< @/snippets/sub-accounts-account.ts
-  <<< @/snippets/sub-accounts-create-response.ts
 
   **List type declarations**
 
   <<< @/snippets/sub-accounts-list-options.ts
-  <<< @/snippets/sub-accounts-list-response.ts
 
   **API Key type declarations**
 

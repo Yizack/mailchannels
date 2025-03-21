@@ -10,5 +10,5 @@ export interface SubAccountsSmtpPassword {
   /**
    * SMTP password for the sub-account.
    */
-  password: string;
+  value: string;
 }
