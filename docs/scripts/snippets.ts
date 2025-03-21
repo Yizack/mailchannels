@@ -1,16 +1,16 @@
-import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
 import {
-  isTypeAliasDeclaration,
-  isInterfaceDeclaration,
-  isClassDeclaration,
-  createSourceFile,
-  ScriptTarget,
-  forEachChild,
   type Node,
+  ScriptTarget,
+  createSourceFile,
+  forEachChild,
+  isClassDeclaration,
+  isConstructorDeclaration,
+  isInterfaceDeclaration,
   isMethodDeclaration,
-  isConstructorDeclaration
+  isTypeAliasDeclaration
 } from "typescript";
 import { kebabCase } from "scule";
 

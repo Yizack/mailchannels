@@ -1,4 +1,4 @@
-import { expect, it, vi, describe } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Emails } from "../src/modules/emails";
 import type { EmailsSendOptions } from "../src/types/emails/send";

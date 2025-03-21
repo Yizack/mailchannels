@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { camelCase } from "scule";
 import { MailChannels, MailChannelsClient } from "../src/mailchannels";
 import * as modules from "../src/modules";

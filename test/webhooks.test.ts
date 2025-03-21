@@ -1,4 +1,4 @@
-import { expect, it, vi, describe } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
 import { Logger } from "../src/utils/logger";

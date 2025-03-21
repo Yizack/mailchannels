@@ -2,8 +2,8 @@ import type { MailChannelsClient } from "../client";
 import { ErrorCode } from "../utils/errors";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
-import type { EmailsSendContent, EmailsSendPayload, EmailsCheckDomainApiResponse, EmailsCheckDomainPayload } from "../types/emails/internal";
-import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { Logger } from "../utils/logger";
 
 export class Emails {

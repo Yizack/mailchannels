@@ -1,5 +1,5 @@
 import { MailChannelsClient } from "./client";
-import { Emails, Webhooks, SubAccounts } from "./modules";
+import { Emails, SubAccounts, Webhooks } from "./modules";
 
 export { MailChannelsClient };
 export type * from "./types";

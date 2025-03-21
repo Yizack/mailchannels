@@ -1,4 +1,4 @@
-import { defineConfig, type HeadConfig } from "vitepress";
+import { type HeadConfig, defineConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
 import { SITE } from "./theme/site";
 import sidebarConfig from "./theme/sidebar";

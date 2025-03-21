@@ -28,6 +28,7 @@ export default defineConfig([
     rules: {
       "camelcase": "off",
       "no-console": ["error", { allow: ["info", "warn", "error"] }],
+      "sort-imports": ["error", { ignoreDeclarationSort: true }],
       "import/first": "error",
       "import/no-duplicates": "error",
       "import/no-mutable-exports": "error",
@@ -63,7 +64,8 @@ export default defineConfig([
       "@stylistic/space-in-parens": ["error", "never"],
       "@stylistic/template-curly-spacing": "error",
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
-      "@typescript-eslint/no-explicit-any": "error"
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/consistent-type-imports": "error"
     }
   }
 ]);

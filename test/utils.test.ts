@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { parseRecipient, parseArrayRecipients } from "../src/utils/recipients";
+import { describe, expect, it } from "vitest";
+import { parseArrayRecipients, parseRecipient } from "../src/utils/recipients";
 
 
 const fake = {
