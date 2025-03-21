@@ -7,11 +7,11 @@ export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
   /**
    * Enrolls the customer to receive event notifications via webhooks.
-   * @param endpoint - The URL to receive event notifications
+   * @param endpoint - The URL to receive event notifications.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
-   * await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+   * const mailchannels = new MailChannels('your-api-key')
+   * await mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
   async enroll (endpoint: string): Promise<void> {
@@ -26,8 +26,8 @@ export class Webhooks {
    * Retrieves all registered webhook endpoints associated with the customer.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
-   * const { webhooks } = await mailchannels.webhooks.list();
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { webhooks } = await mailchannels.webhooks.list()
    * ```
    */
   async list (): Promise<WebhooksListResponse> {
@@ -42,8 +42,8 @@ export class Webhooks {
    * Deletes all registered webhook endpoints for the customer.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
-   * await mailchannels.webhooks.delete();
+   * const mailchannels = new MailChannels('your-api-key')
+   * await mailchannels.webhooks.delete()
    * ```
    */
   async delete (): Promise<void> {
@@ -52,11 +52,11 @@ export class Webhooks {
 
   /**
    * Retrieves the public key used to verify signatures on incoming webhook payloads.
-   * @param id - the ID of the key
+   * @param id - The ID of the key.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
-   * const { key } = await mailchannels.webhooks.getSigningKey("key-id");
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
   async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {

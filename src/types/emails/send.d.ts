@@ -1,37 +1,37 @@
 export interface EmailsSendRecipient {
   /**
-   * The email address of the recipient
+   * The email address of the recipient.
    */
   email: string;
   /**
-   * The name of the recipient
+   * The name of the recipient.
    */
   name?: string;
 }
 
 interface EmailsSendAttachment {
   /**
-   * The attachment data, encoded in base64
+   * The attachment data, encoded in base64.
    */
   content: string;
   /**
-   * The name of the attachment file
+   * The name of the attachment file.
    */
   filename: string;
   /**
-   * The MIME type of the attachment
+   * The MIME type of the attachment.
    */
   type: string;
 }
 
 interface EmailsSendTracking {
   /**
-   * Track when a recipient clicks a link in your email
+   * Track when a recipient clicks a link in your email.
    * @default false
    */
   click?: boolean;
   /**
-   * Track when a recipient opens your email. Please note that some email clients may not support open tracking
+   * Track when a recipient opens your email. Please note that some email clients may not support open tracking.
    * @default false
    */
   open?: boolean;
@@ -39,15 +39,15 @@ interface EmailsSendTracking {
 
 interface EmailsSendOptionsBase {
   /**
-   * An array of attachments to be sent with the email
+   * An array of attachments to be sent with the email.
    */
   attachments?: EmailsSendAttachment[];
   /**
-   * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties
+   * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
-   *   { email: 'email2@example.com', name: 'Example2' },
+   *   { email: 'email2@example.com', name: 'Example2' }
    * ]
    * @example
    * { email: 'email@example.com', name: 'Example' }
@@ -55,14 +55,16 @@ interface EmailsSendOptionsBase {
    * ['email1@example.com', 'email2@example.com']
    * @example
    * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
    */
   bcc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
-   * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties
+   * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
-   *   { email: 'email2@example.com', name: 'Example2' },
+   *   { email: 'email2@example.com', name: 'Example2' }
    * ]
    * @example
    * { email: 'email@example.com', name: 'Example' }
@@ -70,35 +72,39 @@ interface EmailsSendOptionsBase {
    * ['email1@example.com', 'email2@example.com']
    * @example
    * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
    */
   cc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
-   * The DKIM settings for the email
+   * The DKIM settings for the email.
    */
   dkim?: {
     /**
-     * Domain used for DKIM signing
+     * Domain used for DKIM signing.
      */
     domain: string;
     /**
-     * DKIM private key encoded in Base64
+     * DKIM private key encoded in Base64.
      */
     privateKey: string;
     /**
-     * DKIM selector in the domain DNS records
+     * DKIM selector in the domain DNS records.
      */
     selector: string;
   };
   /**
-   * The sender of the email. Can be a string or an object with email and name properties
+   * The sender of the email. Can be a string or an object with email and name properties.
    * @example
    * { email: 'email@example.com', name: 'Example' }
    * @example
    * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
    */
   from: EmailsSendRecipient | string;
   /**
-   * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties
+   * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
    * @example
    * [
    *   { email: 'email1@example.com', name: 'Example1' },
@@ -110,26 +116,30 @@ interface EmailsSendOptionsBase {
    * ['email1@example.com', 'email2@example.com']
    * @example
    * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
    */
   to: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
-   * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking
+   * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking.
    */
   tracking?: EmailsSendTracking;
   /**
-   * A single `replyTo` recipient object, or a single email address
+   * A single `replyTo` recipient object, or a single email address.
    * @example
    * { email: 'email@example.com', name: 'Example' }
    * @example
    * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
    */
   replyTo?: EmailsSendRecipient | string;
   /**
-   * The subject of the email
+   * The subject of the email.
    */
   subject: string;
   /**
-   * Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering. Keys must be strings
+   * Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering. Keys must be strings.
    *
    * the values can be one of the following types:
    * - string

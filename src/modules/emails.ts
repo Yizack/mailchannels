@@ -8,17 +8,17 @@ import { parseRecipient, parseArrayRecipients } from "../utils/recipients";
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
   /**
-   * Send an email using MailChannels Email API
-   * @param options - The email options to send
+   * Send an email using MailChannels Email API.
+   * @param options - The email options to send.
    * @param dryRun - When set to `true`, the message will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response. The default value is `false`.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
+   * const mailchannels = new MailChannels('your-api-key')
    * const { success } = await mailchannels.emails.send({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
-   *   html: 'Test',
+   *   html: 'Test'
    * })
    * ```
    */
@@ -84,18 +84,18 @@ export class Emails {
 
   /**
    * Validates a domain's email authentication setup by retrieving its DKIM, SPF, and Domain Lockdown status. This endpoint checks whether the domain is properly configured for secure email delivery.
-   * @param options - The domain options to check
+   * @param options - The domain options to check.
    * @example
    * ```ts
-   * const mailchannels = new MailChannels("your-api-key");
+   * const mailchannels = new MailChannels('your-api-key')
    * const { results } = await mailchannels.emails.checkDomain({
    *   dkim: [{
-   *     domain: "example.com",
-   *     privateKey
-   *     selector: "mailchannels"
+   *     domain: 'example.com',
+   *     privateKey: 'your-private-key',
+   *     selector: 'mailchannels'
    *   }],
-   *   domain: "example.com",
-   *   senderId: "sender-id"
+   *   domain: 'example.com',
+   *   senderId: 'sender-id'
    * })
    * ```
    */

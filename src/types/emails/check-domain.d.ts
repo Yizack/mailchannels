@@ -1,29 +1,29 @@
 interface EmailsCheckDomainDkim {
   /**
-   * Domain used for DKIM signing
+   * Domain used for DKIM signing.
    */
   domain: string;
   /**
-   * DKIM private key encoded in Base64
+   * DKIM private key encoded in Base64.
    */
   privateKey: string;
   /**
-   * DKIM selector in the domain DNS records
+   * DKIM selector in the domain DNS records.
    */
   selector: string;
 }
 
 export interface EmailsCheckDomainOptions {
   /**
-   * Up to 10 DKIM checks are allowed
+   * Up to 10 DKIM checks are allowed.
    */
   dkim: EmailsCheckDomainDkim[] | EmailsCheckDomainDkim;
   /**
-   * Domain used for sending emails
+   * Domain used for sending emails.
    */
   domain: string;
   /**
-   * `X-MailChannels-Sender-Id` header value in emails via MailChannels
+   * `X-MailChannels-Sender-Id` header value in emails via MailChannels.
    */
   senderId: string;
 }
@@ -32,35 +32,35 @@ export type EmailsCheckDomainVerdict = "passed" | "failed" | "soft failed" | "te
 
 export interface EmailsCheckDomainResponse {
   /**
-   * The results of the domain checks
+   * The results of the domain checks.
    */
   results: {
     dkim: {
       domain: string;
       selector: string;
       /**
-       * A human-readable explanation of DKIM check
+       * A human-readable explanation of DKIM check.
        */
       reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     }[];
     domainLockdown: {
       /**
-       * A human-readable explanation of Domain Lockdown check
+       * A human-readable explanation of Domain Lockdown check.
        */
       reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     spf: {
       /**
-       * A human-readable explanation of SPF check
+       * A human-readable explanation of SPF check.
        */
       reason?: string;
       verdict: EmailsCheckDomainVerdict;
     };
   };
   /**
-   * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed
+   * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
    */
   references?: string[];
 }
