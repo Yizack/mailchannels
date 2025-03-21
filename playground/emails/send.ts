@@ -1,4 +1,4 @@
-import { MailChannels } from "../src/mailchannels";
+import { MailChannels } from "../../src/mailchannels";
 
 process.loadEnvFile();
 
