@@ -2,8 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { SubAccounts } from "../src/modules/sub-accounts";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
-import type { SubAccountsCreateApiKeyResponse } from "../src/types/sub-accounts/create-api-key";
-import type { SubAccountsCreateSmtpPasswordResponse } from "../src/types/sub-accounts/create-smtp-password";
+import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
+import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
 
 const fake = {
@@ -26,7 +26,13 @@ const fake = {
     } as SubAccountsListResponse
   },
   createApiKey: {
-    apiResponse: { id: 1, key: "api-key-value" } as SubAccountsCreateApiKeyResponse
+    apiResponse: { id: 1, key: "api-key-value" } as SubAccountsApiKey
+  },
+  listApiKeys: {
+    keys: [
+      { id: 1, key: "api-key-1" },
+      { id: 2, key: "api-key-2" }
+    ]
   },
   createSmtpPassword: {
     apiResponse: {
@@ -38,7 +44,19 @@ const fake = {
       enabled: true,
       id: 1,
       password: "smtp-password-value"
-    } as SubAccountsCreateSmtpPasswordResponse
+    } as SubAccountsSmtpPassword
+  },
+  listSmtpPasswords: {
+    apiResponse: [
+      { enabled: true, id: 1, smtp_password: "password-1" },
+      { enabled: false, id: 2, smtp_password: "password-2" }
+    ],
+    expectedResponse: {
+      passwords: [
+        { enabled: true, id: 1, password: "password-1" },
+        { enabled: false, id: 2, password: "password-2" }
+      ]
+    }
   }
 };
 
@@ -129,6 +147,20 @@ describe("createApiKey", () => {
   });
 });
 
+describe("listApiKeys", () => {
+  it("should retrieve a list of API keys for a handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.listApiKeys.keys)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.listApiKeys(fake.create.validHandle);
+
+    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${fake.create.validHandle}/api-key`);
+    expect(result).toEqual(fake.listApiKeys);
+  });
+});
+
 describe("createSmtpPassword", () => {
   it("should successfully create an SMTP password for a valid sub-account handle", async () => {
     const mockClient = {
@@ -140,5 +172,19 @@ describe("createSmtpPassword", () => {
 
     expect(mockClient.post).toHaveBeenCalledWith(`/tx/v1/sub-account/${fake.create.validHandle}/smtp-password`);
     expect(result).toEqual(fake.createSmtpPassword.expectedResponse);
+  });
+});
+
+describe("listSmtpPasswords", () => {
+  it("should retrieve a list of SMTP passwords for a handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.listSmtpPasswords.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+
+    expect(mockClient.get).toHaveBeenCalledWith(`/tx/v1/sub-account/${fake.create.validHandle}/smtp-password`);
+    expect(result).toEqual(fake.listSmtpPasswords.expectedResponse);
   });
 });

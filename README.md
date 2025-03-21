@@ -77,10 +77,10 @@ I plan to implement the following features in the future. Already implemented fe
   - 🚧 Suspend Sub-account
   - ✅ Create Sub-account API Key
   - 🚧 Delete Sub-account API Key
-  - 🚧 Retrieve Sub-account API Keys
+  - ✅ Retrieve Sub-account API Keys
   - ✅ Create Sub-account SMTP password
   - 🚧 Delete Sub-account SMTP password
-  - 🚧 Retrieve Sub-account SMTP Passwords
+  - ✅ Retrieve Sub-account SMTP Passwords
 <!-- #endregion roadmap -->
 
 ## <a name="development">💻 Development</a>

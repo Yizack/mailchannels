@@ -23,7 +23,7 @@ export default [
       },
       {
         text: "📢 Webhooks",
-        collapsed: false,
+        collapsed: true,
         link: "/modules/webhooks",
         items: [
           { text: "Enroll for Webhook", link: "/modules/webhooks#enroll" },
@@ -34,13 +34,15 @@ export default [
       },
       {
         text: "🪪 Sub-accounts",
-        collapsed: false,
+        collapsed: true,
         link: "/modules/sub-accounts",
         items: [
           { text: "Create Sub-account", link: "/modules/sub-accounts#create" },
           { text: "List Sub-accounts", link: "/modules/sub-accounts#list" },
           { text: "Create API Key", link: "/modules/sub-accounts#create-api-key" },
-          { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" }
+          { text: "List API Keys", link: "/modules/sub-accounts#list-api-keys" },
+          { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" },
+          { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" }
         ]
       }
     ]

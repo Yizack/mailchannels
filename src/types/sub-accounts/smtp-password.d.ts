@@ -1,4 +1,4 @@
-export interface SubAccountsCreateSmtpPasswordResponse {
+export interface SubAccountsSmtpPassword {
   /**
    * Whether the SMTP password is enabled
    */

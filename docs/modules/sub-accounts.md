@@ -22,14 +22,14 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { account } = await subAccounts.create('validhandle123');
+const { account } = await subAccounts.create('validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { account } = await mailchannels.subAccounts.create('validhandle123');
+const { account } = await mailchannels.subAccounts.create('validhandle123')
 ```
 :::
 
@@ -55,14 +55,14 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { accounts } = await subAccounts.list();
+const { accounts } = await subAccounts.list()
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { accounts } = await mailchannels.subAccounts.list();
+const { accounts } = await mailchannels.subAccounts.list()
 ```
 :::
 
@@ -88,20 +88,49 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { id, key } = await subAccounts.createApiKey('validhandle123');
+const { id, key } = await subAccounts.createApiKey('validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { id, key } = await mailchannels.subAccounts.createApiKey('validhandle123');
+const { id, key } = await mailchannels.subAccounts.createApiKey('validhandle123')
 ```
 :::
 
 ### Params
 
 - `handle`: The handle of the sub-account to create API key for.
+
+## List API Keys <Badge type="info" text="method" />
+
+Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { keys } = await subAccounts.listApiKeys('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to retrieve the API keys for.
 
 ## Create SMTP Password <Badge type="info" text="method" />
 
@@ -117,20 +146,49 @@ import { SubAccounts } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { id, password } = await subAccounts.createSmtpPassword('validhandle123');
+const { id, password } = await subAccounts.createSmtpPassword('validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { id, password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123');
+const { id, password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
 ```
 :::
 
 ### Params
 
 - `handle`: The handle of the sub-account to create SMTP password for.
+
+## List SMTP Passwords <Badge type="info" text="method" />
+
+Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { keys } = await subAccounts.listSmtpPasswords('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to retrieve the SMTP passwords for.
 
 ## Type declarations
 
@@ -149,13 +207,13 @@ const { id, password } = await mailchannels.subAccounts.createSmtpPassword('vali
   <<< @/snippets/sub-accounts-list-options.ts
   <<< @/snippets/sub-accounts-list-response.ts
 
-  **Create API Key type declarations**
+  **API Key type declarations**
 
-  <<< @/snippets/sub-accounts-create-api-key-response.ts
+  <<< @/snippets/sub-accounts-api-key.ts
 
-  **Create SMTP Password type declarations**
+  **SMTP Password type declarations**
 
-  <<< @/snippets/sub-accounts-create-smtp-password-response.ts
+  <<< @/snippets/sub-accounts-smtp-password.ts
 </details>
 
 ## Source

@@ -1,4 +1,4 @@
-export interface SubAccountsCreateApiKeyResponse {
+export interface SubAccountsApiKey {
   /**
    * The API key ID for the sub-account.
    */

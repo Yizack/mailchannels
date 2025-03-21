@@ -3,8 +3,8 @@ import { mcError } from "../utils/errors";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListResponse, SubAccountsListOptions } from "../types/sub-accounts/list";
-import type { SubAccountsCreateApiKeyResponse } from "../types/sub-accounts/create-api-key";
-import type { SubAccountsCreateSmtpPasswordResponse } from "../types/sub-accounts/create-smtp-password";
+import type { SubAccountsApiKey } from "../types/sub-accounts/api-key";
+import type { SubAccountsSmtpPassword } from "../types/sub-accounts/smtp-password";
 
 export class SubAccounts {
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
@@ -63,8 +63,22 @@ export class SubAccounts {
    * const { id, key } = await mailchannels.subAccounts.createApiKey("validhandle123");
    * ```
    */
-  async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
-    return this.mailchannels.post<SubAccountsCreateApiKeyResponse>(`/tx/v1/sub-account/${handle}/api-key`);
+  async createApiKey (handle: string): Promise<SubAccountsApiKey> {
+    return this.mailchannels.post<SubAccountsApiKey>(`/tx/v1/sub-account/${handle}/api-key`);
+  }
+
+  /**
+   * Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.
+   * @param handle - Handle of the sub-account to retrieve the API key for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { keys } = await mailchannels.subAccounts.listApiKeys("validhandle123");
+   * ```
+   */
+  async listApiKeys (handle: string): Promise<{ keys: SubAccountsApiKey[] }> {
+    const response = await this.mailchannels.get<SubAccountsApiKey[]>(`/tx/v1/sub-account/${handle}/api-key`);
+    return { keys: response };
   }
 
   /**
@@ -75,13 +89,33 @@ export class SubAccounts {
    * const mailchannels = new MailChannels("your-api-key");
    * const { id, password } = await mailchannels.subAccounts.createSmtpPassword("validhandle123");
    */
-  async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
+  async createSmtpPassword (handle: string): Promise<SubAccountsSmtpPassword> {
     const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`);
 
     return {
       enabled: response.enabled,
       id: response.id,
       password: response.smtp_password
+    };
+  }
+
+  /**
+   * Retrieves details of all SMTP passwords associated with the specified sub-account. For security, the full SMTP password is not returned; only the password ID and a partially redacted version are provided.
+   * @param handle - Handle of the sub-account to retrieve the SMTP password for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels("your-api-key");
+   * const { passwords } = await mailchannels.subAccounts.listSmtpPasswords("validhandle123");
+   * ```
+   */
+  async listSmtpPasswords (handle: string): Promise<{ passwords: SubAccountsSmtpPassword[] }> {
+    const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`);
+    return {
+      passwords: response.map(password => ({
+        enabled: password.enabled,
+        id: password.id,
+        password: password.smtp_password
+      }))
     };
   }
 }
