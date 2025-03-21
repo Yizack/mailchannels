@@ -1,6 +1,40 @@
 # Changelog
 
 
+## v0.3.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.2...v0.3.0)
+
+### 🚀 Enhancements
+
+- **sub-accoutns:** Support list api keys and smtp passwords ([24e6ce3](https://github.com/Yizack/mailchannels/commit/24e6ce3))
+
+### 💅 Refactors
+
+- ⚠️  Handle `$fetch` errors + add error loggers ([8703138](https://github.com/Yizack/mailchannels/commit/8703138))
+
+### 📖 Documentation
+
+- Add presentation image ([a251e4e](https://github.com/Yizack/mailchannels/commit/a251e4e))
+- Update cover image ([8d6c78d](https://github.com/Yizack/mailchannels/commit/8d6c78d))
+- **fonts:** Fonts swap display ([63686ac](https://github.com/Yizack/mailchannels/commit/63686ac))
+- **theme:** Import theme without fonts ([b420f13](https://github.com/Yizack/mailchannels/commit/b420f13))
+- Jsdoc format consistency ([68978e9](https://github.com/Yizack/mailchannels/commit/68978e9))
+- **snippets:** Rewrite snippets generator ([343a57a](https://github.com/Yizack/mailchannels/commit/343a57a))
+- Fix readme badges ([215d4e4](https://github.com/Yizack/mailchannels/commit/215d4e4))
+
+### 🏡 Chore
+
+- **playground:** Reorganize files ([c2a1b27](https://github.com/Yizack/mailchannels/commit/c2a1b27))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Handle `$fetch` errors + add error loggers ([8703138](https://github.com/Yizack/mailchannels/commit/8703138))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.2.2
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.1...v0.2.2)
