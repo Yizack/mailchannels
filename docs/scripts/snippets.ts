@@ -1,7 +1,17 @@
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { isTypeAliasDeclaration, isInterfaceDeclaration, isClassDeclaration, createSourceFile, ScriptTarget, forEachChild, SyntaxKind, type Node } from "typescript";
+import {
+  isTypeAliasDeclaration,
+  isInterfaceDeclaration,
+  isClassDeclaration,
+  createSourceFile,
+  ScriptTarget,
+  forEachChild,
+  type Node,
+  isMethodDeclaration,
+  isConstructorDeclaration
+} from "typescript";
 import { kebabCase } from "scule";
 
 // Clean code by removing comments, empty lines, export keywords, and trimming whitespace
@@ -12,36 +22,35 @@ const cleanCode = (code: string) => code
   .replace(/^export\s+/m, "") // Remove export keyword
   .trim();
 
-// Find matching closing brace
-const findMatchingBrace = (str: string, start: number): number => {
-  let depth = 0;
-  for (let i = start; i < str.length; i++) {
-    if (str[i] === "{") depth++;
-    else if (str[i] === "}" && --depth === 0) return i;
-  }
-  return -1;
-};
+// Extract class declaration with method signatures only
+const extractClassWithSignatures = (code: string) => {
+  const sourceFile = createSourceFile("temp.ts", code, ScriptTarget.Latest, true);
+  let result = "";
 
-// Remove method implementations, keep only signatures
-const removeImplementation = (source: string) => {
-  let result = "", pos = 0;
-  const methodRegex = /((?:public|protected|private|\s)*(?:async\s+)?(?:constructor|\w+\s*\([^)]*\)(?:\s*:\s*(?:(?!\{).|{[^}]*})+)?))\s*{/g;
+  const visit = (node: Node) => {
+    if (isClassDeclaration(node) && node.name) {
+      // Start with class declaration
+      const className = node.name.text;
+      result = `class ${className} {\n`;
 
-  let match: RegExpExecArray | null;
-  while ((match = methodRegex.exec(source)) !== null) {
-    result += source.substring(pos, match.index) + match[1].trim() + ";";
-    const openBracePos = source.indexOf("{", match.index + match[0].length - 1);
-    const closeBracePos = findMatchingBrace(source, openBracePos);
-    if (closeBracePos !== -1) {
-      pos = closeBracePos + 1;
-      methodRegex.lastIndex = pos;
+      // Process all class members
+      node.members.forEach(member => {
+        if (isMethodDeclaration(member) || isConstructorDeclaration(member)) {
+          // Get method signature
+          const methodText = code.substring(member.pos, member.body ? member.body.pos : member.end);
+          // Fix parameter types with default values
+          const fixedMethodText = methodText.replace(/(\w+)\s*=\s*(true|false)(?=[,)])/g, "$1?: boolean");
+          result += `  ${fixedMethodText.trim()};\n`;
+        }
+      });
+
+      result += "}";
     }
-    else {
-      pos = methodRegex.lastIndex;
-    }
-  }
+    forEachChild(node, visit);
+  };
 
-  return result + source.substring(pos);
+  visit(sourceFile);
+  return result;
 };
 
 // Extract types, interfaces, and classes
@@ -59,18 +68,8 @@ const extract = (code: string) => {
     // Extract classes
     else if (isClassDeclaration(node) && node.name) {
       const name = kebabCase(node.name.text);
-      let content = `class ${node.name.text} {\n`;
-      for (const member of node.members) {
-        const codeContent = code.substring(member.pos, member.end);
-        if (member.kind === SyntaxKind.Constructor) {
-          content += "  " + codeContent + "\n";
-        }
-        else if (member.kind === SyntaxKind.MethodDeclaration) {
-          content += `  ${removeImplementation(codeContent)}\n`;
-        }
-      }
-      content = cleanCode(content) + "\n}";
-      types.push({ name, content });
+      const processedClass = extractClassWithSignatures(code);
+      types.push({ name, content: cleanCode(processedClass) });
     }
     forEachChild(node, visit);
   };
