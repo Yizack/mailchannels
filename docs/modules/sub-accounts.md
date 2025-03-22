@@ -1,7 +1,3 @@
----
-outline: deep
----
-
 # Sub-Accounts <Badge type="tip" text="module" />
 
 <!-- #region description -->
@@ -73,6 +69,35 @@ const { accounts } = await mailchannels.subAccounts.list()
   - `offset`: The offset number to start returning sub-accounts from.
   > [!TIP]
   > If no options are provided, the default limit is `1000` and the offset is `0`.
+
+## Delete <Badge type="info" text="method" />
+
+Deletes the sub-account identified by its handle.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.delete('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.delete('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of sub-account to be deleted.
 
 ## Create API Key <Badge type="info" text="method" />
 

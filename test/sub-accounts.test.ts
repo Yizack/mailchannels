@@ -207,6 +207,39 @@ describe("list", () => {
   });
 });
 
+describe("delete", () => {
+  it("should successfully delete a sub-account with a valid handle", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const result = await subAccounts.delete(fake.create.validHandle);
+
+    expect(result).toEqual({ success: true });
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should log an error on api unknown error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const spyLogger = vi.spyOn(Logger, "error");
+    const { success } = await subAccounts.delete(fake.create.validHandle);
+
+    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+    spyLogger.mockRestore();
+  });
+});
+
 describe("createApiKey", () => {
   it("should successfully create an API key for a valid sub-account handle", async () => {
     const mockClient = {

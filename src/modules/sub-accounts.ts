@@ -73,6 +73,30 @@ export class SubAccounts {
   }
 
   /**
+   * Deletes the sub-account identified by its handle.
+   * @param handle - Handle of sub-account to be deleted.
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.delete('validhandle123')
+   * ```
+   */
+  async delete (handle: string): Promise<{ success: boolean }> {
+    let success = false;
+
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (!response.ok) {
+          return Logger.error("Unknown error.");
+        }
+        success = true;
+      }
+    });
+
+    return { success };
+  }
+
+  /**
    * Creates a new API key for the specified sub-account.
    * @param handle - Handle of the sub-account to create API key for.
    * @example
