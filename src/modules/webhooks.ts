@@ -71,20 +71,19 @@ export class Webhooks {
    * ```
    */
   async delete (): Promise<{ success: boolean }> {
-    const deleteResponse = { success: false };
+    let success = false;
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (!response.ok) {
-          Logger.error("Unknown error.");
-          return;
+          return Logger.error("Unknown error.");
         }
-        deleteResponse.success = true;
+        success = true;
       }
     });
 
-    return deleteResponse;
+    return { success };
   }
 
   /**
