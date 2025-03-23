@@ -1,6 +1,41 @@
 # Changelog
 
 
+## v0.3.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.0...v0.3.1)
+
+### 🚀 Enhancements
+
+- **sub-accounts:** Support deleting sub-accounts ([279ecf3](https://github.com/Yizack/mailchannels/commit/279ecf3))
+- Support delete api key and delete smtp password methods ([7ca7cf4](https://github.com/Yizack/mailchannels/commit/7ca7cf4))
+- **sub-accounts:** Support suspend and activate ([0f89f3d](https://github.com/Yizack/mailchannels/commit/0f89f3d))
+
+### 📖 Documentation
+
+- Fix scroll bar height ([0673a77](https://github.com/Yizack/mailchannels/commit/0673a77))
+- Update roadmap ([51fa6e8](https://github.com/Yizack/mailchannels/commit/51fa6e8))
+- Add inbound api info ([e3571fd](https://github.com/Yizack/mailchannels/commit/e3571fd))
+- Add missing emojis ([6d30a9e](https://github.com/Yizack/mailchannels/commit/6d30a9e))
+- Follow guidelines of logo in presentation and cover images ([17c5bd1](https://github.com/Yizack/mailchannels/commit/17c5bd1))
+- Add MailChannels API link ([e1e13f9](https://github.com/Yizack/mailchannels/commit/e1e13f9))
+
+### 🏡 Chore
+
+- **lint:** Sort imports ([93cf43b](https://github.com/Yizack/mailchannels/commit/93cf43b))
+- Simple variable ([76cc147](https://github.com/Yizack/mailchannels/commit/76cc147))
+- **webhooks:** Use simple success variable ([323aaf6](https://github.com/Yizack/mailchannels/commit/323aaf6))
+- **eslint:** Add no-multiple-empty-lines rule ([f14f643](https://github.com/Yizack/mailchannels/commit/f14f643))
+- **test:** Fix extra space ([1dfee72](https://github.com/Yizack/mailchannels/commit/1dfee72))
+
+### ✅ Tests
+
+- Suppress console.error in reporter ([fdd9c49](https://github.com/Yizack/mailchannels/commit/fdd9c49))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.2.2...v0.3.0)
