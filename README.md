@@ -73,8 +73,8 @@ I plan to implement the following features in the future. Already implemented fe
   - ✅ Create Sub-account
   - ✅ Retrieve Sub-accounts
   - ✅ Delete Sub-account
-  - 🚧 Activate Sub-account
-  - 🚧 Suspend Sub-account
+  - ✅ Activate Sub-account
+  - ✅ Suspend Sub-account
   - ✅ Create Sub-account API Key
   - ✅ Delete Sub-account API Key
   - ✅ Retrieve Sub-account API Keys
