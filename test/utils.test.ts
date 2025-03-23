@@ -7,7 +7,7 @@ const fake = {
 };
 
 describe("parseRecipient", () => {
-  it("should parse recipient  name-address pairs", () => {
+  it("should parse recipient name-address pairs", () => {
     const recipient = parseRecipient(fake.pair);
     expect(recipient).toEqual(fake.object);
   });
