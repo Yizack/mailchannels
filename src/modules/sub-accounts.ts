@@ -97,6 +97,70 @@ export class SubAccounts {
   }
 
   /**
+   * Suspends the sub-account identified by its handle. This action disables the account, preventing it from sending any emails until it is reactivated.
+   * @param handle - Handle of sub-account to be suspended.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.suspend('validhandle123')
+   * ```
+   */
+  async suspend (handle: string): Promise<{ success: boolean }> {
+    let success = false;
+
+    await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.NotFound:
+            return Logger.error(`The specified sub-account ${handle} does not exist.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    });
+
+    return { success };
+  }
+
+  /**
+   * Activates a suspended sub-account identified by its handle, restoring its ability to send emails.
+   * @param handle - Handle of sub-account to be activated.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.activate('validhandle123')
+   * ```
+   */
+  async activate (handle: string): Promise<{ success: boolean }> {
+    let success = false;
+
+    await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.Forbidden:
+            return Logger.error("The parent account does not have permission to activate the sub-account.");
+          case ErrorCode.NotFound:
+            return Logger.error(`The specified sub-account ${handle} does not exist.`);
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    });
+
+    return { success };
+  }
+
+  /**
    * Creates a new API key for the specified sub-account.
    * @param handle - Handle of the sub-account to create API key for.
    * @example

@@ -99,6 +99,64 @@ const { success } = await mailchannels.subAccounts.delete('validhandle123')
 
 - `handle`: The handle of sub-account to be deleted.
 
+## Suspend <Badge type="info" text="method" />
+
+Suspends the sub-account identified by its handle. This action disables the account, preventing it from sending any emails until it is reactivated.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.suspend('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.suspend('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of sub-account to be suspended.
+
+## Activate <Badge type="info" text="method" />
+
+Activates a suspended sub-account identified by its handle, restoring its ability to send emails.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.activate('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.activate('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of sub-account to be activated.
+
 ## Create API Key <Badge type="info" text="method" />
 
 Creates a new API key for the specified sub-account.
