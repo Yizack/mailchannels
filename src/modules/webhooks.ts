@@ -14,11 +14,11 @@ export class Webhooks {
    * ```
    */
   async enroll (endpoint: string): Promise<{ success: boolean }> {
-    const enrollResponse = { success: false };
+    let success = false;
 
     if (!endpoint) {
       Logger.error("No endpoint provided.");
-      return enrollResponse;
+      return { success };
     }
 
     await this.mailchannels.post<void>("/tx/v1/webhook", {
@@ -28,7 +28,7 @@ export class Webhooks {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          enrollResponse.success = true;
+          success = true;
           return;
         }
         switch (response.status) {
@@ -39,7 +39,7 @@ export class Webhooks {
         }
       }
     });
-    return enrollResponse;
+    return { success };
   }
 
   /**
