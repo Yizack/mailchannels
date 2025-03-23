@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# Webhooks <Badge type="tip" text="module" />
+# 📢 Webhooks <Badge type="tip" text="module" />
 
 <!-- #region description -->
 Receive notifications of your email events via webhooks.
