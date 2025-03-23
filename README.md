@@ -58,29 +58,63 @@ pnpm add @yizack/mailchannels
 <!-- #region roadmap -->
 ## <a name="roadmap">🚧 Roadmap</a>
 
-I plan to implement the following features in the future. Already implemented features are marked with a checkmark.
+Already implemented features are marked with a checkmark.
 
 ### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
-- Emails
+
+Fully implemented now. Please open an issue if you find any bugs or missing features.
+
+- 📧 Emails
   - ✅ Send an Email
   - ✅ DKIM, SPF & Domain Lockdown Check
-- Webhooks
+- 📢 Webhooks
   - ✅ Enroll for Webhook Notifications
   - ✅ Retrieve Customer Webhooks
   - ✅ Delete Customer Webhooks
   - ✅ Retrieve Webhook Signing Key
-- Sub-accounts
+- 🪪 Sub-accounts
   - ✅ Create Sub-account
   - ✅ Retrieve Sub-accounts
   - ✅ Delete Sub-account
-  - ✅ Activate Sub-account
   - ✅ Suspend Sub-account
+  - ✅ Activate Sub-account
   - ✅ Create Sub-account API Key
   - ✅ Delete Sub-account API Key
   - ✅ Retrieve Sub-account API Keys
   - ✅ Create Sub-account SMTP password
   - ✅ Delete Sub-account SMTP password
   - ✅ Retrieve Sub-account SMTP Passwords
+
+### [Inbound API](https://docs.mailchannels.net/inbound-api/API-reference/inbound-api)
+
+⚠️ I currently do not plan to implement the Inbound API, as it requires access to paid features that I do not have. However, I am open to implementing these features if provided with access to a paid account.
+
+- Domains
+  - 🚧 Provision domain
+  - 🚧 Remove domain
+  - 🚧 List domains
+  - 🚧 Bulk provision domains
+  - 🚧 Add domain list entry
+  - 🚧 Get domain list entries
+  - 🚧 Create login link
+  - 🚧 Set downstream address
+  - 🚧 Fetch downstream addresses
+  - 🚧 Update API key
+- Lists
+  - 🚧 Add item to customer list
+  - 🚧 Delete item from customer list
+  - 🚧 Add item to recipient list
+  - 🚧 Delete item from recipient list
+  - 🚧 Get customer list entries
+- Users
+  - 🚧 Create a recipient
+  - 🚧 Add item to recipient list
+  - 🚧 Get recipient list entries
+  - 🚧 Delete item from recipient list
+- Service
+  - 🚧 Retrieve the condition of the service
+  - 🚧 Submit a false negative or false positive report
+  - 🚧 Get a list of your subscriptions to MailChannels Inbound
 <!-- #endregion roadmap -->
 
 ## <a name="development">💻 Development</a>
