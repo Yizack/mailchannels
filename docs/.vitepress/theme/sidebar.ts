@@ -41,9 +41,11 @@ export default [
           { text: "List Sub-accounts", link: "/modules/sub-accounts#list" },
           { text: "Delete Sub-account", link: "/modules/sub-accounts#delete" },
           { text: "Create API Key", link: "/modules/sub-accounts#create-api-key" },
+          { text: "Delete API Key", link: "/modules/sub-accounts#delete-api-key" },
           { text: "List API Keys", link: "/modules/sub-accounts#list-api-keys" },
           { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" },
-          { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" }
+          { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" },
+          { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" }
         ]
       }
     ]

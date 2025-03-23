@@ -376,6 +376,56 @@ describe("listApiKeys", () => {
   });
 });
 
+describe("deleteApiKey", () => {
+  it("should successfully delete an API key for a valid sub-account handle", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+
+    expect(success).toBe(true);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should log an error on api bad request", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: 400 } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const spyLogger = vi.spyOn(Logger, "error");
+    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+
+    expect(spyLogger).toHaveBeenCalledWith("Missing or invalid API key ID.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+    spyLogger.mockRestore();
+  });
+
+  it("should log an error on api unknown error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const spyLogger = vi.spyOn(Logger, "error");
+    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+
+    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+    spyLogger.mockRestore();
+  });
+});
+
 describe("createSmtpPassword", () => {
   it("should successfully create an SMTP password for a valid sub-account handle", async () => {
     const mockClient = {
@@ -508,6 +558,56 @@ describe("listSmtpPasswords", () => {
     expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
     expect(passwords).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
+    spyLogger.mockRestore();
+  });
+});
+
+describe("deleteSmtpPassword", () => {
+  it("should successfully delete an SMTP password for a valid sub-account handle", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+
+    expect(success).toBe(true);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should log an error on api bad request", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: 400 } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const spyLogger = vi.spyOn(Logger, "error");
+    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+
+    expect(spyLogger).toHaveBeenCalledWith("Missing or invalid SMTP password ID.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+    spyLogger.mockRestore();
+  });
+
+  it("should log an error on api unknown error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const spyLogger = vi.spyOn(Logger, "error");
+    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+
+    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
     spyLogger.mockRestore();
   });
 });

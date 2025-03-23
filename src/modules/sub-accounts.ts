@@ -161,6 +161,38 @@ export class SubAccounts {
   }
 
   /**
+   * Deletes the API key identified by its ID for the specified sub-account.
+   * @param handle - Handle of the sub-account for which the API key should be deleted.
+   * @param id - The ID of the API key to delete.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
+   * ```
+   */
+  async deleteApiKey (handle: string, id: number): Promise<{ success: boolean }> {
+    let success = false;
+
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.BadRequest:
+            return Logger.error("Missing or invalid API key ID.");
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    });
+
+    return { success };
+  }
+
+  /**
    * Creates a new SMTP password for the specified sub-account.
    * @param handle - Handle of the sub-account to create SMTP password for.
    * @example
@@ -224,5 +256,37 @@ export class SubAccounts {
         value: password.smtp_password
       }))
     };
+  }
+
+  /**
+   * Deletes the SMTP password identified by its ID for the specified sub-account.
+   * @param handle - Handle of the sub-account for which the SMTP password should be deleted.
+   * @param id - The ID of the SMTP password to delete.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
+   * ```
+   */
+  async deleteSmtpPassword (handle: string, id: number): Promise<{ success: boolean }> {
+    let success = false;
+
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          success = true;
+          return;
+        }
+        switch (response.status) {
+          case ErrorCode.BadRequest:
+            return Logger.error("Missing or invalid SMTP password ID.");
+          default:
+            return Logger.error("Unknown error.");
+        }
+      }
+    });
+
+    return { success };
   }
 }

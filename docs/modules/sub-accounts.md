@@ -157,6 +157,36 @@ const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 
 - `handle`: The handle of the sub-account to retrieve the API keys for.
 
+## Delete API Key <Badge type="info" text="method" />
+
+Deletes the API key identified by its ID for the specified sub-account.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { key } = await subAccounts.deleteApiKey('validhandle123', 1)
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { key } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account for which the API key should be deleted.
+- `id`: The ID of the API key to delete.
+
 ## Create SMTP Password <Badge type="info" text="method" />
 
 Creates a new API key for the specified sub-account.
@@ -214,6 +244,36 @@ const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle12
 ### Params
 
 - `handle`: The handle of the sub-account to retrieve the SMTP passwords for.
+
+## Delete SMTP Password <Badge type="info" text="method" />
+
+Deletes the SMTP password identified by its ID for the specified sub-account.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { SubAccounts } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { key } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account for which the SMTP password should be deleted.
+- `id`: The ID of the SMTP password to delete.
 
 ## Type declarations
 
