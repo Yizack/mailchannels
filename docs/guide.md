@@ -5,6 +5,7 @@ Getting started with `@yizack/mailchannels`
 ## Overview
 
 <!-- @include: ../README.md#overview -->
+<!-- @include: ../README.md#note-->
 
 ## Installation
 

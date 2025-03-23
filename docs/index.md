@@ -32,4 +32,5 @@ features:
     link: /modules/sub-accounts
 ---
 
+<!-- @include: ../README.md#note -->
 <!-- @include: ../README.md#roadmap -->
