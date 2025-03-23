@@ -6,7 +6,6 @@ import navbarConfig from "./theme/navbar";
 
 export default defineConfig({
   title: SITE.name,
-  dir: ".",
   lang: "en-US",
   description: SITE.description,
   cleanUrls: true,
