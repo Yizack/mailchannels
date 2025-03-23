@@ -6,7 +6,7 @@
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![codecov][codecov-coverage-src]][codecov-coverage-href]
 
-Node.js SDK to integrate MailChannels API into your JavaScript or TypeScript server-side applications.
+Node.js SDK to integrate [MailChannels API](https://docs.mailchannels.net/) into your JavaScript or TypeScript server-side applications.
 
 <!-- #region overview -->
 This library provides a simple way to interact with the MailChannels API. It is written in TypeScript and can be used in both JavaScript and TypeScript projects and in different runtimes.
