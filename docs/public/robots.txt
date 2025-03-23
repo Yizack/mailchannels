@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://mailchannels.yizack.com/sitemap.xml
