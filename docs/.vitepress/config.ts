@@ -54,6 +54,9 @@ export default defineConfig({
       groupIconVitePlugin()
     ]
   },
+  sitemap: {
+    hostname: SITE.host
+  },
   themeConfig: {
     nav: navbarConfig,
     sidebar: sidebarConfig,
