@@ -8,6 +8,7 @@ export default defineConfig({
     root: fileURLToPath(new URL("./", import.meta.url)),
     coverage: {
       include: ["src/**/*"]
-    }
+    },
+    setupFiles: ["./test/__setup__.ts"]
   }
 });
