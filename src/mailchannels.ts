@@ -4,7 +4,6 @@ import { Emails, SubAccounts, Webhooks } from "./modules";
 export { MailChannelsClient };
 export type * from "./types";
 
-
 export class MailChannels extends MailChannelsClient {
   readonly emails = new Emails(this);
   readonly webhooks = new Webhooks(this);

@@ -62,7 +62,7 @@ export default defineConfig([
       "@stylistic/one-component-per-file": "off",
       "@stylistic/require-default-prop": "off",
       "@stylistic/space-in-parens": ["error", "never"],
-      "@stylistic/template-curly-spacing": "error",
+      "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error"

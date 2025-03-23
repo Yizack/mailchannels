@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseArrayRecipients, parseRecipient } from "../src/utils/recipients";
 
-
 const fake = {
   pair: "Example <name@example.com>",
   object: { name: "Example", email: "name@example.com" }

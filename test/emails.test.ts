@@ -56,7 +56,6 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-
   it("should log an error when from field is missing", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const emails = new Emails(mockClient);
@@ -173,7 +172,6 @@ describe("send", () => {
     spyLogger.mockRestore();
   });
 });
-
 
 describe("checkDomain", () => {
   it("should successfully check a domain", async () => {
