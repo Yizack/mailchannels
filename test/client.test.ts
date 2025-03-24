@@ -17,6 +17,11 @@ vi.mock("ofetch", () => ({
 }));
 
 describe("MailChannelsClient", () => {
+  it("should throw an error if no API key is provided", () => {
+    const client = () => new MailChannelsClient();
+    expect(client).toThrowError("Missing MailChannels API key.");
+  });
+
   it("should handle GET method correctly", async () => {
     vi.mocked($fetch).mockResolvedValueOnce({});
 

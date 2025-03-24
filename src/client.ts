@@ -1,28 +1,27 @@
 import { $fetch, type FetchOptions } from "ofetch";
 
 export class MailChannelsClient {
-  #setup: {
-    baseURL: string;
-    headers: Record<string, string>;
-  };
+  private static BASE_URL = "https://api.mailchannels.net";
+  #headers: Record<string, string>;
 
-  constructor (key: string) {
-    this.#setup = {
-      baseURL: "https://api.mailchannels.net",
-      headers: {
-        "X-API-Key": key,
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-      }
+  constructor (key?: string) {
+    if (!key) {
+      throw new Error("Missing MailChannels API key.");
+    }
+
+    this.#headers = {
+      "X-API-Key": key,
+      "Accept": "application/json",
+      "Content-Type": "application/json"
     };
   }
 
   protected async _fetch<T>(path: string, options?: FetchOptions<"json">) {
     return $fetch<T>(path, {
-      baseURL: this.#setup.baseURL,
+      baseURL: MailChannelsClient.BASE_URL,
       ...options,
       headers: {
-        ...this.#setup.headers,
+        ...this.#headers,
         ...options?.headers
       }
     });
