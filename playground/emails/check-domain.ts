@@ -11,7 +11,7 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { results } = await mailchannels.emails.checkDomain({
+const { results, error } = await mailchannels.emails.checkDomain({
   domain: dkimDomain,
   dkim: {
     domain: dkimDomain,
@@ -21,4 +21,4 @@ const { results } = await mailchannels.emails.checkDomain({
   senderId: senderId
 });
 
-console.info(JSON.stringify(results, null, 2));
+console.info(JSON.stringify({ results, error }, null, 2));

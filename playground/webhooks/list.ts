@@ -7,6 +7,6 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { webhooks } = await mailchannels.webhooks.list();
+const { webhooks, error } = await mailchannels.webhooks.list();
 
-console.info(JSON.stringify(webhooks, null, 2));
+console.info(JSON.stringify({ webhooks, error }, null, 2));

@@ -7,6 +7,6 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { success } = await mailchannels.subAccounts.delete("validhandle1234");
+const { success, error } = await mailchannels.subAccounts.delete("validhandle1234");
 
-console.info(success);
+console.info(JSON.stringify({ success, error }, null, 2));

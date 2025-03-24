@@ -7,6 +7,6 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { passwords } = await mailchannels.subAccounts.listSmtpPasswords("validhandle1234");
+const { passwords, error } = await mailchannels.subAccounts.listSmtpPasswords("validhandle1234");
 
-console.info(JSON.stringify(passwords, null, 2));
+console.info(JSON.stringify({ passwords, error }, null, 2));

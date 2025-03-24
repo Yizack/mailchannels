@@ -7,7 +7,7 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { success } = await mailchannels.emails.send({
+const { success, data, error } = await mailchannels.emails.send({
   from: "Name From <from@example.com>",
   to: "to@example.com",
   subject: "Test",
@@ -18,4 +18,4 @@ const { success } = await mailchannels.emails.send({
   }
 }, true);
 
-console.info(JSON.stringify(success, null, 2));
+console.info(JSON.stringify({ success, data, error }, null, 2));

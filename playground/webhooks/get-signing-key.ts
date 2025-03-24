@@ -7,6 +7,6 @@ const {
 } = process.env as Record<string, string>;
 
 const mailchannels = new MailChannels(apiKey);
-const { key } = await mailchannels.webhooks.getSigningKey("mckey");
+const { key, error } = await mailchannels.webhooks.getSigningKey("mckey");
 
-console.info(key);
+console.info(JSON.stringify({ key, error }, null, 2));
