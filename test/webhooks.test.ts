@@ -58,7 +58,7 @@ describe("enroll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    expect(error).toBe(`${fake.enroll.endpoint} is already enrolled to receive notifications.`);
+    expect(error).toBe(`Endpoint '${fake.enroll.endpoint}' is already enrolled to receive notifications.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

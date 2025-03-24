@@ -142,7 +142,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { account, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(error).toBe(`Sub-account with handle ${fake.create.validHandle} already exists.`);
+    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' already exists.`);
     expect(account).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -259,7 +259,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(error).toBe(`The specified sub-account ${fake.create.validHandle} does not exist.`);
+    expect(error).toBe(`The specified sub-account '${fake.create.validHandle}' does not exist.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -320,7 +320,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(error).toBe(`The specified sub-account ${fake.create.validHandle} does not exist.`);
+    expect(error).toBe(`The specified sub-account '${fake.create.validHandle}' does not exist.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

@@ -34,7 +34,7 @@ export class Webhooks {
           return;
         }
         data.error = getStatusError(response.status, {
-          [ErrorCode.Conflict]: `${endpoint} is already enrolled to receive notifications.`
+          [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
     });

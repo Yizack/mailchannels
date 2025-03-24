@@ -36,7 +36,7 @@ export class SubAccounts {
       onResponseError: ({ response }) => {
         data.error = getStatusError(response.status, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
-          [ErrorCode.Conflict]: `Sub-account with handle ${handle} already exists.`
+          [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
         });
       }
     }).catch(() => null);
@@ -117,7 +117,7 @@ export class SubAccounts {
           return;
         }
         data.error = getStatusError(response.status, {
-          [ErrorCode.NotFound]: `The specified sub-account ${handle} does not exist.`
+          [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
     });
@@ -146,7 +146,7 @@ export class SubAccounts {
         }
         data.error = getStatusError(response.status, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
-          [ErrorCode.NotFound]: `The specified sub-account ${handle} does not exist.`
+          [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
     });
