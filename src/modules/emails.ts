@@ -1,10 +1,9 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode } from "../utils/errors";
+import { ErrorCode, getStatusError } from "../utils/errors";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
-import { Logger } from "../utils/logger";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -26,23 +25,23 @@ export class Emails {
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
-    const sendResponse: EmailsSendResponse = { success: false };
+    const data: EmailsSendResponse = { success: false, error: null };
 
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
-      Logger.error("No sender provided. Use the `from` option to specify a sender");
-      return sendResponse;
+      data.error = "No sender provided. Use the `from` option to specify a sender";
+      return data;
     }
 
     const parsedTo = parseArrayRecipients(to);
     if (!parsedTo || !parsedTo.length) {
-      Logger.error("No recipients provided. Use the `to` option to specify at least one recipient");
-      return sendResponse;
+      data.error = "No recipients provided. Use the `to` option to specify at least one recipient";
+      return data;
     }
 
     if (!text && !html) {
-      Logger.error("No email content provided");
-      return sendResponse;
+      data.error = "No email content provided";
+      return data;
     }
 
     const content: EmailsSendContent[] = [];
@@ -76,26 +75,21 @@ export class Emails {
     const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
-      onResponse: ({ response }) => {
+      onResponse: async ({ response }) => {
         if (response.ok) {
-          sendResponse.success = true;
+          data.success = true;
           return;
         }
-        switch (response.status) {
-          case ErrorCode.BadRequest:
-            return Logger.error("Bad Request.");
-          case ErrorCode.Forbidden:
-            return Logger.error("User does not have access to this feature.");
-          case ErrorCode.PayloadTooLarge:
-            return Logger.error("The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments.");
-          default:
-            return Logger.error("Unknown error.");
-        }
+        data.error = getStatusError(response.status, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Forbidden]: "User does not have access to this feature.",
+          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments."
+        });
       }
-    }).catch(() => undefined);
+    }).catch(() => null);
 
-    sendResponse.data = response?.data;
-    return sendResponse;
+    data.data = response?.data;
+    return data;
   }
 
   /**
@@ -119,6 +113,8 @@ export class Emails {
     const { dkim, domain, senderId } = options;
     const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
 
+    const data: EmailsCheckDomainResponse = { results: null, error: null };
+
     const payload: EmailsCheckDomainPayload = {
       dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
         dkim_domain: domain,
@@ -132,31 +128,26 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload,
       onResponseError: async ({ response }) => {
-        switch (response.status) {
-          case ErrorCode.BadRequest:
-            return Logger.error("Bad Request.");
-          case ErrorCode.Forbidden:
-            return Logger.error("User does not have access to this feature.");
-          default:
-            return Logger.error("Unknown error.");
-        }
+        data.error = getStatusError(response.status, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Forbidden]: "User does not have access to this feature."
+        });
       }
-    }).catch(() => undefined);
+    }).catch(() => null);
 
-    if (!response) return { results: response };
+    if (!response) return data;
 
-    return {
-      results: {
-        dkim: response.check_results.dkim.map(({ dkim_domain, dkim_selector, reason, verdict }) => ({
-          domain: dkim_domain,
-          selector: dkim_selector,
-          reason,
-          verdict
-        })),
-        domainLockdown: response.check_results.domain_lockdown,
-        spf: response.check_results.spf
-      },
+    data.results = {
+      dkim: response.check_results.dkim.map(({ dkim_domain, dkim_selector, reason, verdict }) => ({
+        domain: dkim_domain,
+        selector: dkim_selector,
+        reason,
+        verdict
+      })),
+      domainLockdown: response.check_results.domain_lockdown,
+      spf: response.check_results.spf,
       references: response.references
     };
+    return data;
   }
 }

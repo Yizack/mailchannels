@@ -7,3 +7,5 @@ export enum ErrorCode {
   PayloadTooLarge = 413,
   UnprocessableEntity = 422
 }
+
+export const getStatusError = (status: number, errors: Record<number, string>) => errors[status] || "Unknown error.";

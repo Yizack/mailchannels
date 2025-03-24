@@ -191,4 +191,5 @@ export interface EmailsSendResponse {
    * Fully rendered message if `dryRun` was set to `true`
    */
   data?: string[];
+  error: string | null;
 }

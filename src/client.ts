@@ -4,7 +4,7 @@ export class MailChannelsClient {
   private static BASE_URL = "https://api.mailchannels.net";
   #headers: Record<string, string>;
 
-  constructor (key?: string) {
+  constructor (key: string) {
     if (!key) {
       throw new Error("Missing MailChannels API key.");
     }

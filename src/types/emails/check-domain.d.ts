@@ -34,7 +34,7 @@ export interface EmailsCheckDomainResponse {
   /**
    * The results of the domain checks.
    */
-  results?: {
+  results: {
     dkim: {
       domain: string;
       selector: string;
@@ -58,9 +58,10 @@ export interface EmailsCheckDomainResponse {
       reason?: string;
       verdict: EmailsCheckDomainVerdict;
     };
-  };
+    references?: string[];
+  } | null;
   /**
    * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
    */
-  references?: string[];
+  error: string | null;
 }

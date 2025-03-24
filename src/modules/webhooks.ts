@@ -1,6 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode } from "../utils/errors";
-import { Logger } from "../utils/logger";
+import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -13,12 +12,12 @@ export class Webhooks {
    * const { success } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
-  async enroll (endpoint: string): Promise<{ success: boolean }> {
-    let success = false;
+  async enroll (endpoint: string): Promise<{ success: boolean, error: string | null }> {
+    const data: { success: boolean, error: string | null } = { success: false, error: null };
 
     if (!endpoint) {
-      Logger.error("No endpoint provided.");
-      return { success };
+      data.error = "No endpoint provided.";
+      return data;
     }
 
     await this.mailchannels.post<void>("/tx/v1/webhook", {
@@ -28,18 +27,16 @@ export class Webhooks {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          success = true;
+          data.success = true;
           return;
         }
-        switch (response.status) {
-          case ErrorCode.Conflict:
-            return Logger.error(`${endpoint} is already enrolled to receive notifications.`);
-          default:
-            return Logger.error("Unknown error.");
-        }
+        data.error = getStatusError(response.status, {
+          [ErrorCode.Conflict]: `${endpoint} is already enrolled to receive notifications.`
+        });
       }
     });
-    return { success };
+
+    return data;
   }
 
   /**
@@ -50,16 +47,17 @@ export class Webhooks {
    * const { webhooks } = await mailchannels.webhooks.list()
    * ```
    */
-  async list (): Promise<{ webhooks: string[] }> {
+  async list (): Promise<{ webhooks: string[], error: string | null }> {
+    const data: { webhooks: string[], error: string | null } = { webhooks: [], error: null };
+
     const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
       onResponseError: async () => {
-        Logger.error("Unknown error.");
+        data.error = "Unknown error.";
       }
     }).catch(() => []);
 
-    return {
-      webhooks: response.map(({ webhook }) => webhook)
-    };
+    data.webhooks = response.map(({ webhook }) => webhook);
+    return data;
   }
 
   /**
@@ -70,20 +68,21 @@ export class Webhooks {
    * const { success } = await mailchannels.webhooks.delete()
    * ```
    */
-  async delete (): Promise<{ success: boolean }> {
-    let success = false;
+  async delete (): Promise<{ success: boolean, error: string | null }> {
+    const data: { success: boolean, error: string | null } = { success: false, error: null };
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (!response.ok) {
-          return Logger.error("Unknown error.");
+          data.error = "Unknown error.";
+          return;
         }
-        success = true;
+        data.success = true;
       }
     });
 
-    return { success };
+    return data;
   }
 
   /**
@@ -95,23 +94,21 @@ export class Webhooks {
    * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
-  async getSigningKey (id: string): Promise<{ key?: string }> {
+  async getSigningKey (id: string): Promise<{ key: string | null, error: string | null }> {
+    const data: { key: string | null, error: string | null } = { key: null, error: null };
     const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
       query: {
         id
       },
       onResponseError: ({ response }) => {
-        switch (response.status) {
-          case ErrorCode.NotFound:
-            return Logger.error(`The key '${id}' is not found.`);
-          default:
-            return Logger.error("Unknown error.");
-        }
+        data.error = getStatusError(response.status, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: `The key '${id}' is not found.`
+        });
       }
-    }).catch(() => undefined);
+    }).catch(() => null);
 
-    return {
-      key: response?.key
-    };
+    data.key = response?.key || null;
+    return data;
   }
 }

@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Emails } from "../src/modules/emails";
 import type { EmailsSendOptions } from "../src/types/emails/send";
-import { Logger } from "../src/utils/logger";
 
 const fake = {
   send: {
@@ -50,13 +49,13 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const result = await emails.send(fake.send.options);
+    const { success } = await emails.send(fake.send.options);
 
-    expect(result).toEqual({ success: true });
+    expect(success).toBe(true);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error when from field is missing", async () => {
+  it("should contain error when from field is missing", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const emails = new Emails(mockClient);
 
@@ -64,16 +63,14 @@ describe("send", () => {
     // @ts-expect-error Testing missing from error
     delete options.from;
 
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(options);
+    const { success, error } = await emails.send(options);
 
-    expect(spyLogger).toHaveBeenCalledWith("No sender provided. Use the `from` option to specify a sender");
+    expect(error).toBe("No sender provided. Use the `from` option to specify a sender");
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error when to field is missing", async () => {
+  it("should contain error when to field is missing", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const emails = new Emails(mockClient);
 
@@ -81,16 +78,14 @@ describe("send", () => {
     // @ts-expect-error Testing missing to error
     delete options.to;
 
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(options);
+    const { success, error } = await emails.send(options);
 
-    expect(spyLogger).toHaveBeenCalledWith("No recipients provided. Use the `to` option to specify at least one recipient");
+    expect(error).toBe("No recipients provided. Use the `to` option to specify at least one recipient");
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error when no content provided", async () => {
+  it("should contain error when no content provided", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const emails = new Emails(mockClient);
 
@@ -98,13 +93,11 @@ describe("send", () => {
     delete options.html;
     delete options.text;
 
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(options);
+    const { success, error } = await emails.send(options);
 
-    expect(spyLogger).toHaveBeenCalledWith("No email content provided");
+    expect(error).toBe("No email content provided");
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
   it("should return success false when an error occurs", async () => {
@@ -121,7 +114,7 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api bad request", async () => {
+  it("should contain error on api bad request", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 400 } });
@@ -129,16 +122,14 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(fake.send.options);
+    const { success, error } = await emails.send(fake.send.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("Bad Request.");
+    expect(error).toBe("Bad Request.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error ona api forbidden", async () => {
+  it("should contain error ona api forbidden", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 403 } });
@@ -146,16 +137,14 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(fake.send.options);
+    const { success, error } = await emails.send(fake.send.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("User does not have access to this feature.");
+    expect(error).toBe("User does not have access to this feature.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api payload is too large", async () => {
+  it("should contain error on api payload is too large", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 413 } });
@@ -163,13 +152,11 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await emails.send(fake.send.options);
+    const { success, error } = await emails.send(fake.send.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments.");
+    expect(error).toBe("The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -188,7 +175,7 @@ describe("checkDomain", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api bad request", async () => {
+  it("should contain error on api bad request", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
         onResponseError({ response: { status: 400 } });
@@ -196,16 +183,14 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { results } = await emails.checkDomain(fake.checkDomain.options);
+    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("Bad Request.");
-    expect(results).toBeUndefined();
+    expect(error).toBe("Bad Request.");
+    expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api forbidden", async () => {
+  it("should contain error on api forbidden", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
         onResponseError({ response: { status: 403 } });
@@ -213,16 +198,14 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { results } = await emails.checkDomain(fake.checkDomain.options);
+    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("User does not have access to this feature.");
-    expect(results).toBeUndefined();
+    expect(error).toBe("User does not have access to this feature.");
+    expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
         onResponseError({ response: { status: 500 } });
@@ -230,12 +213,10 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { results } = await emails.checkDomain(fake.checkDomain.options);
+    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
-    expect(results).toBeUndefined();
+    expect(error).toBe("Unknown error.");
+    expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });

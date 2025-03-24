@@ -6,7 +6,6 @@ import type { SubAccountsListOptions } from "../src/types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
-import { Logger } from "../src/utils/logger";
 
 const fake = {
   create: {
@@ -24,13 +23,15 @@ const fake = {
       accounts: [
         { enabled: true, handle: "sub-account-1" },
         { enabled: false, handle: "sub-account-2" }
-      ] as SubAccountsAccount[]
+      ] as SubAccountsAccount[],
+      error: null
     }
   },
   createApiKey: {
     apiResponse: { id: 1, key: "api-key-value" },
     expectedResponse: {
-      key: { id: 1, value: "api-key-value" } as SubAccountsApiKey
+      key: { id: 1, value: "api-key-value" } as SubAccountsApiKey,
+      error: null
     }
   },
   listApiKeys: {
@@ -42,7 +43,8 @@ const fake = {
       keys: [
         { id: 1, value: "api-key-1" },
         { id: 2, value: "api-key-2" }
-      ] as SubAccountsApiKey[]
+      ] as SubAccountsApiKey[],
+      error: null
     }
   },
   createSmtpPassword: {
@@ -56,7 +58,8 @@ const fake = {
         enabled: true,
         id: 1,
         value: "smtp-password-value"
-      } as SubAccountsSmtpPassword
+      } as SubAccountsSmtpPassword,
+      error: null
     }
   },
   listSmtpPasswords: {
@@ -68,7 +71,8 @@ const fake = {
       passwords: [
         { enabled: true, id: 1, value: "password-1" },
         { enabled: false, id: 2, value: "password-2" }
-      ] as SubAccountsSmtpPassword[]
+      ] as SubAccountsSmtpPassword[],
+      error: null
     }
   }
 };
@@ -80,25 +84,23 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.create(fake.create.validHandle);
+    const { account } = await subAccounts.create(fake.create.validHandle);
 
-    expect(result).toEqual({ account: fake.create.apiResponse });
+    expect(account).toEqual(fake.create.apiResponse);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error for an invalid handle", async () => {
+  it("should contain error for an invalid handle", async () => {
     const mockClient = {
       post: vi.fn()
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { account } = await subAccounts.create(fake.create.invalidHandle);
+    const { account, error } = await subAccounts.create(fake.create.invalidHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
-    expect(account).toBeUndefined();
+    expect(error).toBe("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+    expect(account).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
   it("should create a sub-account without a handle (random handle)", async () => {
@@ -107,44 +109,42 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.create();
+    const { account } = await subAccounts.create();
 
-    expect(result).toEqual({ account: fake.create.apiResponse });
+    expect(account).toEqual(fake.create.apiResponse);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api forbidden", async () => {
+  it("should contain error on api forbidden", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 403 } });
-      })
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { account } = await subAccounts.create(fake.create.validHandle);
+    const { account, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("The parent account does not have permission to create sub-accounts.");
-    expect(account).toBeUndefined();
+    expect(error).toBe("The parent account does not have permission to create sub-accounts.");
+    expect(account).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api conflict", async () => {
+  it("should contain error on api conflict", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 409 } });
-      })
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { account } = await subAccounts.create(fake.create.validHandle);
+    const { account, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`Sub-account with handle ${fake.create.validHandle} already exists.`);
-    expect(account).toBeUndefined();
+    expect(error).toBe(`Sub-account with handle ${fake.create.validHandle} already exists.`);
+    expect(account).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -173,22 +173,20 @@ describe("list", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should log an error for invalid limit or offset", async () => {
+  it("should contain error for invalid limit or offset", async () => {
     const mockClient = {
       get: vi.fn()
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { accounts } = await subAccounts.list({ limit: 1001 });
+    const { accounts, error } = await subAccounts.list({ limit: 1001 });
 
-    expect(spyLogger).toHaveBeenCalledWith("The limit and/or offset query parameter are invalid.");
+    expect(error).toBe("The limit and/or offset query parameter are invalid.");
     expect(accounts).toEqual([]);
     expect(mockClient.get).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError();
@@ -197,13 +195,11 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { accounts } = await subAccounts.list();
+    const { accounts, error } = await subAccounts.list();
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(accounts).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -216,13 +212,13 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.delete(fake.create.validHandle);
+    const { success } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(result).toEqual({ success: true });
+    expect(success).toBe(true);
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -230,13 +226,11 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.delete(fake.create.validHandle);
+    const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -249,13 +243,13 @@ describe("suspend", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.suspend(fake.create.validHandle);
+    const { success } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(result).toEqual({ success: true });
+    expect(success).toBe(true);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 404 } });
@@ -263,16 +257,14 @@ describe("suspend", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.suspend(fake.create.validHandle);
+    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`The specified sub-account ${fake.create.validHandle} does not exist.`);
+    expect(error).toBe(`The specified sub-account ${fake.create.validHandle} does not exist.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -280,13 +272,11 @@ describe("suspend", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.suspend(fake.create.validHandle);
+    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -299,13 +289,13 @@ describe("activate", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.activate(fake.create.validHandle);
+    const { success } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(result).toEqual({ success: true });
+    expect(success).toBe(true);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it ("should log an error on api forbidden", async () => {
+  it ("should contain error on api forbidden", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 403 } });
@@ -313,16 +303,14 @@ describe("activate", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.activate(fake.create.validHandle);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("The parent account does not have permission to activate the sub-account.");
+    expect(error).toBe("The parent account does not have permission to activate the sub-account.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 404 } });
@@ -330,16 +318,14 @@ describe("activate", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.activate(fake.create.validHandle);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`The specified sub-account ${fake.create.validHandle} does not exist.`);
+    expect(error).toBe(`The specified sub-account ${fake.create.validHandle} does not exist.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -347,13 +333,11 @@ describe("activate", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.activate(fake.create.validHandle);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -370,7 +354,7 @@ describe("createApiKey", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api forbidden", async () => {
+  it("should contain error on api forbidden", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 403 } });
@@ -379,16 +363,14 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { key } = await subAccounts.createApiKey(fake.create.validHandle);
+    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("You can't create API keys for this sub-account.");
-    expect(key).toBeUndefined();
+    expect(error).toBe("You can't create API keys for this sub-account.");
+    expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 404 } });
@@ -397,13 +379,11 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { key } = await subAccounts.createApiKey(fake.create.validHandle);
+    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(key).toBeUndefined();
+    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
+    expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
   it("shoud log an error on keys limit", async () => {
@@ -415,16 +395,14 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { key } = await subAccounts.createApiKey(fake.create.validHandle);
+    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("You have reached the limit of API keys you can create for this sub-account.");
-    expect(key).toBeUndefined();
+    expect(error).toBe("You have reached the limit of API keys you can create for this sub-account.");
+    expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 500 } });
@@ -433,13 +411,11 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { key } = await subAccounts.createApiKey(fake.create.validHandle);
+    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
-    expect(key).toBeUndefined();
+    expect(error).toBe("Unknown error.");
+    expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -456,7 +432,7 @@ describe("listApiKeys", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 404 } });
@@ -465,16 +441,14 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { keys } = await subAccounts.listApiKeys(fake.create.validHandle);
+    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`Sub-account with handle '${fake.create.validHandle}' not found.`);
+    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
     expect(keys).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 500 } });
@@ -483,13 +457,11 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { keys } = await subAccounts.listApiKeys(fake.create.validHandle);
+    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(keys).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -508,7 +480,7 @@ describe("deleteApiKey", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should log an error on api bad request", async () => {
+  it("should contain error on api bad request", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 400 } });
@@ -516,16 +488,14 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(spyLogger).toHaveBeenCalledWith("Missing or invalid API key ID.");
+    expect(error).toBe("Missing or invalid API key ID.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -533,13 +503,11 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -556,7 +524,7 @@ describe("createSmtpPassword", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error on api forbidden", async () => {
+  it("should contain error on api forbidden", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 403 } });
@@ -565,16 +533,14 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { password } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("You can't create SMTP passwords for this sub-account.");
-    expect(password).toBeUndefined();
+    expect(error).toBe("You can't create SMTP passwords for this sub-account.");
+    expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 404 } });
@@ -583,16 +549,14 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { password } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(password).toBeUndefined();
+    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
+    expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api smtp password limit", async () => {
+  it("should contain error on api smtp password limit", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 422 } });
@@ -601,16 +565,14 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { password } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("You have reached the limit of SMTP passwords you can create for this sub-account.");
-    expect(password).toBeUndefined();
+    expect(error).toBe("You have reached the limit of SMTP passwords you can create for this sub-account.");
+    expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 500 } });
@@ -619,13 +581,11 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { password } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
-    expect(password).toBeUndefined();
+    expect(error).toBe("Unknown error.");
+    expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -642,7 +602,7 @@ describe("listSmtpPasswords", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should log an error on api handle not found", async () => {
+  it("should contain error on api handle not found", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 404 } });
@@ -651,16 +611,14 @@ describe("listSmtpPasswords", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { passwords } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+    const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith(`Sub-account with handle '${fake.create.validHandle}' not found.`);
+    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
     expect(passwords).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: 500 } });
@@ -669,13 +627,11 @@ describe("listSmtpPasswords", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { passwords } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+    const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(passwords).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -694,7 +650,7 @@ describe("deleteSmtpPassword", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should log an error on api bad request", async () => {
+  it("should contain error on api bad request", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: 400 } });
@@ -702,16 +658,14 @@ describe("deleteSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(spyLogger).toHaveBeenCalledWith("Missing or invalid SMTP password ID.");
+    expect(error).toBe("Missing or invalid SMTP password ID.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -719,12 +673,10 @@ describe("deleteSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
-    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });

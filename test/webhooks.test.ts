@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
-import { Logger } from "../src/utils/logger";
 
 const fake = {
   enroll: {
@@ -13,12 +12,13 @@ const fake = {
       { webhook: "https://example.com/webhook2" }
     ],
     expectedResponse: {
+      error: null,
       webhooks: ["https://example.com/webhook1", "https://example.com/webhook2"]
     }
   },
   signingKey: {
     id: "key-id",
-    apiResponse: { key: "public-key" }
+    apiResponse: { error: null, key: "public-key" }
   }
 };
 
@@ -37,21 +37,18 @@ describe("enroll", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should log an error if the endpoint is not provided", async () => {
+  it("should contain error if the endpoint is not provided", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const webhooks = new Webhooks(mockClient);
-
-    const spyLogger = vi.spyOn(Logger, "error");
     // @ts-expect-error Testing missing endpoint error
-    const { success } = await webhooks.enroll();
+    const { success, error } = await webhooks.enroll();
 
-    expect(spyLogger).toHaveBeenCalledWith("No endpoint provided.");
+    expect(error).toBe("No endpoint provided.");
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it ("should log an error on api conflict", async () => {
+  it ("should contain error on api conflict", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false, status: 409 } });
@@ -59,17 +56,14 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    const { success } = await webhooks.enroll(fake.enroll.endpoint);
-
-    expect(spyLogger).toHaveBeenCalledWith(`${fake.enroll.endpoint} is already enrolled to receive notifications.`);
+    expect(error).toBe(`${fake.enroll.endpoint} is already enrolled to receive notifications.`);
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -77,14 +71,11 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    const { success } = await webhooks.enroll(fake.enroll.endpoint);
-
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -101,23 +92,20 @@ describe("list", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, rejects) => {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { ok: false } });
-        rejects();
+        reject();
       }))
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { webhooks: webhooksList, error } = await webhooks.list();
 
-    const result = await webhooks.list();
-
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
-    expect(result).toEqual({ webhooks: [] });
+    expect(error).toBe("Unknown error.");
+    expect(webhooksList).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -136,7 +124,7 @@ describe("delete", () => {
     expect(success).toBe(true);
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -144,14 +132,11 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { success, error } = await webhooks.delete();
 
-    const { success } = await webhooks.delete();
-
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
+    expect(error).toBe("Unknown error.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
 
@@ -168,7 +153,7 @@ describe("getSigningKey", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should log an error on api key not found", async () => {
+  it("should contain error on api key not found", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
         onResponseError({ response: { ok: false, status: 404 } });
@@ -176,32 +161,26 @@ describe("getSigningKey", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { key, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    const result = await webhooks.getSigningKey(fake.signingKey.id);
-
-    expect(spyLogger).toHaveBeenCalledWith(`The key '${fake.signingKey.id}' is not found.`);
-    expect(result.key).toBeUndefined();
+    expect(error).toBe(`The key '${fake.signingKey.id}' is not found.`);
+    expect(key).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 
-  it("should log an error on api unknown error", async () => {
+  it("should contain error on api unknown error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, rejects) => {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { ok: false } });
-        rejects();
+        reject();
       }))
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const spyLogger = vi.spyOn(Logger, "error");
+    const { key, error }= await webhooks.getSigningKey(fake.signingKey.id);
 
-    const result = await webhooks.getSigningKey(fake.signingKey.id);
-
-    expect(spyLogger).toHaveBeenCalledWith("Unknown error.");
-    expect(result.key).toBeUndefined();
+    expect(error).toBe("Unknown error.");
+    expect(key).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
-    spyLogger.mockRestore();
   });
 });
