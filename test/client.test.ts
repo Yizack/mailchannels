@@ -18,6 +18,7 @@ vi.mock("ofetch", () => ({
 
 describe("MailChannelsClient", () => {
   it("should throw an error if no API key is provided", () => {
+    // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
     expect(client).toThrowError("Missing MailChannels API key.");
   });
