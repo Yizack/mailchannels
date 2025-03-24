@@ -1,9 +1,10 @@
 import type { MailChannelsClient } from "../client";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
-import type { SubAccountsAccount } from "../types/sub-accounts/create";
-import type { SubAccountsListOptions } from "../types/sub-accounts/list";
-import type { SubAccountsApiKey } from "../types/sub-accounts/api-key";
-import type { SubAccountsSmtpPassword } from "../types/sub-accounts/smtp-password";
+import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
+import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
+import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
+import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
+import type { SuccessResponse } from "../types/success-response";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class SubAccounts {
@@ -19,8 +20,8 @@ export class SubAccounts {
    * const { account } = await mailchannels.subAccounts.create('validhandle123')
    * ```
    */
-  async create (handle?: string): Promise<{ account: SubAccountsAccount | null, error: string | null }> {
-    const data: { account: SubAccountsAccount | null, error: string | null } = { account: null, error: null };
+  async create (handle?: string): Promise<SubAccountsCreateResponse> {
+    const data: SubAccountsCreateResponse = { account: null, error: null };
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
@@ -52,8 +53,8 @@ export class SubAccounts {
    * const { accounts } = await mailchannels.subAccounts.list()
    * ```
    */
-  async list (options?: SubAccountsListOptions): Promise<{ accounts: SubAccountsAccount[], error: string | null }> {
-    const data: { accounts: SubAccountsAccount[], error: string | null } = { accounts: [], error: null };
+  async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
+    const data: SubAccountsListResponse = { accounts: [], error: null };
 
     if (options?.limit && (options.limit < 1 || options.limit > 1000)) {
       data.error = "The limit and/or offset query parameter are invalid.";
@@ -79,8 +80,8 @@ export class SubAccounts {
    * const { success } = await mailchannels.subAccounts.delete('validhandle123')
    * ```
    */
-  async delete (handle: string): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async delete (handle: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
       ignoreResponseError: true,
@@ -105,8 +106,8 @@ export class SubAccounts {
    * const { success } = await mailchannels.subAccounts.suspend('validhandle123')
    * ```
    */
-  async suspend (handle: string): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async suspend (handle: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
       ignoreResponseError: true,
@@ -133,8 +134,8 @@ export class SubAccounts {
    * const { success } = await mailchannels.subAccounts.activate('validhandle123')
    * ```
    */
-  async activate (handle: string): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async activate (handle: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
       ignoreResponseError: true,
@@ -162,8 +163,8 @@ export class SubAccounts {
    * const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
    * ```
    */
-  async createApiKey (handle: string): Promise<{ key: SubAccountsApiKey | null, error: string | null }> {
-    const data: { key: SubAccountsApiKey | null, error: string | null } = { key: null, error: null };
+  async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
+    const data: SubAccountsCreateApiKeyResponse = { key: null, error: null };
 
     const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
@@ -193,8 +194,8 @@ export class SubAccounts {
    * const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
    * ```
    */
-  async listApiKeys (handle: string): Promise<{ keys: SubAccountsApiKey[], error: string | null }> {
-    const data: { keys: SubAccountsApiKey[], error: string | null } = { keys: [], error: null };
+  async listApiKeys (handle: string): Promise<SubAccountsListApiKeyResponse> {
+    const data: SubAccountsListApiKeyResponse = { keys: [], error: null };
 
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
@@ -221,8 +222,8 @@ export class SubAccounts {
    * const { success } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
    * ```
    */
-  async deleteApiKey (handle: string, id: number): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async deleteApiKey (handle: string, id: number): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
       ignoreResponseError: true,
@@ -249,8 +250,8 @@ export class SubAccounts {
    * const { password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
    * ```
    */
-  async createSmtpPassword (handle: string): Promise<{ password: SubAccountsSmtpPassword | null, error: string | null }> {
-    const data: { password: SubAccountsSmtpPassword | null, error: string | null } = { password: null, error: null };
+  async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
+    const data: SubAccountsCreateSmtpPasswordResponse = { password: null, error: null };
 
     const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
@@ -281,8 +282,8 @@ export class SubAccounts {
    * const { passwords } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
    * ```
    */
-  async listSmtpPasswords (handle: string): Promise<{ passwords: SubAccountsSmtpPassword[], error: string | null }> {
-    const data: { passwords: SubAccountsSmtpPassword[], error: string | null } = { passwords: [], error: null };
+  async listSmtpPasswords (handle: string): Promise<SubAccountsListSmtpPasswordResponse> {
+    const data: SubAccountsListSmtpPasswordResponse = { passwords: [], error: null };
 
     const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
@@ -310,8 +311,8 @@ export class SubAccounts {
    * const { success } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
    * ```
    */
-  async deleteSmtpPassword (handle: string, id: number): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async deleteSmtpPassword (handle: string, id: number): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
       ignoreResponseError: true,

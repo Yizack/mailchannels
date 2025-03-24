@@ -8,3 +8,8 @@ export interface SubAccountsAccount {
    */
   handle: string;
 }
+
+export interface SubAccountsCreateResponse {
+  account: SubAccountsAccount | null;
+  error: string | null;
+}

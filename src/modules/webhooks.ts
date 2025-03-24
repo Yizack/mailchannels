@@ -1,4 +1,7 @@
 import type { MailChannelsClient } from "../client";
+import type { WebhooksListResponse } from "../types/webhooks/list";
+import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
+import type { SuccessResponse } from "../types/success-response";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
@@ -12,8 +15,8 @@ export class Webhooks {
    * const { success } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
-  async enroll (endpoint: string): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async enroll (endpoint: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     if (!endpoint) {
       data.error = "No endpoint provided.";
@@ -47,8 +50,8 @@ export class Webhooks {
    * const { webhooks } = await mailchannels.webhooks.list()
    * ```
    */
-  async list (): Promise<{ webhooks: string[], error: string | null }> {
-    const data: { webhooks: string[], error: string | null } = { webhooks: [], error: null };
+  async list (): Promise<WebhooksListResponse> {
+    const data: WebhooksListResponse = { webhooks: [], error: null };
 
     const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
       onResponseError: async () => {
@@ -68,8 +71,8 @@ export class Webhooks {
    * const { success } = await mailchannels.webhooks.delete()
    * ```
    */
-  async delete (): Promise<{ success: boolean, error: string | null }> {
-    const data: { success: boolean, error: string | null } = { success: false, error: null };
+  async delete (): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
       ignoreResponseError: true,
@@ -94,8 +97,8 @@ export class Webhooks {
    * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
-  async getSigningKey (id: string): Promise<{ key: string | null, error: string | null }> {
-    const data: { key: string | null, error: string | null } = { key: null, error: null };
+  async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
+    const data: WebhooksSigningKeyResponse = { key: null, error: null };
     const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
       query: {
         id

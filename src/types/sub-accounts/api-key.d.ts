@@ -8,3 +8,13 @@ export interface SubAccountsApiKey {
    */
   value: string;
 }
+
+export interface SubAccountsCreateApiKeyResponse {
+  key: SubAccountsApiKey | null;
+  error: string | null;
+}
+
+export interface SubAccountsListApiKeyResponse {
+  keys: SubAccountsApiKey[];
+  error: string | null;
+}

@@ -122,6 +122,22 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id');
 
 <<< @/snippets/webhooks.ts
 
+<details>
+  <summary>All type declarations</summary>
+
+  **Success Response**
+
+  <<< @/snippets/success-response.ts
+
+  **List type declarations**
+
+  <<< @/snippets/webhooks-list-response.ts
+
+  **Signing Key type declarations**
+
+  <<< @/snippets/webhooks-signing-key-response.ts
+</details>
+
 ## Source
 
 [Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/webhooks.ts)

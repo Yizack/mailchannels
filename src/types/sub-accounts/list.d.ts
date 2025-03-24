@@ -12,3 +12,8 @@ export interface SubAccountsListOptions {
    */
   offset?: number;
 }
+
+export interface SubAccountsListResponse {
+  accounts: SubAccountsAccount[];
+  error: string | null;
+}

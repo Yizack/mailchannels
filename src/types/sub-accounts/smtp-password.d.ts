@@ -12,3 +12,13 @@ export interface SubAccountsSmtpPassword {
    */
   value: string;
 }
+
+export interface SubAccountsCreateSmtpPasswordResponse {
+  password: SubAccountsSmtpPassword | null;
+  error: string | null;
+}
+
+export interface SubAccountsListSmtpPasswordResponse {
+  passwords: SubAccountsSmtpPassword[];
+  error: string | null;
+}

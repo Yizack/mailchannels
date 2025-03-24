@@ -340,21 +340,28 @@ const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle12
 <details>
   <summary>All type declarations</summary>
 
-  **Create type declarations**
+  **Success Response**
+
+  <<< @/snippets/success-response.ts
+
+  **Account type declarations**
 
   <<< @/snippets/sub-accounts-account.ts
-
-  **List type declarations**
-
+  <<< @/snippets/sub-accounts-create-response.ts
   <<< @/snippets/sub-accounts-list-options.ts
+  <<< @/snippets/sub-accounts-list-response.ts
 
   **API Key type declarations**
 
   <<< @/snippets/sub-accounts-api-key.ts
+  <<< @/snippets/sub-accounts-create-api-key-response.ts
+  <<< @/snippets/sub-accounts-list-api-key-response.ts
 
   **SMTP Password type declarations**
 
   <<< @/snippets/sub-accounts-smtp-password.ts
+  <<< @/snippets/sub-accounts-create-smtp-password-response.ts
+  <<< @/snippets/sub-accounts-list-smtp-password-response.ts
 </details>
 
 ## Source
