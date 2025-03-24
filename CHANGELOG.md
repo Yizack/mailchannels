@@ -1,6 +1,35 @@
 # Changelog
 
 
+## v0.3.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.1...v0.3.2)
+
+### 💅 Refactors
+
+- Return error prop in response instead of forcing to log errors ([f58560d](https://github.com/Yizack/mailchannels/commit/f58560d))
+
+### 📖 Documentation
+
+- Add note ([ae3cb74](https://github.com/Yizack/mailchannels/commit/ae3cb74))
+- Add `robots.txt` ([49c7c04](https://github.com/Yizack/mailchannels/commit/49c7c04))
+- Generate vitepress sitemap ([9cc0760](https://github.com/Yizack/mailchannels/commit/9cc0760))
+
+### 🏡 Chore
+
+- Update homepage ([ccf0ad3](https://github.com/Yizack/mailchannels/commit/ccf0ad3))
+- **docs:** Remove unnecessary prop ([ea9c574](https://github.com/Yizack/mailchannels/commit/ea9c574))
+- **eslint:** Simplify config ([bf4e95a](https://github.com/Yizack/mailchannels/commit/bf4e95a))
+- Throw error on missing api key ([8d647c2](https://github.com/Yizack/mailchannels/commit/8d647c2))
+- Add missing response types ([f9ee04c](https://github.com/Yizack/mailchannels/commit/f9ee04c))
+- Add reference quotes in error messages ([eefc369](https://github.com/Yizack/mailchannels/commit/eefc369))
+- **playground:** Update playground ([4348603](https://github.com/Yizack/mailchannels/commit/4348603))
+- Fix test no api key provided error ([7349358](https://github.com/Yizack/mailchannels/commit/7349358))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.0...v0.3.1)
