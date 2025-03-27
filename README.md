@@ -117,9 +117,9 @@ Soon to be implemented.
   - 🚧 Get recipient list entries
   - 🚧 Delete item from recipient list
 - Service
-  - 🚧 Retrieve the condition of the service
+  - ✅ Retrieve the condition of the service
   - 🚧 Submit a false negative or false positive report
-  - 🚧 Get a list of your subscriptions to MailChannels Inbound
+  - ✅ Get a list of your subscriptions to MailChannels Inbound
 <!-- #endregion roadmap -->
 
 ## <a name="development">💻 Development</a>

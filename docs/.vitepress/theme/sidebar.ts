@@ -47,6 +47,15 @@ export default [
           { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" },
           { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" }
         ]
+      },
+      {
+        text: "⚙️ Service",
+        collapsed: true,
+        link: "/modules/service",
+        items: [
+          { text: "Status", link: "/modules/service#status" },
+          { text: "Subscriptions", link: "/modules/service#subscriptions" }
+        ]
       }
     ]
   }
