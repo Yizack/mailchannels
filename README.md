@@ -92,7 +92,7 @@ Fully implemented now. Please open an issue if you find any bugs or missing feat
 
 ### [Inbound API](https://docs.mailchannels.net/inbound-api/API-reference/inbound-api)
 
-⚠️ I currently do not plan to implement the Inbound API, as it requires access to paid features that I do not have. However, I am open to implementing these features if provided with access to a paid account.
+Soon to be implemented.
 
 - Domains
   - 🚧 Provision domain
