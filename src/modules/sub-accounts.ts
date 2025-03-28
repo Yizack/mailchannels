@@ -63,8 +63,8 @@ export class SubAccounts {
 
     const response = await this.mailchannels.get<SubAccountsAccount[]>("/tx/v1/sub-account", {
       query: options,
-      onResponseError: async () => {
-        data.error = "Unknown error.";
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response);
       }
     }).catch(() => []);
 
@@ -87,7 +87,7 @@ export class SubAccounts {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (!response.ok) {
-          data.error = "Unknown error.";
+          data.error = getStatusError(response);
           return;
         }
         data.success = true;

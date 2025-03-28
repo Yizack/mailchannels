@@ -12,7 +12,7 @@ export enum ErrorCode {
 
 export const getStatusError = (
   response: FetchResponse<{ message?: string }>,
-  errors: Record<number, string>
+  errors: Record<number, string> = {}
 ) => {
   return errors[response.status] || response._data?.message || "Unknown error.";
 };

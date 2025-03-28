@@ -54,8 +54,8 @@ export class Webhooks {
     const data: WebhooksListResponse = { webhooks: [], error: null };
 
     const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
-      onResponseError: async () => {
-        data.error = "Unknown error.";
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response);
       }
     }).catch(() => []);
 
@@ -78,7 +78,7 @@ export class Webhooks {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (!response.ok) {
-          data.error = "Unknown error.";
+          data.error = getStatusError(response);
           return;
         }
         data.success = true;

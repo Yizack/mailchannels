@@ -24,7 +24,7 @@ export class Service {
           data.success = true;
           return;
         }
-        data.error = "Unknown error.";
+        data.error = getStatusError(response);
       }
     });
 
