@@ -34,7 +34,13 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 ## Inbound API
 
-Manage domains for MailChannels Inbound.
+A cloud-based spam filtering service that protects your users against spam, phishing, and malware.
+
+### 🌐 Domains
+
+<!-- @include: modules/domains.md#description -->
+
+<VPButton href="/modules/service" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### ⚙️ Service 
 
