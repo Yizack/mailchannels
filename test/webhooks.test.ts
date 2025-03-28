@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
+import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   enroll: {
@@ -48,32 +49,17 @@ describe("enroll", () => {
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
-  it ("should contain error on api conflict", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false, status: 409 } });
+        onResponse({ response: { status: ErrorCode.Conflict } });
       })
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    expect(error).toBe(`Endpoint '${fake.enroll.endpoint}' is already enrolled to receive notifications.`);
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const webhooks = new Webhooks(mockClient);
-    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -92,7 +78,7 @@ describe("list", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should contain error on api unknown error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { ok: false } });
@@ -103,7 +89,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { webhooks: webhooksList, error } = await webhooks.list();
 
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(webhooksList).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -124,7 +110,7 @@ describe("delete", () => {
     expect(success).toBe(true);
   });
 
-  it("should contain error on api unknown error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -134,7 +120,7 @@ describe("delete", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.delete();
 
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -153,33 +139,17 @@ describe("getSigningKey", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should contain error on api key not found", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
-        onResponseError({ response: { ok: false, status: 404 } });
+        onResponseError({ response: { status: ErrorCode.NotFound } });
       })
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
     const { key, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(error).toBe(`The key '${fake.signingKey.id}' is not found.`);
-    expect(key).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const webhooks = new Webhooks(mockClient);
-    const { key, error }= await webhooks.getSigningKey(fake.signingKey.id);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(key).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

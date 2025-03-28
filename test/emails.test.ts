@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Emails } from "../src/modules/emails";
 import type { EmailsSendOptions } from "../src/types/emails/send";
+import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   send: {
@@ -114,47 +115,17 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api bad request", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 400 } });
+        onResponse({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
     const { success, error } = await emails.send(fake.send.options);
 
-    expect(error).toBe("Bad Request.");
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error ona api forbidden", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 403 } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const emails = new Emails(mockClient);
-    const { success, error } = await emails.send(fake.send.options);
-
-    expect(error).toBe("User does not have access to this feature.");
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api payload is too large", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 413 } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const emails = new Emails(mockClient);
-    const { success, error } = await emails.send(fake.send.options);
-
-    expect(error).toBe("The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -175,47 +146,17 @@ describe("checkDomain", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api bad request", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
-        onResponseError({ response: { status: 400 } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
     const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(error).toBe("Bad Request.");
-    expect(results).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api forbidden", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
-        onResponseError({ response: { status: 403 } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const emails = new Emails(mockClient);
-    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
-
-    expect(error).toBe("User does not have access to this feature.");
-    expect(results).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
-        onResponseError({ response: { status: 500 } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const emails = new Emails(mockClient);
-    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

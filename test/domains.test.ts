@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
 import type { DomainsProvisionOptions } from "../src/types/domains/provision";
+import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   provision: {
@@ -23,10 +24,10 @@ describe("provision", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api bad request", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false, status: 400 } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -34,8 +35,8 @@ describe("provision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.provision(fake.provision);
 
-    expect(data).toBeNull();
     expect(error).toBeDefined();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

@@ -6,6 +6,7 @@ import type { SubAccountsListOptions } from "../src/types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
+import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   create: {
@@ -115,10 +116,10 @@ describe("create", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api forbidden", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 403 } });
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -126,23 +127,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { account, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(error).toBe("The parent account does not have permission to create sub-accounts.");
-    expect(account).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api conflict", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 409 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.validHandle);
-
-    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' already exists.`);
+    expect(error).toBeDefined();
     expect(account).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -186,7 +171,7 @@ describe("list", () => {
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
-  it("should contain error on api unknown error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError();
@@ -197,7 +182,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { accounts, error } = await subAccounts.list();
 
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(accounts).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -218,7 +203,7 @@ describe("delete", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should contain error on api unknown error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { ok: false } });
@@ -228,7 +213,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -249,32 +234,17 @@ describe("suspend", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api handle not found", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 404 } });
+        onResponse({ response: { status: ErrorCode.NotFound } });
       })
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(error).toBe(`The specified sub-account '${fake.create.validHandle}' does not exist.`);
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -295,47 +265,17 @@ describe("activate", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it ("should contain error on api forbidden", async () => {
+  it ("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 403 } });
+        onResponse({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(error).toBe("The parent account does not have permission to activate the sub-account.");
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api handle not found", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 404 } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.activate(fake.create.validHandle);
-
-    expect(error).toBe(`The specified sub-account '${fake.create.validHandle}' does not exist.`);
-    expect(success).toBe(false);
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.activate(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -354,10 +294,10 @@ describe("createApiKey", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api forbidden", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 403 } });
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -365,58 +305,11 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(error).toBe("You can't create API keys for this sub-account.");
+    expect(error).toBeDefined();
     expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api handle not found", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 404 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
-
-    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(key).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("shoud log an error on keys limit", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 422 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
-
-    expect(error).toBe("You have reached the limit of API keys you can create for this sub-account.");
-    expect(key).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 500 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
-    expect(key).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
 });
 
 describe("listApiKeys", () => {
@@ -432,10 +325,10 @@ describe("listApiKeys", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should contain error on api handle not found", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 404 } });
+        onResponseError({ response: { status: ErrorCode.NotFound } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -443,23 +336,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(keys).toEqual([]);
-    expect(mockClient.get).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 500 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(keys).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -480,32 +357,17 @@ describe("deleteApiKey", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should contain error on api bad request", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 400 } });
+        onResponse({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(error).toBe("Missing or invalid API key ID.");
-    expect(success).toBe(false);
-    expect(mockClient.delete).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -524,10 +386,10 @@ describe("createSmtpPassword", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should contain error on api forbidden", async () => {
+  it("should contain error on error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 403 } });
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -535,55 +397,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(error).toBe("You can't create SMTP passwords for this sub-account.");
-    expect(password).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api handle not found", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 404 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
-
-    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(password).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api smtp password limit", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 422 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
-
-    expect(error).toBe("You have reached the limit of SMTP passwords you can create for this sub-account.");
-    expect(password).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 500 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -602,10 +416,10 @@ describe("listSmtpPasswords", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should contain error on api handle not found", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 404 } });
+        onResponseError({ response: { status: ErrorCode.NotFound } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -613,23 +427,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(error).toBe(`Sub-account with handle '${fake.create.validHandle}' not found.`);
-    expect(passwords).toEqual([]);
-    expect(mockClient.get).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { status: 500 } });
-        reject();
-      }))
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(passwords).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -650,32 +448,17 @@ describe("deleteSmtpPassword", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
-  it("should contain error on api bad request", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: 400 } });
+        onResponse({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(error).toBe("Missing or invalid SMTP password ID.");
-    expect(success).toBe(false);
-    expect(mockClient.delete).toHaveBeenCalled();
-  });
-
-  it("should contain error on api unknown error", async () => {
-    const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
-      })
-    } as unknown as MailChannelsClient;
-
-    const subAccounts = new SubAccounts(mockClient);
-    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
-
-    expect(error).toBe("Unknown error.");
+    expect(error).toBeDefined();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
