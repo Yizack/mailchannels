@@ -47,6 +47,7 @@ export class SubAccounts {
 
   /**
    * Retrieves all sub-accounts associated with the parent account. The response is paginated with a default limit of 1000 sub-accounts per page and an offset of 0.
+   * @param options - The options to filter the list of sub-accounts.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
