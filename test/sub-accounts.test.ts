@@ -158,7 +158,7 @@ describe("list", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should contain error for invalid limit or offset", async () => {
+  it("should contain error for invalid limit", async () => {
     const mockClient = {
       get: vi.fn()
     } as unknown as MailChannelsClient;
@@ -166,7 +166,20 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { accounts, error } = await subAccounts.list({ limit: 1001 });
 
-    expect(error).toBe("The limit and/or offset query parameter are invalid.");
+    expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
+    expect(accounts).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid offset", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { accounts, error } = await subAccounts.list({ offset: -1 });
+
+    expect(error).toBe("Offset must be greater than or equal to 0.");
     expect(accounts).toEqual([]);
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -174,7 +187,7 @@ describe("list", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError();
+        onResponseError({ response: { ok: false } });
         reject();
       }))
     } as unknown as MailChannelsClient;
