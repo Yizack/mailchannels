@@ -95,7 +95,7 @@ Fully implemented now. Please open an issue if you find any bugs or missing feat
 Soon to be implemented.
 
 - Domains
-  - 🚧 Provision domain
+  - ✅ Provision domain
   - 🚧 Remove domain
   - 🚧 List domains
   - 🚧 Bulk provision domains

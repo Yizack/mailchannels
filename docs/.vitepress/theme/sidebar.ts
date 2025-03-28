@@ -49,6 +49,14 @@ export default [
         ]
       },
       {
+        text: "🌐 Domains",
+        collapsed: true,
+        link: "/modules/domains",
+        items: [
+          { text: "Provision", link: "/modules/domains#provision" }
+        ]
+      },
+      {
         text: "⚙️ Service",
         collapsed: true,
         link: "/modules/service",
