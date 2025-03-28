@@ -30,6 +30,14 @@ features:
     title: Sub-accounts module
     details: Manage sub-accounts
     link: /modules/sub-accounts
+  - icon: 🌐
+    title: Domains module
+    details: Manage Inbound domains
+    link: /modules/domains
+  - icon: ⚙️
+    title: Service
+    details: Information about the service
+    link: /modules/service
 ---
 
 <!-- @include: ../README.md#note -->
