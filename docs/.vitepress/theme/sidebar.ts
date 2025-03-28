@@ -23,7 +23,7 @@ export default [
             collapsed: true,
             link: "/modules/emails",
             items: [
-              { text: "Send", link: "/modules/emails#send" },
+              { text: "Send Email", link: "/modules/emails#send" },
               { text: "Check Domain", link: "/modules/emails#check-domain" }
             ]
           },
@@ -65,7 +65,8 @@ export default [
             collapsed: true,
             link: "/modules/domains",
             items: [
-              { text: "Provision", link: "/modules/domains#provision" },
+              { text: "Provision Domain", link: "/modules/domains#provision" },
+              { text: "List Domains", link: "/modules/domains#list" },
               { text: "Create Login Link", link: "/modules/domains#create-login-link" }
             ]
           },

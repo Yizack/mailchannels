@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
+import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
+import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Domains {
@@ -38,6 +39,42 @@ export class Domains {
     }).catch(() => null);
 
     data.data = response;
+    return data;
+  }
+
+  /**
+   * Fetch a list of all domains associated with this API key.
+   * @param options - The options to filter the list of domains.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { domains } = await mailchannels.domains.list()
+   * ```
+   */
+  async list (options?: DomainsListOptions): Promise<DomainsListResponse> {
+    const data: DomainsListResponse = { domains: [], total: 0, error: null };
+
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 5000)) {
+      data.error = "The limit value is invalid. Possible limit values are 1 to 5000.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<{ domains: DomainsData[], total: number }>("/inbound/v1/domains", {
+      query: options,
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response);
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.domains = response.domains;
+    data.total = response.total;
     return data;
   }
 

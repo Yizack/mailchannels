@@ -57,6 +57,40 @@ const { data } = await mailchannels.domains.provision({
     > [!NOTE]
     > Aliases are limited to 255 characters.
 
+## List <Badge type="info" text="method" />
+
+Retrieves all sub-accounts associated with the parent account.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { domains: domainsList } = await domains.list()
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { domains } = await mailchannels.domains.list()
+```
+:::
+
+### Params
+
+- `options`: List domains options.
+  - `domains`: A list of domains to fetch. If this parameter is present, only domains whose name matches an item in this list are returned.
+  - `limit`: The maximum number of domains included in the response. Possible values are 1 to 5000.
+  - `offset`: Offset into the list of domains to return.
+  > [!TIP]
+  > If no options are provided, the default limit is `10` and the offset is `0`.
+
 ## Create Login Link <Badge type="info" text="method" />
 
 Generate a link that allows a user to log in as a domain administrator.
@@ -102,6 +136,11 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
   <<< @/snippets/domains-data.ts
   <<< @/snippets/domains-provision-options.ts
   <<< @/snippets/domains-provision-response.ts
+
+  **List type declarations**
+
+  <<< @/snippets/domains-list-options.ts
+  <<< @/snippets/domains-list-response.ts
 
   **Create Login Link type declarations**
 
