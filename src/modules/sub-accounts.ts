@@ -56,8 +56,13 @@ export class SubAccounts {
   async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
     const data: SubAccountsListResponse = { accounts: [], error: null };
 
-    if (options?.limit && (options.limit < 1 || options.limit > 1000)) {
-      data.error = "The limit and/or offset query parameter are invalid.";
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
+      data.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
       return data;
     }
 
