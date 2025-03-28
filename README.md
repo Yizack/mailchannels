@@ -101,7 +101,7 @@ Soon to be implemented.
   - 🚧 Bulk provision domains
   - 🚧 Add domain list entry
   - 🚧 Get domain list entries
-  - 🚧 Create login link
+  - ✅ Create login link
   - 🚧 Set downstream address
   - 🚧 Fetch downstream addresses
   - 🚧 Update API key

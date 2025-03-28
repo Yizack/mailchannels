@@ -65,7 +65,8 @@ export default [
             collapsed: true,
             link: "/modules/domains",
             items: [
-              { text: "Provision", link: "/modules/domains#provision" }
+              { text: "Provision", link: "/modules/domains#provision" },
+              { text: "Create Login Link", link: "/modules/domains#create-login-link" }
             ]
           },
           {

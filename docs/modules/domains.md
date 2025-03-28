@@ -57,6 +57,35 @@ const { data } = await mailchannels.domains.provision({
     > [!NOTE]
     > Aliases are limited to 255 characters.
 
+## Create Login Link <Badge type="info" text="method" />
+
+Generate a link that allows a user to log in as a domain administrator.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { link } = await domains.createLoginLink("example.com")
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { link } = await mailchannels.domains.createLoginLink("example.com")
+```
+:::
+
+### Params
+
+- `domain`: The domain name.
+
 ## Type declarations
 
 <<< @/snippets/domains.ts
@@ -73,6 +102,10 @@ const { data } = await mailchannels.domains.provision({
   <<< @/snippets/domains-data.ts
   <<< @/snippets/domains-provision-options.ts
   <<< @/snippets/domains-provision-response.ts
+
+  **Create Login Link type declarations**
+
+  <<< @/snippets/domains-create-login-link-response.ts
 </details>
 
 ## Source
