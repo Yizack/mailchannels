@@ -1,4 +1,4 @@
-import type { Fetch, FetchResponse } from "ofetch";
+import type { FetchResponse } from "ofetch";
 
 export enum ErrorCode {
   BadRequest = 400,
