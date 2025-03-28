@@ -72,5 +72,5 @@ export interface DomainsProvisionOptions extends DomainsData {
 
 export interface DomainsProvisionResponse {
   data: DomainsData | null;
-  error: ErrorCode | null;
+  error: string | null;
 }

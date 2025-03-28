@@ -44,7 +44,7 @@ export class Service {
 
     const response = await this.mailchannels.get<ServiceSubscriptionsResponse["subscriptions"]>("/inbound/v1/subscriptions", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }

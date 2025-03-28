@@ -1,3 +1,5 @@
+import type { Fetch, FetchResponse } from "ofetch";
+
 export enum ErrorCode {
   BadRequest = 400,
   Unauthorized = 401,
@@ -8,4 +10,9 @@ export enum ErrorCode {
   UnprocessableEntity = 422
 }
 
-export const getStatusError = (status: number, errors: Record<number, string>) => errors[status] || "Unknown error.";
+export const getStatusError = (
+  response: FetchResponse<{ message?: string }>,
+  errors: Record<number, string>
+) => {
+  return errors[response.status] || response._data?.message || "Unknown error.";
+};

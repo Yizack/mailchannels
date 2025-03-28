@@ -34,7 +34,7 @@ export class SubAccounts {
     const response = await this.mailchannels.post<SubAccountsAccount>("/tx/v1/sub-account", {
       body: handle ? { handle } : undefined,
       onResponseError: ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
           [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
         });
@@ -116,7 +116,7 @@ export class SubAccounts {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
@@ -144,7 +144,7 @@ export class SubAccounts {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
@@ -168,7 +168,7 @@ export class SubAccounts {
 
     const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
@@ -199,7 +199,7 @@ export class SubAccounts {
 
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
@@ -232,7 +232,7 @@ export class SubAccounts {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid API key ID."
         });
       }
@@ -255,7 +255,7 @@ export class SubAccounts {
 
     const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
@@ -287,7 +287,7 @@ export class SubAccounts {
 
     const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
@@ -321,7 +321,7 @@ export class SubAccounts {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
         });
       }

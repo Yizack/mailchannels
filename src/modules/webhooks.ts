@@ -33,7 +33,7 @@ export class Webhooks {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
@@ -104,7 +104,7 @@ export class Webhooks {
         id
       },
       onResponseError: ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });

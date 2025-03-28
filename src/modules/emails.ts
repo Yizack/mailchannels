@@ -80,7 +80,7 @@ export class Emails {
           data.success = true;
           return;
         }
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature.",
           [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments."
@@ -128,7 +128,7 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response.status, {
+        data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
