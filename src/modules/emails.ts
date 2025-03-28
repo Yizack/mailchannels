@@ -7,6 +7,7 @@ import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
+
   /**
    * Send an email using MailChannels Email API.
    * @param options - The email options to send.

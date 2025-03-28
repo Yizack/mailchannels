@@ -6,6 +6,7 @@ import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
+
   /**
    * Enrolls the customer to receive event notifications via webhooks.
    * @param endpoint - The URL to receive event notifications.
