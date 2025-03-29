@@ -157,7 +157,7 @@ describe("delete", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.delete("");
 
-    expect(error).toBe("The domain is required.");
+    expect(error).toBe("No domain provided.");
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -199,7 +199,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { entry, error } = await domains.addListEntry("", fake.addListEntry.options);
 
-    expect(error).toBe("The domain is required.");
+    expect(error).toBe("No domain provided.");
     expect(entry).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -242,7 +242,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { link, error } = await domains.createLoginLink("");
 
-    expect(error).toBe("The domain is required.");
+    expect(error).toBe("No domain provided.");
     expect(link).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -261,5 +261,62 @@ describe("createLoginLink", () => {
     expect(error).toBeDefined();
     expect(link).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("updateApiKey", () => {
+  it("should successfully update an api key", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
+
+    expect(success).toBe(true);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should contain error when domain is not provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.updateApiKey("", "new-api-key");
+
+    expect(error).toBe("No domain provided.");
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when api key is not provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.updateApiKey(fake.provision.domain, "");
+
+    expect(error).toBe("No API key provided.");
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false, status: ErrorCode.Forbidden } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
+
+    expect(error).toBeDefined();
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
   });
 });

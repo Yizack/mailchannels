@@ -104,7 +104,7 @@ Soon to be implemented.
   - ✅ Create login link
   - 🚧 Set downstream address
   - 🚧 Fetch downstream addresses
-  - 🚧 Update API key
+  - ✅ Update API key
 - Lists
   - 🚧 Add item to customer list
   - 🚧 Delete item from customer list

@@ -187,6 +187,36 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 - `domain`: The domain name.
 
+## Update API Key <Badge type="info" text="method" />
+
+Update the API key that is associated with a domain.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { success } = await domains.updateApiKey('example.com', 'your-api-key')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
+```
+:::
+
+### Params
+
+- `domain`: The domain name.
+- `key`: The new API key to associate with this domain.
+
 ## Type declarations
 
 <<< @/snippets/domains.ts

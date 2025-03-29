@@ -36,7 +36,7 @@ export class Domains {
         data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.",
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own.",
-          [ErrorCode.Conflict]: "The domain is already provisioned, and is associated with a different customer."
+          [ErrorCode.Conflict]: `The domain '${options.domain}' is already provisioned, and is associated with a different customer.`
         });
       }
     }).catch(() => null);
@@ -94,7 +94,7 @@ export class Domains {
     const data: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      data.error = "The domain is required.";
+      data.error = "No domain provided.";
       return data;
     }
 
@@ -107,7 +107,7 @@ export class Domains {
         }
         data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, or the domain in the request is an alias domain.",
-          [ErrorCode.NotFound]: "The domain does not exist."
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     });
@@ -133,7 +133,7 @@ export class Domains {
     const data: DomainsAddListEntryResponse = { entry: null, error: null };
 
     if (!domain) {
-      data.error = "The domain is required.";
+      data.error = "No domain provided.";
       return data;
     }
 
@@ -142,7 +142,7 @@ export class Domains {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
-          [ErrorCode.NotFound]: "The domain does not exist."
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     }).catch(() => null);
@@ -166,7 +166,7 @@ export class Domains {
     const data: DomainsCreateLoginLinkResponse = { link: null, error: null };
 
     if (!domain) {
-      data.error = "The domain is required.";
+      data.error = "No domain provided.";
       return data;
     }
 
@@ -175,7 +175,7 @@ export class Domains {
         data.error = getStatusError(response, {
           [ErrorCode.Unauthorized]: "The domain does not belong to this customer.",
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
-          [ErrorCode.NotFound]: "The domain does not exist."
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     }).catch(() => null);
@@ -183,6 +183,47 @@ export class Domains {
     if (!response) return data;
 
     data.link = response.loginLink;
+    return data;
+  }
+
+  /**
+   * Update the API key that is associated with a domain.
+   * @param domain - The domain name.
+   * @param key - The new API key to associate with this domain.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
+   * ```
+   */
+  async updateApiKey (domain: string, key: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!domain) {
+      data.error = "No domain provided.";
+      return data;
+    }
+
+    if (!key) {
+      data.error = "No API key provided.";
+      return data;
+    }
+
+    await this.mailchannels.put<void>(`/inbound/v1/domains/${domain}/api-key`, {
+      body: { apiKey: key },
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: "The domain does not exist."
+        });
+      }
+    });
+
     return data;
   }
 }

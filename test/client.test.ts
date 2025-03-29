@@ -70,4 +70,20 @@ describe("MailChannelsClient", () => {
       }
     });
   });
+
+  it("should handle PUT method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.put(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "PUT",
+      baseURL: fake.baseURL,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
 });
