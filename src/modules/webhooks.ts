@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
+import type { SuccessResponse } from "../types/success-response";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
-import type { SuccessResponse } from "../types/success-response";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {

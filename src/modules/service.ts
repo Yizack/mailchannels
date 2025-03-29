@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types";
+import type { SuccessResponse } from "../types/success-response";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
 import { ErrorCode, getStatusError } from "../utils/errors";
 

@@ -1,10 +1,10 @@
 import type { MailChannelsClient } from "../client";
+import type { SuccessResponse } from "../types/success-response";
 import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
-import type { SuccessResponse } from "../types/success-response";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class SubAccounts {
