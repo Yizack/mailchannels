@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
+import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../types/domains/add-list-entry";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
@@ -14,14 +15,15 @@ export class Domains {
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { data } = await mailchannels.domains.provision({
-   * // options
+   *   domain: "example.com",
+   *   subscriptionHandle: "your-subscription-handle"
    * })
    * ```
    */
   async provision (options: DomainsProvisionOptions): Promise<DomainsProvisionResponse> {
-    const data: DomainsProvisionResponse = { data: null, error: null };
-
     const { associateKey, overwrite, ...payload } = options;
+
+    const data: DomainsProvisionResponse = { data: null, error: null };
 
     const response = await this.mailchannels.post<DomainsData>("/inbound/v1/domains", {
       query: {
@@ -75,6 +77,39 @@ export class Domains {
 
     data.domains = response.domains;
     data.total = response.total;
+    return data;
+  }
+
+  /**
+   * Add an entry to a domain blocklist or safelist.
+   * @param domain - The domain name.
+   * @param options - The options to add a list entry.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { entry } = await mailchannels.domains.addListEntry('example.com', {
+   *   listName: 'safelist',
+   *   item: 'name@domain.com'
+   * })
+   */
+  async addListEntry (domain: string, options: DomainsAddListEntryOptions) {
+    const { listName, item } = options;
+
+    const data: DomainsAddListEntryResponse = { entry: null, error: null };
+
+    const response = await this.mailchannels.post<DomainsAddListEntryResponse["entry"]>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
+      body: { item },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: "The domain does not exist."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.entry = response;
     return data;
   }
 

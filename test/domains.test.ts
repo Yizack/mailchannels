@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
-import type { DomainsProvisionOptions } from "../src/types/domains/provision";
+import type { DomainsProvisionOptions, DomainsProvisionResponse } from "../src/types/domains/provision";
 import { ErrorCode } from "../src/utils/errors";
+import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../src/types/domains/add-list-entry";
 
 const fake = {
   provision: {
@@ -33,7 +34,18 @@ const fake = {
       },
       subscriptionHandle: "your-subscription-handle"
     }
-  ]
+  ] as Partial<DomainsProvisionOptions>,
+  addListEntry: {
+    options: {
+      listName: "safelist",
+      item: "name@example.com"
+    } as DomainsAddListEntryOptions,
+    apiResponse: {
+      action: "safelist",
+      item: "name@example.com",
+      item_type: "email_address"
+    } as DomainsAddListEntryResponse["entry"]
+  }
 };
 
 describe("provision", () => {
@@ -119,6 +131,36 @@ describe("list", () => {
     expect(error).toBeDefined();
     expect(domainsList).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("addListEntry", () => {
+  it("should successfully add a list entry", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.addListEntry.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entry } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(entry).toBe(fake.addListEntry.apiResponse);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entry, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBeDefined();
+    expect(entry).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });
 

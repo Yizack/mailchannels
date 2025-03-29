@@ -99,7 +99,7 @@ Soon to be implemented.
   - 🚧 Remove domain
   - ✅ List domains
   - 🚧 Bulk provision domains
-  - 🚧 Add domain list entry
+  - ✅ Add domain list entry
   - 🚧 Get domain list entries
   - ✅ Create login link
   - 🚧 Set downstream address

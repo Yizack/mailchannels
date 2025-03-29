@@ -16,11 +16,11 @@
     "type": "git",
     "url": "git+https://github.com/Yizack/mailchannels.git"
   },
-  "homepage": "https://mailchannels.yizack.com/",
+  "homepage": "https://mailchannels.yizack.com",
   "author": {
     "name": "Yizack Rangel",
     "email": "yizackr@gmail.com",
-    "url": "https://yizack.com/"
+    "url": "https://yizack.com"
   },
   "main": "./dist/mailchannels.mjs",
   "exports": {
