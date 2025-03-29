@@ -27,15 +27,15 @@ export class MailChannelsClient {
     });
   }
 
-  async post<T>(path: string, options?: FetchOptions<"json">) {
+  async post<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
     return this._fetch<T>(path, { method: "POST", ...options });
   }
 
-  async get<T>(path: string, options?: FetchOptions<"json">) {
+  async get<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
     return this._fetch<T>(path, { method: "GET", ...options });
   }
 
-  async delete<T>(path: string, options?: FetchOptions<"json">) {
+  async delete<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
     return this._fetch<T>(path, { method: "DELETE", ...options });
   }
 }
