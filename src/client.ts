@@ -38,4 +38,8 @@ export class MailChannelsClient {
   async delete<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
     return this._fetch<T>(path, { method: "DELETE", ...options });
   }
+
+  async put<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+    return this._fetch<T>(path, { method: "PUT", ...options });
+  }
 }
