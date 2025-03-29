@@ -97,6 +97,11 @@ export class Domains {
 
     const data: DomainsAddListEntryResponse = { entry: null, error: null };
 
+    if (!domain) {
+      data.error = "The domain is required.";
+      return data;
+    }
+
     const response = await this.mailchannels.post<DomainsAddListEntryResponse["entry"]>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {

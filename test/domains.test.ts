@@ -147,6 +147,19 @@ describe("addListEntry", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should contain error when domain is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entry, error } = await domains.addListEntry("", fake.addListEntry.options);
+
+    expect(error).toBe("The domain is required.");
+    expect(entry).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
