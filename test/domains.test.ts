@@ -134,6 +134,50 @@ describe("list", () => {
   });
 });
 
+describe("delete", () => {
+  it("should successfully delete a provisioned domain", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success } = await domains.delete(fake.provision.domain);
+
+    expect(mockClient.delete).toHaveBeenCalled();
+    expect(success).toBe(true);
+  });
+
+  it("should contain error if domain is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.delete("");
+
+    expect(error).toBe("The domain is required.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.delete(fake.provision.domain);
+
+    expect(error).toBeDefined();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
 describe("addListEntry", () => {
   it("should successfully add a list entry", async () => {
     const mockClient = {

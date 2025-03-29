@@ -91,6 +91,35 @@ const { domains } = await mailchannels.domains.list()
   > [!TIP]
   > If no options are provided, the default limit is `10` and the offset is `0`.
 
+## Delete <Badge type="info" text="method" />
+
+De-provision a domain to cease protecting it with MailChannels Inbound.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { success } = await domains.delete("example.com")
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.domains.delete("example.com")
+```
+:::
+
+### Params
+
+- `domain`: The domain name to be removed.
+
 ## Add List Entry <Badge type="info" text="method" />
 
 Add an entry to a domain blocklist or safelist.

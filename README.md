@@ -96,7 +96,7 @@ Soon to be implemented.
 
 - Domains
   - ✅ Provision domain
-  - 🚧 Remove domain
+  - ✅ Remove domain
   - ✅ List domains
   - 🚧 Bulk provision domains
   - ✅ Add domain list entry

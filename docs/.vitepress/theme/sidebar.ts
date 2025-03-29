@@ -67,6 +67,7 @@ export default [
             items: [
               { text: "Provision Domain", link: "/modules/domains#provision" },
               { text: "List Domains", link: "/modules/domains#list" },
+              { text: "Delete Domain", link: "/modules/domains#delete" },
               { text: "Add List Entry", link: "/modules/domains#add-list-entry" },
               { text: "Create Login Link", link: "/modules/domains#create-login-link" }
             ]

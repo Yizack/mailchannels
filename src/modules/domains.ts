@@ -1,4 +1,5 @@
 import type { MailChannelsClient } from "../client";
+import type { SuccessResponse } from "../types/success-response";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../types/domains/add-list-entry";
@@ -77,6 +78,40 @@ export class Domains {
 
     data.domains = response.domains;
     data.total = response.total;
+    return data;
+  }
+
+  /**
+   * De-provision a domain to cease protecting it with MailChannels Inbound.
+   * @param domain - The domain name to be removed.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.domains.delete('example.com')
+   * ```
+   */
+  async delete (domain: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!domain) {
+      data.error = "The domain is required.";
+      return data;
+    }
+
+    await this.mailchannels.delete<void>(`/inbound/v1/domains/${domain}`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: "The domain does not exist."
+        });
+      }
+    });
+
     return data;
   }
 
