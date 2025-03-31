@@ -1,5 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
+import type { DomainsAddListEntryApiResponse } from "../types/domains/internal";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../types/domains/add-list-entry";
@@ -137,7 +138,7 @@ export class Domains {
       return data;
     }
 
-    const response = await this.mailchannels.post<DomainsAddListEntryResponse["entry"]>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
+    const response = await this.mailchannels.post<DomainsAddListEntryApiResponse>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
@@ -149,7 +150,11 @@ export class Domains {
 
     if (!response) return data;
 
-    data.entry = response;
+    data.entry = {
+      action: response.action,
+      item: response.item,
+      type: response.item_type
+    };
     return data;
   }
 

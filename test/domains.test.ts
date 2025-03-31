@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
-import type { DomainsProvisionOptions, DomainsProvisionResponse } from "../src/types/domains/provision";
+import type { DomainsProvisionOptions } from "../src/types/domains/provision";
 import { ErrorCode } from "../src/utils/errors";
-import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../src/types/domains/add-list-entry";
+import type { DomainsAddListEntryOptions } from "../src/types/domains/add-list-entry";
+import type { DomainsAddListEntryApiResponse } from "../src/types/domains/internal";
 
 const fake = {
   provision: {
@@ -44,7 +45,7 @@ const fake = {
       action: "safelist",
       item: "name@example.com",
       item_type: "email_address"
-    } as DomainsAddListEntryResponse["entry"]
+    } as DomainsAddListEntryApiResponse
   }
 };
 
@@ -187,7 +188,11 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { entry } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(entry).toBe(fake.addListEntry.apiResponse);
+    expect(entry).toEqual({
+      action: fake.addListEntry.apiResponse.action,
+      item: fake.addListEntry.apiResponse.item,
+      type: fake.addListEntry.apiResponse.item_type
+    });
     expect(mockClient.post).toHaveBeenCalled();
   });
 

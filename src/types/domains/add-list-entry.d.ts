@@ -15,7 +15,7 @@ export interface DomainsAddListEntryResponse {
   entry: {
     action: Extract<DomainsListNames, "blocklist" | "safelist">;
     item: string;
-    item_type: "domain" | "email_address" | "ip_address";
+    type: "domain" | "email_address" | "ip_address";
   } | null;
   error: string | null;
 }
