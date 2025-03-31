@@ -36,6 +36,8 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 A cloud-based spam filtering service that protects your users against spam, phishing, and malware.
 
+This API is limited to 100 queries per second, per customer. Queries that exceed this rate may be rejected with the `503 Service Temporarily Unavailable` HTTP response.
+
 ### 🌐 Domains
 
 <!-- @include: modules/domains.md#description -->
