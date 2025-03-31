@@ -108,11 +108,9 @@ Soon to be implemented.
 - Lists
   - 🚧 Add item to customer list
   - 🚧 Delete item from customer list
-  - 🚧 Add item to recipient list
-  - 🚧 Delete item from recipient list
   - 🚧 Get customer list entries
 - Users
-  - 🚧 Create a recipient
+  - ✅ Create a recipient
   - 🚧 Add item to recipient list
   - 🚧 Get recipient list entries
   - 🚧 Delete item from recipient list

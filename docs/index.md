@@ -34,6 +34,10 @@ features:
     title: Domains module
     details: Manage Inbound domains
     link: /modules/domains
+  - icon: 📥
+    title: Users module
+    details: Manage recipient users
+    link: /modules/users
   - icon: ⚙️
     title: Service
     details: Information about the service

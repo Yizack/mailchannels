@@ -74,6 +74,14 @@ export default [
             ]
           },
           {
+            text: "📥 Users",
+            collapsed: true,
+            link: "/modules/users",
+            items: [
+              { text: "Create User", link: "/modules/users#create" }
+            ]
+          },
+          {
             text: "⚙️ Service",
             collapsed: true,
             link: "/modules/service",

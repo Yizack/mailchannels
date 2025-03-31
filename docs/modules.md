@@ -40,7 +40,13 @@ A cloud-based spam filtering service that protects your users against spam, phis
 
 <!-- @include: modules/domains.md#description -->
 
-<VPButton href="/modules/service" text="Read documentation" theme="alt" style="text-decoration:none" />
+<VPButton href="/modules/domains" text="Read documentation" theme="alt" style="text-decoration:none" />
+
+### 📥 Users
+
+<!-- @include: modules/users.md#description -->
+
+<VPButton href="/modules/users" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### ⚙️ Service 
 
