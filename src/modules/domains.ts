@@ -17,8 +17,8 @@ export class Domains {
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { data } = await mailchannels.domains.provision({
-   *   domain: "example.com",
-   *   subscriptionHandle: "your-subscription-handle"
+   *   domain: 'example.com',
+   *   subscriptionHandle: 'your-subscription-handle'
    * })
    * ```
    */

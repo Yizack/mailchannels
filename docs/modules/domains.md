@@ -23,8 +23,8 @@ const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
 const { data } = await domains.provision({
-  "domain": "example.com",
-  "subscriptionHandle": "your-subscription-handle"
+  domain: 'example.com',
+  subscriptionHandle: 'your-subscription-handle'
 })
 ```
 
@@ -33,8 +33,8 @@ import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
 const { data } = await mailchannels.domains.provision({
-  domain: "example.com",
-  subscriptionHandle: "your-subscription-handle"
+  domain: 'example.com',
+  subscriptionHandle: 'your-subscription-handle'
 })
 ```
 :::
@@ -105,14 +105,14 @@ import { Domains } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success } = await domains.delete("example.com")
+const { success } = await domains.delete('example.com')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.domains.delete("example.com")
+const { success } = await mailchannels.domains.delete('example.com')
 ```
 :::
 
@@ -134,7 +134,7 @@ import { Domains } from '@yizack/mailchannels/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { entry } = await domains.addListEntry("example.com", {
+const { entry } = await domains.addListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -144,7 +144,7 @@ const { entry } = await domains.addListEntry("example.com", {
 import { MailChannels } from '@yizack/mailchannels'
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.domains.addListEntry("example.com", {
+const { entry } = await mailchannels.domains.addListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
