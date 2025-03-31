@@ -38,7 +38,7 @@ export const parseArrayRecipients = (recipients?: EmailsSendRecipient | EmailsSe
 
   if (Array.isArray(recipients)) {
     return recipients
-      .map((recipient) => parseRecipient(recipient))
+      .map(recipient => parseRecipient(recipient))
       .filter((recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient));
   }
 

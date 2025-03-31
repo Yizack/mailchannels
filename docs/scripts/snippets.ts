@@ -34,7 +34,7 @@ const extractClassWithSignatures = (code: string) => {
       result = `class ${className} {\n`;
 
       // Process all class members
-      node.members.forEach(member => {
+      node.members.forEach((member) => {
         if (isMethodDeclaration(member) || isConstructorDeclaration(member)) {
           // Get method signature
           const methodText = code.substring(member.pos, member.body ? member.body.pos : member.end);

@@ -59,6 +59,7 @@ export default defineConfig([
       "@stylistic/space-in-parens": ["error", "never"],
       "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
+      "@stylistic/arrow-parens": ["error", "as-needed", { requireForBlockBody: true }],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error"
     }
