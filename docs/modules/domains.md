@@ -241,9 +241,9 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
 
   **List Entry type declarations**
 
-  <<< @/snippets/domains-list-names.ts
-  <<< @/snippets/domains-add-list-entry-options.ts
-  <<< @/snippets/domains-add-list-entry-response.ts
+  <<< @/snippets/list-names.ts
+  <<< @/snippets/list-entry-options.ts
+  <<< @/snippets/list-entry-response.ts
 
   **Create Login Link type declarations**
 

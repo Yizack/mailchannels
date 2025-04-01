@@ -1,9 +1,9 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
+import type { ListEntryOptions, ListEntryResponse } from "../types/list-entry";
 import type { DomainsAddListEntryApiResponse } from "../types/domains/internal";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
-import type { DomainsAddListEntryOptions, DomainsAddListEntryResponse } from "../types/domains/add-list-entry";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
@@ -127,11 +127,12 @@ export class Domains {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
+   * ```
    */
-  async addListEntry (domain: string, options: DomainsAddListEntryOptions) {
+  async addListEntry (domain: string, options: ListEntryOptions) {
     const { listName, item } = options;
 
-    const data: DomainsAddListEntryResponse = { entry: null, error: null };
+    const data: ListEntryResponse = { entry: null, error: null };
 
     if (!domain) {
       data.error = "No domain provided.";

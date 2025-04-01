@@ -3,7 +3,7 @@ import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
 import type { DomainsProvisionOptions } from "../src/types/domains/provision";
 import { ErrorCode } from "../src/utils/errors";
-import type { DomainsAddListEntryOptions } from "../src/types/domains/add-list-entry";
+import type { ListEntryOptions } from "../src/types/list-entry";
 import type { DomainsAddListEntryApiResponse } from "../src/types/domains/internal";
 
 const fake = {
@@ -40,7 +40,7 @@ const fake = {
     options: {
       listName: "safelist",
       item: "name@example.com"
-    } as DomainsAddListEntryOptions,
+    } as ListEntryOptions,
     apiResponse: {
       action: "safelist",
       item: "name@example.com",

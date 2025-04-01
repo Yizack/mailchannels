@@ -111,7 +111,7 @@ Soon to be implemented.
   - 🚧 Get customer list entries
 - Users
   - ✅ Create a recipient
-  - 🚧 Add item to recipient list
+  - ✅ Add item to recipient list
   - 🚧 Get recipient list entries
   - 🚧 Delete item from recipient list
 - Service

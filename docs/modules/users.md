@@ -54,6 +54,44 @@ const { user } = await mailchannels.users.create('name@example.com', {
     - `blocklist`: A list of items to add to the blocklist.
     - `safelist`: A list of items to add to the safelist.
 
+## Add List Entry <Badge type="info" text="method" />
+
+Add an entry to a domain blocklist or safelist.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Users } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const users = new Users(mailchannels)
+
+const { entry } = await users.addListEntry('name@example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { entry } = await mailchannels.users.addListEntry('name@example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+:::
+
+### Params
+
+- `email`: The email address of the recipient whose list will be modified.
+- `options`: Add list entry options.
+  - `listName`: The list to add the item to. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+  - `item`: The item to add to the list. This can be a domain, email address, or IP address.
+
 ## Type declarations
 
 <<< @/snippets/users.ts
@@ -65,6 +103,12 @@ const { user } = await mailchannels.users.create('name@example.com', {
 
   <<< @/snippets/users-create-options.ts
   <<< @/snippets/users-create-response.ts
+
+  **List Entry type declarations**
+
+  <<< @/snippets/list-names.ts
+  <<< @/snippets/list-entry-options.ts
+  <<< @/snippets/list-entry-response.ts
 </details>
 
 ## Source

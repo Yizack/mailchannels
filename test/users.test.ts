@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Users } from "../src/modules/users";
 import { ErrorCode } from "../src/utils/errors";
-import type { UsersCreateApiResponse } from "../src/types/users/internal";
+import type { UsersAddListEntryApiResponse, UsersCreateApiResponse } from "../src/types/users/internal";
+import type { ListEntryOptions } from "../src/types";
 
 const fake = {
   create: {
@@ -20,6 +21,17 @@ const fake = {
       }]
 
     } as UsersCreateApiResponse
+  },
+  addListEntry: {
+    options: {
+      listName: "safelist",
+      item: "name@example.com"
+    } as ListEntryOptions,
+    apiResponse: {
+      action: "safelist",
+      item: "name@example.com",
+      item_type: "email_address"
+    } as UsersAddListEntryApiResponse
   }
 };
 
@@ -72,5 +84,52 @@ describe("create", () => {
     expect(error).toBeDefined();
     expect(user).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
+  });
+});
+
+describe("addListEntry", () => {
+  it("should successfully add a list entry", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.addListEntry.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entry } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(entry).toEqual({
+      action: fake.addListEntry.apiResponse.action,
+      item: fake.addListEntry.apiResponse.item,
+      type: fake.addListEntry.apiResponse.item_type
+    });
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error when email is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entry, error } = await users.addListEntry("", fake.addListEntry.options);
+
+    expect(error).toBe("No email provided.");
+    expect(entry).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entry, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBeDefined();
+    expect(entry).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });
