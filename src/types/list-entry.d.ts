@@ -11,11 +11,18 @@ export interface ListEntryOptions {
   item: string;
 }
 
+export interface ListEntry {
+  action: Extract<ListNames, "blocklist" | "safelist">;
+  item: string;
+  type: "domain" | "email_address" | "ip_address";
+}
+
 export interface ListEntryResponse {
-  entry: {
-    action: Extract<ListNames, "blocklist" | "safelist">;
-    item: string;
-    type: "domain" | "email_address" | "ip_address";
-  } | null;
+  entry: ListEntry | null;
+  error: string | null;
+}
+
+export interface ListEntriesResponse {
+  entries: ListEntry[];
   error: string | null;
 }

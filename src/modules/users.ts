@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { ListEntryOptions, ListEntryResponse } from "../types";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types";
 import type { UsersAddListEntryApiResponse, UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
 import { ErrorCode, getStatusError } from "../utils/errors";
@@ -101,6 +101,48 @@ export class Users {
       item: response.item,
       type: response.item_type
     };
+    return data;
+  }
+
+  /**
+   * Get recipient list entries.
+   * @param email - The email address of the recipient whose list will be fetched.
+   * @param listName - The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { entries } = await mailchannels.users.listEntries('name@example.com', 'safelist')
+   * ```
+   */
+  async listEntries (email: string, listName: ListNames) {
+    const data: ListEntriesResponse = { entries: [], error: null };
+
+    if (!email) {
+      data.error = "No email provided.";
+      return data;
+    }
+
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<UsersAddListEntryApiResponse[]>(`/inbound/v1/users/${email}/lists/${listName}`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.entries = response.map(({ action, item, item_type }) => ({
+      action,
+      item,
+      type: item_type
+    }));
     return data;
   }
 }

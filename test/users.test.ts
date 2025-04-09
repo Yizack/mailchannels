@@ -133,3 +133,64 @@ describe("addListEntry", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
+
+describe("listEntries", () => {
+  it("should return recipient list entries", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce([fake.addListEntry.apiResponse])
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entries } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+
+    expect(entries).toEqual([{
+      action: fake.addListEntry.apiResponse.action,
+      item: fake.addListEntry.apiResponse.item,
+      type: fake.addListEntry.apiResponse.item_type
+    }]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when email is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entries, error } = await users.listEntries("", fake.addListEntry.options.listName);
+
+    expect(error).toBe("No email provided.");
+    expect(entries).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when list name is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    // @ts-expect-error listName is not provided
+    const { entries, error } = await users.listEntries(fake.create.email, "");
+
+    expect(error).toBe("No list name provided.");
+    expect(entries).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { entries, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+
+    expect(error).toBeDefined();
+    expect(entries).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
