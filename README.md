@@ -113,7 +113,7 @@ Soon to be implemented.
   - ✅ Create a recipient
   - ✅ Add item to recipient list
   - ✅ Get recipient list entries
-  - 🚧 Delete item from recipient list
+  - ✅ Delete item from recipient list
 - Service
   - ✅ Retrieve the condition of the service
   - 🚧 Submit a false negative or false positive report

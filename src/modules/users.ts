@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames, SuccessResponse } from "../types";
 import type { UsersAddListEntryApiResponse, UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
 import { ErrorCode, getStatusError } from "../utils/errors";
@@ -143,6 +143,52 @@ export class Users {
       item,
       type: item_type
     }));
+    return data;
+  }
+
+  /**
+   * Delete item from recipient list.
+   * @param email - The email address of the recipient whose list will be modified.
+   * @param options - The options for the list entry to delete.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {
+   *   listName: 'safelist',
+   *   item: 'name@domain.com'
+   * })
+   * ```
+   */
+  async deleteListEntry (email: string, options: ListEntryOptions): Promise<SuccessResponse> {
+    const { listName, item } = options;
+
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!email) {
+      data.error = "No email provided.";
+      return data;
+    }
+
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
+    await this.mailchannels.delete(`/inbound/v1/users/${email}/lists/${listName}`, {
+      query: { item },
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
+        });
+      }
+    });
+
     return data;
   }
 }

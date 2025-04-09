@@ -194,3 +194,61 @@ describe("listEntries", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
+
+describe("deleteListEntry", () => {
+  it("should successfully delete a list entry", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { success } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(success).toBe(true);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should contain error when email is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { success, error } = await users.deleteListEntry("", fake.addListEntry.options);
+
+    expect(error).toBe("No email provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when list name is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    // @ts-expect-error listName is not provided
+    const { success, error } = await users.deleteListEntry(fake.create.email, {});
+
+    expect(error).toBe("No list name provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: ErrorCode.Forbidden } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBeDefined();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+});

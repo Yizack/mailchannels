@@ -80,7 +80,8 @@ export default [
             items: [
               { text: "Create User", link: "/modules/users#create" },
               { text: "Add List Entry", link: "/modules/users#add-list-entry" },
-              { text: "List Entries", link: "/modules/users#list-entries" }
+              { text: "List Entries", link: "/modules/users#list-entries" },
+              { text: "Delete List Entry", link: "/modules/users#delete-list-entry" }
             ]
           },
           {

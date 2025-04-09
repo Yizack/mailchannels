@@ -119,8 +119,46 @@ const { entry } = await mailchannels.users.listEntries('name@example.com', 'safe
 
 ### Params
 
+- `email`:  The email address of the recipient whose list will be fetched.
+- `listName`: TThe name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+
+## Delete List Entry <Badge type="info" text="method" />
+
+Delete item from recipient list.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Users } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const users = new Users(mailchannels)
+
+const { entry } = await users.deleteListEntry('name@example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+:::
+
+### Params
+
 - `email`: The email address of the recipient whose list will be modified.
-- `listName`: The list to add the item to. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+- `options`: Add list entry options.
+  - `listName`: The name of the list to remove an entry from. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+  - `item`: TThe list entry which should be removed. This can be a domain, email address, or IP address.
 
 ## Type declarations
 
