@@ -34,14 +34,14 @@ features:
     title: Domains module
     details: Manage Inbound domains
     link: /modules/domains
+  - icon: 📋
+    title: Lists module
+    details: Manage account-level lists
+    link: /modules/lists
   - icon: 📥
     title: Users module
     details: Manage recipient users
     link: /modules/users
-  - icon: ⚙️
-    title: Service
-    details: Information about the service
-    link: /modules/service
 ---
 
 <!-- @include: ../README.md#note -->

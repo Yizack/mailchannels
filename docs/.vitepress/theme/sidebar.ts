@@ -74,6 +74,14 @@ export default [
             ]
           },
           {
+            text: "📋 Lists",
+            collapsed: true,
+            link: "/modules/lists",
+            items: [
+              {}
+            ]
+          },
+          {
             text: "📥 Users",
             collapsed: true,
             link: "/modules/users",
