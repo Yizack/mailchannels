@@ -25,16 +25,12 @@
   "main": "./dist/mailchannels.mjs",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/mailchannels.d.mts",
-        "default": "./dist/mailchannels.mjs"
-      }
+      "types": "./dist/mailchannels.d.mts",
+      "import": "./dist/mailchannels.mjs"
     },
     "./modules": {
-      "import": {
-        "types": "./dist/modules.d.mts",
-        "default": "./dist/modules.mjs"
-      }
+      "types": "./dist/modules.d.mts",
+      "import": "./dist/modules.mjs"
     }
   },
   "types": "./dist/mailchannels.d.ts",
