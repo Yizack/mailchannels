@@ -158,6 +158,74 @@ const { entry } = await mailchannels.domains.addListEntry('example.com', {
   - `listName`: The list to add the item to. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
   - `item`: The item to add to the list. This can be a domain, email address, or IP address.
 
+## List Entries <Badge type="info" text="method" />
+
+Get domain list entries.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { entry } = await domains.listEntries('example.com', 'safelist')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { entry } = await mailchannels.domains.listEntries('name@example.com', 'safelist')
+```
+:::
+
+### Params
+
+- `email`:  The domain name whose list will be fetched.
+- `listName`: The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+
+## Delete List Entry <Badge type="info" text="method" />
+
+Delete item from domain list.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { entry } = await domains.deleteListEntry('example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { entry } = await mailchannels.domains.deleteListEntry('example.com', {
+  listName: 'safelist',
+  item: 'name@domain.com'
+})
+```
+:::
+
+### Params
+
+- `email`: The domain name whose list will be modified.
+- `options`: Add list entry options.
+  - `listName`: The name of the list to remove an entry from. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+  - `item`: The list entry which should be removed. This can be a domain, email address, or IP address.
+
 ## Create Login Link <Badge type="info" text="method" />
 
 Generate a link that allows a user to log in as a domain administrator.

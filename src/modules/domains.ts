@@ -1,11 +1,12 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { ListEntryOptions, ListEntryResponse } from "../types/list-entry";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/list-entry";
 import type { DomainsAddListEntryApiResponse } from "../types/domains/internal";
 import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import { ErrorCode, getStatusError } from "../utils/errors";
+import type { ListEntryApiResponse } from "../types/internal";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -156,6 +157,94 @@ export class Domains {
       item: response.item,
       type: response.item_type
     };
+    return data;
+  }
+
+  /**
+   * Get domain list entries.
+   * @param domain - The domain name.
+   * @param listName - The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { entries } = await mailchannels.domains.listEntries('example.com', 'safelist')
+   * ```
+   */
+  async listEntries (domain: string, listName: ListNames): Promise<ListEntriesResponse> {
+    const data: ListEntriesResponse = { entries: [], error: null };
+
+    if (!domain) {
+      data.error = "No domain provided.";
+      return data;
+    }
+
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.entries = response.map(({ action, item, item_type }) => ({
+      action,
+      item,
+      type: item_type
+    }));
+    return data;
+  }
+
+  /**
+   * Delete item from domain list.
+   * @param email - The domain name whose list will be modified.
+   * @param options - The options for the list entry to delete.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.domains.deleteListEntry('example.com', {
+   *   listName: 'safelist',
+   *   item: 'name@domain.com'
+   * })
+   * ```
+   */
+  async deleteListEntry (domain: string, options: ListEntryOptions): Promise<SuccessResponse> {
+    const { listName, item } = options;
+
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!domain) {
+      data.error = "No domain provided.";
+      return data;
+    }
+
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
+    await this.mailchannels.delete(`/inbound/v1/domains/${domain}/lists/${listName}`, {
+      query: { item },
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
+        });
+      }
+    });
+
     return data;
   }
 

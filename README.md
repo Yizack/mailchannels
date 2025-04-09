@@ -96,7 +96,8 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ List domains
   - 🚧 Bulk provision domains
   - ✅ Add domain list entry
-  - 🚧 Get domain list entries
+  - ✅ Get domain list entries
+  - ✅ Delete domain list entry
   - ✅ Create login link
   - 🚧 Set downstream address
   - 🚧 Fetch downstream addresses

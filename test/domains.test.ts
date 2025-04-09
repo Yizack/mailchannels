@@ -226,6 +226,125 @@ describe("addListEntry", () => {
   });
 });
 
+describe("listEntries", () => {
+  it("should return recipient list entries", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce([fake.addListEntry.apiResponse])
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entries } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+
+    expect(entries).toEqual([{
+      action: fake.addListEntry.apiResponse.action,
+      item: fake.addListEntry.apiResponse.item,
+      type: fake.addListEntry.apiResponse.item_type
+    }]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when email is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entries, error } = await domains.listEntries("", fake.addListEntry.options.listName);
+
+    expect(error).toBe("No domain provided.");
+    expect(entries).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when list name is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    // @ts-expect-error listName is not provided
+    const { entries, error } = await domains.listEntries(fake.provision.domain, "");
+
+    expect(error).toBe("No list name provided.");
+    expect(entries).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { entries, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+
+    expect(error).toBeDefined();
+    expect(entries).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("deleteListEntry", () => {
+  it("should successfully delete a list entry", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(success).toBe(true);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should contain error when domain is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.deleteListEntry("", fake.addListEntry.options);
+
+    expect(error).toBe("No domain provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when list name is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    // @ts-expect-error listName is not provided
+    const { success, error } = await domains.deleteListEntry(fake.provision.domain, {});
+
+    expect(error).toBe("No list name provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: ErrorCode.Forbidden } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBeDefined();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
 describe("createLoginLink", () => {
   it("should successfully create a login link", async () => {
     const mockClient = {
