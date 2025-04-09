@@ -78,7 +78,9 @@ export default [
             collapsed: true,
             link: "/modules/lists",
             items: [
-              {}
+              { text: "Add List Entry", link: "/modules/lists#add-list-entry" },
+              { text: "List Entries", link: "/modules/lists#list-entries" },
+              { text: "Delete List Entry", link: "/modules/lists#delete-list-entry" }
             ]
           },
           {

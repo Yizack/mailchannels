@@ -56,7 +56,7 @@ const { user } = await mailchannels.users.create('name@example.com', {
 
 ## Add List Entry <Badge type="info" text="method" />
 
-Add an entry to a domain blocklist or safelist.
+Add an entry to a recipient user blocklist or safelist.
 
 ### Usage
 
@@ -120,7 +120,7 @@ const { entry } = await mailchannels.users.listEntries('name@example.com', 'safe
 ### Params
 
 - `email`:  The email address of the recipient whose list will be fetched.
-- `listName`: TThe name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+- `listName`: The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
 
 ## Delete List Entry <Badge type="info" text="method" />
 
@@ -158,7 +158,7 @@ const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {
 - `email`: The email address of the recipient whose list will be modified.
 - `options`: Add list entry options.
   - `listName`: The name of the list to remove an entry from. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
-  - `item`: TThe list entry which should be removed. This can be a domain, email address, or IP address.
+  - `item`: The list entry which should be removed. This can be a domain, email address, or IP address.
 
 ## Type declarations
 

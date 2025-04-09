@@ -2,8 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Users } from "../src/modules/users";
 import { ErrorCode } from "../src/utils/errors";
-import type { UsersAddListEntryApiResponse, UsersCreateApiResponse } from "../src/types/users/internal";
-import type { ListEntryOptions } from "../src/types";
+import type { ListEntryApiResponse } from "../src/types/internal";
+import type { UsersCreateApiResponse } from "../src/types/users/internal";
+import type { ListEntryOptions } from "../src/types/list-entry";
 
 const fake = {
   create: {
@@ -31,7 +32,7 @@ const fake = {
       action: "safelist",
       item: "name@example.com",
       item_type: "email_address"
-    } as UsersAddListEntryApiResponse
+    } as ListEntryApiResponse
   }
 };
 

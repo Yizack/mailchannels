@@ -102,9 +102,9 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - 🚧 Fetch downstream addresses
   - ✅ Update API key
 - 📋 Lists
-  - 🚧 Add item to customer list
-  - 🚧 Delete item from customer list
-  - 🚧 Get customer list entries
+  - ✅ Add item to customer list
+  - ✅ Delete item from customer list
+  - ✅ Get customer list entries
 - 📥 Users
   - ✅ Create a recipient
   - ✅ Add item to recipient list

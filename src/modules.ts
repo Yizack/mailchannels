@@ -4,5 +4,6 @@ export { SubAccounts } from "./modules/sub-accounts";
 export { Service } from "./modules/service";
 export { Domains } from "./modules/domains";
 export { Users } from "./modules/users";
+export { Lists } from "./modules/lists";
 
 export type * from "./types";

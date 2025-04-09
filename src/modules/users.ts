@@ -1,6 +1,8 @@
 import type { MailChannelsClient } from "../client";
-import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames, SuccessResponse } from "../types";
-import type { UsersAddListEntryApiResponse, UsersCreateApiResponse } from "../types/users/internal";
+import type { SuccessResponse } from "../types/success-response";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/list-entry";
+import type { ListEntryApiResponse } from "../types/internal";
+import type { UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
@@ -84,7 +86,7 @@ export class Users {
       return data;
     }
 
-    const response = await this.mailchannels.post<UsersAddListEntryApiResponse>(`/inbound/v1/users/${email}/lists/${listName}`, {
+    const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/users/${email}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
@@ -114,7 +116,7 @@ export class Users {
    * const { entries } = await mailchannels.users.listEntries('name@example.com', 'safelist')
    * ```
    */
-  async listEntries (email: string, listName: ListNames) {
+  async listEntries (email: string, listName: ListNames): Promise<ListEntriesResponse> {
     const data: ListEntriesResponse = { entries: [], error: null };
 
     if (!email) {
@@ -127,7 +129,7 @@ export class Users {
       return data;
     }
 
-    const response = await this.mailchannels.get<UsersAddListEntryApiResponse[]>(`/inbound/v1/users/${email}/lists/${listName}`, {
+    const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/users/${email}/lists/${listName}`, {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
@@ -153,7 +155,7 @@ export class Users {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {
+   * const { success } = await mailchannels.users.deleteListEntry('name@example.com', {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
