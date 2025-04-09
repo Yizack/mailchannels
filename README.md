@@ -63,11 +63,9 @@ pnpm add @yizack/mailchannels
 <!-- #region roadmap -->
 ## <a name="roadmap">🚧 Roadmap</a>
 
-Already implemented features are marked with a checkmark.
+Already implemented features are marked with a checkmark. Please open an issue if you find any bugs or missing features.
 
 ### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
-
-Fully implemented now. Please open an issue if you find any bugs or missing features.
 
 - 📧 Emails
   - ✅ Send an Email
@@ -92,9 +90,7 @@ Fully implemented now. Please open an issue if you find any bugs or missing feat
 
 ### [Inbound API](https://docs.mailchannels.net/inbound-api/API-reference/inbound-api)
 
-Soon to be implemented.
-
-- Domains
+- 🌐 Domains
   - ✅ Provision domain
   - ✅ Remove domain
   - ✅ List domains
@@ -105,16 +101,16 @@ Soon to be implemented.
   - 🚧 Set downstream address
   - 🚧 Fetch downstream addresses
   - ✅ Update API key
-- Lists
+- 📋 Lists
   - 🚧 Add item to customer list
   - 🚧 Delete item from customer list
   - 🚧 Get customer list entries
-- Users
+- 📥 Users
   - ✅ Create a recipient
   - ✅ Add item to recipient list
   - ✅ Get recipient list entries
   - ✅ Delete item from recipient list
-- Service
+- ⚙️ Service
   - ✅ Retrieve the condition of the service
   - 🚧 Submit a false negative or false positive report
   - ✅ Get a list of your subscriptions to MailChannels Inbound
