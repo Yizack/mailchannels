@@ -1,6 +1,64 @@
 # Changelog
 
 
+## v0.3.3
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.2...v0.3.3)
+
+### 🚀 Enhancements
+
+- Add service module + status and subscriptions methods ([b9c76d6](https://github.com/Yizack/mailchannels/commit/b9c76d6))
+- Add domains module + provision method ([86e9dac](https://github.com/Yizack/mailchannels/commit/86e9dac))
+- **domains:** Add create login link method ([f8377f4](https://github.com/Yizack/mailchannels/commit/f8377f4))
+- **domains:** Add list method ([777d333](https://github.com/Yizack/mailchannels/commit/777d333))
+- **domains:** Add `addListEntry` method ([4c82eda](https://github.com/Yizack/mailchannels/commit/4c82eda))
+- **domains:** Add `delete` domain method ([4107014](https://github.com/Yizack/mailchannels/commit/4107014))
+- **domains:** Add `updateApiKey` method ([c0fa0b3](https://github.com/Yizack/mailchannels/commit/c0fa0b3))
+- **users:** Add `users` module and `create` method ([27dff86](https://github.com/Yizack/mailchannels/commit/27dff86))
+- **users:** Add `addListEntry` method ([1f5a591](https://github.com/Yizack/mailchannels/commit/1f5a591))
+- **users:** Support recipient list entries ([3733fbc](https://github.com/Yizack/mailchannels/commit/3733fbc))
+- **users:** Support delete a recipient list entry ([dcc98d2](https://github.com/Yizack/mailchannels/commit/dcc98d2))
+- **modules:** Add `lists` module ([38dfb98](https://github.com/Yizack/mailchannels/commit/38dfb98))
+- **domains:** Support list entries and delete entry ([d61bf7f](https://github.com/Yizack/mailchannels/commit/d61bf7f))
+
+### 🩹 Fixes
+
+- Return possible message errors on unknown api error ([7e1298b](https://github.com/Yizack/mailchannels/commit/7e1298b))
+- **sub-accounts:** List options errors check ([eef12b5](https://github.com/Yizack/mailchannels/commit/eef12b5))
+- **domains:** Add list entry missing domain error ([281a855](https://github.com/Yizack/mailchannels/commit/281a855))
+- **domains:** Consistent return props in `addListEntry` ([f7cd906](https://github.com/Yizack/mailchannels/commit/f7cd906))
+
+### 📖 Documentation
+
+- Readme update readme ([ea8190a](https://github.com/Yizack/mailchannels/commit/ea8190a))
+- Add domain and service modules to index page ([4047085](https://github.com/Yizack/mailchannels/commit/4047085))
+- Adjust sidebar ([d530883](https://github.com/Yizack/mailchannels/commit/d530883))
+- **sub-accounts:** Add jsdoc to list options param ([271d36d](https://github.com/Yizack/mailchannels/commit/271d36d))
+- Consistent quotes formatting ([ce457b7](https://github.com/Yizack/mailchannels/commit/ce457b7))
+- Add inbound api info ([00093a7](https://github.com/Yizack/mailchannels/commit/00093a7))
+- Adjust roadmap ([de65353](https://github.com/Yizack/mailchannels/commit/de65353))
+- Init lists module pages + versions ([1715907](https://github.com/Yizack/mailchannels/commit/1715907))
+
+### 🏡 Chore
+
+- Remove unused type ([40e87d4](https://github.com/Yizack/mailchannels/commit/40e87d4))
+- Check for message error on unknown errors ([53697e0](https://github.com/Yizack/mailchannels/commit/53697e0))
+- Add new line before class methods ([e5532b8](https://github.com/Yizack/mailchannels/commit/e5532b8))
+- Sort success response type import ([9f1ee47](https://github.com/Yizack/mailchannels/commit/9f1ee47))
+- **client:** Omit method prop on fetch methods ([c84bcce](https://github.com/Yizack/mailchannels/commit/c84bcce))
+- **client:** Add put fetch method ([12d4800](https://github.com/Yizack/mailchannels/commit/12d4800))
+- **eslint:** Add arrow-parens stylistic rule ([25f9a45](https://github.com/Yizack/mailchannels/commit/25f9a45))
+- Simple exports properties ([b3514ce](https://github.com/Yizack/mailchannels/commit/b3514ce))
+
+### ✅ Tests
+
+- Test api response errors once ([0d3935e](https://github.com/Yizack/mailchannels/commit/0d3935e))
+- **sub-accounts:** Fix tests ([dd28836](https://github.com/Yizack/mailchannels/commit/dd28836))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.2
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.1...v0.3.2)
