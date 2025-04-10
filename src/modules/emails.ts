@@ -4,6 +4,7 @@ import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
+import { stripPemHeaders } from "../utils/helpers";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -59,7 +60,7 @@ export class Emails {
         cc: parseArrayRecipients(cc),
         to: parsedTo,
         dkim_domain: dkim?.domain || undefined,
-        dkim_private_key: dkim?.privateKey || undefined,
+        dkim_private_key: dkim?.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
         dkim_selector: dkim?.selector || undefined,
         dynamic_template_data: options.mustaches
       }],
@@ -119,7 +120,7 @@ export class Emails {
     const payload: EmailsCheckDomainPayload = {
       dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
         dkim_domain: domain,
-        dkim_private_key: privateKey,
+        dkim_private_key: stripPemHeaders(privateKey),
         dkim_selector: selector
       })),
       domain,
