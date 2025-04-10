@@ -100,7 +100,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ Delete domain list entry
   - ✅ Create login link
   - 🚧 Set downstream address
-  - 🚧 Fetch downstream addresses
+  - ✅ Fetch downstream addresses
   - ✅ Update API key
 - 📋 Lists
   - ✅ Add item to customer list

@@ -255,6 +255,40 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 - `domain`: The domain name.
 
+## List Downstream Addresses <Badge type="info" text="method" />
+
+Retrieve stored downstream addresses for the domain.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { records } = await domains.listDownstreamAddresses('example.com')
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { records } = await mailchannels.domains.listDownstreamAddresses('example.com')
+```
+:::
+
+### Params
+
+- `domain`: The domain name to get downstream addresses records for.
+- `options`: List domains options.
+  - `limit`: The number of records to return.
+  - `offset`: The offset into the records to return.
+  > [!TIP]
+  > If no options are provided, the default limit is `10` and the offset is `0`.
+
 ## Update API Key <Badge type="info" text="method" />
 
 Update the API key that is associated with a domain.
@@ -314,6 +348,12 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
   <<< @/snippets/list-entry.ts
   <<< @/snippets/list-entry-response.ts
   <<< @/snippets/list-entries-response.ts
+
+  **Downstream Addresses type declarations**
+  
+  <<< @/snippets/domains-downstream-address.ts
+  <<< @/snippets/domains-list-downstream-addresses-options.ts
+  <<< @/snippets/domains-list-downstream-addresses-response.ts
 
   **Create Login Link type declarations**
 

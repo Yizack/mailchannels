@@ -72,6 +72,7 @@ export default [
               { text: "List Entries", link: "/modules/domains#list-entries" },
               { text: "Delete List Entry", link: "/modules/domains#delete-list-entry" },
               { text: "Create Login Link", link: "/modules/domains#create-login-link" },
+              { text: "List Downstream Addresses", link: "/modules/domains#list-downstream-addresses" },
               { text: "Update API Key", link: "/modules/domains#update-api-key" }
             ]
           },

@@ -46,6 +46,16 @@ const fake = {
       item: "name@example.com",
       item_type: "email_address"
     } as DomainsAddListEntryApiResponse
+  },
+  listDownstreamAddresses: {
+    records: [
+      {
+        port: 25,
+        priority: 10,
+        target: "example.com",
+        weight: 10
+      }
+    ]
   }
 };
 
@@ -384,6 +394,75 @@ describe("createLoginLink", () => {
 
     expect(error).toBeDefined();
     expect(link).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("listDownstreamAddresses", () => {
+  it("should successfully list downstream address records", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce({ records: fake.listDownstreamAddresses })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { records } = await domains.listDownstreamAddresses(fake.provision.domain);
+
+    expect(records).toEqual(fake.listDownstreamAddresses);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when domain is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { records, error } = await domains.listDownstreamAddresses("");
+
+    expect(error).toBe("No domain provided.");
+    expect(records).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid limit", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain, { limit: -1 });
+
+    expect(error).toBe("The limit value is invalid. Only positive values are allowed.");
+    expect(records).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid offset", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain, { offset: -1 });
+
+    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(records).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { ok: false } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain);
+
+    expect(error).toBeDefined();
+    expect(records).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

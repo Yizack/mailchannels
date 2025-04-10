@@ -7,6 +7,7 @@ import type { DomainsListOptions, DomainsListResponse } from "../types/domains/l
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import { ErrorCode, getStatusError } from "../utils/errors";
 import type { ListEntryApiResponse } from "../types/internal";
+import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -278,6 +279,49 @@ export class Domains {
     if (!response) return data;
 
     data.link = response.loginLink;
+    return data;
+  }
+
+  /**
+   * Retrieve stored downstream addresses for the domain.
+   * @param domain - The domain name.
+   * @param options - The options to filter the list of downstream addresses.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { records } = await mailchannels.domains.listDownstreamAddresses('example.com')
+   * ```
+   */
+  async listDownstreamAddresses (domain: string, options?: DomainsListDownstreamAddressesOptions): Promise<DomainsListDownstreamAddressesResponse> {
+    const data: DomainsListDownstreamAddressesResponse = { records: [], error: null };
+
+    if (!domain) {
+      data.error = "No domain provided.";
+      return data;
+    }
+
+    if (typeof options?.limit === "number" && options.limit < 1) {
+      data.error = "The limit value is invalid. Only positive values are allowed.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<{ records: DomainsDownstreamAddress[] }>(`/inbound/v1/domains/${domain}/downstream-address`, {
+      query: options,
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+    data.records = response.records;
     return data;
   }
 
