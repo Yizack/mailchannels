@@ -89,6 +89,11 @@ export class SubAccounts {
   async delete (handle: string): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
 
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
@@ -114,6 +119,11 @@ export class SubAccounts {
    */
   async suspend (handle: string): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
       ignoreResponseError: true,
@@ -143,6 +153,11 @@ export class SubAccounts {
   async activate (handle: string): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
 
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
@@ -171,6 +186,11 @@ export class SubAccounts {
    */
   async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
     const data: SubAccountsCreateApiKeyResponse = { key: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
 
     const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
@@ -203,6 +223,11 @@ export class SubAccounts {
   async listApiKeys (handle: string): Promise<SubAccountsListApiKeyResponse> {
     const data: SubAccountsListApiKeyResponse = { keys: [], error: null };
 
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
@@ -231,6 +256,11 @@ export class SubAccounts {
   async deleteApiKey (handle: string, id: number): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
 
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
@@ -258,6 +288,11 @@ export class SubAccounts {
    */
   async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
     const data: SubAccountsCreateSmtpPasswordResponse = { password: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
 
     const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
@@ -291,6 +326,11 @@ export class SubAccounts {
   async listSmtpPasswords (handle: string): Promise<SubAccountsListSmtpPasswordResponse> {
     const data: SubAccountsListSmtpPasswordResponse = { passwords: [], error: null };
 
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
     const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
@@ -319,6 +359,11 @@ export class SubAccounts {
    */
   async deleteSmtpPassword (handle: string, id: number): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
       ignoreResponseError: true,

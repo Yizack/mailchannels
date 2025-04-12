@@ -141,6 +141,11 @@ export class Domains {
       return data;
     }
 
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
     const response = await this.mailchannels.post<DomainsAddListEntryApiResponse>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {

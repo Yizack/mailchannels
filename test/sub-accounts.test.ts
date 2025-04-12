@@ -216,6 +216,19 @@ describe("delete", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.delete("");
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
@@ -245,6 +258,19 @@ describe("suspend", () => {
 
     expect(success).toBe(true);
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.suspend("");
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
@@ -278,6 +304,19 @@ describe("activate", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.activate("");
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it ("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
@@ -305,6 +344,19 @@ describe("createApiKey", () => {
 
     expect(result).toEqual(fake.createApiKey.expectedResponse);
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { key, error } = await subAccounts.createApiKey("");
+
+    expect(error).toBe("No handle provided.");
+    expect(key).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
@@ -336,6 +388,19 @@ describe("listApiKeys", () => {
 
     expect(result).toEqual(fake.listApiKeys.expectedResponse);
     expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { keys, error } = await subAccounts.listApiKeys("");
+
+    expect(error).toBe("No handle provided.");
+    expect(keys).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
@@ -370,6 +435,19 @@ describe("deleteApiKey", () => {
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteApiKey("", 1);
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
@@ -397,6 +475,19 @@ describe("createSmtpPassword", () => {
 
     expect(result).toEqual(fake.createSmtpPassword.expectedResponse);
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { password, error } = await subAccounts.createSmtpPassword("");
+
+    expect(error).toBe("No handle provided.");
+    expect(password).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error on error", async () => {
@@ -429,6 +520,19 @@ describe("listSmtpPasswords", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { passwords, error } = await subAccounts.listSmtpPasswords("");
+
+    expect(error).toBe("No handle provided.");
+    expect(passwords).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
@@ -459,6 +563,19 @@ describe("deleteSmtpPassword", () => {
 
     expect(success).toBe(true);
     expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteSmtpPassword("", 1);
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {

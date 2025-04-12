@@ -24,6 +24,11 @@ export class Lists {
 
     const data: ListEntryResponse = { entry: null, error: null };
 
+    if (!listName) {
+      data.error = "No list name provided.";
+      return data;
+    }
+
     const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {

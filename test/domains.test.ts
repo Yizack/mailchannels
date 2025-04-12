@@ -219,6 +219,20 @@ describe("addListEntry", () => {
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
+  it("should contain error when list name is not provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    // @ts-expect-error listName is not provided
+    const { entry, error } = await domains.addListEntry(fake.provision.domain, {});
+
+    expect(error).toBe("No list name provided.");
+    expect(entry).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
