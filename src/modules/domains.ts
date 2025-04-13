@@ -1,13 +1,13 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/list-entry";
-import type { DomainsAddListEntryApiResponse } from "../types/domains/internal";
-import type { DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
+import type { DomainsAddListEntryApiResponse, DomainsBulkProvisionApiResponse } from "../types/domains/internal";
+import type { DomainsBulkProvisionOptions, DomainsBulkProvisionResponse, DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
+import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types/domains/downstream-addresses";
 import { ErrorCode, getStatusError } from "../utils/errors";
 import type { ListEntryApiResponse } from "../types/internal";
-import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -24,12 +24,12 @@ export class Domains {
    * })
    * ```
    */
-  async provision (options: DomainsProvisionOptions): Promise<DomainsProvisionResponse> {
+  async provision (options: DomainsProvisionOptions & DomainsData): Promise<DomainsProvisionResponse> {
     const { associateKey, overwrite, ...payload } = options;
 
     const data: DomainsProvisionResponse = { data: null, error: null };
 
-    const response = await this.mailchannels.post<DomainsData>("/inbound/v1/domains", {
+    const response = await this.mailchannels.post<DomainsBulkProvisionApiResponse>("/inbound/v1/domains", {
       query: {
         "associate-key": associateKey,
         "overwrite": overwrite
@@ -45,6 +45,62 @@ export class Domains {
     }).catch(() => null);
 
     data.data = response;
+    return data;
+  }
+
+  /**
+   * Provision up to 1000 domains to use MailChannels Inbound.
+   * @param options - The options to provision the domains.
+   * @param domains - The list of domains to provision.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { results } = await mailchannels.domains.bulkProvision({
+   *   subscriptionHandle: 'your-subscription-handle'
+   * }, [
+   *   {
+   *     domain: 'example.com',
+   *     admins: ['support@example.com']
+   *   },
+   *   {
+   *     domain: 'example2.com'
+   *   }
+   * ])
+   * ```
+   */
+  async bulkProvision (options: DomainsBulkProvisionOptions, domains: Omit<DomainsData, "subscriptionHandle">[]): Promise<DomainsBulkProvisionResponse> {
+    const { associateKey, overwrite, subscriptionHandle } = options;
+
+    const data: DomainsBulkProvisionResponse = { results: null, error: null };
+
+    if (!domains || !domains.length) {
+      data.error = "No domains provided.";
+      return data;
+    }
+
+    if (domains.length > 1000) {
+      data.error = "The maximum number of domains to be provisioned is 1000.";
+      return data;
+    }
+
+    const response = await this.mailchannels.post<DomainsBulkProvisionResponse["results"]>("/inbound/v1/domains/batch", {
+      query: {
+        subscriptionHandle,
+        "associate-key": associateKey,
+        "overwrite": overwrite
+      },
+      body: { domains },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request, returned in the case that a domain name fails RFC 5891 validation.",
+          [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.results = response;
     return data;
   }
 

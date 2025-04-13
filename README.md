@@ -94,7 +94,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ Provision domain
   - ✅ Remove domain
   - ✅ List domains
-  - 🚧 Bulk provision domains
+  - ✅ Bulk provision domains
   - ✅ Add domain list entry
   - ✅ Get domain list entries
   - ✅ Delete domain list entry

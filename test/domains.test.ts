@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
-import type { DomainsProvisionOptions } from "../src/types/domains/provision";
+import type { DomainsData, DomainsProvisionOptions } from "../src/types/domains/provision";
 import { ErrorCode } from "../src/utils/errors";
 import type { ListEntryOptions } from "../src/types/list-entry";
 import type { DomainsAddListEntryApiResponse } from "../src/types/domains/internal";
@@ -10,8 +10,38 @@ const fake = {
   provision: {
     domain: "example.com",
     subscriptionHandle: "subscription-handle"
-  } as DomainsProvisionOptions,
+  } as DomainsProvisionOptions & DomainsData,
   loginLink: "https://example.com/login",
+  bulkProvisionResponse: {
+    results: {
+      errors: [
+        {
+          code: 409,
+          domain: {
+            admins: null,
+            aliases: null,
+            domain: "example.com",
+            downstreamAddresses: null,
+            subscriptionHandle: "test"
+          }
+        }
+      ],
+      successes: [
+        {
+          code: 201,
+          domain: {
+            admins: [
+              "support@example.com"
+            ],
+            aliases: null,
+            domain: "example.com",
+            downstreamAddresses: [],
+            subscriptionHandle: "test"
+          }
+        }
+      ]
+    }
+  },
   list: [
     {
       admins: [
@@ -85,6 +115,68 @@ describe("provision", () => {
 
     expect(error).toBeDefined();
     expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+});
+
+describe("bulkProvision", () => {
+  it("should successfully bulk provision domains", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.bulkProvisionResponse)
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
+      { domain: fake.provision.domain },
+      { domain: fake.provision.domain }
+    ]);
+
+    expect(results).toEqual(fake.bulkProvisionResponse);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error if no domains are provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, []);
+
+    expect(error).toBe("No domains provided.");
+    expect(results).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error more than 1000 domains are provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, new Array(1001).fill(fake.provision.domain));
+
+    expect(error).toBe("The maximum number of domains to be provisioned is 1000.");
+    expect(results).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
+      { domain: fake.provision.domain },
+      { domain: fake.provision.domain }
+    ]);
+
+    expect(error).toBeDefined();
+    expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

@@ -42,10 +42,68 @@ const { data } = await mailchannels.domains.provision({
 ### Params
 
 - `options`: Provision options.
-  - `domain`: The domain name.
   - `subscriptionHandle`: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
+  - `domain`: The domain name.
+  - `settings`: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+    - `abusePolicy`: The abuse policy.
+    - `abusePolicyOverride`: If `true`, this abuse policy overrides the recipient abuse policy.
+    - `spamHeaderName`: The header name to use if the abuse policy is set to `flag`.
+    - `spamHeaderValue`: The header value to use if the abuse policy is set to `flag`.
+  - `admins`: A list of email addresses that are the domain admins for the domain.
+  - `downstreamAddresses`: The locations of mail servers to which messages will be delivered after filtering.
+  - `aliases`: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+    > [!NOTE]
+    > Aliases are limited to 255 characters.
+  - `associateKey`: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
+  - `overwrite`: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
+
+## Bulk Provision <Badge type="info" text="method" />
+
+Provision up to 1000 domains to use MailChannels Inbound.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { results } = await domains.bulkProvision({
+  subscriptionHandle: 'your-subscription-handle'
+}, [
+  { domain: 'example.com' },
+  { domain: 'example2.com' }
+])
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { results } = await mailchannels.domains.bulkProvision({
+  subscriptionHandle: 'your-subscription-handle'
+}, [
+  { domain: 'example.com' },
+  { domain: 'example2.com' }
+])
+```
+:::
+
+### Params
+
+- `options`: Provision options.
+  - `subscriptionHandle`: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+    > [!TIP]
+    > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
+  - `associateKey`: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
+  - `overwrite`: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
+- `domains`: A list of domains to provision. Each domain is an object with the following properties:
+  - `domain`: The domain name.
   - `settings`: The abuse policy settings for the domain. These settings determine how spam messages are handled.
     - `abusePolicy`: The abuse policy.
     - `abusePolicyOverride`: If `true`, this abuse policy overrides the recipient abuse policy.
@@ -388,6 +446,11 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
   <<< @/snippets/domains-data.ts
   <<< @/snippets/domains-provision-options.ts
   <<< @/snippets/domains-provision-response.ts
+
+  **Bulk Provision type declarations**
+
+  <<< @/snippets/domains-bulk-provision-options.ts
+  <<< @/snippets/domains-bulk-provision-response.ts
 
   **List type declarations**
 

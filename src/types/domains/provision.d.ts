@@ -4,10 +4,6 @@ export interface DomainsData {
    */
   domain: string;
   /**
-   * The subscription `handle` that identifies the subscription that this domain should be provisioned against. Subscription handles can be retrieved from the `subscriptions` service method.
-   */
-  subscriptionHandle: string;
-  /**
    * The abuse policy settings for the domain. These settings determine how spam messages are handled.
    */
   settings?: Partial<{
@@ -31,7 +27,7 @@ export interface DomainsData {
   /**
    * A list of email addresses that are the domain admins for the domain.
    */
-  admins?: string[];
+  admins?: string[] | null;
   /**
    * The locations of mail servers to which messages will be delivered after filtering.
    */
@@ -52,14 +48,18 @@ export interface DomainsData {
      * The canonical hostname of the host providing the service, ending in a dot.
      */
     target: string;
-  }[];
+  }[] | null;
   /**
    * A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain. Must be <= 255 characters
    */
-  aliases?: string[];
+  aliases?: string[] | null;
+  /**
+   * The subscription `handle` that identifies the subscription that this domain should be provisioned against. Subscription handles can be retrieved from the `subscriptions` service method.
+   */
+  subscriptionHandle: string;
 }
 
-export interface DomainsProvisionOptions extends DomainsData {
+export interface DomainsProvisionOptions {
   /**
    * If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
    */
@@ -70,7 +70,34 @@ export interface DomainsProvisionOptions extends DomainsData {
   overwrite?: boolean;
 }
 
+export type DomainsBulkProvisionOptions = DomainsProvisionOptions & Pick<DomainsData, "subscriptionHandle">;
+
 export interface DomainsProvisionResponse {
   data: DomainsData | null;
+  error: string | null;
+}
+
+export interface DomainsBulkProvisionResponse {
+  /**
+   * If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
+   */
+  results: {
+    /**
+     * Domains that were successfully provisioned or updated.
+     */
+    successes: {
+      domain: DomainsData;
+      code: number;
+      comment?: string;
+    }[];
+    /**
+     * Domains that were not successfully provisioned.
+     */
+    errors: {
+      domain: DomainsData;
+      code: number;
+      comment?: string;
+    }[];
+  } | null;
   error: string | null;
 }
