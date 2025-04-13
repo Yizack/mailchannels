@@ -288,6 +288,54 @@ export class Domains {
   }
 
   /**
+   * Sets the list of downstream addreses for the domain. This action deletes any existing downstream address for the domain before creating new ones. If the `records` parameter is an empty array, all downstream address records will be deleted.
+   * @param domain - The domain name.
+   * @param records - The list of records to set for the domain. A maximum of 10 records can be set.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.domains.setDownstreamAddress('example.com', [
+   *   {
+   *     port: 25,
+   *     priority: 10,
+   *     target: 'example.com.',
+   *     weight: 10
+   *   }
+   * ])
+   * ```
+   */
+  async setDownstreamAddress (domain: string, records: DomainsDownstreamAddress[] = []): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!domain) {
+      data.error = "No domain provided.";
+      return data;
+    }
+
+    if (records.length > 10) {
+      data.error = "The maximum of records to be set is 10.";
+      return data;
+    }
+
+    await this.mailchannels.put<void>(`/inbound/v1/domains/${domain}/downstream-address`, {
+      body: { records },
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
+          [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
+        });
+      }
+    });
+
+    return data;
+  }
+
+  /**
    * Retrieve stored downstream addresses for the domain.
    * @param domain - The domain name.
    * @param options - The options to filter the list of downstream addresses.

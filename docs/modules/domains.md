@@ -255,6 +255,59 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 - `domain`: The domain name.
 
+## Set Downstream Address <Badge type="info" text="method" />
+
+Sets the list of downstream addreses for the domain.
+
+> [!WARNING]
+> This action deletes any existing downstream address for the domain before creating new ones. 
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from '@yizack/mailchannels'
+import { Domains } from '@yizack/mailchannels/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { success } = await domains.setDownstreamAddress('example.com', [
+  {
+    port: 25,
+    priority: 10,
+    target: 'example.com.',
+    weight: 10
+  }
+])
+```
+
+```ts [full.ts]
+import { MailChannels } from '@yizack/mailchannels'
+const mailchannels = new MailChannels('your-api-key')
+
+const { records } = await mailchannels.domains.setDownstreamAddress('example.com', [
+  {
+    port: 25,
+    priority: 10,
+    target: 'example.com.',
+    weight: 10
+  }
+])
+```
+:::
+
+### Params
+
+- `domain`: The domain name to set downstream addresses for.
+- `records`: The list of downstream addresses to set for the domain. Each downstream address is an object with the following properties:
+  - `port`: TCP port on which the downstream mail server is listening.
+  - `priority`: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+  - `target`: The canonical hostname of the host providing the service, ending in a dot.
+  - `weight`: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+> [!IMPORTANT]
+> If the `records` parameter is an empty array, all downstream address records will be deleted.
+
 ## List Downstream Addresses <Badge type="info" text="method" />
 
 Retrieve stored downstream addresses for the domain.

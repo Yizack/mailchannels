@@ -99,7 +99,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ Get domain list entries
   - ✅ Delete domain list entry
   - ✅ Create login link
-  - 🚧 Set downstream address
+  - ✅ Set downstream address
   - ✅ Fetch downstream addresses
   - ✅ Update API key
 - 📋 Lists

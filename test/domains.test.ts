@@ -412,6 +412,65 @@ describe("createLoginLink", () => {
   });
 });
 
+describe("setDownstreamAddress", () => {
+  it("should successfully set downstream address", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
+
+    expect(success).toBe(true);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should contain error when domain is not provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.setDownstreamAddress("", fake.listDownstreamAddresses.records);
+
+    expect(error).toBe("No domain provided.");
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when more than 10 records are provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const records = new Array(11).fill(fake.listDownstreamAddresses.records[0]);
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, records);
+
+    expect(error).toBe("The maximum of records to be set is 10.");
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
+
+    expect(error).toBeDefined();
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+});
+
 describe("listDownstreamAddresses", () => {
   it("should successfully list downstream address records", async () => {
     const mockClient = {
