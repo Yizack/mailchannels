@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.3.4
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.3...v0.3.4)
+
+### 🚀 Enhancements
+
+- **emails:** Support DKIM PEM format by stripping headers ([7b26474](https://github.com/Yizack/mailchannels/commit/7b26474))
+- **domains:** Add `listDownstreamAddresses` method ([aded64a](https://github.com/Yizack/mailchannels/commit/aded64a))
+- **domains:** Add `setDownstreamAddress` method ([5bffc66](https://github.com/Yizack/mailchannels/commit/5bffc66))
+- **domains:** Support `bulkProvision` method ([6200de8](https://github.com/Yizack/mailchannels/commit/6200de8))
+
+### 🩹 Fixes
+
+- Add some missing error checks ([fba1abe](https://github.com/Yizack/mailchannels/commit/fba1abe))
+
+### 📖 Documentation
+
+- **domains:** Add missing list entries type declarations ([ecc026f](https://github.com/Yizack/mailchannels/commit/ecc026f))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.3
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.2...v0.3.3)
