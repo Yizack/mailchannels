@@ -35,6 +35,9 @@ This library provides a simple way to interact with the [MailChannels API](https
 - Check DKIM, SPF & Domain Lockdown
 - Webhook notifications
 - Manage sub-accounts
+- Manage inbound domains
+- Manage account lists
+- Manage recipient lists
 
 ## <a name="requirements">📏 Requirements</a>
 
