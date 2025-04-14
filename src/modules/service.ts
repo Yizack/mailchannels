@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
+import type { ServiceReportOptions } from "../types/service/report";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Service {
@@ -51,6 +52,32 @@ export class Service {
     }).catch(() => []);
 
     data.subscriptions = response;
+    return data;
+  }
+
+  /**
+   * Submit a false negative or false positive report.
+   * @param options - The report options
+   */
+  async report (options: ServiceReportOptions): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    const { type, ...payload } = options;
+
+    await this.mailchannels.post<void>("/inbound/v1/report", {
+      query: {
+        report_type: type
+      },
+      body: payload,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response);
+      }
+    });
+
     return data;
   }
 }

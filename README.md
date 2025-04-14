@@ -113,7 +113,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ Delete item from recipient list
 - ⚙️ Service
   - ✅ Retrieve the condition of the service
-  - 🚧 Submit a false negative or false positive report
+  - ✅ Submit a false negative or false positive report
   - ✅ Get a list of your subscriptions to MailChannels Inbound
 <!-- #endregion roadmap -->
 

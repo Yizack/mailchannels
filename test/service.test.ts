@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Service } from "../src/modules/service";
 import { ErrorCode } from "../src/utils/errors";
+import type { ServiceReportOptions } from "../src/types";
 
 const fake = {
   subscriptions: {
@@ -9,7 +10,11 @@ const fake = {
       { id: "sub1", name: "Subscription 1" },
       { id: "sub2", name: "Subscription 2" }
     ]
-  }
+  },
+  report: {
+    type: "false_positive",
+    messageContent: "This is a test message"
+  } as ServiceReportOptions
 };
 
 describe("status", () => {
@@ -70,5 +75,36 @@ describe("subscriptions", () => {
     expect(error).toBeDefined();
     expect(subscriptions).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("report", () => {
+  it("should successfully submit a report", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success } = await service.report(fake.report);
+
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: false } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success, error } = await service.report(fake.report);
+
+    expect(success).toBe(false);
+    expect(error).toBeDefined();
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });

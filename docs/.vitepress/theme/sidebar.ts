@@ -105,7 +105,8 @@ export default [
             link: "/modules/service",
             items: [
               { text: "Status", link: "/modules/service#status" },
-              { text: "Subscriptions", link: "/modules/service#subscriptions" }
+              { text: "Subscriptions", link: "/modules/service#subscriptions" },
+              { text: "Report", link: "/modules/service#report" }
             ]
           }
         ]
