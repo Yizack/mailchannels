@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.3.5
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.4...v0.3.5)
+
+### 🚀 Enhancements
+
+- **service:** Support `report` false negative or false positive ([1e180ba](https://github.com/Yizack/mailchannels/commit/1e180ba))
+
+### 📖 Documentation
+
+- Update features ([623350e](https://github.com/Yizack/mailchannels/commit/623350e))
+
+### 🤖 CI
+
+- No need to force install corepack anymore ([4436b94](https://github.com/Yizack/mailchannels/commit/4436b94))
+- **auto-fix:** Update `auto-fix` action version hash ([40131a6](https://github.com/Yizack/mailchannels/commit/40131a6))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.4
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.3...v0.3.4)
