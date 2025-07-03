@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.3.6
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.5...v0.3.6)
+
+### 💅 Refactors
+
+- Rename main npm package to `mailchannels-sdk` ([cc00c23](https://github.com/Yizack/mailchannels/commit/cc00c23))
+
+### 📦 Build
+
+- Publish npm package aliases ([ebb07c3](https://github.com/Yizack/mailchannels/commit/ebb07c3))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.5
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.4...v0.3.5)
