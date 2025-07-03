@@ -16,8 +16,8 @@ Create a recipient user.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Users } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Users } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -28,7 +28,7 @@ const { user } = await users.create('name@example.com', {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { user } = await mailchannels.users.create('name@example.com', {
@@ -62,8 +62,8 @@ Add an entry to a recipient user blocklist or safelist.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Users } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Users } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -75,7 +75,7 @@ const { entry } = await users.addListEntry('name@example.com', {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.users.addListEntry('name@example.com', {
@@ -100,8 +100,8 @@ Get recipient list entries.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Users } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Users } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -110,7 +110,7 @@ const { entry } = await users.listEntries('name@example.com', 'safelist')
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.users.listEntries('name@example.com', 'safelist')
@@ -130,8 +130,8 @@ Delete item from recipient list.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Users } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Users } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -143,7 +143,7 @@ const { entry } = await users.deleteListEntry('name@example.com', {
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {

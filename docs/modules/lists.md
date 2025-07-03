@@ -16,8 +16,8 @@ Add an entry to a account-level blocklist or safelist.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Lists } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Lists } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
@@ -29,7 +29,7 @@ const { entry } = await lists.addListEntry({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.lists.addListEntry({
@@ -53,8 +53,8 @@ Get account-level list entries.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Lists } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Lists } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
@@ -63,7 +63,7 @@ const { entry } = await lists.listEntries('safelist')
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.lists.listEntries('safelist')
@@ -82,8 +82,8 @@ Delete item from account-level list.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Lists } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Lists } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
@@ -95,7 +95,7 @@ const { entry } = await lists.deleteListEntry({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.lists.deleteListEntry({

@@ -1,6 +1,6 @@
 # Getting Started
 
-Getting started with `@yizack/mailchannels`
+Getting started with `mailchannels-sdk`
 
 ## Overview
 
@@ -9,19 +9,19 @@ Getting started with `@yizack/mailchannels`
 
 ## Installation
 
-Add `@yizack/mailchannels` dependency to your project
+Add `mailchannels-sdk` dependency to your project
 
 ::: code-group
 ```sh [npm]
-npm i @yizack/mailchannels
+npm i mailchannels-sdk
 ```
 
 ```sh [yarn]
-yarn add @yizack/mailchannels
+yarn add mailchannels-sdk
 ```
 
 ```sh [pnpm]
-pnpm add @yizack/mailchannels
+pnpm add mailchannels-sdk
 ```
 :::
 
@@ -36,7 +36,7 @@ This library can be used in two ways:
 In this example, we import the whole library and use the `MailChannels` class to send an email.
 
 ```ts{1}
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 const { success } = await mailchannels.emails.send({
@@ -51,8 +51,8 @@ This method is useful when building an application on top of MailChannels and yo
 In this example, we import the `MailChannelsClient` and the `Emails` module to send an email.
 
 ```ts{1,2}
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Emails } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)

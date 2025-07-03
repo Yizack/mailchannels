@@ -16,8 +16,8 @@ Sends an email message to one or more recipients.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Emails } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -32,7 +32,7 @@ const { success } = await emails.send({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.emails.send({
@@ -94,8 +94,8 @@ Validates a domain's email authentication setup by retrieving its DKIM, SPF, and
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from '@yizack/mailchannels'
-import { Emails } from '@yizack/mailchannels/modules'
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -112,7 +112,7 @@ const { results } = await emails.checkDomain({
 ```
 
 ```ts [full.ts]
-import { MailChannels } from '@yizack/mailchannels'
+import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.emails.checkDomain({

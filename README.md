@@ -46,17 +46,17 @@ This library provides a simple way to interact with the [MailChannels API](https
 
 ## <a name="quick-setup">🏃 Quick setup</a>
 
-1. Add `@yizack/mailchannels` dependency to your project
+1. Add `mailchannels-sdk` dependency to your project
 
 ```sh
 # npm
-npm i @yizack/mailchannels
+npm i mailchannels-sdk
 
 # yarn
-yarn add @yizack/mailchannels
+yarn add mailchannels-sdk
 
 # pnpm
-pnpm add @yizack/mailchannels
+pnpm add mailchannels-sdk
 ```
 
 ## <a name="license">⚖️ License</a>
@@ -149,11 +149,11 @@ npm run release
 </details>
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@yizack/mailchannels.svg?style=flat&colorA=070a30&colorB=35a047
-[npm-version-href]: https://npmjs.com/package/@yizack/mailchannels
+[npm-version-src]: https://img.shields.io/npm/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[npm-version-href]: https://npmjs.com/package/mailchannels-sdk
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/@yizack/mailchannels.svg?style=flat&colorA=070a30&colorB=35a047
-[npm-downloads-href]: https://npmjs.com/package/@yizack/mailchannels
+[npm-downloads-src]: https://img.shields.io/npm/dm/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
+[npm-downloads-href]: https://npmjs.com/package/mailchannels-sdk
 
 [codecov-coverage-src]: https://img.shields.io/codecov/c/github/yizack/mailchannels?style=flat&colorA=070a30&token=HTSBRHSJ5M
 [codecov-coverage-href]: https://codecov.io/gh/Yizack/mailchannels
