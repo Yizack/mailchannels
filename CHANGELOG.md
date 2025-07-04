@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.3.7
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.6...v0.3.7)
+
+### 📦 Build
+
+- Update readme for each mirror package ([5ee3e14](https://github.com/Yizack/mailchannels/commit/5ee3e14))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.6
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.5...v0.3.6)
