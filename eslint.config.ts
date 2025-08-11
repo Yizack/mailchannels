@@ -60,6 +60,7 @@ export default defineConfig([
       "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
       "@stylistic/arrow-parens": ["error", "as-needed", { requireForBlockBody: true }],
+      "@stylistic/function-call-spacing": ["error", "never"],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error"
     }

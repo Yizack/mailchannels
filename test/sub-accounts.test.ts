@@ -317,7 +317,7 @@ describe("activate", () => {
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
-  it ("should contain error on api response error", async () => {
+  it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
         onResponse({ response: { status: ErrorCode.Forbidden } });
