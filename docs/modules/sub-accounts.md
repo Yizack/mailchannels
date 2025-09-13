@@ -9,7 +9,7 @@ Manage your sub-accounts associated with your MailChannels account.
 Creates a new sub-account under the parent account.
 
 > [!IMPORTANT]
-> Sub-accounts are only available to parent accounts on 100K and higher plans
+> Sub-accounts are only available to parent accounts on 100K and higher plans.
 
 ### Usage
 
