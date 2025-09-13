@@ -53,7 +53,8 @@ export default [
               { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" },
               { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" },
               { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" },
-              { text: "Get Limit", link: "/modules/sub-accounts#get-limit" }
+              { text: "Get Limit", link: "/modules/sub-accounts#get-limit" },
+              { text: "Set Limit", link: "/modules/sub-accounts#set-limit" }
             ]
           }
         ]

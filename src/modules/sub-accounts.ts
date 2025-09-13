@@ -435,4 +435,40 @@ export class SubAccounts {
     data.limit = response;
     return data;
   }
+
+  /**
+   * Sets the limit for the specified sub-account.
+   * @param handle - Handle of the sub-account to set limit for.
+   * @param limit - The limits to set for the sub-account. The minimum allowed sends is `0`
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+   * ```
+   */
+  async setLimit (handle: string, limit: SubAccountsLimit): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    await this.mailchannels.put(`/tx/v1/sub-account/${handle}/limit`, {
+      body: limit,
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    });
+
+    return data;
+  }
 }

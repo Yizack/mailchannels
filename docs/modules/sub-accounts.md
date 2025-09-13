@@ -371,6 +371,38 @@ const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
 
 - `handle`: The handle of the sub-account to retrieve the limit for.
 
+## Set Limit <Badge type="info" text="method" />
+
+Sets the limit for the specified sub-account.
+
+### Usage
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
+```
+
+```ts [full.ts] 
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to set the limit for.
+- `limits`: The limits to set for the sub-account.
+  - `sends`
+  > [!TIP]
+  > The minimum allowed sends is `0`.
+
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
@@ -401,7 +433,7 @@ const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
   <<< @/snippets/sub-accounts-create-smtp-password-response.ts
   <<< @/snippets/sub-accounts-list-smtp-password-response.ts
 
-  **Get Limit type declaration**
+  **Limit type declaration**
 
   <<< @/snippets/sub-accounts-limit.ts
   <<< @/snippets/sub-accounts-limit-response.ts
