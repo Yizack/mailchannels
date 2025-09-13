@@ -59,7 +59,7 @@ describe("enroll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -89,7 +89,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { webhooks: webhooksList, error } = await webhooks.list();
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(webhooksList).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -120,7 +120,7 @@ describe("delete", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.delete();
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -149,7 +149,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { key, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(key).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

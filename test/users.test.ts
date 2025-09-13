@@ -82,7 +82,7 @@ describe("create", () => {
     const users = new Users(mockClient);
     const { user, error } = await users.create(fake.create.email);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(user).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -143,7 +143,7 @@ describe("addListEntry", () => {
     const users = new Users(mockClient);
     const { entry, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entry).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -204,7 +204,7 @@ describe("listEntries", () => {
     const users = new Users(mockClient);
     const { entries, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entries).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -262,7 +262,7 @@ describe("deleteListEntry", () => {
     const users = new Users(mockClient);
     const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

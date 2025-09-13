@@ -113,7 +113,7 @@ describe("provision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.provision(fake.provision);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -175,7 +175,7 @@ describe("bulkProvision", () => {
       { domain: fake.provision.domain }
     ]);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -231,7 +231,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { domains: domainsList, error } = await domains.list();
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(domainsList).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -275,7 +275,7 @@ describe("delete", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.delete(fake.provision.domain);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -336,7 +336,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { entry, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entry).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -397,7 +397,7 @@ describe("listEntries", () => {
     const domains = new Domains(mockClient);
     const { entries, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entries).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -455,7 +455,7 @@ describe("deleteListEntry", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -498,7 +498,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { link, error } = await domains.createLoginLink(fake.provision.domain);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(link).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -557,7 +557,7 @@ describe("setDownstreamAddress", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -626,7 +626,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(records).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -683,7 +683,7 @@ describe("updateApiKey", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });

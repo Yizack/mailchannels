@@ -43,7 +43,7 @@ describe("status", () => {
     const { success, error } = await service.status();
 
     expect(success).toBe(false);
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -72,7 +72,7 @@ describe("subscriptions", () => {
     const service = new Service(mockClient);
     const { subscriptions, error } = await service.subscriptions();
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(subscriptions).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -104,7 +104,7 @@ describe("report", () => {
     const { success, error } = await service.report(fake.report);
 
     expect(success).toBe(false);
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
