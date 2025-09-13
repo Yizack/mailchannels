@@ -5,6 +5,7 @@ import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
+import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class SubAccounts {
@@ -401,6 +402,37 @@ export class SubAccounts {
       }
     });
 
+    return data;
+  }
+
+  /**
+   * Retrieves the limit of a specified sub-account. A value of `-1` indicates that the sub-account inherits the parent account's limit, allowing the sub-account to utilize any remaining capacity within the parent account's allocation.
+   * @param handle - Handle of the sub-account to retrieve the limit for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
+   * ```
+   */
+  async getLimit (handle: string): Promise<SubAccountsLimitResponse> {
+    const data: SubAccountsLimitResponse = { limit: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${handle}/limit`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.limit = response;
     return data;
   }
 }

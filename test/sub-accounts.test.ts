@@ -81,6 +81,13 @@ const fake = {
       ] as SubAccountsSmtpPassword[],
       error: null
     }
+  },
+  getLimit: {
+    apiResponse: { sends: 1 },
+    expectedResponse: {
+      limit: { sends: 1 },
+      error: null
+    }
   }
 };
 
@@ -610,5 +617,48 @@ describe("deleteSmtpPassword", () => {
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
+describe("getLimit", () => {
+  it("should successfully retrieve the limit of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.getLimit.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+
+    expect(limit).toEqual(fake.getLimit.expectedResponse.limit);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit("");
+
+    expect(error).toBe("No handle provided.");
+    expect(limit).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+    expect(error).toBeTruthy();
+    expect(limit).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
   });
 });

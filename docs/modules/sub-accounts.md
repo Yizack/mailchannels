@@ -339,6 +339,38 @@ const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle12
 - `handle`: The handle of the sub-account for which the SMTP password should be deleted.
 - `id`: The ID of the SMTP password to delete.
 
+## Get Limit <Badge type="info" text="method" />
+
+Retrieves the limit of a specified sub-account.
+
+> [!TIP]
+> A value of `-1` indicates that the sub-account inherits the parent account's limit, allowing the sub-account to utilize any remaining capacity within the parent account's allocation.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { limit } = await subAccounts.getLimit('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to retrieve the limit for.
+
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
@@ -368,6 +400,11 @@ const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle12
   <<< @/snippets/sub-accounts-smtp-password.ts
   <<< @/snippets/sub-accounts-create-smtp-password-response.ts
   <<< @/snippets/sub-accounts-list-smtp-password-response.ts
+
+  **Get Limit type declaration**
+
+  <<< @/snippets/sub-accounts-limit.ts
+  <<< @/snippets/sub-accounts-limit-response.ts
 </details>
 
 ## Source
