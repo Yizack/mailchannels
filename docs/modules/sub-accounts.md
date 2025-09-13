@@ -4,12 +4,12 @@
 Manage your sub-accounts associated with your MailChannels account.
 <!-- #endregion description -->
 
+> [!IMPORTANT]
+> Sub-accounts are only available to parent accounts on 100K and higher plans.
+
 ## Create <Badge type="info" text="method" />
 
 Creates a new sub-account under the parent account.
-
-> [!IMPORTANT]
-> Sub-accounts are only available to parent accounts on 100K and higher plans.
 
 ### Usage
 
