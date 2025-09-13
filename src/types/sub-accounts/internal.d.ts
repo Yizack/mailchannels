@@ -3,3 +3,11 @@ export interface SubAccountsCreateSmtpPasswordApiResponse {
   id: number;
   smtp_password: string;
 }
+
+export interface SubAccountsCreateApiResponse {
+  company_name: string;
+  enabled: boolean;
+  handle: string;
+}
+
+export type SubAccountsListApiResponse = SubAccountsCreateApiResponse[];

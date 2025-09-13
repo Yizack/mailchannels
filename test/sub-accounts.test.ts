@@ -1,32 +1,38 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { SubAccounts } from "../src/modules/sub-accounts";
-import type { SubAccountsAccount } from "../src/types/sub-accounts/create";
-import type { SubAccountsListOptions } from "../src/types/sub-accounts/list";
+import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse } from "../src/types/sub-accounts/internal";
 import { ErrorCode } from "../src/utils/errors";
+import type { SubAccountsCreateResponse } from "../src/types";
 
 const fake = {
   create: {
+    validCompanyName: "My Company",
+    invalidCompanyName: "a",
     validHandle: "validhandle123",
     invalidHandle: "Invalid_Handle!",
-    apiResponse: { enabled: true, handle: "validhandle123" }
+    apiResponse: { company_name: "My Company", enabled: true, handle: "validhandle123" } satisfies SubAccountsCreateApiResponse,
+    expectedResponse: {
+      account: { companyName: "My Company", enabled: true, handle: "validhandle123" },
+      error: null
+    } satisfies SubAccountsCreateResponse
   },
   list: {
     options: { limit: 10, offset: 0 } as SubAccountsListOptions,
     apiResponse: [
-      { enabled: true, handle: "sub-account-1" },
-      { enabled: false, handle: "sub-account-2" }
-    ] as SubAccountsAccount[],
+      { company_name: "My Company", enabled: true, handle: "sub-account-1" },
+      { company_name: "Another Company", enabled: false, handle: "sub-account-2" }
+    ] satisfies SubAccountsListApiResponse,
     expectedResponse: {
       accounts: [
-        { enabled: true, handle: "sub-account-1" },
-        { enabled: false, handle: "sub-account-2" }
-      ] as SubAccountsAccount[],
+        { companyName: "My Company", enabled: true, handle: "sub-account-1" },
+        { companyName: "Another Company", enabled: false, handle: "sub-account-2" }
+      ],
       error: null
-    }
+    } satisfies SubAccountsListResponse
   },
   createApiKey: {
     apiResponse: { id: 1, key: "api-key-value" },
@@ -79,16 +85,29 @@ const fake = {
 };
 
 describe("create", () => {
-  it("should successfully create a sub-account with a valid handle", async () => {
+  it("should successfully create a sub-account with a valid company name and handle", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValue(fake.create.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create(fake.create.validHandle);
+    const { account } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
 
-    expect(account).toEqual(fake.create.apiResponse);
+    expect(account).toEqual(fake.create.expectedResponse.account);
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error for an invalid company name", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { account, error } = await subAccounts.create(fake.create.invalidCompanyName, fake.create.validHandle);
+
+    expect(error).toBe("Invalid company name. Company name must be between 3 and 128 characters.");
+    expect(account).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error for an invalid handle", async () => {
@@ -97,9 +116,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.invalidHandle);
+    const { account, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.invalidHandle);
 
-    expect(error).toBe("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+    expect(error).toBe("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
     expect(account).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -110,9 +129,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create();
+    const { account } = await subAccounts.create(fake.create.validCompanyName);
 
-    expect(account).toEqual(fake.create.apiResponse);
+    expect(account).toEqual(fake.create.expectedResponse.account);
     expect(mockClient.post).toHaveBeenCalled();
   });
 

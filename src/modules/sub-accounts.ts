@@ -1,38 +1,49 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
-import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse } from "../types/sub-accounts/internal";
+import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class SubAccounts {
+  private static readonly COMPANY_PATTERN = /^.{3,128}$/;
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
   constructor (protected mailchannels: MailChannelsClient) {}
 
   /**
-   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated.
-   * @param handle - The handle of the sub-account to create. Sub-account handle must match the pattern `[a-z0-9]{3,128}`.
+   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated. Note that Sub-accounts are only available to parent accounts on 100K and higher plans.
+   * @param companyName - The name of the company associated with the sub-account. This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
+   * @param handle - A unique name for the sub-account to be created. The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers. If not provided, a random handle will be generated.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { account } = await mailchannels.subAccounts.create('validhandle123')
+   * const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
    * ```
    */
-  async create (handle?: string): Promise<SubAccountsCreateResponse> {
+  async create (companyName: string, handle?: string): Promise<SubAccountsCreateResponse> {
     const data: SubAccountsCreateResponse = { account: null, error: null };
+
+    const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
+    if (!isValidCompany) {
+      data.error = "Invalid company name. Company name must be between 3 and 128 characters.";
+      return data;
+    }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        data.error = "Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}";
+        data.error = "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.";
         return data;
       }
     }
 
-    const response = await this.mailchannels.post<SubAccountsAccount>("/tx/v1/sub-account", {
-      body: handle ? { handle } : undefined,
+    const response = await this.mailchannels.post<SubAccountsCreateApiResponse>("/tx/v1/sub-account", {
+      body: {
+        company_name: companyName,
+        handle
+      },
       onResponseError: ({ response }) => {
         data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
@@ -41,7 +52,14 @@ export class SubAccounts {
       }
     }).catch(() => null);
 
-    data.account = response;
+    if (!response) return data;
+
+    data.account = {
+      companyName: response.company_name,
+      enabled: response.enabled,
+      handle: response.handle
+    };
+
     return data;
   }
 
@@ -67,14 +85,19 @@ export class SubAccounts {
       return data;
     }
 
-    const response = await this.mailchannels.get<SubAccountsAccount[]>("/tx/v1/sub-account", {
+    const response = await this.mailchannels.get<SubAccountsListApiResponse>("/tx/v1/sub-account", {
       query: options,
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response);
       }
     }).catch(() => []);
 
-    data.accounts = response;
+    data.accounts = response.map(account => ({
+      companyName: account.company_name,
+      enabled: account.enabled,
+      handle: account.handle
+    }));
+
     return data;
   }
 

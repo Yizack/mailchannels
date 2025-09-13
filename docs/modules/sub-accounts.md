@@ -8,6 +8,9 @@ Manage your sub-accounts associated with your MailChannels account.
 
 Creates a new sub-account under the parent account.
 
+> [!IMPORTANT]
+> Sub-accounts are only available to parent accounts on 100K and higher plans
+
 ### Usage
 
 ::: code-group
@@ -18,22 +21,25 @@ import { SubAccounts } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { account } = await subAccounts.create('validhandle123')
+const { account } = await subAccounts.create('My Company', 'validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { account } = await mailchannels.subAccounts.create('validhandle123')
+const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
 ```
 :::
 
 ### Params
 
+- `companyName`: The name of the company associated with the sub-account.
+  > [!TIP]
+  > This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
 - `handle`: The handle of the sub-account to create.
   > [!TIP]
-  > Sub-account handle must match the pattern `[a-z0-9]{3,128}`.
+  > The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers.
   >
   > If no handle is provided, a random handle will be generated.
 
