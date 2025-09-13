@@ -35,7 +35,8 @@ export default [
               { text: "Enroll for Webhook", link: "/modules/webhooks#enroll" },
               { text: "List Webhooks", link: "/modules/webhooks#list" },
               { text: "Delete Webhooks", link: "/modules/webhooks#delete" },
-              { text: "Get Signing Key", link: "/modules/webhooks#signing-key" }
+              { text: "Get Signing Key", link: "/modules/webhooks#signing-key" },
+              { text: "Validate Webhooks", link: "/modules/webhooks#validate" }
             ]
           },
           {

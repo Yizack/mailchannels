@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
 import { ErrorCode } from "../src/utils/errors";
+import type { WebhooksValidateApiResponse } from "../src/types/webhooks/internal";
+import type { WebhooksValidateResponse } from "../src/types";
 
 const fake = {
   enroll: {
@@ -20,6 +22,29 @@ const fake = {
   signingKey: {
     id: "key-id",
     apiResponse: { error: null, key: "public-key" }
+  },
+  validateResponse: {
+    apiResponse: {
+      all_passed: true,
+      results: [{
+        result: "passed",
+        webhook: "https://example.com/webhook",
+        response: {
+          status: 200
+        }
+      }]
+    } satisfies WebhooksValidateApiResponse,
+    expectedResponse: {
+      allPassed: true,
+      results: [{
+        result: "passed",
+        webhook: "https://example.com/webhook",
+        response: {
+          status: 200
+        }
+      }],
+      error: null
+    } satisfies WebhooksValidateResponse
   }
 };
 
@@ -152,5 +177,36 @@ describe("getSigningKey", () => {
     expect(error).toBeTruthy();
     expect(key).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("validate", () => {
+  it("should successfully validate webhook endpoints", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.validateResponse.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const result = await webhooks.validate();
+
+    expect(result).toEqual(fake.validateResponse.expectedResponse);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { ok: false } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { allPassed, results, error } = await webhooks.validate();
+
+    expect(error).toBeTruthy();
+    expect(allPassed).toBe(false);
+    expect(results).toEqual([]);
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });
