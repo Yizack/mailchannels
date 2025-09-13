@@ -1,6 +1,6 @@
 import type { FetchResponse } from "ofetch";
 
-export enum ErrorCode {
+export const enum ErrorCode {
   BadRequest = 400,
   Unauthorized = 401,
   Forbidden = 403,
@@ -11,8 +11,21 @@ export enum ErrorCode {
 }
 
 export const getStatusError = (
-  response: FetchResponse<{ message?: string }>,
+  response: FetchResponse<{ message?: string, errors?: string[] } | string>,
   errors: Record<number, string> = {}
 ) => {
-  return errors[response.status] || response._data?.message || "Unknown error.";
+  const statusText = errors[response.status] || "Unknown error.";
+
+  let details = "";
+  if (typeof response._data === "string") {
+    details = response._data;
+  }
+  else if (response._data?.message) {
+    details = response._data.message;
+  }
+  else if (Array.isArray(response._data?.errors) && response._data.errors.length) {
+    details = response._data.errors.join(", ");
+  }
+
+  return details ? `${statusText} ${details}` : statusText;
 };
