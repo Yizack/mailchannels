@@ -209,4 +209,18 @@ describe("validate", () => {
     expect(results).toEqual([]);
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should contain error when requestId has more than 28 characters", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { allPassed, results, error } = await webhooks.validate("this-request-id-is-way-too-long");
+
+    expect(error).toBe("The request id should not exceed 28 characters.");
+    expect(allPassed).toBe(false);
+    expect(results).toEqual([]);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
 });
