@@ -127,7 +127,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { account, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(account).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -195,7 +195,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { accounts, error } = await subAccounts.list();
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(accounts).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -239,7 +239,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -283,7 +283,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -327,7 +327,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -370,7 +370,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(key).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -414,7 +414,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(keys).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -458,7 +458,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -501,7 +501,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(password).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -544,7 +544,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(passwords).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -588,7 +588,7 @@ describe("deleteSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

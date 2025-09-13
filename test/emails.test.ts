@@ -125,7 +125,7 @@ describe("send", () => {
     const emails = new Emails(mockClient);
     const { success, error } = await emails.send(fake.send.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -156,7 +156,7 @@ describe("checkDomain", () => {
     const emails = new Emails(mockClient);
     const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

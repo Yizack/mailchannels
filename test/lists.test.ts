@@ -61,7 +61,7 @@ describe("addListEntry", () => {
     const lists = new Lists(mockClient);
     const { entry, error } = await lists.addListEntry(fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entry).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -109,7 +109,7 @@ describe("listEntries", () => {
     const lists = new Lists(mockClient);
     const { entries, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(entries).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -154,7 +154,7 @@ describe("deleteListEntry", () => {
     const lists = new Lists(mockClient);
     const { success, error } = await lists.deleteListEntry(fake.addListEntry.options);
 
-    expect(error).toBeDefined();
+    expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
