@@ -78,7 +78,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Retrieve Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/retrieve-customer-webhooks)
   - ✅ [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks)
   - ✅ [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key)
-  - 🚧 [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook)
+  - ✅ [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook)
 - 🪪 Sub-accounts
   - ✅ [Create Sub-account](https://docs.mailchannels.net/email-api/api-reference/create-sub-account)
   - ✅ [Retrieve Sub-accounts](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-accounts)
@@ -91,7 +91,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Create Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/create-sub-account-smtp-password)
   - ✅ [Delete Sub-account SMTP Password](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-smtp-password)
   - ✅ [Retrieve Sub-account SMTP Passwords](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-smtp-passwords)
-  - 🚧 [Retrieve Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-limit)
+  - ✅ [Retrieve Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-limit)
   - 🚧 [Set Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/set-sub-account-limit)
   - 🚧 [Delete Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-limit)
   - 🚧 [Retrieve Sub-account Usage Stats](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-usage-stats)
