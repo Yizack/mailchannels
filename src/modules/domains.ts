@@ -187,7 +187,7 @@ export class Domains {
    * })
    * ```
    */
-  async addListEntry (domain: string, options: ListEntryOptions) {
+  async addListEntry (domain: string, options: ListEntryOptions): Promise<ListEntryResponse> {
     const { listName, item } = options;
 
     const data: ListEntryResponse = { entry: null, error: null };
