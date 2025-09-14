@@ -51,6 +51,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      // @ts-expect-error icon vite plugin
       groupIconVitePlugin()
     ]
   },

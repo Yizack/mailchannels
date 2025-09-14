@@ -19,9 +19,9 @@
     "declaration": true
   },
   "exclude": [
-    "**/dist/**",
-    "**/docs/**",
-    "**/playground/**",
-    "**/examples/**"
+    "dist/**",
+    "docs/**",
+    "playground/**",
+    "examples/**"
   ]
 }
