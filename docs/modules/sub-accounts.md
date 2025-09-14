@@ -415,6 +415,7 @@ import { SubAccounts } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
+
 const { success } = await subAccounts.deleteLimit('validhandle123')
 ```
 
@@ -425,6 +426,40 @@ const mailchannels = new MailChannels('your-api-key')
 const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
 ```
 :::
+
+### Params
+
+- `handle`: The handle of the sub-account to delete the limit for.
+
+## Get Usage <Badge type="info" text="method" />
+
+Retrieves usage statistics for the specified sub-account during the current billing period.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { usage } = await subAccounts.getUsage('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to query usage stats for.
+
 
 ## Type declarations
 
@@ -460,6 +495,11 @@ const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
 
   <<< @/snippets/sub-accounts-limit.ts
   <<< @/snippets/sub-accounts-limit-response.ts
+
+  **Usage type declarations**
+
+  <<< @/snippets/sub-accounts-usage.ts
+  <<< @/snippets/sub-accounts-usage-response.ts
 </details>
 
 ## Source

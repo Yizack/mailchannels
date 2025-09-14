@@ -4,9 +4,10 @@ import { SubAccounts } from "../src/modules/sub-accounts";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
-import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse } from "../src/types/sub-accounts/internal";
-import { ErrorCode } from "../src/utils/errors";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../src/types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../src/types";
+import type { SubAccountsUsageResponse } from "../src/types/sub-accounts/usage";
+import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   create: {
@@ -50,7 +51,7 @@ const fake = {
       keys: [
         { id: 1, value: "api-key-1" },
         { id: 2, value: "api-key-2" }
-      ] as SubAccountsApiKey[],
+      ] satisfies SubAccountsApiKey[],
       error: null
     }
   },
@@ -59,13 +60,13 @@ const fake = {
       enabled: true,
       id: 1,
       smtp_password: "smtp-password-value"
-    } as SubAccountsCreateSmtpPasswordApiResponse,
+    } satisfies SubAccountsCreateSmtpPasswordApiResponse,
     expectedResponse: {
       password: {
         enabled: true,
         id: 1,
         value: "smtp-password-value"
-      } as SubAccountsSmtpPassword,
+      } satisfies SubAccountsSmtpPassword,
       error: null
     }
   },
@@ -78,7 +79,7 @@ const fake = {
       passwords: [
         { enabled: true, id: 1, value: "password-1" },
         { enabled: false, id: 2, value: "password-2" }
-      ] as SubAccountsSmtpPassword[],
+      ] satisfies SubAccountsSmtpPassword[],
       error: null
     }
   },
@@ -88,6 +89,21 @@ const fake = {
       limit: { sends: 1 },
       error: null
     }
+  },
+  getUsage: {
+    apiResponse: {
+      period_end_date: "2025-04-11",
+      period_start_date: "2025-03-12",
+      total_usage: 1234
+    } satisfies SubAccountsUsageApiResponse,
+    expectedResponse: {
+      usage: {
+        endDate: "2025-04-11",
+        startDate: "2025-03-12",
+        total: 1234
+      },
+      error: null
+    } satisfies SubAccountsUsageResponse
   }
 };
 
@@ -750,5 +766,49 @@ describe("deleteLimit", () => {
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
+describe("getUsage", () => {
+  it("should successfully retrieve the usage of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.getUsage.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(usage).toEqual(fake.getUsage.expectedResponse.usage);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage("");
+
+    expect(error).toBe("No handle provided.");
+    expect(usage).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(error).toBeTruthy();
+    expect(usage).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
   });
 });

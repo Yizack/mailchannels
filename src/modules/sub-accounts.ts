@@ -1,12 +1,13 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse } from "../types/sub-accounts/internal";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
 import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
 import { ErrorCode, getStatusError } from "../utils/errors";
+import type { SubAccountsUsageResponse } from "../types/sub-accounts/usage";
 
 export class SubAccounts {
   private static readonly COMPANY_PATTERN = /^.{3,128}$/;
@@ -475,6 +476,11 @@ export class SubAccounts {
   /**
    * Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
    * @param handle - Handle of the sub-account to delete limit for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
+   * ```
    */
   async deleteLimit (handle: string): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
@@ -496,6 +502,42 @@ export class SubAccounts {
         });
       }
     });
+
+    return data;
+  }
+
+  /**
+   * Retrieves usage statistics for the specified sub-account during the current billing period.
+   * @param handle - Handle of the sub-account to query usage stats for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
+   * ```
+   */
+  async getUsage (handle: string): Promise<SubAccountsUsageResponse> {
+    const data: SubAccountsUsageResponse = { usage: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${handle}/usage`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.usage = {
+      endDate: response.period_end_date,
+      startDate: response.period_start_date,
+      total: response.total_usage
+    };
 
     return data;
   }

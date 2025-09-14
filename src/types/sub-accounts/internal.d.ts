@@ -11,3 +11,9 @@ export interface SubAccountsCreateApiResponse {
 }
 
 export type SubAccountsListApiResponse = SubAccountsCreateApiResponse[];
+
+export interface SubAccountsUsageApiResponse {
+  period_end_date: string;
+  period_start_date: string;
+  total_usage: number;
+}

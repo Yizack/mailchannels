@@ -55,7 +55,8 @@ export default [
               { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" },
               { text: "Get Limit", link: "/modules/sub-accounts#get-limit" },
               { text: "Set Limit", link: "/modules/sub-accounts#set-limit" },
-              { text: "Delete Limit", link: "/modules/sub-accounts#delete-limit" }
+              { text: "Delete Limit", link: "/modules/sub-accounts#delete-limit" },
+              { text: "Get Usage", link: "/modules/sub-accounts#get-usage" }
             ]
           }
         ]
