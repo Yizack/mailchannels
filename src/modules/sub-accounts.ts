@@ -454,7 +454,7 @@ export class SubAccounts {
       return data;
     }
 
-    await this.mailchannels.put(`/tx/v1/sub-account/${handle}/limit`, {
+    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${handle}/limit`, {
       body: limit,
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
@@ -464,6 +464,34 @@ export class SubAccounts {
         }
         data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    });
+
+    return data;
+  }
+
+  /**
+   * Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
+   * @param handle - Handle of the sub-account to delete limit for.
+   */
+  async deleteLimit (handle: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/limit`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }

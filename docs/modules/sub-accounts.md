@@ -403,6 +403,29 @@ const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { 
   > [!TIP]
   > The minimum allowed sends is `0`.
 
+## Delete Limit <Badge type="info" text="method" />
+
+Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
+
+### Usage
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+const { success } = await subAccounts.deleteLimit('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
+```
+:::
+
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts

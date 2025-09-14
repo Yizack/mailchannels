@@ -707,3 +707,48 @@ describe("setLimit", () => {
     expect(mockClient.put).toHaveBeenCalled();
   });
 });
+
+describe("deleteLimit", () => {
+  it("should successfully delete the limit of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(success).toBe(true);
+    expect(error).toBeNull();
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit("");
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: ErrorCode.BadRequest } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
