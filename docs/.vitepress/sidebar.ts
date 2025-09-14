@@ -58,6 +58,14 @@ export default [
               { text: "Delete Limit", link: "/modules/sub-accounts#delete-limit" },
               { text: "Get Usage", link: "/modules/sub-accounts#get-usage" }
             ]
+          },
+          {
+            text: "📊 Metrics",
+            collapsed: true,
+            link: "/modules/metrics",
+            items: [
+              { text: "Engagement", link: "/modules/metrics#engagement" }
+            ]
           }
         ]
       },

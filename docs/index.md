@@ -42,6 +42,10 @@ features:
     title: Users module
     details: Manage recipient users
     link: /modules/users
+  - icon: 📊
+    title: Metrics module
+    details: Retrieve account metrics
+    link: /modules/metrics
 ---
 
 <!-- @include: ../README.md#note -->
