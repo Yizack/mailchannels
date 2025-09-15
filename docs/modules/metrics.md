@@ -35,7 +35,7 @@ const { engagement } = await mailchannels.metrics.engagement()
 
 ### Params
 
-- `options`: (Optional) Engagement options.
+- `options`: Optional filter options.
   - `startTime`: The beginning of the time range for retrieving message engagement metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
   - `endTime`: The end of the time range for retrieving message engagement metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
   - `campaignId`: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
@@ -68,7 +68,7 @@ const { performance } = await mailchannels.metrics.performance()
 
 ### Params
 
-- `options`: Filter options.
+- `options`: Optional filter options.
   - `startTime`: The beginning of the time range for retrieving message performance metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
   - `endTime`: The end of the time range for retrieving message performance metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
   - `campaignId`: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
