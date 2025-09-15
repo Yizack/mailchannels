@@ -1,5 +1,7 @@
 export * from "./engagement";
 export * from "./performance";
+export * from "./recipient-behaviour";
+export * from "./volume";
 
 export interface MetricsBucket {
   /**

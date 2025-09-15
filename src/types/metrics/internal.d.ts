@@ -41,3 +41,16 @@ export interface MetricsRecipientBehaviourApiResponse {
   unsubscribe_delivered: number;
   unsubscribed: number;
 }
+
+export interface MetricsVolumeApiResponse {
+  buckets: {
+    delivered: MetricsApiBucket[];
+    dropped: MetricsApiBucket[];
+    processed: MetricsApiBucket[];
+  };
+  delivered: number;
+  dropped: number;
+  end_time: string;
+  processed: number;
+  start_time: string;
+}

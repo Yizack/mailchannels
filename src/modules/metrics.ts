@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse } from "../types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
+import type { MetricsVolumeResponse } from "../types/metrics/volume";
 
 const mapBuckets = (arr: { count: number, period_start: string }[]) => {
   return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
@@ -140,6 +141,50 @@ export class Metrics {
       startTime: response.start_time,
       unsubscribeDelivered: response.unsubscribe_delivered,
       unsubscribed: response.unsubscribed
+    };
+
+    return data;
+  }
+
+  /**
+   * Retrieve volume metrics for messages sent from your account, including counts of processed, delivered and dropped events. Supports optional filters for time range and campaign ID.
+   * @param options - Options to filter and customize the volume metrics retrieval.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { volume } = await mailchannels.metrics.volume()
+   * ```
+   */
+  async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
+    const data: MetricsVolumeResponse = { volume: null, error: null };
+
+    const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
+      query: {
+        start_time: options?.startTime,
+        end_time: options?.endTime,
+        campaign_id: options?.campaignId,
+        interval: options?.interval
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.volume = {
+      buckets: {
+        delivered: mapBuckets(response.buckets.delivered),
+        dropped: mapBuckets(response.buckets.dropped),
+        processed: mapBuckets(response.buckets.processed)
+      },
+      delivered: response.delivered,
+      dropped: response.dropped,
+      endTime: response.end_time,
+      processed: response.processed,
+      startTime: response.start_time
     };
 
     return data;
