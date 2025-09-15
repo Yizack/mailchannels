@@ -318,7 +318,7 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 Sets the list of downstream addreses for the domain.
 
 > [!WARNING]
-> This action deletes any existing downstream address for the domain before creating new ones. 
+> This action deletes any existing downstream address for the domain before creating new ones.
 
 ### Usage
 

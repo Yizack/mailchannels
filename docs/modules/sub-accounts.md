@@ -387,7 +387,7 @@ const subAccounts = new SubAccounts(mailchannels)
 const { success } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
 ```
 
-```ts [full.ts] 
+```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
@@ -459,7 +459,6 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
 ### Params
 
 - `handle`: The handle of the sub-account to query usage stats for.
-
 
 ## Type declarations
 

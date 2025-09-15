@@ -140,7 +140,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
 
 <details>
   <summary>Local development</summary>
-  
+
 ```sh
 # Install dependencies
 pnpm install

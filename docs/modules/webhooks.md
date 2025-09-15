@@ -118,7 +118,6 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id');
   > [!TIP]
   > The `keyId` can be found in the `signature-input` request header of the webhook notification.
 
-
 ## Validate <Badge type="info" text="method" />
 
 Validates whether your enrolled webhook(s) respond with an HTTP `2xx` status code. Sends a test request to each webhook containing your customer handle, a hardcoded event type (`test`), a hardcoded sender email (`test@mailchannels.com`), a timestamp, a request ID (provided or generated), and an SMTP ID. The response includes the HTTP status code and body returned by each webhook.

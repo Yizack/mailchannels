@@ -62,7 +62,7 @@ This API is limited to 100 queries per second, per customer. Queries that exceed
 
 <VPButton href="/modules/users" text="Read documentation" theme="alt" style="text-decoration:none" />
 
-### ⚙️ Service 
+### ⚙️ Service
 
 <!-- @include: modules/service.md#description -->
 
