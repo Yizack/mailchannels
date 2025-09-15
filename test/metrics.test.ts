@@ -3,7 +3,8 @@ import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
 import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformance, MetricsPerformanceResponse } from "../src/types/metrics";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse } from "../src/types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse } from "../src/types/metrics/internal";
+import type { MetricsRecipientBehaviourResponse } from "../src/types/metrics/recipient-behaviour";
 
 const fake = {
   options: {
@@ -73,6 +74,31 @@ const fake = {
       },
       error: null
     } satisfies MetricsPerformanceResponse
+  },
+  recipientBehaviour: {
+    apiResponse: {
+      buckets: {
+        unsubscribe_delivered: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }],
+        unsubscribed: [{ count: 0, period_start: "2024-07-29T15:51:28.071Z" }]
+      },
+      end_time: "2024-07-29T15:51:28.071Z",
+      start_time: "2024-07-29T15:51:28.071Z",
+      unsubscribe_delivered: 0,
+      unsubscribed: 0
+    } satisfies MetricsRecipientBehaviourApiResponse,
+    expectedResponse: {
+      behaviour: {
+        buckets: {
+          unsubscribeDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
+          unsubscribed: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }]
+        },
+        endTime: "2024-07-29T15:51:28.071Z",
+        startTime: "2024-07-29T15:51:28.071Z",
+        unsubscribeDelivered: 0,
+        unsubscribed: 0
+      },
+      error: null
+    } satisfies MetricsRecipientBehaviourResponse
   }
 };
 
@@ -134,6 +160,37 @@ describe("performance", () => {
 
     expect(error).toBeTruthy();
     expect(performance).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("recipientBehaviour", () => {
+  it("should successfully retrieve recipient behaviour metrics", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.recipientBehaviour.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { behaviour, error } = await metrics.recipientBehaviour(fake.options);
+
+    expect(behaviour).toEqual(fake.recipientBehaviour.expectedResponse.behaviour);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { behaviour, error } = await metrics.recipientBehaviour();
+
+    expect(error).toBeTruthy();
+    expect(behaviour).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

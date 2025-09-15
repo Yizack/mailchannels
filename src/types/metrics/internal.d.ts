@@ -1,21 +1,14 @@
+interface MetricsApiBucket {
+  count: number;
+  period_start: string;
+}
+
 export interface MetricsEngagementApiResponse {
   buckets: {
-    click: {
-      count: number;
-      period_start: string;
-    }[];
-    click_tracking_delivered: {
-      count: number;
-      period_start: string;
-    }[];
-    open: {
-      count: number;
-      period_start: string;
-    }[];
-    open_tracking_delivered: {
-      count: number;
-      period_start: string;
-    }[];
+    click: MetricsApiBucket[];
+    click_tracking_delivered: MetricsApiBucket[];
+    open: MetricsApiBucket[];
+    open_tracking_delivered: MetricsApiBucket[];
   };
   click: number;
   click_tracking_delivered: number;
@@ -28,21 +21,23 @@ export interface MetricsEngagementApiResponse {
 export interface MetricsPerformanceApiResponse {
   bounced: number;
   buckets: {
-    bounced: {
-      count: number;
-      period_start: string;
-    }[];
-    delivered: {
-      count: number;
-      period_start: string;
-    }[];
-    processed: {
-      count: number;
-      period_start: string;
-    }[];
+    bounced: MetricsApiBucket[];
+    delivered: MetricsApiBucket[];
+    processed: MetricsApiBucket[];
   };
   delivered: number;
   end_time: string;
   processed: number;
   start_time: string;
+}
+
+export interface MetricsRecipientBehaviourApiResponse {
+  buckets: {
+    unsubscribe_delivered: MetricsApiBucket[];
+    unsubscribed: MetricsApiBucket[];
+  };
+  end_time: string;
+  start_time: string;
+  unsubscribe_delivered: number;
+  unsubscribed: number;
 }

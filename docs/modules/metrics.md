@@ -74,6 +74,39 @@ const { performance } = await mailchannels.metrics.performance()
   - `campaignId`: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
   - `interval`: The interval for aggregating metrics data. Possible values are `hour`, `day`, `week`, and `month`. Defaults to `day`.
 
+## Recipient Behaviour <Badge type="info" text="method" />
+
+Retrieve recipient behaviour metrics for messages sent from your account, including counts of unsubscribed events. Supports optional filters for time range, and campaign ID.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Metrics } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const metrics = new Metrics(mailchannels)
+
+const { behaviour } = await metrics.recipientBehaviour()
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { behaviour } = await mailchannels.metrics.recipientBehaviour()
+```
+:::
+
+### Params
+
+- `options`: Optional filter options.
+  - `startTime`: The beginning of the time range for retrieving recipient behaviour metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
+  - `endTime`: The end of the time range for retrieving recipient behaviour metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
+  - `campaignId`: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
+  - `interval`: The interval for aggregating metrics data. Possible values are `hour`, `day`, `week`, and `month`. Defaults to `day`.
+
 ## Type declarations
 
 <<< @/snippets/metrics.ts
@@ -93,6 +126,11 @@ const { performance } = await mailchannels.metrics.performance()
 
   <<< @/snippets/metrics-performance.ts
   <<< @/snippets/metrics-performance-response.ts
+
+  ***Recipient Behaviour type declarations**
+
+  <<< @/snippets/metrics-recipient-behaviour.ts
+  <<< @/snippets/metrics-recipient-behaviour-response.ts
 </details>
 
 ## Source

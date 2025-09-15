@@ -466,7 +466,7 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
   <<< @/snippets/list-entries-response.ts
 
   **Downstream Addresses type declarations**
-  
+
   <<< @/snippets/domains-downstream-address.ts
   <<< @/snippets/domains-list-downstream-addresses-options.ts
   <<< @/snippets/domains-list-downstream-addresses-response.ts

@@ -65,7 +65,8 @@ export default [
             link: "/modules/metrics",
             items: [
               { text: "Engagement", link: "/modules/metrics#engagement" },
-              { text: "Performance", link: "/modules/metrics#performance" }
+              { text: "Performance", link: "/modules/metrics#performance" },
+              { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour" }
             ]
           }
         ]
