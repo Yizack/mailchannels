@@ -62,3 +62,13 @@ const { success } = await emails.send({
 ```
 
 This method is useful when you only need to use a specific module from the library and want to reduce the bundle size.
+
+### Error handling
+
+All methods in this SDK return an object containing an `error` property besides the actual response data to avoid throwing exceptions. If the request was successful, the `error` property will be `null`. If there was an error, the `error` property will contain a `string` with the error message.
+
+```ts{1}
+const { success, error } = await emails.send({
+  // ...
+})
+```
