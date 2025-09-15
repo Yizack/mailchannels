@@ -3,7 +3,7 @@ import type { MailChannelsClient } from "../src/client";
 import { Domains } from "../src/modules/domains";
 import type { DomainsData, DomainsProvisionOptions } from "../src/types/domains/provision";
 import { ErrorCode } from "../src/utils/errors";
-import type { ListEntryOptions } from "../src/types/list-entry";
+import type { ListEntryOptions } from "../src/types/lists/entry";
 import type { DomainsAddListEntryApiResponse } from "../src/types/domains/internal";
 
 const fake = {

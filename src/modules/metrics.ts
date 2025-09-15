@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementOptions, MetricsEngagementResponse } from "../types/metrics/engagement";
+import type { MetricsOptions } from "../types/metrics";
+import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsEngagementApiResponse } from "../types/metrics/internal";
 
 export class Metrics {
@@ -15,7 +16,7 @@ export class Metrics {
    * const { engagement } = await mailchannels.metrics.engagement()
    * ```
    */
-  async engagement (options?: MetricsEngagementOptions): Promise<MetricsEngagementResponse> {
+  async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
     const data: MetricsEngagementResponse = { engagement: null, error: null };
 
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {

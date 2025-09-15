@@ -48,9 +48,10 @@ const { engagement } = await mailchannels.metrics.engagement()
 <details>
   <summary>All type declarations</summary>
 
+  <<< @/snippets/metrics-options.ts
+
   **Engagement type declarations**
 
-  <<< @/snippets/metrics-engagement-options.ts
   <<< @/snippets/metrics-engagement.ts
   <<< @/snippets/metrics-engagement-response.ts
 </details>

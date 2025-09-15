@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Users } from "../src/modules/users";
 import { ErrorCode } from "../src/utils/errors";
-import type { ListEntryApiResponse } from "../src/types/internal";
+import type { ListEntryApiResponse } from "../src/types/lists/internal";
 import type { UsersCreateApiResponse } from "../src/types/users/internal";
-import type { ListEntryOptions } from "../src/types/list-entry";
+import type { ListEntryOptions } from "../src/types/lists/entry";
 
 const fake = {
   create: {

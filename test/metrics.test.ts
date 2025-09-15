@@ -2,8 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
+import type { MetricsOptions } from "../src/types/metrics";
 
 const fake = {
+  options: {
+    startTime: "2024-07-01T00:00:00Z",
+    endTime: "2024-07-31T23:59:59Z",
+    campaignId: "campaign123",
+    interval: "day"
+  } satisfies MetricsOptions,
   engagement: {
     apiResponse: {
       buckets: {
@@ -46,7 +53,7 @@ describe("engagement", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { engagement, error } = await metrics.engagement();
+    const { engagement, error } = await metrics.engagement(fake.options);
 
     expect(engagement).toEqual(fake.engagement.expectedResponse.engagement);
     expect(error).toBeNull();
