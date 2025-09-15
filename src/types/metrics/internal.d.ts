@@ -24,3 +24,25 @@ export interface MetricsEngagementApiResponse {
   open_tracking_delivered: number;
   start_time: string;
 }
+
+export interface MetricsPerformanceApiResponse {
+  bounced: number;
+  buckets: {
+    bounced: {
+      count: number;
+      period_start: string;
+    }[];
+    delivered: {
+      count: number;
+      period_start: string;
+    }[];
+    processed: {
+      count: number;
+      period_start: string;
+    }[];
+  };
+  delivered: number;
+  end_time: string;
+  processed: number;
+  start_time: string;
+}

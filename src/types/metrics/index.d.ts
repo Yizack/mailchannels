@@ -1,13 +1,25 @@
 export * from "./engagement";
+export * from "./performance";
+
+export interface MetricsBucket {
+  /**
+   * The number of events or occurrences aggregated within this time period.
+   */
+  count: number;
+  /**
+   * The starting date and time of the time period this bucket represents.
+   */
+  periodStart: string;
+}
 
 export interface MetricsOptions {
   /**
-   * The beginning of the time range for retrieving message engagement metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
+   * The beginning of the time range for retrieving message metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
    * @example "2025-05-26"
    */
   startTime?: string;
   /**
-   * The end of the time range for retrieving message engagement metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
+   * The end of the time range for retrieving message metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
    * @example "2025-05-31T15:16:17Z"
    */
   endTime?: string;

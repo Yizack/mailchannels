@@ -1,21 +1,11 @@
+import type { MetricsBucket } from ".";
+
 export interface MetricsEngagement {
   buckets: {
-    click: {
-      count: number;
-      periodStart: string;
-    }[];
-    clickTrackingDelivered: {
-      count: number;
-      periodStart: string;
-    }[];
-    open: {
-      count: number;
-      periodStart: string;
-    }[];
-    openTrackingDelivered: {
-      count: number;
-      periodStart: string;
-    }[];
+    click: MetricsBucket[];
+    clickTrackingDelivered: MetricsBucket[];
+    open: MetricsBucket[];
+    openTrackingDelivered: MetricsBucket[];
   };
   click: number;
   clickTrackingDelivered: number;
