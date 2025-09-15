@@ -58,6 +58,13 @@ export class Service {
   /**
    * Submit a false negative or false positive report.
    * @param options - The report options
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, error } = await mailchannels.service.report({
+   * // ...
+   * })
+   * ```
    */
   async report (options: ServiceReportOptions): Promise<SuccessResponse> {
     const data: SuccessResponse = { success: false, error: null };
