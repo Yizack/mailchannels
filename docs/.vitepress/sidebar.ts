@@ -64,7 +64,8 @@ export default [
             collapsed: true,
             link: "/modules/metrics",
             items: [
-              { text: "Engagement", link: "/modules/metrics#engagement" }
+              { text: "Engagement", link: "/modules/metrics#engagement" },
+              { text: "Performance", link: "/modules/metrics#performance" }
             ]
           }
         ]
