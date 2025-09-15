@@ -30,6 +30,10 @@ features:
     title: Sub-accounts module
     details: Manage sub-accounts
     link: /modules/sub-accounts
+  - icon: 📊
+    title: Metrics module
+    details: Retrieve account metrics
+    link: /modules/metrics
   - icon: 🌐
     title: Domains module
     details: Manage Inbound domains
@@ -42,10 +46,6 @@ features:
     title: Users module
     details: Manage recipient users
     link: /modules/users
-  - icon: 📊
-    title: Metrics module
-    details: Retrieve account metrics
-    link: /modules/metrics
 ---
 
 <!-- @include: ../README.md#note -->
