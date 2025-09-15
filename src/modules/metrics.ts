@@ -1,11 +1,12 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../types/metrics/volume";
+import type { MetricsUsageResponse } from "../types/metrics/usage";
 
 const mapBuckets = (arr: { count: number, period_start: string }[]) => {
   return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
@@ -185,6 +186,34 @@ export class Metrics {
       endTime: response.end_time,
       processed: response.processed,
       startTime: response.start_time
+    };
+
+    return data;
+  }
+
+  /**
+   * Retrieves usage statistics during the current billing period.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { usage } = await mailchannels.metrics.usage()
+   * ```
+   */
+  async usage (): Promise<MetricsUsageResponse> {
+    const data: MetricsUsageResponse = { usage: null, error: null };
+
+    const response = await this.mailchannels.get<MetricsUsageApiResponse>("/tx/v1/usage", {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response);
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.usage = {
+      endDate: response.period_end_date,
+      startDate: response.period_start_date,
+      total: response.total_usage
     };
 
     return data;

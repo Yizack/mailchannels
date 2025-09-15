@@ -3,9 +3,10 @@ import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
 import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformance, MetricsPerformanceResponse } from "../src/types/metrics";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
 import type { MetricsRecipientBehaviourResponse } from "../src/types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../src/types/metrics/volume";
+import type { MetricsUsageResponse } from "../src/types/metrics/usage";
 
 const fake = {
   options: {
@@ -129,6 +130,21 @@ const fake = {
       },
       error: null
     } satisfies MetricsVolumeResponse
+  },
+  usage: {
+    apiResponse: {
+      period_end_date: "2025-04-11",
+      period_start_date: "2025-03-12",
+      total_usage: 5000
+    } satisfies MetricsUsageApiResponse,
+    expectedResponse: {
+      usage: {
+        endDate: "2025-04-11",
+        startDate: "2025-03-12",
+        total: 5000
+      },
+      error: null
+    } satisfies MetricsUsageResponse
   }
 };
 
@@ -252,6 +268,37 @@ describe("volume", () => {
 
     expect(error).toBeTruthy();
     expect(volume).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("usage", () => {
+  it("should successfully retrieve usage metrics", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.usage.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { usage, error } = await metrics.usage();
+
+    expect(usage).toEqual(fake.usage.expectedResponse.usage);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { usage, error } = await metrics.usage();
+
+    expect(error).toBeTruthy();
+    expect(usage).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

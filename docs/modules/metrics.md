@@ -140,6 +140,31 @@ const { volume } = await mailchannels.metrics.volume()
   - `campaignId`: The ID of the campaign to filter metrics by. If not provided, metrics for all campaigns will be returned.
   - `interval`: The interval for aggregating metrics data. Possible values are `hour`, `day`, `week`, and `month`. Defaults to `day`.
 
+## Usage <Badge type="info" text="method" />
+
+Retrieves usage statistics during the current billing period.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Metrics } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const metrics = new Metrics(mailchannels)
+
+const { usage } = await metrics.usage()
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { usage } = await mailchannels.metrics.usage()
+```
+:::
+
 ## Type declarations
 
 <<< @/snippets/metrics.ts
@@ -166,8 +191,13 @@ const { volume } = await mailchannels.metrics.volume()
   <<< @/snippets/metrics-recipient-behaviour-response.ts
 
   **Volume type declarations**
+
   <<< @/snippets/metrics-volume.ts
   <<< @/snippets/metrics-volume-response.ts
+
+  **Usage type declarations**
+
+  <<< @/snippets/metrics-usage-response.ts
 </details>
 
 ## Source

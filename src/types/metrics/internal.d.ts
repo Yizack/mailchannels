@@ -54,3 +54,9 @@ export interface MetricsVolumeApiResponse {
   processed: number;
   start_time: string;
 }
+
+export interface MetricsUsageApiResponse {
+  period_end_date: string;
+  period_start_date: string;
+  total_usage: number;
+}
