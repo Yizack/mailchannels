@@ -101,7 +101,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Retrieve Recipient Behaviour Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-recipient-behaviour-metrics)
   - ✅ [Retrieve Usage Stats](https://docs.mailchannels.net/email-api/api-reference/retrieve-usage-stats)
   - ✅ [Retrieve Volume Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-volume-metrics)
-- 📵 Suppressions
+- 🚫 Suppressions
   - ✅ [Create Suppression Entries](https://docs.mailchannels.net/email-api/api-reference/create-suppression-entries)
   - ✅ [Delete Suppression Entry](https://docs.mailchannels.net/email-api/api-reference/delete-suppression-entry)
   - ✅ [Retrieve Suppression List](https://docs.mailchannels.net/email-api/api-reference/retrieve-suppression-list)

@@ -34,7 +34,7 @@ features:
     title: Metrics module
     details: Retrieve account metrics
     link: /modules/metrics
-  - icon: 📵
+  - icon: 🚫
     title: Suppressions module
     details: Manage account suppressions
     link: /modules/suppressions

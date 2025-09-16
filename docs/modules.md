@@ -38,7 +38,7 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 <VPButton href="/modules/metrics" text="Read documentation" theme="alt" style="text-decoration:none" />
 
-### 📵 Suppressions
+### 🚫 Suppressions
 
 <!-- @include: modules/suppressions.md#description -->
 
