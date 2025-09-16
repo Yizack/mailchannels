@@ -70,6 +70,16 @@ export default [
               { text: "Volume", link: "/modules/metrics#volume" },
               { text: "Usage", link: "/modules/metrics#usage" }
             ]
+          },
+          {
+            text: "🚫 Suppressions",
+            collapsed: true,
+            link: "/modules/suppressions",
+            items: [
+              { text: "Create Suppression", link: "/modules/suppressions#create" },
+              { text: "Delete Suppression", link: "/modules/suppressions#delete" },
+              { text: "List Suppressions", link: "/modules/suppressions#list" }
+            ]
           }
         ]
       },

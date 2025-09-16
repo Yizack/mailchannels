@@ -3,6 +3,7 @@ export type * from "./emails";
 export type * from "./webhooks";
 export type * from "./sub-accounts";
 export type * from "./metrics";
+export type * from "./suppressions";
 
 // Modules: Inbound API
 export type * from "./domains";

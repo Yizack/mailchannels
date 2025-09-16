@@ -38,6 +38,12 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 <VPButton href="/modules/metrics" text="Read documentation" theme="alt" style="text-decoration:none" />
 
+### 📵 Suppressions
+
+<!-- @include: modules/suppressions.md#description -->
+
+<VPButton href="/modules/suppressions" text="Read documentation" theme="alt" style="text-decoration:none" />
+
 ## Inbound API <Badge type="warning" text="version 1.1.0" />
 
 A cloud-based spam filtering service that protects your users against spam, phishing, and malware.
