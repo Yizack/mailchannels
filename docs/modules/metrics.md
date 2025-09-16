@@ -185,7 +185,7 @@ const { usage } = await mailchannels.metrics.usage()
   <<< @/snippets/metrics-performance.ts
   <<< @/snippets/metrics-performance-response.ts
 
-  ***Recipient Behaviour type declarations**
+  **Recipient Behaviour type declarations**
 
   <<< @/snippets/metrics-recipient-behaviour.ts
   <<< @/snippets/metrics-recipient-behaviour-response.ts
