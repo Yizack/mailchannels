@@ -9,7 +9,7 @@ export interface EmailsSendRecipient {
   name?: string;
 }
 
-interface EmailsSendAttachment {
+export interface EmailsSendAttachment {
   /**
    * The attachment data, encoded in base64.
    */
@@ -24,7 +24,7 @@ interface EmailsSendAttachment {
   type: string;
 }
 
-interface EmailsSendTracking {
+export interface EmailsSendTracking {
   /**
    * Track when a recipient clicks a link in your email.
    * @default false

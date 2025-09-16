@@ -1,4 +1,4 @@
-type ListNames = "blocklist" | "safelist" | "blacklist" | "whitelist";
+export type ListNames = "blocklist" | "safelist" | "blacklist" | "whitelist";
 
 export interface ListEntryOptions {
   /**
