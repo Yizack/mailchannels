@@ -1,4 +1,3 @@
-
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { ErrorCode } from "../src/utils/errors";
