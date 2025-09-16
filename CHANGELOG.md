@@ -1,6 +1,43 @@
 # Changelog
 
 
+## v0.4.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.7...v0.4.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Update to mailchannels email api `0.11.0` ([#1](https://github.com/Yizack/mailchannels/pull/1))
+
+### 🩹 Fixes
+
+- **domains:** Add missing returning type in `addListEntry` ([14a755a](https://github.com/Yizack/mailchannels/commit/14a755a))
+
+### 📖 Documentation
+
+- Update new endpoints list and add links ([7880e36](https://github.com/Yizack/mailchannels/commit/7880e36))
+
+### 🏡 Chore
+
+- **lint:** Add `function-call-spacing` stylistic rule ([ac9055e](https://github.com/Yizack/mailchannels/commit/ac9055e))
+
+### ✅ Tests
+
+- Error prop must be truthy on error ([ffed7a9](https://github.com/Yizack/mailchannels/commit/ffed7a9))
+
+### 🤖 CI
+
+- Update to `actions/checkout@v5` ([964752b](https://github.com/Yizack/mailchannels/commit/964752b))
+- Update `autofix-ci` ([45c386a](https://github.com/Yizack/mailchannels/commit/45c386a))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Update to mailchannels email api `0.11.0` ([#1](https://github.com/Yizack/mailchannels/pull/1))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.3.7
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.6...v0.3.7)
