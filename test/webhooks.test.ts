@@ -74,6 +74,19 @@ describe("enroll", () => {
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
+  it("should contain error if the endpoint exceeds maximum length", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const longEndpoint = "https://example.com/" + "a".repeat(7990);
+
+    const { success, error } = await webhooks.enroll(longEndpoint);
+
+    expect(error).toBe("The endpoint exceeds the maximum length of 8000 characters.");
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {

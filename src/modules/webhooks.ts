@@ -11,7 +11,7 @@ export class Webhooks {
 
   /**
    * Enrolls the customer to receive event notifications via webhooks.
-   * @param endpoint - The URL to receive event notifications.
+   * @param endpoint - The URL to receive event notifications. Must be no longer than `8000` characters.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
@@ -23,6 +23,11 @@ export class Webhooks {
 
     if (!endpoint) {
       data.error = "No endpoint provided.";
+      return data;
+    }
+
+    if (endpoint.length > 8000) {
+      data.error = "The endpoint exceeds the maximum length of 8000 characters.";
       return data;
     }
 

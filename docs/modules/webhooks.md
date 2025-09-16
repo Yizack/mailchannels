@@ -35,7 +35,7 @@ const { success } = await mailchannel.webhooks.enroll("https://example.com/api/w
 
 ### Params
 
-- `endpoint`: The URL to receive the webhook notifications.
+- `endpoint`: The URL to receive event notifications. Must be no longer than `8000` characters.
 
 ## List <Badge type="info" text="method" />
 
