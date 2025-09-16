@@ -13,7 +13,7 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const response = await mailchannels.suppressions.create({
+   * const { success } = await mailchannels.suppressions.create({
    * // ...
    * });
    */
@@ -57,7 +57,7 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const response = await mailchannels.suppressions.delete('name@example.com', 'api');
+   * const { success } = await mailchannels.suppressions.delete('name@example.com', 'api');
    * ```
    */
   async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
@@ -87,7 +87,7 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const response = await mailchannels.suppressions.list();
+   * const { list }= await mailchannels.suppressions.list();
    * ```
    * @param options - Options to filter and customize the suppression entries retrieval.
    */

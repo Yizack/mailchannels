@@ -107,14 +107,14 @@ import { Suppressions } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-const { suppressions: entries, total } = await suppressions.list()
+const { list } = await suppressions.list()
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { suppressions: entries, total } = await mailchannels.suppressions.list()
+const { list } = await mailchannels.suppressions.list()
 ```
 :::
 
