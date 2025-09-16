@@ -344,7 +344,7 @@ export class Domains {
   }
 
   /**
-   * Sets the list of downstream addreses for the domain. This action deletes any existing downstream address for the domain before creating new ones. If the `records` parameter is an empty array, all downstream address records will be deleted.
+   * Sets the list of downstream addresses for the domain. This action deletes any existing downstream address for the domain before creating new ones. If the `records` parameter is an empty array, all downstream address records will be deleted.
    * @param domain - The domain name.
    * @param records - The list of records to set for the domain. A maximum of 10 records can be set.
    * @example
