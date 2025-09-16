@@ -1,13 +1,13 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/list-entry";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { DomainsAddListEntryApiResponse, DomainsBulkProvisionApiResponse } from "../types/domains/internal";
 import type { DomainsBulkProvisionOptions, DomainsBulkProvisionResponse, DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types/domains/downstream-addresses";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { ListEntryApiResponse } from "../types/internal";
+import type { ListEntryApiResponse } from "../types/lists/internal";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}

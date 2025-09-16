@@ -1,5 +1,9 @@
 export interface SubAccountsAccount {
   /**
+   * The name of the company associated with the sub-account.
+   */
+  companyName: string;
+  /**
    * If the sub-account is enabled.
    */
   enabled: boolean;

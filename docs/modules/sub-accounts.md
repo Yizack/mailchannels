@@ -4,6 +4,9 @@
 Manage your sub-accounts associated with your MailChannels account.
 <!-- #endregion description -->
 
+> [!IMPORTANT]
+> Sub-accounts are only available to parent accounts on 100K and higher plans.
+
 ## Create <Badge type="info" text="method" />
 
 Creates a new sub-account under the parent account.
@@ -18,22 +21,25 @@ import { SubAccounts } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { account } = await subAccounts.create('validhandle123')
+const { account } = await subAccounts.create('My Company', 'validhandle123')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { account } = await mailchannels.subAccounts.create('validhandle123')
+const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
 ```
 :::
 
 ### Params
 
+- `companyName`: The name of the company associated with the sub-account.
+  > [!TIP]
+  > This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
 - `handle`: The handle of the sub-account to create.
   > [!TIP]
-  > Sub-account handle must match the pattern `[a-z0-9]{3,128}`.
+  > The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers.
   >
   > If no handle is provided, a random handle will be generated.
 
@@ -333,6 +339,127 @@ const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle12
 - `handle`: The handle of the sub-account for which the SMTP password should be deleted.
 - `id`: The ID of the SMTP password to delete.
 
+## Get Limit <Badge type="info" text="method" />
+
+Retrieves the limit of a specified sub-account.
+
+> [!TIP]
+> A value of `-1` indicates that the sub-account inherits the parent account's limit, allowing the sub-account to utilize any remaining capacity within the parent account's allocation.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { limit } = await subAccounts.getLimit('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to retrieve the limit for.
+
+## Set Limit <Badge type="info" text="method" />
+
+Sets the limit for the specified sub-account.
+
+### Usage
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to set the limit for.
+- `limits`: The limits to set for the sub-account.
+  - `sends`
+  > [!TIP]
+  > The minimum allowed sends is `0`.
+
+## Delete Limit <Badge type="info" text="method" />
+
+Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
+
+### Usage
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { success } = await subAccounts.deleteLimit('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to delete the limit for.
+
+## Get Usage <Badge type="info" text="method" />
+
+Retrieves usage statistics for the specified sub-account during the current billing period.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { SubAccounts } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const subAccounts = new SubAccounts(mailchannels)
+
+const { usage } = await subAccounts.getUsage('validhandle123')
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
+```
+:::
+
+### Params
+
+- `handle`: The handle of the sub-account to query usage stats for.
+
 ## Type declarations
 
 <<< @/snippets/sub-accounts.ts
@@ -362,6 +489,16 @@ const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle12
   <<< @/snippets/sub-accounts-smtp-password.ts
   <<< @/snippets/sub-accounts-create-smtp-password-response.ts
   <<< @/snippets/sub-accounts-list-smtp-password-response.ts
+
+  **Limit type declaration**
+
+  <<< @/snippets/sub-accounts-limit.ts
+  <<< @/snippets/sub-accounts-limit-response.ts
+
+  **Usage type declarations**
+
+  <<< @/snippets/sub-accounts-usage.ts
+  <<< @/snippets/sub-accounts-usage-response.ts
 </details>
 
 ## Source

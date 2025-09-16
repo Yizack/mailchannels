@@ -39,8 +39,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "release": "npm run lint && npm run test && npm run build && changelogen --release && npm publish && npm run publish:mirrors && git push --follow-tags",
-    "publish:mirrors": "jiti scripts/publish-mirrors",
+    "release": "npm run lint && npm run test && npm run build && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest run --reporter=verbose --coverage",

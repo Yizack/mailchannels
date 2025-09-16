@@ -30,6 +30,14 @@ features:
     title: Sub-accounts module
     details: Manage sub-accounts
     link: /modules/sub-accounts
+  - icon: 📊
+    title: Metrics module
+    details: Retrieve account metrics
+    link: /modules/metrics
+  - icon: 🚫
+    title: Suppressions module
+    details: Manage account suppressions
+    link: /modules/suppressions
   - icon: 🌐
     title: Domains module
     details: Manage Inbound domains

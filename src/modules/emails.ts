@@ -55,6 +55,7 @@ export class Emails {
 
     const payload: EmailsSendPayload = {
       attachments: options.attachments,
+      campaign_id: options.campaignId,
       personalizations: [{
         bcc: parseArrayRecipients(bcc),
         cc: parseArrayRecipients(cc),
@@ -71,7 +72,8 @@ export class Emails {
       tracking_settings: options.tracking ? {
         click_tracking: options.tracking.click ? { enable: options.tracking.click } : undefined,
         open_tracking: options.tracking.open ? { enable: options.tracking.open } : undefined
-      } : undefined
+      } : undefined,
+      transactional: options.transactional
     };
 
     const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {

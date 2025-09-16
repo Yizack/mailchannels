@@ -1,32 +1,39 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { SubAccounts } from "../src/modules/sub-accounts";
-import type { SubAccountsAccount } from "../src/types/sub-accounts/create";
-import type { SubAccountsListOptions } from "../src/types/sub-accounts/list";
+import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "../src/types/sub-accounts/internal";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../src/types/sub-accounts/internal";
+import type { SubAccountsCreateResponse } from "../src/types";
+import type { SubAccountsUsageResponse } from "../src/types/sub-accounts/usage";
 import { ErrorCode } from "../src/utils/errors";
 
 const fake = {
   create: {
+    validCompanyName: "My Company",
+    invalidCompanyName: "a",
     validHandle: "validhandle123",
     invalidHandle: "Invalid_Handle!",
-    apiResponse: { enabled: true, handle: "validhandle123" }
+    apiResponse: { company_name: "My Company", enabled: true, handle: "validhandle123" } satisfies SubAccountsCreateApiResponse,
+    expectedResponse: {
+      account: { companyName: "My Company", enabled: true, handle: "validhandle123" },
+      error: null
+    } satisfies SubAccountsCreateResponse
   },
   list: {
     options: { limit: 10, offset: 0 } as SubAccountsListOptions,
     apiResponse: [
-      { enabled: true, handle: "sub-account-1" },
-      { enabled: false, handle: "sub-account-2" }
-    ] as SubAccountsAccount[],
+      { company_name: "My Company", enabled: true, handle: "sub-account-1" },
+      { company_name: "Another Company", enabled: false, handle: "sub-account-2" }
+    ] satisfies SubAccountsListApiResponse,
     expectedResponse: {
       accounts: [
-        { enabled: true, handle: "sub-account-1" },
-        { enabled: false, handle: "sub-account-2" }
-      ] as SubAccountsAccount[],
+        { companyName: "My Company", enabled: true, handle: "sub-account-1" },
+        { companyName: "Another Company", enabled: false, handle: "sub-account-2" }
+      ],
       error: null
-    }
+    } satisfies SubAccountsListResponse
   },
   createApiKey: {
     apiResponse: { id: 1, key: "api-key-value" },
@@ -44,7 +51,7 @@ const fake = {
       keys: [
         { id: 1, value: "api-key-1" },
         { id: 2, value: "api-key-2" }
-      ] as SubAccountsApiKey[],
+      ] satisfies SubAccountsApiKey[],
       error: null
     }
   },
@@ -53,13 +60,13 @@ const fake = {
       enabled: true,
       id: 1,
       smtp_password: "smtp-password-value"
-    } as SubAccountsCreateSmtpPasswordApiResponse,
+    } satisfies SubAccountsCreateSmtpPasswordApiResponse,
     expectedResponse: {
       password: {
         enabled: true,
         id: 1,
         value: "smtp-password-value"
-      } as SubAccountsSmtpPassword,
+      } satisfies SubAccountsSmtpPassword,
       error: null
     }
   },
@@ -72,23 +79,58 @@ const fake = {
       passwords: [
         { enabled: true, id: 1, value: "password-1" },
         { enabled: false, id: 2, value: "password-2" }
-      ] as SubAccountsSmtpPassword[],
+      ] satisfies SubAccountsSmtpPassword[],
       error: null
     }
+  },
+  getLimit: {
+    apiResponse: { sends: 1 },
+    expectedResponse: {
+      limit: { sends: 1 },
+      error: null
+    }
+  },
+  getUsage: {
+    apiResponse: {
+      period_end_date: "2025-04-11",
+      period_start_date: "2025-03-12",
+      total_usage: 1234
+    } satisfies SubAccountsUsageApiResponse,
+    expectedResponse: {
+      usage: {
+        endDate: "2025-04-11",
+        startDate: "2025-03-12",
+        total: 1234
+      },
+      error: null
+    } satisfies SubAccountsUsageResponse
   }
 };
 
 describe("create", () => {
-  it("should successfully create a sub-account with a valid handle", async () => {
+  it("should successfully create a sub-account with a valid company name and handle", async () => {
     const mockClient = {
       post: vi.fn().mockResolvedValue(fake.create.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create(fake.create.validHandle);
+    const { account } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
 
-    expect(account).toEqual(fake.create.apiResponse);
+    expect(account).toEqual(fake.create.expectedResponse.account);
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error for an invalid company name", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { account, error } = await subAccounts.create(fake.create.invalidCompanyName, fake.create.validHandle);
+
+    expect(error).toBe("Invalid company name. Company name must be between 3 and 128 characters.");
+    expect(account).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error for an invalid handle", async () => {
@@ -97,9 +139,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.invalidHandle);
+    const { account, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.invalidHandle);
 
-    expect(error).toBe("Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}");
+    expect(error).toBe("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
     expect(account).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -110,9 +152,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create();
+    const { account } = await subAccounts.create(fake.create.validCompanyName);
 
-    expect(account).toEqual(fake.create.apiResponse);
+    expect(account).toEqual(fake.create.expectedResponse.account);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -591,5 +633,182 @@ describe("deleteSmtpPassword", () => {
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
+describe("getLimit", () => {
+  it("should successfully retrieve the limit of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.getLimit.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+
+    expect(limit).toEqual(fake.getLimit.expectedResponse.limit);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit("");
+
+    expect(error).toBe("No handle provided.");
+    expect(limit).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+    expect(error).toBeTruthy();
+    expect(limit).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("setLimit", () => {
+  it("should successfully set the limit of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
+
+    expect(success).toBe(true);
+    expect(error).toBeNull();
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.setLimit("", { sends: 1 });
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: ErrorCode.BadRequest } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
+
+    expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+});
+
+describe("deleteLimit", () => {
+  it("should successfully delete the limit of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(success).toBe(true);
+    expect(error).toBeNull();
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      delete: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit("");
+
+    expect(error).toBe("No handle provided.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+        onResponse({ response: { status: ErrorCode.BadRequest } });
+      })
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+});
+
+describe("getUsage", () => {
+  it("should successfully retrieve the usage of a sub-account with a valid handle", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValue(fake.getUsage.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(usage).toEqual(fake.getUsage.expectedResponse.usage);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error when handle is not provided", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage("");
+
+    expect(error).toBe("No handle provided.");
+    expect(usage).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(error).toBeTruthy();
+    expect(usage).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
   });
 });

@@ -43,6 +43,10 @@ interface EmailsSendOptionsBase {
    */
   attachments?: EmailsSendAttachment[];
   /**
+   * The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
+   */
+  campaignId?: string;
+  /**
    * The BCC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
    * [
@@ -149,6 +153,13 @@ interface EmailsSendOptionsBase {
    * - map, whose keys must be strings, and whose values are all of permitted types
    */
   mustaches?: Record<string, unknown>;
+  /**
+   * Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
+   *
+   * List-Unsubscribe headers will be added.
+   * @default true
+   */
+  transactional?: boolean;
 }
 
 export type EmailsSendOptions = EmailsSendOptionsBase & (

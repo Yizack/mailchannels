@@ -35,7 +35,7 @@ const { success } = await mailchannel.webhooks.enroll("https://example.com/api/w
 
 ### Params
 
-- `endpoint`: The URL to receive the webhook notifications.
+- `endpoint`: The URL to receive event notifications. Must be no longer than `8000` characters.
 
 ## List <Badge type="info" text="method" />
 
@@ -118,6 +118,37 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id');
   > [!TIP]
   > The `keyId` can be found in the `signature-input` request header of the webhook notification.
 
+## Validate <Badge type="info" text="method" />
+
+Validates whether your enrolled webhook(s) respond with an HTTP `2xx` status code. Sends a test request to each webhook containing your customer handle, a hardcoded event type (`test`), a hardcoded sender email (`test@mailchannels.com`), a timestamp, a request ID (provided or generated), and an SMTP ID. The response includes the HTTP status code and body returned by each webhook.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Webhooks } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const webhooks = new Webhooks(mailchannels)
+
+const { allPassed, results } = await webhooks.validate('optional-request-id');
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id');
+```
+:::
+
+### Params
+
+- `requestId`: Optional identifier in the webhook payload. If not provided, a value will be automatically generated.
+  > [!NOTE]
+  > The request id must not exceed 28 characters.
+
 ## Type declarations
 
 <<< @/snippets/webhooks.ts
@@ -136,6 +167,10 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id');
   **Signing Key type declarations**
 
   <<< @/snippets/webhooks-signing-key-response.ts
+
+  **Validate type declarations**
+
+  <<< @/snippets/webhooks-validate-response.ts
 </details>
 
 ## Source

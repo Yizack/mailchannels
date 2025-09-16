@@ -1,8 +1,8 @@
 import { type HeadConfig, defineConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
-import { SITE } from "./theme/site";
-import sidebarConfig from "./theme/sidebar";
-import navbarConfig from "./theme/navbar";
+import { SITE } from "./site";
+import sidebarConfig from "./sidebar";
+import navbarConfig from "./navbar";
 
 export default defineConfig({
   title: SITE.name,
@@ -51,6 +51,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      // @ts-expect-error icon vite plugin
       groupIconVitePlugin()
     ]
   },

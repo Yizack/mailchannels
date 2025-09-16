@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/list-entry";
-import type { ListEntryApiResponse } from "../types/internal";
+import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
+import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
 import { ErrorCode, getStatusError } from "../utils/errors";

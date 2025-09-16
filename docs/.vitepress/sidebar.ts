@@ -35,7 +35,8 @@ export default [
               { text: "Enroll for Webhook", link: "/modules/webhooks#enroll" },
               { text: "List Webhooks", link: "/modules/webhooks#list" },
               { text: "Delete Webhooks", link: "/modules/webhooks#delete" },
-              { text: "Get Signing Key", link: "/modules/webhooks#signing-key" }
+              { text: "Get Signing Key", link: "/modules/webhooks#signing-key" },
+              { text: "Validate Webhooks", link: "/modules/webhooks#validate" }
             ]
           },
           {
@@ -51,7 +52,33 @@ export default [
               { text: "List API Keys", link: "/modules/sub-accounts#list-api-keys" },
               { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password" },
               { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords" },
-              { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" }
+              { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password" },
+              { text: "Get Limit", link: "/modules/sub-accounts#get-limit" },
+              { text: "Set Limit", link: "/modules/sub-accounts#set-limit" },
+              { text: "Delete Limit", link: "/modules/sub-accounts#delete-limit" },
+              { text: "Get Usage", link: "/modules/sub-accounts#get-usage" }
+            ]
+          },
+          {
+            text: "📊 Metrics",
+            collapsed: true,
+            link: "/modules/metrics",
+            items: [
+              { text: "Engagement", link: "/modules/metrics#engagement" },
+              { text: "Performance", link: "/modules/metrics#performance" },
+              { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour" },
+              { text: "Volume", link: "/modules/metrics#volume" },
+              { text: "Usage", link: "/modules/metrics#usage" }
+            ]
+          },
+          {
+            text: "🚫 Suppressions",
+            collapsed: true,
+            link: "/modules/suppressions",
+            items: [
+              { text: "Create Suppression", link: "/modules/suppressions#create" },
+              { text: "Delete Suppression", link: "/modules/suppressions#delete" },
+              { text: "List Suppressions", link: "/modules/suppressions#list" }
             ]
           }
         ]

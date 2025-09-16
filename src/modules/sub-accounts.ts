@@ -1,38 +1,51 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
-import type { SubAccountsCreateSmtpPasswordApiResponse } from "../types/sub-accounts/internal";
-import type { SubAccountsAccount, SubAccountsCreateResponse } from "../types/sub-accounts/create";
+import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
+import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
+import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
 import { ErrorCode, getStatusError } from "../utils/errors";
+import type { SubAccountsUsageResponse } from "../types/sub-accounts/usage";
 
 export class SubAccounts {
+  private static readonly COMPANY_PATTERN = /^.{3,128}$/;
   private static readonly HANDLE_PATTERN = /^[a-z0-9]{3,128}$/;
   constructor (protected mailchannels: MailChannelsClient) {}
 
   /**
-   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated.
-   * @param handle - The handle of the sub-account to create. Sub-account handle must match the pattern `[a-z0-9]{3,128}`.
+   * Creates a new sub-account under the parent account. Each sub-account must have a unique handle composed solely of lowercase alphanumeric characters. If no handle is provided, a random handle will be generated. Note that Sub-accounts are only available to parent accounts on 100K and higher plans.
+   * @param companyName - The name of the company associated with the sub-account. This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
+   * @param handle - A unique name for the sub-account to be created. The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers. If not provided, a random handle will be generated.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { account } = await mailchannels.subAccounts.create('validhandle123')
+   * const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
    * ```
    */
-  async create (handle?: string): Promise<SubAccountsCreateResponse> {
+  async create (companyName: string, handle?: string): Promise<SubAccountsCreateResponse> {
     const data: SubAccountsCreateResponse = { account: null, error: null };
+
+    const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
+    if (!isValidCompany) {
+      data.error = "Invalid company name. Company name must be between 3 and 128 characters.";
+      return data;
+    }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        data.error = "Invalid handle. Sub-account handle must match the pattern [a-z0-9]{3,128}";
+        data.error = "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.";
         return data;
       }
     }
 
-    const response = await this.mailchannels.post<SubAccountsAccount>("/tx/v1/sub-account", {
-      body: handle ? { handle } : undefined,
+    const response = await this.mailchannels.post<SubAccountsCreateApiResponse>("/tx/v1/sub-account", {
+      body: {
+        company_name: companyName,
+        handle
+      },
       onResponseError: ({ response }) => {
         data.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
@@ -41,7 +54,14 @@ export class SubAccounts {
       }
     }).catch(() => null);
 
-    data.account = response;
+    if (!response) return data;
+
+    data.account = {
+      companyName: response.company_name,
+      enabled: response.enabled,
+      handle: response.handle
+    };
+
     return data;
   }
 
@@ -67,14 +87,19 @@ export class SubAccounts {
       return data;
     }
 
-    const response = await this.mailchannels.get<SubAccountsAccount[]>("/tx/v1/sub-account", {
+    const response = await this.mailchannels.get<SubAccountsListApiResponse>("/tx/v1/sub-account", {
       query: options,
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response);
       }
     }).catch(() => []);
 
-    data.accounts = response;
+    data.accounts = response.map(account => ({
+      companyName: account.company_name,
+      enabled: account.enabled,
+      handle: account.handle
+    }));
+
     return data;
   }
 
@@ -377,6 +402,142 @@ export class SubAccounts {
         });
       }
     });
+
+    return data;
+  }
+
+  /**
+   * Retrieves the limit of a specified sub-account. A value of `-1` indicates that the sub-account inherits the parent account's limit, allowing the sub-account to utilize any remaining capacity within the parent account's allocation.
+   * @param handle - Handle of the sub-account to retrieve the limit for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
+   * ```
+   */
+  async getLimit (handle: string): Promise<SubAccountsLimitResponse> {
+    const data: SubAccountsLimitResponse = { limit: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${handle}/limit`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.limit = response;
+    return data;
+  }
+
+  /**
+   * Sets the limit for the specified sub-account.
+   * @param handle - Handle of the sub-account to set limit for.
+   * @param limit - The limits to set for the sub-account. The minimum allowed sends is `0`
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+   * ```
+   */
+  async setLimit (handle: string, limit: SubAccountsLimit): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${handle}/limit`, {
+      body: limit,
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    });
+
+    return data;
+  }
+
+  /**
+   * Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
+   * @param handle - Handle of the sub-account to delete limit for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
+   * ```
+   */
+  async deleteLimit (handle: string): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/limit`, {
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    });
+
+    return data;
+  }
+
+  /**
+   * Retrieves usage statistics for the specified sub-account during the current billing period.
+   * @param handle - Handle of the sub-account to query usage stats for.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
+   * ```
+   */
+  async getUsage (handle: string): Promise<SubAccountsUsageResponse> {
+    const data: SubAccountsUsageResponse = { usage: null, error: null };
+
+    if (!handle) {
+      data.error = "No handle provided.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${handle}/usage`, {
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.usage = {
+      endDate: response.period_end_date,
+      startDate: response.period_start_date,
+      total: response.total_usage
+    };
 
     return data;
   }

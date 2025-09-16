@@ -2,6 +2,8 @@ import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
+import type { WebhooksValidateResponse } from "../types/webhooks/validate";
+import type { WebhooksValidateApiResponse } from "../types/webhooks/internal";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
@@ -9,7 +11,7 @@ export class Webhooks {
 
   /**
    * Enrolls the customer to receive event notifications via webhooks.
-   * @param endpoint - The URL to receive event notifications.
+   * @param endpoint - The URL to receive event notifications. Must be no longer than `8000` characters.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
@@ -21,6 +23,11 @@ export class Webhooks {
 
     if (!endpoint) {
       data.error = "No endpoint provided.";
+      return data;
+    }
+
+    if (endpoint.length > 8000) {
+      data.error = "The endpoint exceeds the maximum length of 8000 characters.";
       return data;
     }
 
@@ -113,6 +120,43 @@ export class Webhooks {
     }).catch(() => null);
 
     data.key = response?.key || null;
+    return data;
+  }
+
+  /**
+   * Validates whether your enrolled webhook(s) respond with an HTTP `2xx` status code. Sends a test request to each webhook containing your customer handle, a hardcoded event type (`test`), a hardcoded sender email (`test@mailchannels.com`), a timestamp, a request ID (provided or generated), and an SMTP ID. The response includes the HTTP status code and body returned by each webhook.
+   * @param requestId - Optional identifier in the webhook payload. If not provided, a value will be automatically generated. Must not exceed 28 characters.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')
+   * ```
+   */
+  async validate (requestId?: string): Promise<WebhooksValidateResponse> {
+    const data: WebhooksValidateResponse = { allPassed: false, results: [], error: null };
+
+    if (requestId && requestId.length > 28) {
+      data.error = "The request id should not exceed 28 characters.";
+      return data;
+    }
+
+    const response = await this.mailchannels.post<WebhooksValidateApiResponse>("/tx/v1/webhook/validate", {
+      body: {
+        request_id: requestId
+      },
+      onResponseError: ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "No webhooks found for the account."
+        });
+      }
+    }).catch(() => null);
+
+    if (response) {
+      data.allPassed = response.all_passed;
+      data.results = response.results;
+    }
+
     return data;
   }
 }

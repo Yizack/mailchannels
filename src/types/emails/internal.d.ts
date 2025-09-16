@@ -23,10 +23,10 @@ export interface EmailsSendContent {
 
 export interface EmailsSendPayload {
   attachments?: EmailsSendAttachment[];
+  campaign_id?: string;
   content: EmailsSendContent[];
   from: EmailsSendRecipient;
   headers?: Record<string, string>;
-  mailfrom?: EmailsSendRecipient;
   personalizations: EmailsSendPersonalization[];
   reply_to?: EmailsSendRecipient;
   subject: string;
@@ -38,6 +38,7 @@ export interface EmailsSendPayload {
       enable: EmailsSendTracking["open"];
     };
   };
+  transactional?: boolean;
 }
 
 export interface EmailsCheckDomainPayload {

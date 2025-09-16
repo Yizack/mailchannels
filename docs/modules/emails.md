@@ -52,6 +52,7 @@ const { success } = await mailchannels.emails.send({
     - `content`: The attachment data, encoded in base64
     - `filename`: The name of the attachment file
     - `type`: The MIME type of the attachment
+  - `campaignId`: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
   - `bcc`: The BCC recipients of the email.
   - `cc`: The CC recipients of the email.
   - `dkim`: The DKIM settings for the email.
@@ -80,6 +81,8 @@ const { success } = await mailchannels.emails.send({
     >
     > You can use the [`html-to-text`](https://www.npmjs.com/package/html-to-text) package to convert your HTML content to plain text.
   - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
+  - `transactional`: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
+    List-Unsubscribe headers will be added.
 - `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response.
   > [!TIP]
   > Use `dryRun` to test your email message before sending it.

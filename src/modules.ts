@@ -1,9 +1,15 @@
+// Modules: Email API
 export { Emails } from "./modules/emails";
 export { Webhooks } from "./modules/webhooks";
 export { SubAccounts } from "./modules/sub-accounts";
-export { Service } from "./modules/service";
-export { Domains } from "./modules/domains";
-export { Users } from "./modules/users";
-export { Lists } from "./modules/lists";
+export { Metrics } from "./modules/metrics";
+export { Suppressions } from "./modules/suppressions";
 
+// Modules: Inbound API
+export { Domains } from "./modules/domains";
+export { Lists } from "./modules/lists";
+export { Users } from "./modules/users";
+export { Service } from "./modules/service";
+
+// Types
 export type * from "./types";
