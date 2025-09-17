@@ -19,9 +19,11 @@ jobs:
       - run: corepack enable
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: latest
           cache: pnpm
           registry-url: https://registry.npmjs.org
+
+      - run: pnpm config set registry https://registry.npmjs.org
 
       - name: 📦 Install dependencies
         run: pnpm i
