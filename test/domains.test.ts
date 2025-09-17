@@ -5,6 +5,7 @@ import type { DomainsData, DomainsProvisionOptions } from "../src/types/domains/
 import { ErrorCode } from "../src/utils/errors";
 import type { ListEntryOptions } from "../src/types/lists/entry";
 import type { DomainsAddListEntryApiResponse } from "../src/types/domains/internal";
+import type { DomainsBulkCreateLoginLinksResponse } from "../src/types/domains/bulk-create-login-links";
 
 const fake = {
   provision: {
@@ -88,23 +89,25 @@ const fake = {
     ]
   },
   bulkCreateLoginLinksResponse: {
-    successes: [
-      {
-        domain: "example1.com",
-        code: 200,
-        comment: "string",
-        loginLink: "string"
-      }
-    ],
-    errors: [
-      {
-        domain: "example2.com",
-        code: 400,
-        comment: "string",
-        loginLink: "string"
-      }
-    ]
-  }
+    results: {
+      successes: [
+        {
+          domain: "example1.com",
+          code: 200,
+          comment: "string",
+          loginLink: "string"
+        }
+      ],
+      errors: [
+        {
+          domain: "example2.com",
+          code: 400,
+          comment: "string"
+        }
+      ]
+    },
+    error: null
+  } satisfies DomainsBulkCreateLoginLinksResponse
 };
 
 describe("provision", () => {
@@ -744,7 +747,7 @@ describe("bulkCreateLoginLinks", () => {
     const { results, error } = await domains.bulkCreateLoginLinks([]);
 
     expect(error).toBe("No domains provided.");
-    expect(results).toEqual([]);
+    expect(results).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -757,7 +760,7 @@ describe("bulkCreateLoginLinks", () => {
     const { results, error } = await domains.bulkCreateLoginLinks(new Array(1001).fill("example.com"));
 
     expect(error).toBe("The maximum number of domains to create login links for is 1000.");
-    expect(results).toEqual([]);
+    expect(results).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -776,7 +779,7 @@ describe("bulkCreateLoginLinks", () => {
     ]);
 
     expect(error).toBeTruthy();
-    expect(results).toEqual([]);
+    expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

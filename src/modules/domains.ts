@@ -7,7 +7,7 @@ import type { DomainsBulkProvisionOptions, DomainsBulkProvisionResponse, Domains
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types/domains/downstream-addresses";
-import type { DomainsBulkCreateLoginLink, DomainsBulkCreateLoginLinksResponse } from "../types/domains/bulk-create-login-links";
+import type { DomainsBulkCreateLoginLinks, DomainsBulkCreateLoginLinksResponse } from "../types/domains/bulk-create-login-links";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Domains {
@@ -486,7 +486,7 @@ export class Domains {
    * ```
    */
   async bulkCreateLoginLinks (domains: string[]): Promise<DomainsBulkCreateLoginLinksResponse> {
-    const data: DomainsBulkCreateLoginLinksResponse = { results: [], error: null };
+    const data: DomainsBulkCreateLoginLinksResponse = { results: null, error: null };
 
     if (!domains || !domains.length) {
       data.error = "No domains provided.";
@@ -498,7 +498,7 @@ export class Domains {
       return data;
     }
 
-    const response = await this.mailchannels.post<DomainsBulkCreateLoginLink[]>("/inbound/v1/domains/batch/login-link", {
+    const response = await this.mailchannels.post<DomainsBulkCreateLoginLinks>("/inbound/v1/domains/batch/login-link", {
       body: {
         domains: domains.map(domain => ({ domain }))
       },
