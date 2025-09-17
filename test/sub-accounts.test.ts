@@ -5,7 +5,7 @@ import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/typ
 import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../src/types/sub-accounts/internal";
-import type { SubAccountsCreateResponse } from "../src/types";
+import type { SubAccountsCreateResponse } from "../src/types/sub-accounts/create";
 import type { SubAccountsUsageResponse } from "../src/types/sub-accounts/usage";
 import { ErrorCode } from "../src/utils/errors";
 

@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { SuccessResponse } from "../types";
+import type { SuccessResponse } from "../types/success-response";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
 

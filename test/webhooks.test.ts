@@ -3,7 +3,7 @@ import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
 import { ErrorCode } from "../src/utils/errors";
 import type { WebhooksValidateApiResponse } from "../src/types/webhooks/internal";
-import type { WebhooksValidateResponse } from "../src/types";
+import type { WebhooksValidateResponse } from "../src/types/webhooks/validate";
 
 const fake = {
   enroll: {

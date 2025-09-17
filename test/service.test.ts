@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Service } from "../src/modules/service";
 import { ErrorCode } from "../src/utils/errors";
-import type { ServiceReportOptions } from "../src/types";
+import type { ServiceReportOptions } from "../src/types/service/report";
 
 const fake = {
   subscriptions: {
