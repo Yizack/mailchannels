@@ -1,6 +1,39 @@
 # Changelog
 
 
+## v0.4.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.0...v0.4.1)
+
+### 🚀 Enhancements
+
+- **domains:** Add `bulkCreateLoginLinks` method ([0edd816](https://github.com/Yizack/mailchannels/commit/0edd816))
+
+### 📖 Documentation
+
+- **suppressions:** Fix suppression response ([26953a5](https://github.com/Yizack/mailchannels/commit/26953a5))
+- **domains:** Fix typo ([9d8d39f](https://github.com/Yizack/mailchannels/commit/9d8d39f))
+- Add features to readme ([34f4f49](https://github.com/Yizack/mailchannels/commit/34f4f49))
+
+### 🏡 Chore
+
+- Export some missing types ([9f63d72](https://github.com/Yizack/mailchannels/commit/9f63d72))
+- **ci:** Add new line ([1e9f7ec](https://github.com/Yizack/mailchannels/commit/1e9f7ec))
+- **types:** Use explicit import path for consistency ([75cc53a](https://github.com/Yizack/mailchannels/commit/75cc53a))
+
+### ✅ Tests
+
+- Remove unused imports ([3bf659c](https://github.com/Yizack/mailchannels/commit/3bf659c))
+
+### 🤖 CI
+
+- Use npm trusted publishing ([fd1d591](https://github.com/Yizack/mailchannels/commit/fd1d591))
+- Use latest node for trusted publish ([0125387](https://github.com/Yizack/mailchannels/commit/0125387))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.3.7...v0.4.0)
