@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
-import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformance, MetricsPerformanceResponse } from "../src/types/metrics";
+import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformanceResponse } from "../src/types/metrics";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
 import type { MetricsRecipientBehaviourResponse } from "../src/types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../src/types/metrics/volume";

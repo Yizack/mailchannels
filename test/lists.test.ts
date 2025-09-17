@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Lists } from "../src/modules/lists";
-import { ErrorCode } from "../src/utils/errors";
 import type { ListEntryApiResponse } from "../src/types/lists/internal";
 import type { ListEntryOptions } from "../src/types";
 
