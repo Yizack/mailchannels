@@ -119,7 +119,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Get domain list entries](https://docs.mailchannels.net/inbound-api/API-reference/get-domain-list-entries)
   - ✅ [Delete domain list entry](https://docs.mailchannels.net/inbound-api/API-reference/delete-domain-list-entry)
   - ✅ [Create login link](https://docs.mailchannels.net/inbound-api/API-reference/create-login-link)
-  - 🚧 [Bulk create login links](https://docs.mailchannels.net/inbound-api/API-reference/bulk-create-login-links)
+  - ✅ [Bulk create login links](https://docs.mailchannels.net/inbound-api/API-reference/bulk-create-login-links)
   - ✅ [Set downstream address](https://docs.mailchannels.net/inbound-api/API-reference/set-downstream-address)
   - ✅ [Fetch downstream addresses](https://docs.mailchannels.net/inbound-api/API-reference/fetch-downstream-addresses)
   - ✅ [Update API key](https://docs.mailchannels.net/inbound-api/API-reference/update-api-key)

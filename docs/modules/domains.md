@@ -430,6 +430,41 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
 - `domain`: The domain name.
 - `key`: The new API key to associate with this domain.
 
+## Bulk Create Login Links <Badge type="info" text="method" />
+
+Generate a batch of links that allow a user to log in as a domain administrator to their different domains.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Domains } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const domains = new Domains(mailchannels)
+
+const { results } = await domains.bulkCreateLoginLinks([
+  'example.com',
+  'example2.com'
+])
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { results } = await mailchannels.domains.bulkCreateLoginLinks([
+  'example.com',
+  'example2.com'
+])
+```
+:::
+
+### Params
+
+- `domains`: A list of domain names to generate login links for. Maximum of `1000` domains per request.
+
 ## Type declarations
 
 <<< @/snippets/domains.ts
@@ -474,6 +509,12 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
   **Create Login Link type declarations**
 
   <<< @/snippets/domains-create-login-link-response.ts
+  
+  **Bulk Create Login Links type declarations**
+
+  <<< @/snippets/domains-bulk-create-login-link-result.ts
+  <<< @/snippets/domains-bulk-create-login-link.ts
+  <<< @/snippets/domains-bulk-create-login-links-response.ts
 </details>
 
 ## Source

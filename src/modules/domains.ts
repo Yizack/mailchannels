@@ -1,13 +1,14 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
+import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { DomainsAddListEntryApiResponse, DomainsBulkProvisionApiResponse } from "../types/domains/internal";
 import type { DomainsBulkProvisionOptions, DomainsBulkProvisionResponse, DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types/domains/downstream-addresses";
+import type { DomainsBulkCreateLoginLink, DomainsBulkCreateLoginLinksResponse } from "../types/domains/bulk-create-login-links";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { ListEntryApiResponse } from "../types/lists/internal";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -472,6 +473,45 @@ export class Domains {
       }
     });
 
+    return data;
+  }
+
+  /**
+   * Generate a batch of links that allow a user to log in as a domain administrator to their different domains.
+   * @param domains - The list of domain names. Maximum of `1000` links per request.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { results } = await mailchannels.domains.bulkCreateLoginLinks(['example.com', 'example2.com'])
+   * ```
+   */
+  async bulkCreateLoginLinks (domains: string[]): Promise<DomainsBulkCreateLoginLinksResponse> {
+    const data: DomainsBulkCreateLoginLinksResponse = { results: [], error: null };
+
+    if (!domains || !domains.length) {
+      data.error = "No domains provided.";
+      return data;
+    }
+
+    if (domains.length > 1000) {
+      data.error = "The maximum number of domains to create login links for is 1000.";
+      return data;
+    }
+
+    const response = await this.mailchannels.post<DomainsBulkCreateLoginLink[]>("/inbound/v1/domains/batch/login-link", {
+      body: {
+        domains: domains.map(domain => ({ domain }))
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.results = response;
     return data;
   }
 }

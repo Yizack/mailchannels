@@ -86,6 +86,24 @@ const fake = {
         weight: 10
       }
     ]
+  },
+  bulkCreateLoginLinksResponse: {
+    successes: [
+      {
+        domain: "example1.com",
+        code: 200,
+        comment: "string",
+        loginLink: "string"
+      }
+    ],
+    errors: [
+      {
+        domain: "example2.com",
+        code: 400,
+        comment: "string",
+        loginLink: "string"
+      }
+    ]
   }
 };
 
@@ -96,9 +114,10 @@ describe("provision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { data } = await domains.provision(fake.provision);
+    const { data, error } = await domains.provision(fake.provision);
 
     expect(data).toBe(fake.provision);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -126,12 +145,13 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
       { domain: fake.provision.domain },
       { domain: fake.provision.domain }
     ]);
 
     expect(results).toEqual(fake.bulkProvisionResponse);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -188,9 +208,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { domains: domainsList } = await domains.list();
+    const { domains: domainsList, error } = await domains.list();
 
     expect(domainsList).toEqual(fake.list);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -246,9 +267,10 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success } = await domains.delete(fake.provision.domain);
+    const { success, error } = await domains.delete(fake.provision.domain);
 
     expect(mockClient.delete).toHaveBeenCalled();
+    expect(error).toBeNull();
     expect(success).toBe(true);
   });
 
@@ -288,13 +310,14 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entry } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+    const { entry, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
     expect(entry).toEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     });
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -349,13 +372,14 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entries } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+    const { entries, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
     expect(entries).toEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     }]);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -412,9 +436,10 @@ describe("deleteListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
+    const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
@@ -468,9 +493,10 @@ describe("createLoginLink", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { link } = await domains.createLoginLink(fake.provision.domain);
+    const { link, error } = await domains.createLoginLink(fake.provision.domain);
 
     expect(link).toBe(fake.loginLink);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -513,9 +539,10 @@ describe("setDownstreamAddress", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
 
@@ -570,9 +597,10 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records } = await domains.listDownstreamAddresses(fake.provision.domain);
+    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
     expect(records).toEqual(fake.listDownstreamAddresses);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -641,9 +669,10 @@ describe("updateApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { success } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
+    const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
 
@@ -686,5 +715,68 @@ describe("updateApiKey", () => {
     expect(error).toBeTruthy();
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
+  });
+});
+
+describe("bulkCreateLoginLinks", () => {
+  it("should successfully bulk create login links", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.bulkCreateLoginLinksResponse)
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkCreateLoginLinks([
+      "example1.com",
+      "example2.com"
+    ]);
+
+    expect(results).toEqual(fake.bulkCreateLoginLinksResponse);
+    expect(error).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error if no domains are provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkCreateLoginLinks([]);
+
+    expect(error).toBe("No domains provided.");
+    expect(results).toEqual([]);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error more than 1000 domains are provided", async () => {
+    const mockClient = {
+      post: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkCreateLoginLinks(new Array(1001).fill("example.com"));
+
+    expect(error).toBe("The maximum number of domains to create login links for is 1000.");
+    expect(results).toEqual([]);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkCreateLoginLinks([
+      "example1.com",
+      "example2.com"
+    ]);
+
+    expect(error).toBeTruthy();
+    expect(results).toEqual([]);
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });

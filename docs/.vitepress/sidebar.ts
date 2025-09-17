@@ -102,7 +102,8 @@ export default [
               { text: "Create Login Link", link: "/modules/domains#create-login-link" },
               { text: "Set Downstream Address", link: "/modules/domains#set-downstream-address" },
               { text: "List Downstream Addresses", link: "/modules/domains#list-downstream-addresses" },
-              { text: "Update API Key", link: "/modules/domains#update-api-key" }
+              { text: "Update API Key", link: "/modules/domains#update-api-key" },
+              { text: "Bulk Create Login Links", link: "/modules/domains#bulk-create-login-links" }
             ]
           },
           {
