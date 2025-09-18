@@ -42,4 +42,8 @@ export class MailChannelsClient {
   async put<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
     return this._fetch<T>(path, { method: "PUT", ...options });
   }
+
+  async patch<T>(path: string, options?: Omit<FetchOptions<"json">, "method">) {
+    return this._fetch<T>(path, { method: "PATCH", ...options });
+  }
 }

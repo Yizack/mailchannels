@@ -24,7 +24,10 @@ export default [
             link: "/modules/emails",
             items: [
               { text: "Send Email", link: "/modules/emails#send" },
-              { text: "Check Domain", link: "/modules/emails#check-domain" }
+              { text: "Check Domain", link: "/modules/emails#check-domain" },
+              { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key" },
+              { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys" },
+              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key" }
             ]
           },
           {

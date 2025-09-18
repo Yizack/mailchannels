@@ -111,7 +111,7 @@ const { results } = await emails.checkDomain({
     privateKey: 'your-dkim-private-key'
   },
   senderId: 'your-sender-id'
-});
+})
 ```
 
 ```ts [full.ts]
@@ -126,7 +126,7 @@ const { success } = await mailchannels.emails.checkDomain({
     privateKey: 'your-dkim-private-key'
   },
   senderId: 'your-sender-id'
-});
+})
 ```
 :::
 
@@ -142,12 +142,139 @@ const { success } = await mailchannels.emails.checkDomain({
     > [!INFO]
     > Your `senderId` is the `X-MailChannels-Sender-Id` header value in emails sent via MailChannels.
 
+## Create DKIM Key <Badge type="info" text="method" />
+
+Create a DKIM key pair for a specified domain and selector using the specified algorithm and key length, for the current customer.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Emails(mailchannels)
+
+const { key } = await emails.createDkimKey('example.com', {
+  selector: 'mailchannels'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { key } = await mailchannels.emails.createDkimKey('example.com', {
+  selector: 'mailchannels'
+})
+```
+:::
+
+### Params
+
+- `domain`: The domain to create the DKIM key for.
+- `options`: Create DKIM key options.
+  - `algorithm`: Algorithm used for the new key pair Currently, only RSA is supported. Defaults to `rsa`.
+  - `length`: Key length in bits. For RSA, must be a multiple of `1024`.
+    > [!TIP]
+    > Defaults to `2048`.
+    > Common values: `1024` or `2048`.
+  - `selector`: Selector for the new key pair. Must be a maximum of 63 characters.
+
+## Get DKIM Keys <Badge type="info" text="method" />
+
+Search for DKIM keys by customer handle and domain, with optional filters. If selector is provided, at most one key will be returned.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Emails(mailchannels)
+
+const { keys } = await emails.getDkimKeys('example.com', {
+  includeDnsRecord: true
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
+  includeDnsRecord: true
+})
+```
+:::
+
+### Params
+
+- `domain`: The domain to get the DKIM keys for.
+- `options`: Optional filter options.
+  - `selector`: Selector to filter keys by. Must be a maximum of 63 characters.
+  - `status`: Status to filter keys by.
+    > [!TIP]
+    > Possible values: `active`, `revoked`, `retired`.
+  - `offset`: Number of results to skip from the start. Must be a positive integer. Defaults to `0`.
+  - `limit`: Maximum number of keys to return. Maximum is `100` and minimum is `1`. Defaults to `10`.
+  - `includeDnsRecord`: If `true`, includes the suggested DKIM DNS record for each returned key. Defaults to `false`.
+
+## Update DKIM Key <Badge type="info" text="method" />
+
+Update fields of an existing DKIM key pair for the specified domain and selector, for the current customer. Currently, only the `status` field can be updated.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient } from 'mailchannels-sdk'
+import { Emails } from 'mailchannels-sdk/modules'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Emails(mailchannels)
+
+const { success } = await emails.updateDkimKey('example.com', {
+  selector: 'mailchannels',
+  status: 'retired'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+const mailchannels = new MailChannels('your-api-key')
+
+const { success } = await mailchannels.emails.updateDkimKey('example.com', {
+  selector: 'mailchannels',
+  status: 'retired'
+})
+```
+:::
+
+### Params
+
+- `domain`: The domain of the DKIM key to update.
+- `options`: Update DKIM key options.
+  - `selector`: Selector of the DKIM key to update. Must be a maximum of 63 characters.
+  - `status`: New status of the DKIM key pair.
+    > [!TIP]
+    > Possible values: `revoked`, `retired`.
+    > - `revoked`: Indicates that the key is compromised and should not be used.
+    > - `retired`: Indicates that the key has been rotated and is no longer in use.
+
 ## Type declarations
 
 <<< @/snippets/emails.ts
 
 <details>
   <summary>All type declarations</summary>
+
+  **Success Response**
+
+  <<< @/snippets/success-response.ts
 
   **Send type declarations**
 
@@ -164,6 +291,21 @@ const { success } = await mailchannels.emails.checkDomain({
   <<< @/snippets/emails-check-domain-response.ts
   <<< @/snippets/emails-check-domain-verdict.ts
   <<< @/snippets/emails-check-domain-dkim.ts
+
+  **Create DKIM Key type declarations**
+
+  <<< @/snippets/emails-dkim-key.ts
+  <<< @/snippets/emails-create-dkim-key-options.ts
+  <<< @/snippets/emails-create-dkim-key-response.ts
+
+  **Get DKIM Keys type declarations**
+
+  <<< @/snippets/emails-get-dkim-keys-options.ts
+  <<< @/snippets/emails-get-dkim-keys-response.ts
+
+  **Update DKIM Key type declarations**
+
+  <<< @/snippets/emails-update-dkim-key-options.ts
 </details>
 
 ## Source

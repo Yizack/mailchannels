@@ -70,3 +70,33 @@ export interface EmailsCheckDomainApiResponse {
   };
   references?: string[];
 }
+
+export interface EmailsCreateDkimKeyPayload {
+  algorithm?: "rsa";
+  key_length?: 1024 | 2048 | 4096 | 3072 | 4096;
+  selector: string;
+}
+
+export interface EmailsCreateDkimKeyApiResponse {
+  algorithm: string;
+  created_at: string;
+  dkim_dns_records: {
+    name: string;
+    type: string;
+    value: string;
+  }[];
+  domain: string;
+  key_length: 1024 | 2048 | 4096 | 3072 | 4096;
+  public_key: string;
+  selector: string;
+  status: "active" | "retired" | "revoked";
+  status_modified_at: string;
+}
+
+export interface EmailsGetDkimKeysPayload {
+  selector?: string;
+  status?: "active" | "retired" | "revoked";
+  offset?: number;
+  limit?: number;
+  include_dns_record?: boolean;
+}

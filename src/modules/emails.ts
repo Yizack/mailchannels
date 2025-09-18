@@ -1,10 +1,14 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
-import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
-import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { stripPemHeaders } from "../utils/helpers";
+import type { SuccessResponse } from "../types/success-response";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
+import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse } from "../types/emails/create-dkim-key";
+import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../types/emails/get-dkim-keys";
+import type { EmailsUpdateDkimKeyOptions } from "../types/emails/update-dkim-key";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -152,6 +156,164 @@ export class Emails {
       spf: response.check_results.spf,
       references: response.references
     };
+    return data;
+  }
+
+  /**
+   * Create a DKIM key pair for a specified domain and selector using the specified algorithm and key length, for the current customer.
+   * @param domain - The domain to create the DKIM key for.
+   * @param options - DKIM key creation options.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { key, error } = await mailchannels.emails.createDkimKey('example.com', {
+   *   selector: 'mailchannels'
+   * })
+   * ```
+   */
+  async createDkimKey (domain: string, options: EmailsCreateDkimKeyOptions): Promise<EmailsCreateDkimKeyResponse> {
+    const data: EmailsCreateDkimKeyResponse = { key: null, error: null };
+
+    if (!options.selector || options.selector.length > 63) {
+      data.error = "Selector must be between 1 and 63 characters.";
+    }
+
+    if (data.error) return data;
+
+    const payload: EmailsCreateDkimKeyPayload = {
+      algorithm: options.algorithm,
+      key_length: options.length,
+      selector: options.selector
+    };
+
+    const response = await this.mailchannels.post<EmailsCreateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys`, {
+      body: payload,
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Conflict]: "Key pair already created for customer_handle, domain, and selector."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.key = {
+      algorithm: response.algorithm,
+      createdAt: response.created_at,
+      dnsRecords: response.dkim_dns_records,
+      domain: response.domain,
+      length: response.key_length,
+      publicKey: response.public_key,
+      selector: response.selector,
+      status: response.status,
+      statusModifiedAt: response.status_modified_at
+    };
+
+    return data;
+  }
+
+  /**
+   * Search for DKIM keys by customer handle and domain, with optional filters. If selector is provided, at most one key will be returned.
+   * @param domain - The domain to search DKIM keys for.
+   * @param options - The options to filter DKIM keys by.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { keys } = await mailchannels.getDkimKeys('example.com', {
+   *   includeDnsRecord: true
+   * })
+   * ```
+   */
+  async getDkimKeys (domain: string, options?: EmailsGetDkimKeysOptions): Promise<EmailsGetDkimKeysResponse> {
+    const data: EmailsGetDkimKeysResponse = { keys: [], error: null };
+
+    if (options?.selector && options.selector.length > 63) {
+      data.error = "Selector must be a maximum of 63 characters.";
+      return data;
+    }
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 100)) {
+      data.error = "Limit must be between 1 and 100.";
+      return data;
+    }
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset value is invalid. Only positive values are allowed.";
+      return data;
+    }
+
+    const payload: EmailsGetDkimKeysPayload = {
+      selector: options?.selector,
+      status: options?.status,
+      offset: options?.offset,
+      limit: options?.limit,
+      include_dns_record: options?.includeDnsRecord
+    };
+
+    const response = await this.mailchannels.get<{ keys: EmailsCreateDkimKeyApiResponse[] }>(`/tx/v1/domains/${domain}/dkim-keys`, {
+      query: payload,
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.keys = response.keys.map(key => ({
+      algorithm: key.algorithm,
+      createdAt: key.created_at,
+      dnsRecords: key.dkim_dns_records,
+      domain: key.domain,
+      length: key.key_length,
+      publicKey: key.public_key,
+      selector: key.selector,
+      status: key.status,
+      statusModifiedAt: key.status_modified_at
+    }));
+
+    return data;
+  }
+
+  /**
+   * Update fields of an existing DKIM key pair for the specified domain and selector, for the current customer. Currently, only the `status` field can be updated.
+   * @param domain - The domain the DKIM key belongs to.
+   * @param options - The options to update the DKIM key.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success } = await mailchannels.emails.updateDkimKey('example.com', {
+   *   selector: 'mailchannels',
+   *   status: 'retired'
+   * })
+   */
+  async updateDkimKey (domain: string, options: EmailsUpdateDkimKeyOptions): Promise<SuccessResponse> {
+    const data: SuccessResponse = { success: false, error: null };
+
+    if (!options.selector || options.selector.length > 63) {
+      data.error = "Selector must be between 1 and 63 characters.";
+      return data;
+    }
+
+    const payload = {
+      status: options.status
+    };
+
+    await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
+      body: payload,
+      ignoreResponseError: true,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found, or the DKIM domain or selector path parameter is missing."
+        });
+      }
+    });
+
     return data;
   }
 }
