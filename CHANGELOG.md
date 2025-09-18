@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.4.3
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.2...v0.4.3)
+
+### 🩹 Fixes
+
+- **emails:** `privateKey` type in `send` method can be undefined ([343657d](https://github.com/Yizack/mailchannels/commit/343657d))
+
+### 📖 Documentation
+
+- **emails:** Mention active dkim keys ([dd23703](https://github.com/Yizack/mailchannels/commit/dd23703))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.2
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.1...v0.4.2)
