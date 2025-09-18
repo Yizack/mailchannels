@@ -40,7 +40,7 @@
   "scripts": {
     "build": "unbuild",
     "prepack": "pnpm build",
-    "release": "npm run lint && npm run test && changelogen --release && git push --follow-tags",
+    "release": "npm run lint && npm run test && pnpm build && changelogen --release && git push --follow-tags",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest run --reporter=verbose --coverage",
