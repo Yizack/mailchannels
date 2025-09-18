@@ -91,7 +91,7 @@ interface EmailsSendOptionsBase {
     /**
      * DKIM private key encoded in Base64.
      */
-    privateKey: string;
+    privateKey?: string;
     /**
      * DKIM selector in the domain DNS records.
      */
