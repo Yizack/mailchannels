@@ -86,4 +86,20 @@ describe("MailChannelsClient", () => {
       }
     });
   });
+
+  it("should handle PATCH method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey);
+    await client.patch(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "PATCH",
+      baseURL: fake.baseURL,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
 });
