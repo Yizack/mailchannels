@@ -1,6 +1,39 @@
 # Changelog
 
 
+## v0.4.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.1...v0.4.2)
+
+### 🚀 Enhancements
+
+- Update email api `0.12.0` ([02e86f4](https://github.com/Yizack/mailchannels/commit/02e86f4))
+
+### 🩹 Fixes
+
+- **domains:** Fix `bulkCreateLoginLinks` response types ([b61bb65](https://github.com/Yizack/mailchannels/commit/b61bb65))
+- **types:** Fix length values ([cfa81e2](https://github.com/Yizack/mailchannels/commit/cfa81e2))
+- Remove non existent import ([ad3d43a](https://github.com/Yizack/mailchannels/commit/ad3d43a))
+
+### 📖 Documentation
+
+- Update inbound api version ([aab9149](https://github.com/Yizack/mailchannels/commit/aab9149))
+- Add new email api endpoints ([aeb2773](https://github.com/Yizack/mailchannels/commit/aeb2773))
+- Fix typos and inconsistencies ([44948a3](https://github.com/Yizack/mailchannels/commit/44948a3))
+- **domains:** Fix list description ([6fa040f](https://github.com/Yizack/mailchannels/commit/6fa040f))
+
+### 🏡 Chore
+
+- Build before release tag to avoid fail on github ([57ad31c](https://github.com/Yizack/mailchannels/commit/57ad31c))
+
+### ✅ Tests
+
+- Add patch test ([2bd2446](https://github.com/Yizack/mailchannels/commit/2bd2446))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.0...v0.4.1)

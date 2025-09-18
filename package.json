@@ -1,6 +1,6 @@
 {
   "name": "mailchannels-sdk",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Node.js SDK to integrate MailChannels API into your JavaScript or TypeScript server-side applications.",
   "type": "module",
   "license": "MIT",
