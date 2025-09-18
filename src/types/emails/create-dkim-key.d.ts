@@ -8,7 +8,7 @@ export interface EmailsCreateDkimKeyOptions {
    * Key length in bits. For RSA, must be a multiple of 1024. Common values: 1024 or 2048.
    * @default 2048
    */
-  length?: 1024 | 2048 | 4096 | 3072 | 4096;
+  length?: 1024 | 2048 | 3072 | 4096;
   /**
    * Selector for the new key pair. Must be a maximum of 63 characters.
    */
@@ -39,7 +39,7 @@ export interface EmailsDkimKey {
   /**
    * Key length in bits.
    */
-  length: 1024 | 2048 | 4096 | 3072 | 4096;
+  length: 1024 | 2048 | 3072 | 4096;
   publicKey: string;
   /**
    * Selector assigned to the key pair.
