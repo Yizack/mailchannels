@@ -57,7 +57,7 @@ const { success } = await mailchannels.emails.send({
   - `cc`: The CC recipients of the email.
   - `dkim`: The DKIM settings for the email.
     - `domain`: The domain to sign the email with.
-    - `privateKey`: The private key to sign the email with.
+    - `privateKey`: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
     - `selector`: The DKIM selector to use.
   - `from`: The sender of the email.
   - `to`: The recipients of the email.
