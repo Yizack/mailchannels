@@ -117,7 +117,7 @@ const { results } = await mailchannels.domains.bulkProvision({
 
 ## List <Badge type="info" text="method" />
 
-Retrieves all sub-accounts associated with the parent account.
+Fetch a list of all domains associated with this API key.
 
 ### Usage
 
