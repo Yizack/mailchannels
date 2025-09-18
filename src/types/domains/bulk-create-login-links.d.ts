@@ -1,5 +1,3 @@
-import type { Optional } from "../internal";
-
 interface DomainsBulkCreateLoginLinkResult {
   /**
    * The domain the request was for.
