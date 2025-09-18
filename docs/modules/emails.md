@@ -61,7 +61,7 @@ const { success } = await mailchannels.emails.send({
     - `selector`: The DKIM selector to use.
   - `from`: The sender of the email.
   - `to`: The recipients of the email.
-  - `tracking` Adjust open and click tracking for the message.
+  - `tracking`: Adjust open and click tracking for the message.
     > [!INFO]
     > Tracking for your messages requires a [subscription](https://www.mailchannels.com/pricing/#for_devs) that supports open and click tracking.
     >

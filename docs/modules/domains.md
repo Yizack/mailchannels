@@ -237,13 +237,13 @@ const { entry } = await domains.listEntries('example.com', 'safelist')
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.domains.listEntries('name@example.com', 'safelist')
+const { entry } = await mailchannels.domains.listEntries('example.com', 'safelist')
 ```
 :::
 
 ### Params
 
-- `email`:  The domain name whose list will be fetched.
+- `domain`: The domain name whose list will be fetched.
 - `listName`: The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
 
 ## Delete List Entry <Badge type="info" text="method" />
@@ -279,7 +279,7 @@ const { entry } = await mailchannels.domains.deleteListEntry('example.com', {
 
 ### Params
 
-- `email`: The domain name whose list will be modified.
+- `domain`: The domain name whose list will be modified.
 - `options`: Add list entry options.
   - `listName`: The name of the list to remove an entry from. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
   - `item`: The list entry which should be removed. This can be a domain, email address, or IP address.
@@ -315,7 +315,7 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 ## Set Downstream Address <Badge type="info" text="method" />
 
-Sets the list of downstream addreses for the domain.
+Sets the list of downstream addresses for the domain.
 
 > [!WARNING]
 > This action deletes any existing downstream address for the domain before creating new ones.

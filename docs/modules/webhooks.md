@@ -29,7 +29,7 @@ const { success } = await webhooks.enroll("https://example.com/api/webhooks/mail
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannel.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+const { success } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
 ```
 :::
 
@@ -96,7 +96,7 @@ Retrieves the public key used to verify signatures on incoming webhook payloads.
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/emails'
+import { Webhooks } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
