@@ -22,7 +22,7 @@ import { Emails } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { success } = await emails.send({
+const { success, data } = await emails.send({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -35,7 +35,7 @@ const { success } = await emails.send({
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.emails.send({
+const { success, data } = await mailchannels.emails.send({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -83,7 +83,7 @@ const { success } = await mailchannels.emails.send({
   - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
   - `transactional`: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
     List-Unsubscribe headers will be added.
-- `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response.
+- `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data.rendered` property of the response.
   > [!TIP]
   > Use `dryRun` to test your email message before sending it.
 

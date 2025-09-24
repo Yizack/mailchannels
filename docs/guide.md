@@ -39,7 +39,7 @@ In this example, we import the whole library and use the `MailChannels` class to
 import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
-const { success } = await mailchannels.emails.send({
+const { success, data } = await mailchannels.emails.send({
   // ...
 })
 ```
@@ -56,7 +56,7 @@ import { Emails } from 'mailchannels-sdk/modules'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
-const { success } = await emails.send({
+const { success, data } = await emails.send({
   // ...
 })
 ```
@@ -68,7 +68,7 @@ This method is useful when you only need to use a specific module from the libra
 All methods in this SDK return an object containing an `error` property besides the actual response data to avoid throwing exceptions. If the request was successful, the `error` property will be `null`. If there was an error, the `error` property will contain a `string` with the error message.
 
 ```ts{1}
-const { success, error } = await emails.send({
+const { success, data, error } = await emails.send({
   // ...
 })
 ```

@@ -3,7 +3,7 @@ import { ErrorCode, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { stripPemHeaders } from "../utils/helpers";
 import type { SuccessResponse } from "../types/success-response";
-import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse } from "../types/emails/create-dkim-key";
@@ -20,7 +20,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.emails.send({
+   * const { success, data } = await mailchannels.emails.send({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
@@ -31,7 +31,7 @@ export class Emails {
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
-    const data: EmailsSendResponse = { success: false, error: null };
+    const data: EmailsSendResponse = { success: false, data: null, error: null };
 
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
@@ -80,7 +80,7 @@ export class Emails {
       transactional: options.transactional
     };
 
-    const response = await this.mailchannels.post<{ data: string[] }>("/tx/v1/send", {
+    const response = await this.mailchannels.post<EmailsSendApiResponse>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
       onResponse: async ({ response }) => {
@@ -96,7 +96,19 @@ export class Emails {
       }
     }).catch(() => null);
 
-    data.data = response?.data;
+    if (!response) return data;
+
+    data.data = {
+      rendered: response.data,
+      requestId: response.request_id,
+      results: response.results?.map(result => ({
+        index: result.index,
+        messageId: result.message_id,
+        reason: result.reason,
+        status: result.status
+      }))
+    };
+
     return data;
   }
 

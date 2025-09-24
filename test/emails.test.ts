@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Emails } from "../src/modules/emails";
-import type { EmailsSendOptions } from "../src/types/emails/send";
+import type { EmailsSendOptions, EmailsSendResponse } from "../src/types/emails/send";
 import { ErrorCode } from "../src/utils/errors";
-import type { EmailsCreateDkimKeyApiResponse } from "../src/types/emails/internal";
+import type { EmailsCreateDkimKeyApiResponse, EmailsSendApiResponse } from "../src/types/emails/internal";
 import type { EmailsCreateDkimKeyResponse } from "../src/types";
 
 const fake = {
@@ -15,8 +15,26 @@ const fake = {
       html: "<p>Test content</p>",
       text: "Test content",
       tracking: { click: true, open: true }
-    } as EmailsSendOptions,
-    query: { "dry-run": false }
+    } satisfies EmailsSendOptions,
+    query: { "dry-run": false },
+    apiResponse: {
+      request_id: "test-request-id",
+      results: [{
+        message_id: "test-message-id",
+        status: "sent"
+      }]
+    } satisfies EmailsSendApiResponse,
+    expectedResponse: {
+      success: true,
+      data: {
+        requestId: "test-request-id",
+        results: [{
+          messageId: "test-message-id",
+          status: "sent"
+        }]
+      },
+      error: null
+    } satisfies EmailsSendResponse
   },
   checkDomain: {
     apiResponse: {
@@ -84,15 +102,17 @@ const fake = {
 describe("send", () => {
   it("should successfully send an email", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
         onResponse({ response: { ok: true } });
+        return fake.send.apiResponse;
       })
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { success } = await emails.send(fake.send.options);
+    const { success, data } = await emails.send(fake.send.options);
 
     expect(success).toBe(true);
+    expect(data).toEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -131,8 +151,8 @@ describe("send", () => {
     const emails = new Emails(mockClient);
 
     const options = { ...fake.send.options };
-    delete options.html;
-    delete options.text;
+    options.html = "";
+    options.text = "";
 
     const { success, error } = await emails.send(options);
 

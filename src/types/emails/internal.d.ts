@@ -41,6 +41,17 @@ export interface EmailsSendPayload {
   transactional?: boolean;
 }
 
+export interface EmailsSendApiResponse {
+  data?: string[];
+  request_id?: string;
+  results?: {
+    index?: number;
+    message_id: string;
+    reason?: string;
+    status: "sent" | "failed";
+  }[];
+}
+
 export interface EmailsCheckDomainPayload {
   dkim_settings: {
     dkim_domain: string;
