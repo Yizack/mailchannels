@@ -70,6 +70,9 @@ pnpm add mailchannels-sdk
 
 Already implemented features are marked with a checkmark. Please open an issue if you find any bugs or missing features.
 
+> [!IMPORTANT]
+> Links below point to the official MailChannels API documentation, options and responses may differ slightly when using this SDK. Please refer to the [documentation](https://mailchannels.yizack.com) for the correct usage of each feature.
+
 ### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
 
 - 📧 Emails
