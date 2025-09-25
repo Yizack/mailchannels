@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.4.4
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.3...v0.4.4)
+
+### 🚀 Enhancements
+
+- **emails:** Include message info in `send` data response ([f706938](https://github.com/Yizack/mailchannels/commit/f706938))
+
+### 📖 Documentation
+
+- Add important note about roadmap links ([df7a81d](https://github.com/Yizack/mailchannels/commit/df7a81d))
+
+### 🏡 Chore
+
+- Configure renovate ([1d72229](https://github.com/Yizack/mailchannels/commit/1d72229))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.3
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.2...v0.4.3)
