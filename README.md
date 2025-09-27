@@ -33,13 +33,13 @@ This library provides a simple way to interact with the [MailChannels API](https
 
 - Send transactional emails
 - Check DKIM, SPF & Domain Lockdown
+- Configure DKIM keys
 - Webhook notifications
 - Manage sub-accounts
 - Retrieve metrics
-- Manage suppressions
-- Manage inbound domains
-- Manage account lists
-- Manage recipient lists
+- Handle suppressions
+- Configure inbound domains
+- Manage account and recipient lists
 
 ## <a name="requirements">📏 Requirements</a>
 
