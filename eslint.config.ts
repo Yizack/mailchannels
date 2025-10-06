@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { defineConfig } from "eslint/config";
-import { includeIgnoreFile } from "@eslint/compat";
+import { type FlatConfig, includeIgnoreFile } from "@eslint/compat";
 import parserTs from "@typescript-eslint/parser";
 import stylisticPlugin from "@stylistic/eslint-plugin";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
@@ -65,4 +65,4 @@ export default defineConfig([
       "@typescript-eslint/consistent-type-imports": "error"
     }
   }
-]);
+]) as FlatConfig[];
