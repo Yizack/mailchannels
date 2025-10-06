@@ -22,7 +22,6 @@ import { Suppressions } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-
 const { success } = await suppressions.create({
   addToSubAccounts: false,
   entries: [
@@ -67,6 +66,7 @@ const { success } = await mailchannels.suppressions.create({
 Deletes suppression entry associated with the account based on the specified recipient and source.
 
 ### Usage
+
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from 'mailchannels-sdk'

@@ -22,14 +22,14 @@ import { Webhooks } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { success } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+const { success } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels")
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels");
+const { success } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels")
 ```
 :::
 
@@ -51,14 +51,14 @@ import { Webhooks } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { webhooks: webhooksList } = await webhooks.list();
+const { webhooks: webhooksList } = await webhooks.list()
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { webhooks } = await mailchannels.webhooks.list();
+const { webhooks } = await mailchannels.webhooks.list()
 ```
 :::
 
@@ -76,14 +76,14 @@ import { Webhooks } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { success } = await webhooks.delete();
+const { success } = await webhooks.delete()
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.webhooks.delete();
+const { success } = await mailchannels.webhooks.delete()
 ```
 :::
 
@@ -101,14 +101,14 @@ import { Webhooks } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { key } = await webhooks.getSigningKey('key-id');
+const { key } = await webhooks.getSigningKey('key-id')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.webhooks.getSigningKey('key-id');
+const { key } = await mailchannels.webhooks.getSigningKey('key-id')
 ```
 :::
 
@@ -132,14 +132,14 @@ import { Webhooks } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { allPassed, results } = await webhooks.validate('optional-request-id');
+const { allPassed, results } = await webhooks.validate('optional-request-id')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id');
+const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')
 ```
 :::
 

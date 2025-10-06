@@ -103,7 +103,7 @@ const { success } = await mailchannels.subAccounts.delete('validhandle123')
 
 ### Params
 
-- `handle`: The handle of sub-account to be deleted.
+- `handle`: The handle of the sub-account to be deleted.
 
 ## Suspend <Badge type="info" text="method" />
 
@@ -132,7 +132,7 @@ const { success } = await mailchannels.subAccounts.suspend('validhandle123')
 
 ### Params
 
-- `handle`: The handle of sub-account to be suspended.
+- `handle`: The handle of the sub-account to be suspended.
 
 ## Activate <Badge type="info" text="method" />
 
@@ -161,7 +161,7 @@ const { success } = await mailchannels.subAccounts.activate('validhandle123')
 
 ### Params
 
-- `handle`: The handle of sub-account to be activated.
+- `handle`: The handle of the sub-account to be activated.
 
 ## Create API Key <Badge type="info" text="method" />
 
@@ -376,6 +376,7 @@ const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
 Sets the limit for the specified sub-account.
 
 ### Usage
+
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from 'mailchannels-sdk'
@@ -408,6 +409,7 @@ const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { 
 Deletes the limit for the specified sub-account. After a successful deletion, the specified sub-account will be limited to the parent account's limit.
 
 ### Usage
+
 ::: code-group
 ```ts [modular.ts]
 import { MailChannelsClient } from 'mailchannels-sdk'

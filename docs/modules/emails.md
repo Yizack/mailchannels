@@ -49,9 +49,9 @@ const { success, data } = await mailchannels.emails.send({
 
 - `options`: Send options.
   - `attachments`: An array of attachments to be sent with the email.
-    - `content`: The attachment data, encoded in base64
-    - `filename`: The name of the attachment file
-    - `type`: The MIME type of the attachment
+    - `content`: The attachment data, encoded in Base64.
+    - `filename`: The name of the attachment file.
+    - `type`: The MIME type of the attachment.
   - `campaignId`: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
   - `bcc`: The BCC recipients of the email.
   - `cc`: The CC recipients of the email.

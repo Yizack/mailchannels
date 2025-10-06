@@ -119,7 +119,7 @@ const { entry } = await mailchannels.users.listEntries('name@example.com', 'safe
 
 ### Params
 
-- `email`:  The email address of the recipient whose list will be fetched.
+- `email`: The email address of the recipient whose list will be fetched.
 - `listName`: The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
 
 ## Delete List Entry <Badge type="info" text="method" />

@@ -5,7 +5,7 @@ Getting started with `mailchannels-sdk`
 ## Overview
 
 <!-- @include: ../README.md#overview -->
-<!-- @include: ../README.md#note-->
+<!-- @include: ../README.md#note -->
 
 ## Installation
 

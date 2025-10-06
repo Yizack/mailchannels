@@ -95,11 +95,11 @@ const { success } = await mailchannels.service.report({
   - `type`: The type of report. Can be either `false_positive` or `false_negative`.
   - `messageContent`: The full, unaltered message content in accordance with the RFC 2822 specifications without dot stuffing.
   - `smtpEnvelopeInformation`: The SMTP envelope information.
-    - `ehlo`
-    - `mailFrom`
-    - `rcptTo`
+    - `ehlo`: The EHLO/HELO hostname.
+    - `mailFrom`: The MAIL FROM address.
+    - `rcptTo`: The RCPT TO address.
   - `sendingHostInformation`: The sending host information.
-    - `name`
+    - `name`: The hostname of the sending server.
 
 ## Type declarations
 
