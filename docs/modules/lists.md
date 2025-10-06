@@ -10,7 +10,7 @@ Manage account-level lists.
 
 ## Add List Entry <Badge type="info" text="method" />
 
-Add an entry to a account-level blocklist or safelist.
+Add an entry to an account-level blocklist or safelist.
 
 ### Usage
 
