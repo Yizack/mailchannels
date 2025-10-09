@@ -47,21 +47,21 @@ const { success, data } = await mailchannels.emails.send({
 
 ### Params
 
-- `options`: Send options.
-  - `attachments`: An array of attachments to be sent with the email.
-    - `content`: The attachment data, encoded in Base64.
-    - `filename`: The name of the attachment file.
-    - `type`: The MIME type of the attachment.
-  - `campaignId`: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
-  - `bcc`: The BCC recipients of the email.
-  - `cc`: The CC recipients of the email.
-  - `dkim`: The DKIM settings for the email.
-    - `domain`: The domain to sign the email with.
-    - `privateKey`: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
-    - `selector`: The DKIM selector to use.
-  - `from`: The sender of the email.
-  - `to`: The recipients of the email.
-  - `tracking`: Adjust open and click tracking for the message.
+- `options` `EmailsSendOptions`<Badge type="danger" text="required" />: Send options `EmailsSendOptions`.
+  - `attachments` `EmailsSendAttachment[]`<Badge type="info" text="optional" />: An array of attachments to be sent with the email.
+    - `content` `string`<Badge type="danger" text="required" />: The attachment data, encoded in Base64.
+    - `filename` `string`<Badge type="danger" text="required" />: The name of the attachment file.
+    - `type` `string`<Badge type="danger" text="required" />: The MIME type of the attachment.
+  - `campaignId` `string`<Badge type="info" text="optional" />: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
+  - `bcc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info" text="optional" />: The BCC recipients of the email.
+  - `cc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info" text="optional" />: The CC recipients of the email.
+  - `dkim` `string` <Badge type="info" text="optional" />: The DKIM settings for the email.
+    - `domain` `string` <Badge type="danger" text="required" />: The domain to sign the email with.
+    - `privateKey` `string` <Badge type="info" text="optional" />: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
+    - `selector` `string` <Badge type="danger" text="required" />: The DKIM selector to use.
+  - `from` `EmailsSendRecipient | string` <Badge type="danger" text="required" />: The sender of the email.
+  - `to` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="danger" text="required" />: The recipients of the email.
+  - `tracking` `EmailsSendTracking` <Badge type="info" text="optional" />: Adjust open and click tracking for the message.
     > [!INFO]
     > Tracking for your messages requires a [subscription](https://www.mailchannels.com/pricing/#for_devs) that supports open and click tracking.
     >
@@ -69,10 +69,10 @@ const { success, data } = await mailchannels.emails.send({
     > - The URL is non-empty.
     > - The URL starts with `http` or `https`.
     > - The link does not have a `clicktracking` attribute set to `off`.
-  - `replyTo`: The reply-to address of the email.
-  - `subject`: The subject of the email.
-  - `html`: The HTML content of the email. Required if `text` is not set.
-  - `text`: The plain text content of the email. Required if `html` is not set.
+  - `replyTo` `EmailsSendRecipient | string` <Badge type="info" text="optional" />: The reply-to address of the email.
+  - `subject` `string` <Badge type="danger" text="required" />: The subject of the email.
+  - `html` `string` <Badge type="info" text="optional" />: The HTML content of the email. Required if `text` is not set.
+  - `text` `string` <Badge type="info" text="optional" />: The plain text content of the email. Required if `html` is not set.
     > [!IMPORTANT]
     > Either `html` or `text` must be provided.
     <!---->
@@ -80,10 +80,10 @@ const { success, data } = await mailchannels.emails.send({
     > Including a plain text version of your email ensures that all recipients can read your message, including those with email clients that lack HTML support.
     >
     > You can use the [`html-to-text`](https://www.npmjs.com/package/html-to-text) package to convert your HTML content to plain text.
-  - `mustaches`: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
-  - `transactional`: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
+  - `mustaches` `Record<string, unknown>` <Badge type="info" text="optional" />: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
+  - `transactional` `boolean` <Badge type="info" text="optional" />: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
     List-Unsubscribe headers will be added.
-- `dryRun`: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data.rendered` property of the response.
+- `dryRun` `boolean` <Badge type="info" text="optional" />: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data.rendered` property of the response.
   > [!TIP]
   > Use `dryRun` to test your email message before sending it.
 
