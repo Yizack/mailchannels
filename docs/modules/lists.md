@@ -41,9 +41,17 @@ const { entry } = await mailchannels.lists.addListEntry({
 
 ### Params
 
-- `options`: Add list entry options.
-  - `listName`: The list to add the item to. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
-  - `item`: The item to add to the list. This can be a domain, email address, or IP address.
+- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The list to add the item to.
+  - `item` `string` <Badge type="danger" text="required" />: The item to add to the list. This can be a domain, email address, or IP address.
+
+### Response
+
+- `entry` `ListEntry | null` <Badge type="warning" text="nullable" />
+  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
+  - `item` `string` <Badge text="guaranteed" />
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## List Entries <Badge type="info" text="method" />
 
@@ -59,20 +67,28 @@ import { Lists } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
 
-const { entry } = await lists.listEntries('safelist')
+const { entries } = await lists.listEntries('safelist')
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.lists.listEntries('safelist')
+const { entries } = await mailchannels.lists.listEntries('safelist')
 ```
 :::
 
 ### Params
 
-- `listName`: The name of the list to fetch. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
+- `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to fetch.
+
+### Response
+
+- `entries` `ListEntry[]` <Badge text="guaranteed" />
+  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
+  - `item` `string` <Badge text="guaranteed" />
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete List Entry <Badge type="info" text="method" />
 
@@ -88,7 +104,7 @@ import { Lists } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
 
-const { entry } = await lists.deleteListEntry({
+const { success } = await lists.deleteListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -98,7 +114,7 @@ const { entry } = await lists.deleteListEntry({
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.lists.deleteListEntry({
+const { success } = await mailchannels.lists.deleteListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -107,9 +123,14 @@ const { entry } = await mailchannels.lists.deleteListEntry({
 
 ### Params
 
-- `options`: Add list entry options.
-  - `listName`: The name of the list to remove an entry from. This can be a `blocklist`, `safelist`, `blacklist`, or `whitelist`.
-  - `item`: The list entry which should be removed. This can be a domain, email address, or IP address.
+- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to remove an entry from.
+  - `item` `string` <Badge type="danger" text="required" />: The list entry which should be removed. This can be a domain, email address, or IP address.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Type declarations
 
