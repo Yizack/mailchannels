@@ -53,13 +53,19 @@ const { success } = await mailchannels.suppressions.create({
 
 ### Params
 
-- `addToSubAccounts`: If true, the parent account creates suppression entries for all associated sub-accounts. This field is only applicable to parent accounts. Sub-accounts cannot create entries for other sub-accounts.
-- `entries`: The total number of suppression entries to create, for the parent and/or its sub-accounts, must not exceed `1000`.
-  - `notes`: Optional. Must be less than `1024` characters.
-  - `recipient`: The email address to suppress. Must be a valid email address format and less than `255` characters.
-  - `types`: An array of types of suppression to apply to the recipient. If not provided, it defaults to `["non-transactional"]`.
-    > [!NOTE]
-    > Possible type values are: `transactional`, `non-transactional`.
+- `options` `SuppressionsCreateOptions` <Badge type="danger" text="required" />: The details of the suppression entries to create.
+  - `addToSubAccounts` `boolean` <Badge type="info" text="optional" />: If `true`, the parent account creates suppression entries for all associated sub-accounts. This field is only applicable to parent accounts. Sub-accounts cannot create entries for other sub-accounts.
+  - `entries` `object[]` <Badge type="danger" text="required" />: The total number of suppression entries to create, for the parent and/or its sub-accounts, must not exceed `1000`.
+    - `notes` `string` <Badge type="info" text="optional" />: Must be less than `1024` characters.
+    - `recipient` `string` <Badge type="danger" text="required" />: The email address to suppress. Must be a valid email address format and less than `255` characters.
+    - `types` `("transactional" | "non-transactional")[]` <Badge type="info" text="optional" />: An array of types of suppression to apply to the recipient. If not provided, it defaults to `["non-transactional"]`.
+      > [!NOTE]
+      > Possible type values are: `transactional`, `non-transactional`.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete <Badge type="info" text="method" />
 
@@ -88,10 +94,15 @@ const { success } = await mailchannels.suppressions.delete("name@example.com", "
 
 ### Params
 
-- `recipient`: The email address of the suppression entry to delete.
-- `source`: Optional. The source of the suppression entry to be deleted. If source is not provided, it defaults to `api`. If source is set to `all`, all suppression entries related to the specified recipient will be deleted.
+- `recipient` `string` <Badge type="danger" text="required" />: The email address of the suppression entry to delete.
+- `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all"` <Badge type="info" text="optional" />: Optional. The source of the suppression entry to be deleted. If source is not provided, it defaults to `api`. If source is set to `all`, all suppression entries related to the specified recipient will be deleted.
   > [!NOTE]
   > Possible values are: `api`, `unsubscribe_link`, `list_unsubscribe`, `hard_bounce`, `spam_complaint`, `all`
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## List <Badge type="info" text="method" />
 
@@ -120,15 +131,26 @@ const { list } = await mailchannels.suppressions.list()
 
 ### Params
 
-- `options`: Optional filter options.
-  - `recipient`: The email address of the suppression entry to search for. If provided, the search will return the suppression entry associated with this recipient. If not provided, the search will return all suppression entries for the account.
-  - `source`: The source of the suppression entries to filter by. If not provided, suppression entries from all sources will be returned.
+- `options` `SuppressionsListOptions` <Badge type="info" text="optional" />: Optional filter options.
+  - `recipient` `string` <Badge type="info" text="optional" />: The email address of the suppression entry to search for. If provided, the search will return the suppression entry associated with this recipient. If not provided, the search will return all suppression entries for the account.
+  - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint"` <Badge type="info" text="optional" />: The source of the suppression entries to filter by. If not provided, suppression entries from all sources will be returned.
     > [!NOTE]
     > Possible values are: `api`, `unsubscribe_link`, `list_unsubscribe`, `hard_bounce`, `spam_complaint`.
-  - `startTime`: The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
-  - `endTime`: The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
-  - `limit`: The maximum number of suppression entries to return in the response. Default is `1000`. Maximum is `1000`.
-  - `offset`: The number of suppression entries to skip before starting to collect the result set. Default is `0`.
+  - `createdBefore` `string` <Badge type="info" text="optional" />: The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
+  - `createdAfter` `string` <Badge type="info" text="optional" />: The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
+  - `limit` `number` <Badge type="info" text="optional" />: The maximum number of suppression entries to return. Must be between `1` and `1000`. Defaults to `1000`.
+  - `offset` `number` <Badge type="info" text="optional" />: The number of suppression entries to skip before returning results. Defaults to `0`.
+
+### Response
+
+- `list` `SuppressionsListEntry[]` <Badge text="guaranteed" />
+  - `createdAt` `string` <Badge text="guaranteed" />
+  - `notes` `string | null` <Badge type="info" text="optional" />
+  - `recipient` `string` <Badge text="guaranteed" />: The email address that is suppressed.
+  - `sender` `string | null` <Badge type="info" text="optional" />
+  - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all"` <Badge text="guaranteed" />
+  - `types` `("transactional" | "non-transactional")[]` <Badge text="guaranteed" />
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Type declarations
 
@@ -149,7 +171,3 @@ const { list } = await mailchannels.suppressions.list()
   <<< @/snippets/suppressions-list-entry.ts
   <<< @/snippets/suppressions-list-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/suppressions.ts)

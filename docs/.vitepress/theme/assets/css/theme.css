@@ -53,3 +53,11 @@ html.dark {
   background: var(--vp-c-brand-1);
   color: var(--vp-sidebar-bg-color);
 }
+
+ul li > span.VPBadge {
+  transform: translateY(0);
+}
+
+ul li > code + code:has(+ span.VPBadge) {
+  color: var(--vp-c-important-1);
+}

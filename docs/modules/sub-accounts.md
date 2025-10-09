@@ -34,14 +34,22 @@ const { account } = await mailchannels.subAccounts.create('My Company', 'validha
 
 ### Params
 
-- `companyName`: The name of the company associated with the sub-account.
+- `companyName` `string` <Badge type="danger" text="required" />: The name of the company associated with the sub-account.
   > [!TIP]
   > This name is used for display purposes only and does not affect the functionality of the sub-account. The length must be between 3 and 128 characters.
-- `handle`: The handle of the sub-account to create.
+- `handle` `string` <Badge type="info" text="optional" />: The handle of the sub-account to create.
   > [!TIP]
   > The length must be between 3 and 128 characters, and it may contain only lowercase letters and numbers.
   >
   > If no handle is provided, a random handle will be generated.
+
+### Response
+
+- `account` `SubAccountsAccount | null` <Badge type="warning" text="nullable" />
+  - `companyName` `string` <Badge text="guaranteed" />: The name of the company associated with the sub-account.
+  - `enabled` `boolean` <Badge text="guaranteed" />: If the sub-account is enabled.
+  - `handle` `string` <Badge text="guaranteed" />: The handle for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## List <Badge type="info" text="method" />
 
@@ -70,11 +78,19 @@ const { accounts } = await mailchannels.subAccounts.list()
 
 ### Params
 
-- `options`: List sub-accounts options.
-  - `limit`: The number of sub-accounts to return. Possible values are 1 to 1000.
-  - `offset`: The offset number to start returning sub-accounts from.
+- `options` `SubAccountsListOptions` <Badge type="info" text="optional" />: List sub-accounts options.
+  - `limit` `number` <Badge type="info" text="optional" />: The number of sub-accounts to return. Possible values are 1 to 1000.
+  - `offset` `number` <Badge type="info" text="optional" />: The offset number to start returning sub-accounts from.
   > [!TIP]
   > If no options are provided, the default limit is `1000` and the offset is `0`.
+
+### Response
+
+- `accounts` `SubAccountsAccount[]` <Badge text="guaranteed" />
+  - `companyName` `string` <Badge text="guaranteed" />: The name of the company associated with the sub-account.
+  - `enabled` `boolean` <Badge text="guaranteed" />: If the sub-account is enabled.
+  - `handle` `string` <Badge text="guaranteed" />: The handle for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete <Badge type="info" text="method" />
 
@@ -103,7 +119,12 @@ const { success } = await mailchannels.subAccounts.delete('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to be deleted.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to be deleted.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Suspend <Badge type="info" text="method" />
 
@@ -132,7 +153,12 @@ const { success } = await mailchannels.subAccounts.suspend('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to be suspended.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to be suspended.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Activate <Badge type="info" text="method" />
 
@@ -161,7 +187,12 @@ const { success } = await mailchannels.subAccounts.activate('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to be activated.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to be activated.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Create API Key <Badge type="info" text="method" />
 
@@ -190,7 +221,14 @@ const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to create API key for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to create API key for.
+
+### Response
+
+- `key` `SubAccountsApiKey | null` <Badge type="warning" text="nullable" />
+  - `id` `number` <Badge text="guaranteed" />: The API key ID for the sub-account.
+  - `value` `string` <Badge text="guaranteed" />: API key for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## List API Keys <Badge type="info" text="method" />
 
@@ -219,7 +257,14 @@ const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to retrieve the API keys for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to retrieve the API keys for.
+
+### Response
+
+- `keys` `SubAccountsApiKey[]` <Badge text="guaranteed" />
+  - `id` `number` <Badge text="guaranteed" />: The API key ID for the sub-account.
+  - `value` `string` <Badge text="guaranteed" />: API key for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete API Key <Badge type="info" text="method" />
 
@@ -235,21 +280,26 @@ import { SubAccounts } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { key } = await subAccounts.deleteApiKey('validhandle123', 1)
+const { success } = await subAccounts.deleteApiKey('validhandle123', 1)
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
+const { success } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
 ```
 :::
 
 ### Params
 
-- `handle`: The handle of the sub-account for which the API key should be deleted.
-- `id`: The ID of the API key to delete.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account for which the API key should be deleted.
+- `id` `number` <Badge type="danger" text="required" />: The ID of the API key to delete.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Create SMTP Password <Badge type="info" text="method" />
 
@@ -278,7 +328,15 @@ const { password } = await mailchannels.subAccounts.createSmtpPassword('validhan
 
 ### Params
 
-- `handle`: The handle of the sub-account to create SMTP password for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to create SMTP password for.
+
+### Response
+
+- `password` `SubAccountsSmtpPassword | null` <Badge type="warning" text="nullable" />
+  - `enabled` `boolean` <Badge text="guaranteed" />: Whether the SMTP password is enabled.
+  - `id` `number` <Badge text="guaranteed" />: The SMTP password ID for the sub-account.
+  - `value` `string` <Badge text="guaranteed" />: SMTP password for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## List SMTP Passwords <Badge type="info" text="method" />
 
@@ -307,7 +365,15 @@ const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle12
 
 ### Params
 
-- `handle`: The handle of the sub-account to retrieve the SMTP passwords for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to retrieve the SMTP passwords for.
+
+### Response
+
+- `passwords` `SubAccountsSmtpPassword[]` <Badge text="guaranteed" />
+  - `enabled` `boolean` <Badge text="guaranteed" />: Whether the SMTP password is enabled.
+  - `id` `number` <Badge text="guaranteed" />: The SMTP password ID for the sub-account.
+  - `value` `string` <Badge text="guaranteed" />: SMTP password for the sub-account.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete SMTP Password <Badge type="info" text="method" />
 
@@ -323,21 +389,26 @@ import { SubAccounts } from 'mailchannels-sdk/modules'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { key } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
 ```
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
 ```
 :::
 
 ### Params
 
-- `handle`: The handle of the sub-account for which the SMTP password should be deleted.
-- `id`: The ID of the SMTP password to delete.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account for which the SMTP password should be deleted.
+- `id` `number` <Badge type="danger" text="required" />: The ID of the SMTP password to delete.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Get Limit <Badge type="info" text="method" />
 
@@ -369,7 +440,13 @@ const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to retrieve the limit for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to retrieve the limit for.
+
+### Response
+
+- `limit` `SubAccountsLimit | null` <Badge type="warning" text="nullable" />
+  - `sends` `number` <Badge text="guaranteed" />
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Set Limit <Badge type="info" text="method" />
 
@@ -398,11 +475,16 @@ const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { 
 
 ### Params
 
-- `handle`: The handle of the sub-account to set the limit for.
-- `limits`: The limits to set for the sub-account.
-  - `sends`
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to set the limit for.
+- `limits` `object` <Badge type="danger" text="required" />: The limits to set for the sub-account.
+  - `sends` `number` <Badge type="danger" text="required" />
   > [!TIP]
   > The minimum allowed sends is `0`.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Delete Limit <Badge type="info" text="method" />
 
@@ -431,7 +513,12 @@ const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to delete the limit for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to delete the limit for.
+
+### Response
+
+- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Get Usage <Badge type="info" text="method" />
 
@@ -460,7 +547,15 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
 
 ### Params
 
-- `handle`: The handle of the sub-account to query usage stats for.
+- `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to query usage stats for.
+
+### Response
+
+- `usage` `SubAccountsUsage | null` <Badge type="warning" text="nullable" />
+  - `endDate` `string` <Badge type="info" text="optional" />: The end date of the current billing period (ISO 8601 format).
+  - `startDate` `string` <Badge type="info" text="optional" />: The start date of the current billing period (ISO 8601 format).
+  - `total` `number` <Badge text="guaranteed" />: The total usage for the current billing period.
+- `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Type declarations
 
@@ -502,7 +597,3 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
   <<< @/snippets/sub-accounts-usage.ts
   <<< @/snippets/sub-accounts-usage-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/sub-accounts.ts)
