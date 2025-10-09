@@ -55,7 +55,7 @@ const { success, data } = await mailchannels.emails.send({
   - `campaignId` `string`<Badge type="info" text="optional" />: The campaign identifier. If specified, this ID will be included in all relevant webhooks. It can be up to 48 UTF-8 characters long and must not contain spaces.
   - `bcc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info" text="optional" />: The BCC recipients of the email.
   - `cc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info" text="optional" />: The CC recipients of the email.
-  - `dkim` `string` <Badge type="info" text="optional" />: The DKIM settings for the email.
+  - `dkim` `object` <Badge type="info" text="optional" />: The DKIM settings for the email.
     - `domain` `string` <Badge type="danger" text="required" />: The domain to sign the email with.
     - `privateKey` `string` <Badge type="info" text="optional" />: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
     - `selector` `string` <Badge type="danger" text="required" />: The DKIM selector to use.
