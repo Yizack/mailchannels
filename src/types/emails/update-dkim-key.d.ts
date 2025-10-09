@@ -6,7 +6,7 @@ export interface EmailsUpdateDkimKeyOptions {
    */
   selector: string;
   /**
-   * New status of the DKIM key pair
+   * New status of the DKIM key pair.
    * - `revoked`: Indicates that the key is compromised and should not be used.
    * - `retired`: Indicates that the key has been rotated and is no longer in use.
    */

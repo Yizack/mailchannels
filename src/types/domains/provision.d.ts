@@ -50,7 +50,7 @@ export interface DomainsData {
     target: string;
   }[] | null;
   /**
-   * A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain. Must be <= 255 characters
+   * A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain. Must be <= 255 characters.
    */
   aliases?: string[] | null;
   /**

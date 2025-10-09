@@ -12,11 +12,11 @@ export interface SuppressionsListOptions {
    */
   source?: Exclude<SuppressionsSource, "all">;
   /**
-   * The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
+   * The date and/or time before which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
    */
   createdBefore?: string;
   /**
-   * The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`
+   * The date and/or time after which the suppression entries were created. Format: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
    */
   createdAfter?: string;
   /**

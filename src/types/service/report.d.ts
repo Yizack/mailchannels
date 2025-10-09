@@ -8,7 +8,7 @@ export interface ServiceReportOptions {
    */
   messageContent: string;
   /**
-   * The SMTP envelope information
+   * The SMTP envelope information.
    */
   smtpEnvelopeInformation?: {
     ehlo: string;

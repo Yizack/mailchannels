@@ -1,6 +1,6 @@
 export interface WebhooksValidateResponse {
   /**
-   * Indicates whether all webhook validations passed
+   * Indicates whether all webhook validations passed.
    */
   allPassed: boolean;
   /**
@@ -8,11 +8,11 @@ export interface WebhooksValidateResponse {
    */
   results: {
     /**
-     * Indicates whether the webhook responded with a 2xx HTTP status code
+     * Indicates whether the webhook responded with a 2xx HTTP status code.
      */
     result: "passed" | "failed";
     /**
-     * The webhook that was validated
+     * The webhook that was validated.
      */
     webhook: string;
     /**
@@ -24,7 +24,7 @@ export interface WebhooksValidateResponse {
        */
       body?: string;
       /**
-       * HTTP status code returned by the webhook
+       * HTTP status code returned by the webhook.
        */
       status: number;
     } | null;

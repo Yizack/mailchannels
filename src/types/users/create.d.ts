@@ -1,6 +1,6 @@
 export interface UsersCreateOptions {
   /**
-   * Flag to indicate if the user is a domain admin or a regular user
+   * Flag to indicate if the user is a domain admin or a regular user.
    * @default false
    */
   admin?: boolean;
@@ -13,7 +13,7 @@ export interface UsersCreateOptions {
    */
   filter?: boolean | "compute";
   /**
-   * safelist and blocklist entries to be added
+   * safelist and blocklist entries to be added.
    */
   listEntries?: {
     blocklist?: string[];

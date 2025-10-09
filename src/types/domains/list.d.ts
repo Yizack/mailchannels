@@ -6,7 +6,7 @@ export interface DomainsListOptions {
    */
   domains?: string[];
   /**
-   * The maximum number of domains included in the response. Possible values are 1 to 5000
+   * The maximum number of domains included in the response. Possible values are 1 to 5000.
    * @default 10
    */
   limit?: number;
@@ -19,7 +19,7 @@ export interface DomainsListOptions {
 
 export interface DomainsListResponse {
   /**
-   * A list of domains
+   * A list of domains.
    */
   domains: DomainsData[];
   /**

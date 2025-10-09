@@ -165,13 +165,13 @@ interface EmailsSendOptionsBase {
 export type EmailsSendOptions = EmailsSendOptionsBase & (
   | {
     /**
-     * The HTML content of the email
+     * The HTML content of the email.
      * @example
      * '<p>Hello World</p>'
      */
     html: string;
     /**
-     * The plain text content of the email (optional when html is provided)
+     * The plain text content of the email (optional when html is provided).
      * @example
      * 'Hello World'
      */
@@ -179,13 +179,13 @@ export type EmailsSendOptions = EmailsSendOptionsBase & (
   }
   | {
     /**
-     * The HTML content of the email (optional when text is provided)
+     * The HTML content of the email (optional when text is provided).
      * @example
      * '<p>Hello World</p>'
      */
     html?: string;
     /**
-     * The plain text content of the email
+     * The plain text content of the email.
      * @example
      * 'Hello World'
      */
@@ -195,7 +195,7 @@ export type EmailsSendOptions = EmailsSendOptionsBase & (
 
 export interface EmailsSendResponse {
   /**
-   * Indicates if the email was successfully sent
+   * Indicates if the email was successfully sent.
    */
   success: boolean;
   data: {
