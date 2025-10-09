@@ -199,7 +199,3 @@ const { usage } = await mailchannels.metrics.usage()
 
   <<< @/snippets/metrics-usage-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/metrics.ts)

@@ -120,7 +120,3 @@ const { success } = await mailchannels.service.report({
 
   <<< @/snippets/service-report-options.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/service.ts)

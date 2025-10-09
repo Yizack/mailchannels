@@ -516,7 +516,3 @@ const { results } = await mailchannels.domains.bulkCreateLoginLinks([
   <<< @/snippets/domains-bulk-create-login-links.ts
   <<< @/snippets/domains-bulk-create-login-links-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/domains.ts)

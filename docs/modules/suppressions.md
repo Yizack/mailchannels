@@ -149,7 +149,3 @@ const { list } = await mailchannels.suppressions.list()
   <<< @/snippets/suppressions-list-entry.ts
   <<< @/snippets/suppressions-list-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/suppressions.ts)

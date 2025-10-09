@@ -172,7 +172,3 @@ const { allPassed, results } = await mailchannels.webhooks.validate('optional-re
 
   <<< @/snippets/webhooks-validate-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/webhooks.ts)

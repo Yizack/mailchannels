@@ -126,7 +126,3 @@ const { entry } = await mailchannels.lists.deleteListEntry({
   <<< @/snippets/list-entry-response.ts
   <<< @/snippets/list-entries-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/lists.ts)

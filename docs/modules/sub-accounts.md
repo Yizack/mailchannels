@@ -502,7 +502,3 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
   <<< @/snippets/sub-accounts-usage.ts
   <<< @/snippets/sub-accounts-usage-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/sub-accounts.ts)

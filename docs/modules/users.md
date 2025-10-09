@@ -180,7 +180,3 @@ const { entry } = await mailchannels.users.deleteListEntry('name@example.com', {
   <<< @/snippets/list-entry-response.ts
   <<< @/snippets/list-entries-response.ts
 </details>
-
-## Source
-
-[Source](https://github.com/Yizack/mailchannels/tree/main/src/modules/users.ts)
