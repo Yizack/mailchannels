@@ -54,7 +54,7 @@ const { data } = await mailchannels.domains.provision({
   - `admins` `string[] | null` <Badge type="info" text="optional" />: A list of email addresses that are the domain admins for the domain.
   - `downstreamAddresses` `object[] | null` <Badge type="info" text="optional" />: The locations of mail servers to which messages will be delivered after filtering.
     - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
     - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
     - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
   - `aliases` `string[] | null` <Badge type="info" text="optional" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -75,7 +75,7 @@ const { data } = await mailchannels.domains.provision({
   - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
   - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
     - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
     - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
     - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
   - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -135,7 +135,7 @@ const { results } = await mailchannels.domains.bulkProvision({
   - `admins` `string[] | null` <Badge type="info" text="optional" />: A list of email addresses that are the domain admins for the domain.
   - `downstreamAddresses` `object[] | null` <Badge type="info" text="optional" />: The locations of mail servers to which messages will be delivered after filtering.
     - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
     - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
     - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
   - `aliases` `string[] | null` <Badge type="info" text="optional" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -158,7 +158,7 @@ const { results } = await mailchannels.domains.bulkProvision({
       - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
       - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
         - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-        - `weight` `number` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+        - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
         - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
         - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
       - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -176,7 +176,7 @@ const { results } = await mailchannels.domains.bulkProvision({
       - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
       - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
         - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-        - `weight` `number` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+        - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
         - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
         - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
       - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -229,7 +229,7 @@ const { domains } = await mailchannels.domains.list()
   - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
   - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
     - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
     - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
     - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
   - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
@@ -481,7 +481,7 @@ const { success } = await mailchannels.domains.setDownstreamAddress('example.com
   - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
   - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
   - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `weight` `number` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+  - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
 > [!IMPORTANT]
 > If the `records` parameter is an empty array, all downstream address records will be deleted.
 
@@ -530,7 +530,7 @@ const { records } = await mailchannels.domains.listDownstreamAddresses('example.
   - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
   - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
   - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `weight` `number` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+  - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
 - `error` `string | null` <Badge type="warning" text="nullable" />
 
 ## Update API Key <Badge type="info" text="method" />
