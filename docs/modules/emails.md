@@ -157,7 +157,6 @@ const { success } = await mailchannels.emails.checkDomain({
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `results` `object | null` <Badge type="warning" text="nullable" />: The results of the domain checks.
   - `dkim` `object[]` <Badge text="guaranteed" />
     - `domain` `string` <Badge text="guaranteed" />
@@ -215,7 +214,6 @@ const { key } = await mailchannels.emails.createDkimKey('example.com', {
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `key` `EmailsDkimKey | null` <Badge type="warning" text="nullable" />: The created DKIM key information.
   - `algorithm` `string` <Badge text="guaranteed" />: Algorithm used for the key pair.
   - `createdAt` `string` <Badge text="guaranteed" />: Timestamp when the key pair was created.
@@ -274,7 +272,6 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `keys` `Optional<EmailsDkimKey, "dnsRecords">[]` <Badge text="guaranteed" />: List of keys matching the filter. Empty if no keys match the filter.
   - `algorithm` `string` <Badge text="guaranteed" />: Algorithm used for the key pair.
   - `createdAt` `string` <Badge text="guaranteed" />: Timestamp when the key pair was created.

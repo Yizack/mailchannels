@@ -45,7 +45,6 @@ const { account } = await mailchannels.subAccounts.create('My Company', 'validha
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `account` `SubAccountsAccount | null` <Badge type="warning" text="nullable" />
   - `companyName` `string` <Badge text="guaranteed" />: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge text="guaranteed" />: If the sub-account is enabled.
@@ -87,7 +86,6 @@ const { accounts } = await mailchannels.subAccounts.list()
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `accounts` `SubAccountsAccount[]` <Badge text="guaranteed" />
   - `companyName` `string` <Badge text="guaranteed" />: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge text="guaranteed" />: If the sub-account is enabled.
@@ -227,7 +225,6 @@ const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `key` `SubAccountsApiKey | null` <Badge type="warning" text="nullable" />
   - `id` `number` <Badge text="guaranteed" />: The API key ID for the sub-account.
   - `value` `string` <Badge text="guaranteed" />: API key for the sub-account.
@@ -264,7 +261,6 @@ const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `keys` `SubAccountsApiKey[]` <Badge text="guaranteed" />
   - `id` `number` <Badge text="guaranteed" />: The API key ID for the sub-account.
   - `value` `string` <Badge text="guaranteed" />: API key for the sub-account.
@@ -336,7 +332,6 @@ const { password } = await mailchannels.subAccounts.createSmtpPassword('validhan
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `password` `SubAccountsSmtpPassword | null` <Badge type="warning" text="nullable" />
   - `enabled` `boolean` <Badge text="guaranteed" />: Whether the SMTP password is enabled.
   - `id` `number` <Badge text="guaranteed" />: The SMTP password ID for the sub-account.
@@ -374,7 +369,6 @@ const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle12
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `passwords` `SubAccountsSmtpPassword[]` <Badge text="guaranteed" />
   - `enabled` `boolean` <Badge text="guaranteed" />: Whether the SMTP password is enabled.
   - `id` `number` <Badge text="guaranteed" />: The SMTP password ID for the sub-account.
@@ -557,7 +551,6 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
 - `usage` `SubAccountsUsage | null` <Badge type="warning" text="nullable" />
   - `endDate` `string` <Badge type="info" text="optional" />: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge type="info" text="optional" />: The start date of the current billing period (ISO 8601 format).
