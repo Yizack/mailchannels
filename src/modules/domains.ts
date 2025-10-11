@@ -15,7 +15,7 @@ export class Domains {
 
   /**
    * Provision a single domain to use MailChannels Inbound.
-   * @param options - The domain data to provision.
+   * @param options - The provision options and domain data.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
@@ -52,7 +52,7 @@ export class Domains {
   /**
    * Provision up to 1000 domains to use MailChannels Inbound.
    * @param options - The options to provision the domains.
-   * @param domains - The list of domains to provision.
+   * @param domains - A list of domain data to provision.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')

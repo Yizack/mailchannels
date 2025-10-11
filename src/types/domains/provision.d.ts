@@ -73,6 +73,9 @@ export interface DomainsProvisionOptions {
 export type DomainsBulkProvisionOptions = DomainsProvisionOptions & Pick<DomainsData, "subscriptionHandle">;
 
 export interface DomainsProvisionResponse {
+  /**
+   * The provisioned domain data.
+   */
   data: DomainsData | null;
   error: string | null;
 }
@@ -86,6 +89,9 @@ export interface DomainsBulkProvisionResponse {
      * Domains that were successfully provisioned or updated.
      */
     successes: {
+      /**
+       * The provisioned domain data.
+       */
       domain: DomainsData;
       code: number;
       comment?: string;
@@ -94,6 +100,9 @@ export interface DomainsBulkProvisionResponse {
      * Domains that were not successfully provisioned.
      */
     errors: {
+      /**
+       * The failed to provision domain data.
+       */
       domain: DomainsData;
       code: number;
       comment?: string;

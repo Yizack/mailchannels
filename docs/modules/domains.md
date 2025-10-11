@@ -41,7 +41,7 @@ const { data } = await mailchannels.domains.provision({
 
 ### Params
 
-- `options` `DomainsProvisionOptions & DomainsData` <Badge type="danger" text="required" />: Provision options.
+- `options` `DomainsProvisionOptions & DomainsData` <Badge type="danger" text="required" />: The provision options and domain data.
   - `subscriptionHandle` `string` <Badge type="danger" text="required" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
@@ -65,7 +65,7 @@ const { data } = await mailchannels.domains.provision({
 
 ### Response
 
-- `data` `DomainsData | null` <Badge type="warning" text="nullable" />
+- `data` `DomainsData | null` <Badge type="warning" text="nullable" />: The provisioned domain data.
   - `domain` `string` <Badge text="guaranteed" />: The domain name.
   - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
     - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
@@ -119,13 +119,13 @@ const { results } = await mailchannels.domains.bulkProvision({
 
 ### Params
 
-- `options` `DomainsBulkProvisionOptions` <Badge type="danger" text="required" />: Provision options.
+- `options` `DomainsBulkProvisionOptions` <Badge type="danger" text="required" />: The options to provision the domains.
   - `subscriptionHandle` `string` <Badge type="danger" text="required" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
   - `associateKey` `boolean` <Badge type="info" text="optional" />: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
   - `overwrite` `boolean` <Badge type="info" text="optional" />: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
-- `domains` `DomainsData[]` <Badge type="danger" text="required" />: A list of domains to provision.
+- `domains` `DomainsData[]` <Badge type="danger" text="required" />: A list of domain data to provision.
   - `domain` `string` <Badge type="danger" text="required" />: The domain name.
   - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
     - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
@@ -148,7 +148,7 @@ const { results } = await mailchannels.domains.bulkProvision({
   - `successes` `object[]` <Badge text="guaranteed" />: Domains that were successfully provisioned or updated.
     - `code` `number` <Badge text="guaranteed" />
     - `comment` `string` <Badge type="info" text="optional" />
-    - `domain` `DomainsData` <Badge text="guaranteed" />: The domain name.
+    - `domain` `DomainsData` <Badge text="guaranteed" />: The provisioned domain data.
       - `domain` `string` <Badge text="guaranteed" />: The domain name.
       - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
         - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
@@ -166,7 +166,7 @@ const { results } = await mailchannels.domains.bulkProvision({
   - `errors` `object[]` <Badge text="guaranteed" />: Domains that were not successfully provisioned.
     - `code` `number` <Badge text="guaranteed" />
     - `comment` `string` <Badge type="info" text="optional" />
-    - `domain` `DomainsData` <Badge text="guaranteed" />: The domain name.
+    - `domain` `DomainsData` <Badge text="guaranteed" />: The failed to provision domain data.
       - `domain` `string` <Badge text="guaranteed" />: The domain name.
       - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
         - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
@@ -219,7 +219,7 @@ const { domains } = await mailchannels.domains.list()
 
 ### Response
 
-- `domains` `DomainsData[]` <Badge text="guaranteed" />: A list of domains.
+- `domains` `DomainsData[]` <Badge text="guaranteed" />: A list of domain data.
   - `domain` `string` <Badge text="guaranteed" />: The domain name.
   - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
     - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
