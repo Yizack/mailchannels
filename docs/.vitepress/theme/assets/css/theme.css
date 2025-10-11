@@ -54,10 +54,55 @@ html.dark {
   color: var(--vp-sidebar-bg-color);
 }
 
-ul li > span.VPBadge {
+.vp-doc[class*="_modules"] ul li > span.VPBadge {
   transform: translateY(0);
 }
 
-ul li > code + code:has(+ span.VPBadge) {
+.vp-doc[class*="_modules"] ul li > code + code:has(+ span.VPBadge) {
   color: var(--vp-c-important-1);
+}
+
+.vp-doc[class*="_modules"] ul ul ul li > ul {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-2px);
+  margin-top: 0;
+  pointer-events: none;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.3s ease,
+    transform 0.5s ease,
+    margin-top 0.5s ease;
+  will-change: max-height, opacity, transform;
+}
+
+.vp-doc[class*="_modules"] ul ul ul li:hover > ul,
+.vp-doc[class*="_modules"] ul ul ul li:focus-within > ul {
+  max-height: 1000px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 0.25rem;
+  pointer-events: auto;
+}
+
+.vp-doc[class*="_modules"] ul {
+  margin-left: calc(-0.82rem - 1px);
+  padding-left: calc(2.07rem + 1px);
+}
+
+.vp-doc[class*="_modules"] li > ul {
+  border-left: 1px solid;
+  border-color: var(--vp-c-divider);
+  margin-left: calc(-0.82rem - 2px);
+  transition: border-left 0.5s ease;
+}
+
+.vp-doc[class*="_modules"] li:hover > ul {
+  border-color: var(--vp-button-brand-hover-bg);
+}
+
+.vp-doc[class*="_modules"] li:hover::marker,
+.vp-doc[class*="_modules"] li:focus-within::marker {
+  color: var(--vp-c-brand-1);
 }
