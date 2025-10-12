@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.4.5
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.4...v0.4.5)
+
+### 📖 Documentation
+
+- Improve readme features list ([7136b82](https://github.com/Yizack/mailchannels/commit/7136b82))
+- **lists:** Fix typo ([8e06389](https://github.com/Yizack/mailchannels/commit/8e06389))
+- Improve formatting and clarity ([cd6dd19](https://github.com/Yizack/mailchannels/commit/cd6dd19))
+- Improve param types and add responses ([#11](https://github.com/Yizack/mailchannels/pull/11))
+- **types:** Add missing trailing periods ([695373b](https://github.com/Yizack/mailchannels/commit/695373b))
+- Improve params and response style in modules ([1a37d5e](https://github.com/Yizack/mailchannels/commit/1a37d5e))
+- **domains:** Improve domain data docs ([bf8c5c1](https://github.com/Yizack/mailchannels/commit/bf8c5c1))
+
+### 🏡 Chore
+
+- Prefer pnpm to run scripts ([3bfeeff](https://github.com/Yizack/mailchannels/commit/3bfeeff))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.4
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.3...v0.4.4)
