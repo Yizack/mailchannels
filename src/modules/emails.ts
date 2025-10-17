@@ -69,6 +69,7 @@ export class Emails {
         dkim_selector: dkim?.selector || undefined,
         dynamic_template_data: options.mustaches
       }],
+      headers: options.headers,
       reply_to: parseRecipient(options.replyTo),
       from: parsedFrom,
       subject: options.subject,

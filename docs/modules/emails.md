@@ -60,6 +60,12 @@ const { success, data } = await mailchannels.emails.send({
     - `privateKey` `string` <Badge type="info" text="optional" />: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
     - `selector` `string` <Badge type="danger" text="required" />: The DKIM selector to use.
   - `from` `EmailsSendRecipient | string` <Badge type="danger" text="required" />: The sender of the email.
+  - `headers` `Record<string, string>` <Badge type="info" text="optional" />: An object containing key-value pairs, where both keys (header names) and values must be strings. These pairs represent custom headers to be substituted.
+    > [!IMPORTANT]
+    > Please note the following restrictions and behavior:
+    > - **Reserved headers**: The following headers cannot be modified: `Authentication-Results`, `BCC`, `CC`, `Content-Transfer-Encoding`, `Content-Type`, `DKIM-Signature`, `From`, `Message-ID`, `Received`, `Reply-To`, `Subject`, `To`.
+    > - **Header precedence**: If a header is defined in both the personalizations object and the root headers, the value from personalizations will be used.
+    > - **Case sensitivity**: Headers are treated as case-insensitive. If multiple headers differ only by case, only one will be used, with no guarantee of which one.
   - `to` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="danger" text="required" />: The recipients of the email.
   - `tracking` `EmailsSendTracking` <Badge type="info" text="optional" />: Adjust open and click tracking for the message.
     > [!INFO]

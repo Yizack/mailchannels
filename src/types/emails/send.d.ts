@@ -108,6 +108,15 @@ interface EmailsSendOptionsBase {
    */
   from: EmailsSendRecipient | string;
   /**
+   * An object containing key-value pairs, where both keys (header names) and values must be strings. These pairs represent custom headers to be substituted.
+   *
+   * Please note the following restrictions and behavior:
+   * - **Reserved headers**: The following headers cannot be modified: `Authentication-Results`, `BCC`, `CC`, `Content-Transfer-Encoding`, `Content-Type`, `DKIM-Signature`, `From`, `Message-ID`, `Received`, `Reply-To`, `Subject`, `To`.
+   * - **Header precedence**: If a header is defined in both the personalizations object and the root headers, the value from personalizations will be used.
+   * - **Case sensitivity**: Headers are treated as case-insensitive. If multiple headers differ only by case, only one will be used, with no guarantee of which one.
+   */
+  headers?: Record<string, string>;
+  /**
    * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
    * @example
    * [
