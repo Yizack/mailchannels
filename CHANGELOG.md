@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.4.6
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.5...v0.4.6)
+
+### 🚀 Enhancements
+
+- **emails:** Update `checkDomain` to support managed or stored DKIM ([dc5692f](https://github.com/Yizack/mailchannels/commit/dc5692f))
+
+### 🩹 Fixes
+
+- **emails:** Allow sending email headers ([dc2ea82](https://github.com/Yizack/mailchannels/commit/dc2ea82))
+
+### 📖 Documentation
+
+- Update Email API version to `0.13.0` ([c1846fc](https://github.com/Yizack/mailchannels/commit/c1846fc))
+
+### 🏡 Chore
+
+- Add MailChannels OpenAPI specs for control ([267d059](https://github.com/Yizack/mailchannels/commit/267d059))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.5
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.4...v0.4.5)
