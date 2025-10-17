@@ -1,5 +1,6 @@
 import type { EmailsCheckDomainVerdict } from "./check-domain";
 import type { EmailsSendAttachment, EmailsSendRecipient, EmailsSendTracking } from "./send";
+import type { EmailsDkimKey } from "./create-dkim-key";
 
 interface EmailsSendPersonalization {
   bcc?: EmailsSendRecipient[];
@@ -53,25 +54,37 @@ export interface EmailsSendApiResponse {
 }
 
 export interface EmailsCheckDomainPayload {
-  dkim_settings: {
-    dkim_domain: string;
-    dkim_private_key: string;
-    dkim_selector: string;
+  dkim_settings?: {
+    dkim_domain?: string;
+    dkim_private_key?: string;
+    dkim_selector?: string;
   }[];
   domain: string;
-  sender_id: string;
+  sender_id?: string;
 }
 
 export interface EmailsCheckDomainApiResponse {
   check_results: {
     dkim: {
       dkim_domain: string;
+      dkim_key_status?: EmailsDkimKey["status"] | "provided";
       dkim_selector: string;
       reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     }[];
     domain_lockdown: {
       reason?: string;
+      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+    };
+    sender_domain: {
+      a: {
+        reason?: string;
+        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+      };
+      mx: {
+        reason?: string;
+        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+      };
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     spf: {

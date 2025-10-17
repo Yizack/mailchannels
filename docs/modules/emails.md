@@ -152,12 +152,20 @@ const { success } = await mailchannels.emails.checkDomain({
 ### Params
 
 - `options` `EmailsCheckDomainOptions` <Badge type="danger" text="required" />: Check domain options.
-  - `dkim` `EmailsCheckDomainDkim[] | EmailsCheckDomainDkim` <Badge type="danger" text="required" />: The DKIM settings for the domain.
-    - `domain` `string` <Badge type="danger" text="required" />: The DKIM domain to sign the email with.
-    - `privateKey` `string` <Badge type="danger" text="required" />: The DKIM private key to sign the email with. Encoded in Base64.
-    - `selector` `string` <Badge type="danger" text="required" />: The DKIM selector to use.
-  - `domain` `string` <Badge type="danger" text="required" />: Domain used for sending emails.
-  - `senderId` `string` <Badge type="danger" text="required" />: The sender ID to check the domain with.
+  - `dkim` `EmailsCheckDomainDkim[] | EmailsCheckDomainDkim` <Badge type="info" text="optional" />: The DKIM settings for the domain.
+    - `domain` `string` <Badge type="info" text="optional" />: The DKIM domain to sign the email with.
+    - `privateKey` `string` <Badge type="info" text="optional" />: The DKIM private key to sign the email with. Encoded in Base64.
+    - `selector` `string` <Badge type="info" text="optional" />: The DKIM selector to use.
+    > [!TIP]
+    > The absence or presence of these fields affects how DKIM settings are validated:
+    > - If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
+    > - If `domain` and `selector` are present, use the stored private key for the given domain and selector.
+    > - If only `domain` is present, use all stored keys for the given domain.
+    > - If none are present, use all stored keys for the `domain` provided in the domain field of the request.
+    > - If `privateKey` is present, `selector` must be present.
+    > - If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
+  - `domain` `string` <Badge type="danger" text="required" />: Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
+  - `senderId` `string` <Badge type="info" text="optional" />: Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
     > [!INFO]
     > Your `senderId` is the `X-MailChannels-Sender-Id` header value in emails sent via MailChannels.
 
@@ -166,12 +174,20 @@ const { success } = await mailchannels.emails.checkDomain({
 - `results` `object | null` <Badge type="warning" text="nullable" />: The results of the domain checks.
   - `dkim` `object[]` <Badge text="guaranteed" />
     - `domain` `string` <Badge text="guaranteed" />
+    - `keyStatus` `"active" | "revoked" | "retired" | "provided"` <Badge text="guaranteed" />: The human readable status of the DKIM key used for verification.
     - `selector` `string` <Badge text="guaranteed" />
     - `reason` `string` <Badge type="info" text="optional" />: A human-readable explanation of DKIM check.
     - `verdict` `"passed" | "failed"` <Badge text="guaranteed" />
   - `domainLockdown` `object` <Badge text="guaranteed" />
     - `reason` `string` <Badge type="info" text="optional" />: A human-readable explanation of Domain Lockdown check.
     - `verdict` `"passed" | "failed"` <Badge text="guaranteed" />
+  - `senderDomain` `object` <Badge text="guaranteed" />: These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
+    - `a` `object` <Badge text="guaranteed" />
+      - `reason` `string` <Badge type="info" text="optional" />: A human-readable explanation of A record check.
+      - `verdict` `"passed" | "failed"` <Badge text="guaranteed" />
+    - `mx` `object` <Badge text="guaranteed" />
+      - `reason` `string` <Badge type="info" text="optional" />: A human-readable explanation of MX record check.
+      - `verdict` `"passed" | "failed"` <Badge text="guaranteed" />
   - `spf` `object` <Badge text="guaranteed" />
     - `reason` `string` <Badge type="info" text="optional" />: A human-readable explanation of SPF check.
     - `verdict` `"passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown"` <Badge text="guaranteed" />

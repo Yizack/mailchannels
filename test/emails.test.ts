@@ -4,7 +4,8 @@ import { Emails } from "../src/modules/emails";
 import type { EmailsSendOptions, EmailsSendResponse } from "../src/types/emails/send";
 import { ErrorCode } from "../src/utils/errors";
 import type { EmailsCreateDkimKeyApiResponse, EmailsSendApiResponse } from "../src/types/emails/internal";
-import type { EmailsCreateDkimKeyResponse } from "../src/types";
+import type { EmailsCreateDkimKeyResponse } from "../src/types/emails/create-dkim-key";
+import type { EmailsCheckDomainResponse } from "../src/types/emails/check-domain";
 
 const fake = {
   send: {
@@ -41,9 +42,19 @@ const fake = {
       check_results: {
         spf: { verdict: "passed" },
         domain_lockdown: { verdict: "passed" },
-        dkim: [{ dkim_domain: "example.com", dkim_selector: "selector", verdict: "passed" }]
+        sender_domain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
+        dkim: [{ dkim_domain: "example.com", dkim_key_status: "provided", dkim_selector: "selector", verdict: "passed" }]
       }
     },
+    expectedResponse: {
+      results: {
+        spf: { verdict: "passed" },
+        domainLockdown: { verdict: "passed" },
+        senderDomain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
+        dkim: [{ domain: "example.com", keyStatus: "provided", selector: "selector", verdict: "passed" }]
+      },
+      error: null
+    } satisfies EmailsCheckDomainResponse,
     options: {
       dkim: { domain: "example.com", privateKey: "private-key", selector: "selector" },
       domain: "example.com",
@@ -198,11 +209,10 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { results } = await emails.checkDomain(fake.checkDomain.options);
+    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(results?.spf.verdict).toBe("passed");
-    expect(results?.domainLockdown.verdict).toBe("passed");
-    expect(results?.dkim[0]!.verdict).toBe("passed");
+    expect(results).toEqual(fake.checkDomain.expectedResponse.results);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 

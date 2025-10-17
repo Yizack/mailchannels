@@ -132,14 +132,14 @@ export class Emails {
    */
   async checkDomain (options: EmailsCheckDomainOptions): Promise<EmailsCheckDomainResponse> {
     const { dkim, domain, senderId } = options;
-    const dkimOptions = Array.isArray(dkim) ? dkim : [dkim];
+    const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
 
     const data: EmailsCheckDomainResponse = { results: null, error: null };
 
     const payload: EmailsCheckDomainPayload = {
-      dkim_settings: dkimOptions.map(({ domain, privateKey, selector }) => ({
+      dkim_settings: dkimOptions?.map(({ domain, privateKey, selector }) => ({
         dkim_domain: domain,
-        dkim_private_key: stripPemHeaders(privateKey),
+        dkim_private_key: privateKey ? stripPemHeaders(privateKey) : undefined,
         dkim_selector: selector
       })),
       domain,
@@ -159,13 +159,15 @@ export class Emails {
     if (!response) return data;
 
     data.results = {
-      dkim: response.check_results.dkim.map(({ dkim_domain, dkim_selector, reason, verdict }) => ({
-        domain: dkim_domain,
-        selector: dkim_selector,
-        reason,
-        verdict
+      dkim: response.check_results.dkim.map(dkimResults => ({
+        domain: dkimResults.dkim_domain,
+        keyStatus: dkimResults.dkim_key_status,
+        selector: dkimResults.dkim_selector,
+        reason: dkimResults.reason,
+        verdict: dkimResults.verdict
       })),
       domainLockdown: response.check_results.domain_lockdown,
+      senderDomain: response.check_results.sender_domain,
       spf: response.check_results.spf,
       references: response.references
     };
