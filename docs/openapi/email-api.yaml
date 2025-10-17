@@ -1,0 +1,2765 @@
+components:
+  schemas:
+    APIKey:
+      properties:
+        id:
+          description: The API key ID for the sub-account.
+          type: integer
+        key:
+          description: API key for the sub-account.
+          type: string
+      type: object
+    Attachment:
+      properties:
+        content:
+          description: the attachment data, encoded in base64
+          type: string
+        filename:
+          description: the name of the attachment file
+          type: string
+        type:
+          description: the MIME type of the attachment
+          type: string
+      required:
+      - content
+      - filename
+      type: object
+    CheckDomainBody:
+      properties:
+        dkim_settings:
+          description: 'Each item must include DKIM domain, selector and private key.
+
+            Up to 10 items are allowed.
+
+            '
+          items:
+            $ref: '#/components/schemas/DkimSetting'
+          maxItems: 10
+          type: array
+        domain:
+          description: 'Domain used for sending emails. If dkim_settings are not provided,
+            or dkim_settings are provided with no dkim_domain,
+
+            the stored dkim settings for this domain will be used.
+
+            '
+          type: string
+        sender_id:
+          description: 'Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown)
+            verification.
+
+            If you''re not using `senderid` to associate your domain with your account,
+            you can disregard this field.
+
+            The corresponding value is included in the X-MailChannels-SenderId header
+            of emails sent via MailChannels.
+
+            '
+          type: string
+      required:
+      - domain
+      type: object
+    CheckDomainResult:
+      properties:
+        check_results:
+          $ref: '#/components/schemas/CheckResults'
+        references:
+          description: Link to SPF, Domain Lockdown or DKIM references, displayed
+            if any verdict is not passed.
+          items:
+            type: string
+          type: array
+      type: object
+    CheckResults:
+      properties:
+        dkim:
+          items:
+            $ref: '#/components/schemas/DkimResult'
+          type: array
+        domain_lockdown:
+          $ref: '#/components/schemas/LockdownResult'
+        sender_domain:
+          $ref: '#/components/schemas/SenderDomainResult'
+        spf:
+          $ref: '#/components/schemas/SpfResult'
+      type: object
+    ContentItem:
+      properties:
+        template_type:
+          description: The template type of the content
+          enum:
+          - mustache
+          type: string
+        type:
+          description: The mime type of the content you are including in your email
+          type: string
+        value:
+          description: The actual content of the specified mime type that you are
+            including in the message
+          type: string
+      required:
+      - type
+      - value
+      type: object
+    DKIMDnsRecord:
+      description: 'Suggested DNS record for the DKIM key
+
+        '
+      nullable: true
+      properties:
+        name:
+          type: string
+        type:
+          example: TXT
+          type: string
+        value:
+          type: string
+      required:
+      - name
+      - type
+      - value
+      type: object
+    DKIMKeyInfo:
+      properties:
+        algorithm:
+          description: 'Algorithm used for the key pair
+
+            '
+          type: string
+        created_at:
+          description: 'Timestamp when the key pair was created
+
+            '
+          format: date-time
+          nullable: true
+          type: string
+        dkim_dns_records:
+          description: 'Suggested DNS records for the DKIM key
+
+            '
+          items:
+            $ref: '#/components/schemas/DKIMDnsRecord'
+          type: array
+        domain:
+          description: 'Domain associated with the key pair
+
+            '
+          type: string
+        key_length:
+          description: 'Key length in bits
+
+            '
+          type: integer
+        public_key:
+          type: string
+        selector:
+          description: 'Selector assigned to the key pair
+
+            '
+          type: string
+        status:
+          enum:
+          - active
+          - retired
+          - revoked
+          type: string
+        status_modified_at:
+          description: 'Timestamp when the key was last modified
+
+            '
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - domain
+      - selector
+      - public_key
+      - status
+      - algorithm
+      type: object
+    DKIMKeyList:
+      properties:
+        keys:
+          description: 'List of keys matching the filter.
+
+            Empty if no keys match the filter.
+
+            '
+          items:
+            $ref: '#/components/schemas/DKIMKeyInfo'
+          type: array
+      required:
+      - keys
+      type: object
+    DKIMKeyPairCreateRequest:
+      properties:
+        algorithm:
+          default: rsa
+          description: 'Algorithm used for the new key pair
+
+            Currently, only RSA is supported.
+
+            '
+          enum:
+          - rsa
+          type: string
+        key_length:
+          default: 2048
+          description: 'Key length in bits.
+
+            For RSA, must be a multiple of 1024. Common values: 1024 or 2048.
+
+            Defaults to 2048 bits.
+
+            '
+          maximum: 4096
+          minimum: 1024
+          type: integer
+        selector:
+          description: 'Selector for the new key pair
+
+            '
+          maxLength: 63
+          minLength: 1
+          type: string
+      required:
+      - selector
+      type: object
+    DKIMKeyPairUpdateRequest:
+      properties:
+        status:
+          description: 'New status of the DKIM key pair
+
+            '
+          enum:
+          - revoked
+          - retired
+          type: string
+      required:
+      - status
+      type: object
+    DkimResult:
+      properties:
+        dkim_domain:
+          type: string
+        dkim_key_status:
+          description: 'The human readable status of the DKIM key used for verification.
+
+            This field is only present if the DKIM check was performed using a DKIM
+            key managed by MailChannels.
+
+            If a DKIM key is present in the request, this field will not be included.
+
+            '
+          type: string
+        dkim_selector:
+          type: string
+        reason:
+          description: A human-readable explanation of DKIM check.
+          type: string
+        verdict:
+          enum:
+          - passed
+          - failed
+          type: string
+      type: object
+    DkimSetting:
+      description: 'Domain, selector and private key for DKIM signing. the absence
+        or presence of these
+
+        fields affects how DKIM settings are validated:
+
+        1. If dkim_domain, dkim_selector, and dkim_private_key are all present, verify
+        using the provided domain, selector, and key.
+
+        2. If dkim_domain and dkim_selector are present, use the stored private key
+        for the given domain and selector.
+
+        3. If only dkim_domain is present, use all stored keys for the given domain.
+
+        4. If none are present, use all stored keys for the domain provided in the
+        `domain` field of the request.
+
+        5. If dkim_private_key is present, dkim_selector must be present.
+
+        6. If dkim_selector is present and dkim_domain is not, the domain will be
+        taken from the `domain` field of the request.
+
+        '
+      properties:
+        dkim_domain:
+          description: 'The Signing Domain Identifier; the d= field in a DKIM-Signature
+            header
+
+            '
+          type: string
+        dkim_private_key:
+          description: 'Encoded in Base64.
+
+            '
+          type: string
+        dkim_selector:
+          type: string
+      type: object
+    EmailAddress:
+      properties:
+        email:
+          type: string
+        name:
+          description: "Display name in raw text, e.g. John Doe, \u5F20\u4E09"
+          type: string
+      required:
+      - email
+      type: object
+    ErrorResponse:
+      properties:
+        errors:
+          description: 'This is an array error objects that provide machine and human
+            readable descriptions of the errors.
+
+            '
+          items:
+            type: string
+          type: array
+      type: object
+    Key:
+      properties:
+        id:
+          type: string
+        key:
+          description: The public key used to verify webhook signatures
+          type: string
+      required:
+      - id
+      - key
+      type: object
+    Limit:
+      properties:
+        sends:
+          type: integer
+      required:
+      - sends
+      type: object
+    LimitInput:
+      properties:
+        sends:
+          minimum: 0
+          type: integer
+      required:
+      - sends
+      type: object
+    LimitUpdateResult:
+      properties:
+        limit:
+          $ref: '#/components/schemas/Limit'
+      type: object
+    LockdownResult:
+      properties:
+        reason:
+          description: 'A human-readable explanation of Domain Lockdown check.
+
+            '
+          type: string
+        verdict:
+          enum:
+          - passed
+          - failed
+          type: string
+      type: object
+    MailSendBody:
+      properties:
+        attachments:
+          items:
+            $ref: '#/components/schemas/Attachment'
+          maxItems: 1000
+          type: array
+        campaign_id:
+          description: 'The campaign identifier. If specified, this ID will be included
+            in all relevant webhooks. It can be up to 48 UTF-8 characters long and
+            must not contain spaces.
+
+            '
+          type: string
+        content:
+          items:
+            $ref: '#/components/schemas/ContentItem'
+          type: array
+        dkim_domain:
+          description: 'If set, you must also provide the matching dkim_selector.
+
+            '
+          type: string
+        dkim_private_key:
+          description: 'Encoded in Base64.
+
+            If set, you must also provide the matching dkim_domain and dkim_selector.
+
+            '
+          type: string
+        dkim_selector:
+          description: 'If set without a matching dkim_domain, the domain will be
+            taken from the `from` email address.
+
+            '
+          type: string
+        from:
+          $ref: '#/components/schemas/EmailAddress'
+        headers:
+          additionalProperties:
+            type: string
+          description: "A JSON object containing key-value pairs, where both keys\
+            \ (header names) and values must be strings.\nThese pairs represent custom\
+            \ headers to be substituted. Please note the following restrictions and\
+            \ behavior:\n- Reserved headers: The following headers cannot be modified:\n\
+            \  - Authentication-Results\n  - BCC\n  - CC\n  - Content-Transfer-Encoding\n\
+            \  - Content-Type\n  - DKIM-Signature\n  - From\n  - Message-ID\n  - Received\n\
+            \  - Reply-To\n  - Subject\n  - To\n- Header precedence: If a header is\
+            \ defined in both the personalizations object and the root headers,\n\
+            the value from personalizations will be used.\n- Case sensitivity: Headers\
+            \ are treated as case-insensitive. If multiple headers differ only by\
+            \ case,\nonly one will be used, with no guarantee of which one.\n"
+          type: object
+        personalizations:
+          items:
+            $ref: '#/components/schemas/Personalization'
+          maxItems: 1000
+          type: array
+        reply_to:
+          $ref: '#/components/schemas/EmailAddress'
+        subject:
+          type: string
+        tracking_settings:
+          description: 'Settings to adjust open and click tracking for the message.
+            Please note that
+
+            enabling tracking for your messages requires a subscription that supports
+            open
+
+            and click tracking.
+
+            '
+          properties:
+            click_tracking:
+              properties:
+                enable:
+                  default: false
+                  description: 'Setting to enable or disable click tracking for the
+                    message.
+
+                    This feature allows you to track when a recipient clicks a link
+                    in your email.
+
+                    '
+                  type: boolean
+              type: object
+            open_tracking:
+              properties:
+                enable:
+                  default: false
+                  description: 'Setting to enable or disable open tracking for the
+                    message.
+
+                    This feature allows you to track when a recipient opens your email.
+
+                    Please note that some email clients may not support open tracking.
+
+                    '
+                  type: boolean
+              type: object
+          type: object
+        transactional:
+          default: true
+          description: "Mark these messages as transactional or non-transactional.\n\
+            In order for a message to be marked as non-transactional,\nit must have\
+            \ exactly one recipient per personalization,\nand it must be DKIM signed.\
+            \ 400 Bad Request will be returned\nif there are more than one recipient\
+            \ in any personalization for\nnon-transactional messages.\nIf a message\
+            \ is marked as non-transactional, it changes the sending process as follows:\n\
+            \  * List-Unsubscribe headers will be added.\n"
+          nullable: true
+          type: boolean
+      required:
+      - personalizations
+      - from
+      - subject
+      - content
+      type: object
+    Message:
+      properties:
+        data:
+          description: a string representation of a rendered message, one per personalization
+            in the request
+          items:
+            type: string
+          type: array
+      type: object
+    MetricsBucket:
+      description: 'Represents a time-based bucket for aggregating metrics data.
+
+        Each bucket corresponds to a specific time interval, with the `period_start`
+        indicating the beginning of that interval.
+
+        The `count` field represents the number of events or occurrences that fall
+        within that time period.
+
+        '
+      properties:
+        count:
+          description: The number of events or occurrences aggregated within this
+            time period.
+          minimum: 0
+          type: integer
+        period_start:
+          description: The starting date and time of the time period this bucket represents.
+          format: date-time
+          type: string
+      required:
+      - period_start
+      - count
+      type: object
+    MetricsEngagement:
+      properties:
+        buckets:
+          properties:
+            click:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            click_tracking_delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            open:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            open_tracking_delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+          required:
+          - open
+          - open_tracking_delivered
+          - click
+          - click_tracking_delivered
+          type: object
+        click:
+          description: 'Count of click events by recipients.
+
+            '
+          minimum: 0
+          type: integer
+        click_tracking_delivered:
+          description: 'Count of recipients of delivered messages with HTML content
+            that contains tracked click URLs,
+
+            where click tracking is enabled in the send request.
+
+            '
+          minimum: 0
+          type: integer
+        end_time:
+          description: 'The end of the time range for retrieving message engagement
+            metrics (exclusive).
+
+            '
+          format: date-time
+          type: string
+        open:
+          description: 'Count of open events by recipients.
+
+            '
+          minimum: 0
+          type: integer
+        open_tracking_delivered:
+          description: 'Count of recipients of delivered messages with HTML content
+            where open tracking was enabled
+
+            in the send request.
+
+            '
+          minimum: 0
+          type: integer
+        start_time:
+          description: 'The beginning of the time range for retrieving message engagement
+            metrics (inclusive).
+
+            '
+          format: date-time
+          type: string
+      required:
+      - open
+      - open_tracking_delivered
+      - click
+      - click_tracking_delivered
+      - buckets
+      type: object
+    MetricsPerformance:
+      properties:
+        bounced:
+          description: 'Count of messages bounced during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        buckets:
+          properties:
+            bounced:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            processed:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+          required:
+          - delivered
+          - bounced
+          - processed
+          type: object
+        delivered:
+          description: 'Count of messages delivered during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        end_time:
+          description: The end of the time range for retrieving message performance
+            metrics (exclusive).
+          format: date-time
+          type: string
+        processed:
+          description: 'Count of messages processed during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        start_time:
+          description: 'The beginning of the time range for retrieving message performance
+            metrics (inclusive).
+
+            '
+          format: date-time
+          type: string
+      required:
+      - delivered
+      - bounced
+      - processed
+      - buckets
+      type: object
+    MetricsRecipientBehaviour:
+      properties:
+        buckets:
+          properties:
+            unsubscribe_delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            unsubscribed:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+          required:
+          - unsubscribed
+          - unsubscribe_delivered
+          type: object
+        end_time:
+          description: 'The end of the time range for retrieving recipient behaviour
+            metrics (exclusive).
+
+            '
+          format: date-time
+          type: string
+        start_time:
+          description: 'The beginning of the time range for retrieving recipient behaviour
+            metrics (inclusive).
+
+            '
+          format: date-time
+          type: string
+        unsubscribe_delivered:
+          description: 'Count of recipients of delivered messages that include at
+            least one of the unsubscribe link
+
+            or unsubscribe headers. Since the unsubscribe feature requires exactly
+            one recipient per message,
+
+            this count also represents the total number of delivered messages.
+
+            '
+          minimum: 0
+          type: integer
+        unsubscribed:
+          description: 'Count of unsubscribed events by recipients.
+
+            '
+          minimum: 0
+          type: integer
+      required:
+      - unsubscribed
+      - unsubscribe_delivered
+      - buckets
+      type: object
+    MetricsVolume:
+      properties:
+        buckets:
+          properties:
+            delivered:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            dropped:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+            processed:
+              items:
+                $ref: '#/components/schemas/MetricsBucket'
+              type: array
+          required:
+          - processed
+          - delivered
+          - dropped
+          type: object
+        delivered:
+          description: 'Count of messages delivered during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        dropped:
+          description: 'Count of messages dropped during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        end_time:
+          description: 'The end of the time range for retrieving message volume metrics
+            (exclusive).
+
+            '
+          format: date-time
+          type: string
+        processed:
+          description: 'Count of messages processed during the specified time range.
+
+            '
+          minimum: 0
+          type: integer
+        start_time:
+          description: 'The beginning of the time range for retrieving message volume
+            metrics (inclusive).
+
+            '
+          format: date-time
+          type: string
+      required:
+      - processed
+      - delivered
+      - dropped
+      - buckets
+      type: object
+    Personalization:
+      properties:
+        bcc:
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          maxItems: 1000
+          type: array
+        cc:
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          maxItems: 1000
+          type: array
+        dkim_domain:
+          description: 'If set, you must also provide the matching dkim_selector.
+
+            '
+          type: string
+        dkim_private_key:
+          description: 'Encoded in Base64.
+
+            If set, you must also provide the matching dkim_domain and dkim_selector.
+
+            '
+          type: string
+        dkim_selector:
+          description: 'If set without a matching dkim_domain, the domain will be
+            taken from the `from` email address.
+
+            '
+          type: string
+        dynamic_template_data:
+          description: 'A JSON object containing key-value pairs of variables to set
+            for template rendering.
+
+            Keys must be strings, and values can be one of the following types:
+
+            * string
+
+            * boolean
+
+            * number
+
+            * list, whose values are all of permitted types
+
+            * map, whose keys must be strings, and whose values are all of permitted
+            types
+
+            '
+          type: object
+        from:
+          $ref: '#/components/schemas/EmailAddress'
+        headers:
+          additionalProperties:
+            type: string
+          description: "A JSON object containing key-value pairs, where both keys\
+            \ (header names) and values must be strings.\nThese pairs represent custom\
+            \ headers to be substituted. Please note the following restrictions and\
+            \ behavior:\n- Reserved headers: The following headers cannot be modified:\n\
+            \  - Authentication-Results\n  - BCC\n  - CC\n  - Content-Transfer-Encoding\n\
+            \  - Content-Type\n  - DKIM-Signature\n  - From\n  - Message-ID\n  - Received\n\
+            \  - Reply-To\n  - Subject\n  - To\n- Header precedence: If a header is\
+            \ defined in both the personalizations object and the root headers,\n\
+            the value from personalizations will be used.\n- Case sensitivity: Headers\
+            \ are treated as case-insensitive. If multiple headers differ only by\
+            \ case,\nonly one will be used, with no guarantee of which one.\n"
+          type: object
+        reply_to:
+          $ref: '#/components/schemas/EmailAddress'
+        subject:
+          type: string
+        to:
+          items:
+            $ref: '#/components/schemas/EmailAddress'
+          maxItems: 1000
+          minItems: 1
+          type: array
+      required:
+      - to
+    SMTPPassword:
+      properties:
+        enabled:
+          description: Whether the SMTP password is enabled
+          type: boolean
+        id:
+          description: The SMTP password ID for the sub-account
+          type: integer
+        smtp_password:
+          description: SMTP password for the sub-account
+          type: string
+      type: object
+    SendResult:
+      properties:
+        index:
+          description: 'The index of the personalization in the request. Starts at
+            0.
+
+            '
+          type: integer
+        message_id:
+          description: 'The Message ID is a unique identifier generated by the service.
+
+            Each personalization has a distinct Message ID, which is also used in
+            the `Message-Id` header and included in webhooks.
+
+            '
+          type: string
+        reason:
+          description: A human-readable explanation of the status.
+          type: string
+        status:
+          description: 'The status of the message.
+
+            Note that ''sent'' is a temporary status; the final status will be provided
+            through webhooks, if configured.
+
+            '
+          enum:
+          - sent
+          - failed
+          type: string
+      type: object
+    SendResults:
+      properties:
+        request_id:
+          description: 'The Request ID is a unique identifier generated by the service
+            to track the HTTP request.
+
+            It will also be included in all webhooks for reference.
+
+            '
+          type: string
+        results:
+          description: 'A list of results for each message sent.
+
+            '
+          items:
+            $ref: '#/components/schemas/SendResult'
+          type: array
+      type: object
+    SenderDomainResult:
+      description: 'These results are here to help avoid SDNF (Sender Domain Not Found)
+        blocks.
+
+        For messages not to get blocked by [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found),
+
+        we require either an MX or A record to exist for the sender domain.
+
+        '
+      properties:
+        a:
+          properties:
+            reason:
+              description: 'A human-readable explanation of A record check.
+
+                '
+              type: string
+            verdict:
+              enum:
+              - passed
+              - failed
+              type: string
+          type: object
+        mx:
+          properties:
+            reason:
+              description: 'A human-readable explanation of MX record check.
+
+                '
+              type: string
+            verdict:
+              enum:
+              - passed
+              - failed
+              type: string
+          type: object
+        verdict:
+          description: Overall verdict. Passed if either A or MX record check passed.
+          enum:
+          - passed
+          - failed
+          type: string
+      type: object
+    SpfResult:
+      properties:
+        reason:
+          description: 'A human-readable explanation of SPF check.
+
+            '
+          type: string
+        verdict:
+          enum:
+          - passed
+          - failed
+          - soft failed
+          - temporary error
+          - permanent error
+          - neutral
+          - none
+          - unknown
+          type: string
+      type: object
+    SubAccountData:
+      properties:
+        company_name:
+          description: 'The name of the company associated with the sub-account.
+
+            This name is used for display purposes only and does not affect the functionality
+            of the sub-account.
+
+            The length must be between 3 and 128 characters.
+
+            '
+          type: string
+        handle:
+          description: 'A unique name for the sub-account to be created.
+
+            The length must be between 3 and 128 characters, and it may contain only
+            lowercase letters and numbers.
+
+            If not provided, a random handle will be generated.
+
+            '
+          type: string
+      required:
+      - company_name
+      type: object
+    SubAccountDetails:
+      properties:
+        company_name:
+          type: string
+        enabled:
+          type: boolean
+        handle:
+          type: string
+      required:
+      - handle
+      - enabled
+      type: object
+    SuppressionEntry:
+      properties:
+        notes:
+          maxLength: 1024
+          nullable: true
+          type: string
+        recipient:
+          maxLength: 255
+          type: string
+        suppression_types:
+          items:
+            enum:
+            - transactional
+            - non-transactional
+            type: string
+          type: array
+      required:
+      - recipient
+      type: object
+    SuppressionEntryResponse:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        notes:
+          maxLength: 1024
+          nullable: true
+          type: string
+        recipient:
+          maxLength: 255
+          type: string
+        sender:
+          nullable: true
+          type: string
+        source:
+          enum:
+          - api
+          - unsubscribe_link
+          - list_unsubscribe
+          - hard_bounce
+          - spam_complaint
+          type: string
+        suppression_types:
+          items:
+            enum:
+            - transactional
+            - non-transactional
+            type: string
+          type: array
+      required:
+      - recipient
+      type: object
+    SuppressionListInput:
+      properties:
+        add_to_sub_accounts:
+          default: false
+          description: 'If true, the parent account creates suppression entries for
+            all associated sub-accounts.
+
+            This field is only applicable to parent accounts.
+
+            Sub-accounts cannot create entries for other sub-accounts.
+
+            '
+          type: boolean
+        suppression_entries:
+          description: The total number of suppression entries to create, for the
+            parent and/or its sub-accounts, must not exceed 1000.
+          items:
+            $ref: '#/components/schemas/SuppressionEntry'
+          type: array
+      required:
+      - suppression_entries
+      type: object
+    SuppressionListResponse:
+      properties:
+        suppression_list:
+          items:
+            $ref: '#/components/schemas/SuppressionEntryResponse'
+          maxItems: 1000
+          type: array
+      required:
+      - suppression_list
+      type: object
+    UsageStats:
+      properties:
+        period_end_date:
+          description: The end date of the current billing period (ISO 8601 format).
+          example: '2025-04-11'
+          format: date
+          type: string
+        period_start_date:
+          description: The start date of the current billing period (ISO 8601 format).
+          example: '2025-03-12'
+          format: date
+          type: string
+        total_usage:
+          description: The total usage for the current billing period.
+          example: 5000
+          format: int64
+          type: integer
+      required:
+      - total_usage
+      type: object
+    Webhook:
+      properties:
+        webhook:
+          description: A customer's webhook that events will be sent to
+          type: string
+      required:
+      - webhook
+      type: object
+    WebhookResponse:
+      description: 'The HTTP response returned by the webhook, including status code
+        and response body.
+
+        A null value indicates no response was received.
+
+        Possible reasons include timeouts, connection failures, or other network-related
+        issues.
+
+        '
+      nullable: true
+      properties:
+        body:
+          description: 'Response body from webhook.
+
+            Returns an error if unprocessable or too large.
+
+            '
+          type: string
+        status:
+          description: 'HTTP status code returned by the webhook
+
+            '
+          example: 200
+          type: integer
+      required:
+      - status
+      type: object
+    WebhookValidationRequestBody:
+      properties:
+        request_id:
+          description: 'Optional identifier in the webhook payload.
+
+            If not provided, a value will be automatically generated.
+
+            '
+          maxLength: 28
+          type: string
+      type: object
+    WebhookValidationResult:
+      properties:
+        response:
+          $ref: '#/components/schemas/WebhookResponse'
+        result:
+          description: 'Indicates whether the webhook responded with a 2xx HTTP status
+            code
+
+            '
+          enum:
+          - passed
+          - failed
+          type: string
+        webhook:
+          description: 'The webhook that was validated
+
+            '
+          type: string
+      required:
+      - result
+      - webhook
+      - response
+      type: object
+    WebhookValidationResults:
+      properties:
+        all_passed:
+          description: 'Indicates whether all webhook validations passed
+
+            '
+          type: boolean
+        results:
+          description: 'Detailed results for each tested webhook, including whether
+            it returned a 2xx status code,
+
+            along with its response status code and body.
+
+            '
+          items:
+            $ref: '#/components/schemas/WebhookValidationResult'
+          type: array
+      required:
+      - all_passed
+      - results
+      type: object
+info:
+  contact:
+    email: support@mailchannels.com
+    name: MailChannels Corporation
+  description: 'This is the API reference for Email API. Here, you''ll find more detailed
+    information on every endpoint, including parameters, response formats, and error
+    codes.
+
+    '
+  title: Email API
+  version: 0.13.0
+openapi: 3.0.0
+paths:
+  /check-domain:
+    post:
+      description: 'Validates a domain''s email authentication setup by retrieving
+        its DKIM, SPF, and Domain Lockdown status.
+
+        This endpoint checks whether the domain is properly configured for secure
+        email delivery.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckDomainBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckDomainResult'
+          description: Success.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '403':
+          description: User does not have access to this feature
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal Server Error
+      summary: DKIM, SPF & Domain Lockdown Check
+  /domains/{domain}/dkim-keys:
+    get:
+      description: 'Search for DKIM keys by customer handle and domain, with optional
+        filters.
+
+        If selector is provided, at most one key will be returned.
+
+        '
+      parameters:
+      - in: path
+        name: domain
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: selector
+        required: false
+        schema:
+          maxLength: 63
+          minLength: 1
+          type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - active
+          - retired
+          - revoked
+          type: string
+      - description: 'Number of keys to skip before returning results.
+
+          The default is 0.
+
+          '
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+      - description: 'Maximum number of keys to return.
+
+          The default is 10.
+
+          '
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          maximum: 100
+          minimum: 1
+          type: integer
+      - description: 'If true, includes the suggested DKIM DNS record for each returned
+          key.
+
+          Defaults to false.
+
+          '
+        in: query
+        name: include_dns_record
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DKIMKeyList'
+          description: Successfully retrieved DKIM keys
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      summary: Retrieve DKIM Keys
+    post:
+      description: 'Create a DKIM key pair for a specified domain and selector using
+        the specified algorithm and key length,
+
+        for the current customer.
+
+        '
+      parameters:
+      - in: path
+        name: domain
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DKIMKeyPairCreateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DKIMKeyInfo'
+          description: Key pair created successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '409':
+          description: 'Key pair already created for customer_handle, domain, and
+            selector
+
+            '
+        '500':
+          description: Internal Server Error
+      summary: Create DKIM Key Pair
+  /domains/{domain}/dkim-keys/{selector}:
+    patch:
+      description: 'Update fields of an existing DKIM key pair for the specified domain
+        and selector, for the current customer.
+
+        Currently, only the status field can be updated.
+
+        revoked: Indicates that the key is compromised and should not be used.
+
+        retired: Indicates that the key has been rotated and is no longer in use.
+
+        '
+      parameters:
+      - in: path
+        name: domain
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: selector
+        required: true
+        schema:
+          maxLength: 63
+          minLength: 1
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DKIMKeyPairUpdateRequest'
+        required: true
+      responses:
+        '204':
+          description: Key pair status updated successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Status not supported
+        '404':
+          description: Specified key pair not found, or the DKIM domain or selector
+            path parameter is missing
+        '500':
+          description: Internal Server Error
+      summary: Update DKIM Key Status
+  /metrics/engagement:
+    get:
+      description: 'Retrieve engagement metrics for messages sent from your account,
+
+        including counts of open and click events.
+
+        Supports optional filters for time range, and campaign ID.
+
+        '
+      parameters:
+      - description: 'The beginning of the time range for retrieving message engagement
+          metrics (inclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to one month ago if not provided.
+
+          '
+        example: '2025-05-26'
+        in: query
+        name: start_time
+        required: false
+        schema:
+          type: string
+      - description: 'The end of the time range for retrieving message engagement
+          metrics (exclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to the current time if not provided.
+
+          '
+        example: '2025-05-31T15:16:17Z'
+        in: query
+        name: end_time
+        required: false
+        schema:
+          type: string
+      - description: 'The ID of the campaign to filter metrics by.
+
+          If not provided, metrics for all campaigns will be returned.
+
+          '
+        in: query
+        name: campaign_id
+        required: false
+        schema:
+          type: string
+      - description: "The interval for aggregating metrics data. Allowed values:\n\
+          \  - hour: Hourly breakdown\n  - day: Daily breakdown (default)\n  - week:\
+          \ Weekly breakdown\n  - month: Monthly breakdown\n"
+        in: query
+        name: interval
+        required: false
+        schema:
+          default: day
+          enum:
+          - hour
+          - day
+          - week
+          - month
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsEngagement'
+          description: 'Successfully retrieved engagement metrics
+
+            '
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Engagement Metrics
+  /metrics/performance:
+    get:
+      description: 'Retrieve performance metrics for messages sent from your account,
+
+        including counts of processed, delivered, hard-bounced events.
+
+        Supports optional filters for time range, and campaign ID.
+
+        '
+      parameters:
+      - description: 'The beginning of the time range for retrieving message performance
+          metrics (inclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to one month ago if not provided.
+
+          '
+        example: '2025-05-26'
+        in: query
+        name: start_time
+        required: false
+        schema:
+          type: string
+      - description: 'The end of the time range for retrieving message performance
+          metrics (exclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to the current time if not provided.
+
+          '
+        example: '2025-05-31T15:16:17Z'
+        in: query
+        name: end_time
+        required: false
+        schema:
+          type: string
+      - description: 'The ID of the campaign to filter metrics by.
+
+          If not provided, metrics for all campaigns will be returned.
+
+          '
+        in: query
+        name: campaign_id
+        required: false
+        schema:
+          type: string
+      - description: "The interval for aggregating metrics data. Allowed values:\n\
+          \  - hour: Hourly breakdown\n  - day: Daily breakdown (default)\n  - week:\
+          \ Weekly breakdown\n  - month: Monthly breakdown\n"
+        in: query
+        name: interval
+        required: false
+        schema:
+          default: day
+          enum:
+          - hour
+          - day
+          - week
+          - month
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsPerformance'
+          description: 'Successfully retrieved performance metrics
+
+            '
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Performance Metrics
+  /metrics/recipient-behaviour:
+    get:
+      description: 'Retrieve recipient behaviour metrics for messages sent from your
+        account,
+
+        including counts of unsubscribed events.
+
+        Supports optional filters for time range, and campaign ID.
+
+        '
+      parameters:
+      - description: 'The beginning of the time range for retrieving recipient behaviour
+          metrics (inclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to one month ago if not provided.
+
+          '
+        example: '2025-05-26'
+        in: query
+        name: start_time
+        required: false
+        schema:
+          type: string
+      - description: 'The end of the time range for retrieving recipient behaviour
+          metrics (exclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to the current time if not provided.
+
+          '
+        example: '2025-05-31T15:16:17Z'
+        in: query
+        name: end_time
+        required: false
+        schema:
+          type: string
+      - description: 'The ID of the campaign to filter metrics by.
+
+          If not provided, metrics for all campaigns will be returned.
+
+          '
+        in: query
+        name: campaign_id
+        required: false
+        schema:
+          type: string
+      - description: "The interval for aggregating metrics data. Allowed values:\n\
+          \  - hour: Hourly breakdown\n  - day: Daily breakdown (default)\n  - week:\
+          \ Weekly breakdown\n  - month: Monthly breakdown\n"
+        in: query
+        name: interval
+        required: false
+        schema:
+          default: day
+          enum:
+          - hour
+          - day
+          - week
+          - month
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsRecipientBehaviour'
+          description: 'Successfully retrieved recipient behaviour metrics
+
+            '
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Recipient Behaviour Metrics
+  /metrics/volume:
+    get:
+      description: 'Retrieve volume metrics for messages sent from your account,
+
+        including counts of processed, delivered and dropped events.
+
+        Supports optional filters for time range and campaign ID.
+
+        '
+      parameters:
+      - description: 'The beginning of the time range for retrieving message volume
+          metrics (inclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to one month ago if not provided.
+
+          '
+        example: '2025-05-26'
+        in: query
+        name: start_time
+        required: false
+        schema:
+          type: string
+      - description: 'The end of the time range for retrieving message volume metrics
+          (exclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ.
+
+          Defaults to the current time if not provided.
+
+          '
+        example: '2025-05-31T15:16:17Z'
+        in: query
+        name: end_time
+        required: false
+        schema:
+          type: string
+      - description: 'The ID of the campaign to filter metrics by.
+
+          If not provided, metrics for all campaigns will be returned.
+
+          '
+        in: query
+        name: campaign_id
+        required: false
+        schema:
+          type: string
+      - description: "The interval for aggregating metrics data. Allowed values:\n\
+          \  - hour: Hourly breakdown\n  - day: Daily breakdown (default)\n  - week:\
+          \ Weekly breakdown\n  - month: Monthly breakdown\n"
+        in: query
+        name: interval
+        required: false
+        schema:
+          default: day
+          enum:
+          - hour
+          - day
+          - week
+          - month
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsVolume'
+          description: 'Successfully retrieved volume metrics
+
+            '
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Volume Metrics
+  /send:
+    post:
+      description: 'Sends an email message to one or more recipients.
+
+
+        **Click Tracking Notes:**
+
+        Only links (`<a>` tags) meeting all of the following conditions are processed
+        for click tracking:
+
+        - The URL is non-empty.
+
+        - The URL starts with "http" or "https".
+
+        - The link does not have a clicktracking attribute set to ''off''.
+
+        '
+      parameters:
+      - description: 'When present and set to true, the message will not be sent.
+          Instead, the fully rendered
+
+          message is returned. This can be useful for testing.
+
+          '
+        in: query
+        name: dry-run
+        required: false
+        schema:
+          type: boolean
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailSendBody'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: Success. Returned if dry-run is present in the query
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendResults'
+          description: Success
+        '400':
+          description: Bad Request
+        '403':
+          description: User does not have access to this feature
+        '413':
+          description: 'Payload too large - The total message size should not exceed
+            30MB.
+
+            This includes the message itself, headers, and the combined size of any
+            attachments.
+
+            '
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal Server Error
+        '502':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Gateway
+      summary: Send an Email
+  /sub-account:
+    get:
+      description: 'Retrieves all sub-accounts associated with the parent account.
+
+        The response is paginated with a default limit of 1000 sub-accounts per page
+        and an offset of 0.
+
+        '
+      parameters:
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 1000
+          description: The maximum number of sub-accounts to return. The default is
+            1000.
+          maximum: 1000
+          minimum: 1
+          type: integer
+      - in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: The number of sub-accounts to skip before returning results.
+            The default is 0.
+          minimum: 0
+          type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SubAccountDetails'
+                maxItems: 1000
+                type: array
+          description: Successfully retrieved all sub-accounts associated with the
+            parent account.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request. The limit and/or offset query parameter are invalid.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Retrieve Sub-accounts
+    post:
+      description: 'Creates a new sub-account under the parent account.
+
+        Each sub-account must have a unique handle composed solely of lowercase alphanumeric
+        characters.
+
+        If no handle is provided, a random handle will be generated.
+
+        Note that Sub-accounts are only available to parent accounts on 100K and higher
+        plans.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubAccountData'
+        description: The details of the sub-account to create.
+        required: false
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubAccountDetails'
+          description: The sub-account was successfully created.
+        '400':
+          description: Malformed request. The request body is invalid.
+        '403':
+          description: The operation is forbidden. The parent account does not have
+            permission to create sub-accounts.
+        '409':
+          description: A sub-account with the specified name already exists.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Create Sub-account
+  /sub-account/{handle}:
+    delete:
+      description: Deletes the sub-account identified by its handle.
+      parameters:
+      - description: Handle of sub-account to be deleted.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The specified sub-account(s) were successfully deleted.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Delete Sub-account
+  /sub-account/{handle}/activate:
+    post:
+      description: 'Activates a suspended sub-account identified by its handle, restoring
+        its ability to send emails.
+
+        '
+      parameters:
+      - description: Handle of sub-account to be activated.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The specified sub-account is successfully activated.
+        '403':
+          description: The operation is forbidden. The parent account does not have
+            permission to activate the sub-account.
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Activate Sub-account
+  /sub-account/{handle}/api-key:
+    get:
+      description: 'Retrieves details of all API keys associated with the specified
+        sub-account.
+
+        For security reasons, the full API key is **not** returned; only the key ID
+        and a partially redacted version are provided.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to retrieve the API key for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 100
+          description: The maximum number of API keys to return. The default is 100.
+          maximum: 1000
+          minimum: 1
+          type: integer
+      - in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          description: The number of API keys to skip before returning results. The
+            default is 0.
+          minimum: 0
+          type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/APIKey'
+                maxItems: 1000
+                type: array
+          description: Successfully retrieved the API key for the specified sub-account.
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Retrieve Sub-account API Keys
+    post:
+      description: 'Creates a new API key for the specified sub-account.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to create API key for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIKey'
+          description: 'A new API key was successfully created for the specified sub-account.
+
+            '
+        '403':
+          description: 'The operation is forbidden. You can''t create API keys for
+            this sub-account.
+
+            '
+        '404':
+          description: 'The specified sub-account does not exist.
+
+            '
+        '422':
+          description: 'You have reached the limit of API keys you can create for
+            this sub-account.
+
+            '
+        '500':
+          description: 'An unexpected internal error occurred.
+
+            '
+      summary: Create Sub-account API Key
+  /sub-account/{handle}/api-key/{id}:
+    delete:
+      description: 'Deletes the API key identified by its ID for the specified sub-account.
+
+        '
+      parameters:
+      - description: 'Handle of the sub-account for which the API key should be deleted.
+
+          '
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - description: The ID of the API key to delete.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: 'The API key was successfully deleted for the sub-account.
+
+            '
+        '400':
+          description: 'Missing or invalid API key ID.
+
+            '
+        '500':
+          description: 'An unexpected internal error occurred.
+
+            '
+      summary: Delete Sub-account API Key
+  /sub-account/{handle}/limit:
+    delete:
+      description: 'Deletes the limit for the specified sub-account.
+
+        After a successful deletion, the specified sub-account will be
+
+        limited to the parent account''s limit.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to delete limit for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The limit was successfully deleted for the sub-account.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Delete Sub-account Limit
+    get:
+      description: 'Retrieves the limit of a specified sub-account.
+
+        A value of -1 indicates that the sub-account inherits the parent account''s
+        limit,
+
+        allowing the sub-account to utilize any remaining capacity within the parent
+        account''s allocation.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to retrieve the limit for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Limit'
+          description: Successfully retrieved the limit for the specified sub-account.
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Retrieve Sub-account Limit
+    put:
+      description: 'Sets the limit for the specified sub-account.
+
+        The minimum allowed sends is 0.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to set limit for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LimitInput'
+        description: The value the sub-account limit to set.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LimitUpdateResult'
+          description: The limit was successfully updated for the specified sub-account.
+        '400':
+          description: 'Missing or invalid limit value.
+
+            '
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Set Sub-account Limit
+  /sub-account/{handle}/smtp-password:
+    get:
+      description: 'Retrieves details of all SMTP passwords associated with the specified
+        sub-account.
+
+        For security, the full SMTP password is **not** returned; only the password
+        ID and a partially redacted version are provided.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to retrieve the SMTP password for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/SMTPPassword'
+                type: array
+          description: Successfully retrieved the SMTP password for the specified
+            sub-account.
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Retrieve Sub-account SMTP Passwords
+    post:
+      description: 'Creates a new SMTP password for the specified sub-account.
+
+        '
+      parameters:
+      - description: Handle of the sub-account to create SMTP password for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SMTPPassword'
+          description: A new SMTP password was successfully created for the specified
+            sub-account.
+        '403':
+          description: 'The operation is forbidden. You can''t create SMTP passwords
+            for this sub-account.
+
+            '
+        '404':
+          description: The specified sub-account does not exist.
+        '422':
+          description: 'You have reached the limit of SMTP passwords you can create
+            for this sub-account.
+
+            '
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Create Sub-account SMTP Password
+  /sub-account/{handle}/smtp-password/{id}:
+    delete:
+      description: 'Deletes the SMTP password identified by its ID for the specified
+        sub-account.
+
+        '
+      parameters:
+      - description: Handle of the sub-account for which the SMTP password should
+          be deleted.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - description: The ID of the SMTP password to delete.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The specified SMTP password was successfully deleted for the
+            sub-account.
+        '400':
+          description: Missing or invalid SMTP password ID.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Delete Sub-account SMTP Password
+  /sub-account/{handle}/suspend:
+    post:
+      description: 'Suspends the sub-account identified by its handle.
+
+        This action disables the account, preventing it from sending any emails until
+        it is reactivated.
+
+        '
+      parameters:
+      - description: Handle of sub-account to be suspended.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The specified sub-account is successfully suspended.
+        '404':
+          description: The specified sub-account does not exist.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Suspend Sub-account
+  /sub-account/{handle}/usage:
+    get:
+      description: Retrieves usage statistics for the specified sub-account during
+        the current billing period.
+      parameters:
+      - description: Handle of the sub-account to query usage stats for.
+        in: path
+        name: handle
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStats'
+          description: Successfully returned the usage stats.
+        '404':
+          description: Sub-account not found
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Sub-account Usage Stats
+  /suppression-list:
+    get:
+      description: 'Retrieve suppression entries associated with the specified account.
+
+        Supports filtering by recipient, source and creation date range.
+
+        The response is paginated, with a default limit of 1000 entries per page and
+        an offset of 0.
+
+        '
+      parameters:
+      - in: query
+        name: recipient
+        required: false
+        schema:
+          maxLength: 255
+          type: string
+      - in: query
+        name: source
+        required: false
+        schema:
+          enum:
+          - api
+          - unsubscribe_link
+          - list_unsubscribe
+          - hard_bounce
+          - spam_complaint
+          type: string
+      - description: 'The date and/or time before which the suppression entries were
+          created.
+
+          Format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ
+
+          '
+        in: query
+        name: created_before
+        required: false
+        schema:
+          type: string
+      - description: 'The date and/or time after which the suppression entries were
+          created.
+
+          Format: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ
+
+          '
+        in: query
+        name: created_after
+        required: false
+        schema:
+          type: string
+      - description: 'The maximum number of suppression entries to return. The default
+          is 1000.
+
+          '
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 1000
+          maximum: 1000
+          minimum: 1
+          type: integer
+      - description: 'The number of suppression entries to skip before returning results.
+          The default is 0.
+
+          '
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuppressionListResponse'
+          description: Successfully retrieved all suppression entries associated with
+            the account.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request. The request is invalid.
+        '500':
+          description: An unexpected internal error occurred.
+      summary: Retrieve Suppression List
+    post:
+      description: 'Creates suppression entries for the specified account.
+
+        Parent accounts can create suppression entries for all associated sub-accounts.
+
+        If suppression_type is not provided, it defaults to ''non-transactional''.
+
+        The operation is atomic, meaning all entries are successfully added or none
+        are added if an error occurs.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuppressionListInput'
+        description: The details of the suppression entries to create.
+        required: true
+      responses:
+        '201':
+          description: All suppression entries were successfully created.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request. The request body is invalid.
+        '409':
+          description: 'Conflicts.
+
+            One or more suppression entries in the request already exist and
+
+            cannot be created again.
+
+            '
+        '413':
+          description: 'Payload too large.
+
+            The request exceeds the maximum allowed total of 1000 suppression entries
+
+            for the parent account and/or its sub-accounts.
+
+            '
+        '500':
+          description: An unexpected internal error occurred.
+        '503':
+          description: Temporarily unavailable for maintenance.
+      summary: Create Suppression Entries
+  /suppression-list/recipients/{recipient}:
+    delete:
+      description: 'Deletes suppression entry associated with the account based on
+        the specified recipient and source.
+
+        If source is not provided, it defaults to ''api''.
+
+        If source is set to ''all'', all suppression entries related to the specified
+
+        recipient will be deleted.
+
+        '
+      parameters:
+      - in: path
+        name: recipient
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: source
+        required: false
+        schema:
+          default: api
+          enum:
+          - api
+          - unsubscribe_link
+          - list_unsubscribe
+          - hard_bounce
+          - spam_complaint
+          - all
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The specified suppression entry was successfully deleted.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad request. The request is invalid.
+        '500':
+          description: An unexpected internal error occurred.
+        '503':
+          description: Temporarily unavailable for maintenance.
+      summary: Delete Suppression Entry
+  /usage:
+    get:
+      description: Retrieves usage statistics during the current billing period.
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageStats'
+          description: Successfully returned the usage stats.
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Usage Stats
+  /webhook:
+    delete:
+      description: 'Deletes all registered webhook endpoints for the customer.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Successfully removed webhook endpoint(s)
+        '500':
+          description: Internal Server Error
+      summary: Delete Customer Webhooks
+    get:
+      description: 'Retrieves all registered webhook endpoints associated with the
+        customer.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Webhook'
+                type: array
+          description: Successfully returning customer's webhooks
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Customer Webhooks
+    post:
+      description: 'Enrolls the customer to receive event notifications via webhooks.
+
+        '
+      parameters:
+      - description: the URL to which the webhook should be sent
+        in: query
+        name: endpoint
+        required: true
+        schema:
+          maxLength: 8000
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: Successfully enrolled customer to receive webhooks
+        '400':
+          description: Bad Request
+        '409':
+          description: There's already a webhook endpoint for this customer
+        '500':
+          description: Internal Server Error
+      summary: Enroll for Webhook Notifications
+  /webhook/public-key:
+    get:
+      description: 'Retrieves the public key used to verify signatures on incoming
+        webhook payloads.
+
+        '
+      parameters:
+      - description: the ID of the key
+        in: query
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Key'
+          description: Successfully return the webhook signing key
+        '404':
+          description: The key is not found
+        '500':
+          description: Internal Server Error
+      summary: Retrieve Webhook Signing Key
+  /webhook/validate:
+    post:
+      description: 'Validates whether your enrolled webhook(s) respond with an HTTP
+        2xx status code.
+
+        Sends a test request to each webhook containing your customer handle,
+
+        a hardcoded event type(test), a hardcoded sender email(test@mailchannels.com),a
+        timestamp,
+
+        a request ID (provided or generated), and an SMTP ID.
+
+        The response includes the HTTP status code and body returned by each webhook.
+
+        '
+      parameters:
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookValidationRequestBody'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookValidationResults'
+          description: 'Webhook validation completed
+
+            '
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request. Provided request ID is too long.
+        '404':
+          description: No webhooks found for the account
+        '500':
+          description: Internal Server Error
+      summary: Validate Enrolled Webhook
+servers:
+- url: https://api.mailchannels.net/tx/v1

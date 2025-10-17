@@ -1,0 +1,1913 @@
+{
+  "host": "api.mailchannels.net",
+  "security": [
+    {
+      "APIKeyHeader": []
+    }
+  ],
+  "securityDefinitions": {
+    "APIKeyHeader": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key"
+    }
+  },
+  "swagger": "2.0",
+  "info": {
+    "title": "Inbound API",
+    "description": "Manage domains for MailChannels Inbound.\n\n### Rate Limits\nThis API is limited to 100 queries per second, per customer.\nQueries that exceed this rate may be rejected with the\n`503 Service Temporarily Unavailable` HTTP response.\n",
+    "version": "1.2.0"
+  },
+  "schemes": [
+    "https"
+  ],
+  "basePath": "/inbound/v1",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/lists/{listname}": {
+      "get": {
+        "summary": "Get customer list entries",
+        "parameters": [
+          {
+            "name": "listname",
+            "description": "The name of the list to fetch entries for. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the items",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ListItem"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add item to customer list",
+        "parameters": [
+          {
+            "name": "listname",
+            "description": "The name of the list to add an entry to. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ListPost"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the item",
+            "schema": {
+              "$ref": "#/definitions/ListItem"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that the list item is not a valid\nip address, email address or domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete item from customer list",
+        "parameters": [
+          {
+            "name": "listname",
+            "description": "The name of the list to delete an entry from. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the item"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains": {
+      "get": {
+        "summary": "List domains",
+        "description": "Fetch a list of all domains associated with this API key.\n",
+        "parameters": [
+          {
+            "name": "domains",
+            "description": "A list of domains to fetch. If this parameter is present, only domains whose\nname matches an item in this list are returned.\n",
+            "in": "query",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "hostname"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "The maximum number of domains included in the response.\nIf not specified, defaults to 10.\n",
+            "in": "query",
+            "type": "integer",
+            "format": "int32",
+            "required": false,
+            "maximum": 5000
+          },
+          {
+            "name": "offset",
+            "description": "Offset into the list of domains to return. If not specified, defaults to 0.",
+            "in": "query",
+            "type": "integer",
+            "format": "int32",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found the domain",
+            "schema": {
+              "$ref": "#/definitions/GetDomainsResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Provision domain",
+        "description": "Provision a single domain to use MailChannels Inbound.",
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Domain"
+            },
+            "required": true
+          },
+          {
+            "name": "associate-key",
+            "description": "If present and set to true, the domain will be associated with the api-key that created it.\nThis means that this api-key must be used for inbound-api actions involving this domain (for\nexample adding safe/block list entries, etc).\n",
+            "in": "query",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "overwrite",
+            "description": "If present and set to true, the settings (domain settings, downstream addresses, aliases and admins)\nfor the domain will be overwritten with the ones in the request if the domain already exists, unless\na section is not included in the request or there is problem updating a setting in which case the \nprevious settings are carried forward. \n",
+            "in": "query",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The domain was already provisioned to use MailChannels Inbound.",
+            "schema": {
+              "$ref": "#/definitions/Domain"
+            }
+          },
+          "201": {
+            "description": "The domain has been successfully provisioned to use MailChannels Inbound.",
+            "schema": {
+              "$ref": "#/definitions/Domain"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "A 403 response can be returned in two cases:\n\n1. The limit on associated domains is reached. Contact sales@mailchannels.com to increase your limit.\n2. You are attempting to associate a domain with a subscription that is not your own.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "The domain is already provisioned, and is associated with a different customer.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/batch": {
+      "post": {
+        "summary": "Bulk provision domains",
+        "description": "Provision up to 1000 domains to use MailChannels Inbound.",
+        "parameters": [
+          {
+            "name": "subscriptionHandle",
+            "description": "The subscription 'handle' that identifies the subscription that domains should be\nprovisioned against. Subscription handles can be retrieved from the `/subscriptions`\nendpoint.\n",
+            "in": "query",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "domains": {
+                  "type": "array",
+                  "maxItems": 1000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "domain"
+                    ],
+                    "properties": {
+                      "domain": {
+                        "type": "string",
+                        "format": "hostname",
+                        "description": "The domain name to be provisioned."
+                      },
+                      "downstreamAddress": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/DownstreamAddress"
+                        },
+                        "description": "The locations of mail servers to which messages will be delivered\nafter filtering.\n"
+                      },
+                      "settings": {
+                        "description": "The abuse policy settings for the domains. These settings determine how spam messages are handled.",
+                        "$ref": "#/definitions/DomainSettings"
+                      },
+                      "aliases": {
+                        "description": "A list of aliases for the domain. Mail is accepted for these domains and\nrouted to the downstreamAddresses defined for the domain.\n",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "admins": {
+                        "description": "A list of email addresses that are the domain admins for the domain.",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          },
+          {
+            "name": "associate-key",
+            "description": "If present and set to true, the domains will be associated with the api-key in the header.\nThis means that this api-key must be used for inbound-api actions involving these domains\n(for example adding safe/block list entries, etc).\n",
+            "in": "query",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "overwrite",
+            "description": "If present and set to true, the settings (domain settings, downstream addresses, aliases and admins)\nfor any existing domains will be overwritten with the ones in the request, unless a section is not \nincluded in the request or there is problem updating a setting in which case the previous settings \nare carried forward.\n",
+            "in": "query",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was processed successfully. This does not necessarily mean all the domains in\nthe request were successfully provisioned.\nSee the CommentedDomain definition for more information.\n",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "successes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CommentedDomain"
+                  }
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CommentedDomain"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that a domain name fails RFC 5891 validation\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Creating the domains will exceed the number of domains allowed with the specified subscription, or\nyou are attempting to use a subscription that is not your own.\nNone of the domains have been provisioned.\nContact sales@mailchannels.com to increase your limit\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/batch/login-link": {
+      "post": {
+        "summary": "Bulk create login links",
+        "description": "Generate a batch of links that allow a user to log in as a domain administrator to their different domains.\nMaximum of 1000 links per request.\n",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "domains": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1000,
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "domain"
+                    ],
+                    "properties": {
+                      "domain": {
+                        "type": "string",
+                        "format": "hostname",
+                        "description": "The domain name to create a login link for."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was processed successfully. This does not necessarily mean login links were\ncreated for all domains.\nSee the CommentedLoginLink definition for more information.\n",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "successes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CommentedLoginLink"
+                  }
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CommentedLoginLink"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}": {
+      "delete": {
+        "summary": "Remove domain",
+        "description": "De-provision a domain to cease protecting it with MailChannels Inbound.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name to be removed.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful de-provisioning request. The domain will no longer count towards your\nlimit on protected domains.\n"
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, or the domain\nin the request is an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/alias/{alias}": {
+      "post": {
+        "description": "Create an alias for the domain",
+        "parameters": [
+          {
+            "name": "domain",
+            "type": "string",
+            "format": "hostname",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "alias",
+            "type": "string",
+            "required": true,
+            "in": "path",
+            "maxLength": 255
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The alias was created for the domain",
+            "schema": {
+              "$ref": "#/definitions/Alias"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name, or that the alias is not a legal domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "The domain is associated with a different customer, or is associated with an api key\ndifferent than the one in the request.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict, alias already exists:\nEither as an alias for this domain, or\nas an alias for a different domain, or\nas a different canonical domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Remove an alias for the domain",
+        "parameters": [
+          {
+            "name": "domain",
+            "type": "string",
+            "format": "hostname",
+            "required": true,
+            "in": "path"
+          },
+          {
+            "name": "alias",
+            "type": "string",
+            "required": true,
+            "in": "path",
+            "maxLength": 255
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The alias was deleted for the domain"
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "The domain is associated with a different customer, or is associated with an api key\ndifferent than the one in the request.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain or alias does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/login-link": {
+      "get": {
+        "summary": "Create login link",
+        "description": "Generate a link that allows a user to log in as a domain administrator.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created login link for the domain",
+            "schema": {
+              "$ref": "#/definitions/LoginLinkResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request, including the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "The domain does not belong to this customer.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/lists/{listname}": {
+      "get": {
+        "summary": "Get domain list entries",
+        "description": "Get all of the blocklist or safelist entries for a domain.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name to be removed.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to add an entry to. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the items",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ListItem"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "This domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add domain list entry",
+        "description": "Add an entry to a domain blocklist or safelist.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to add an entry to. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ListPost"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the entry.",
+            "schema": {
+              "$ref": "#/definitions/ListItem"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name, or that the list item is not a valid\nip address, email address or domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete domain list entry",
+        "description": "Delete an entry from the blocklist or safelist for a domain.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to delete an entry from. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the item."
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "This domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/downstream-address": {
+      "get": {
+        "summary": "Fetch downstream addresses",
+        "description": "Retrieve stored downstream addresses for the domain.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "limit",
+            "description": "The number of results to return, defaults to 10.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "minimum": 1
+          },
+          {
+            "name": "offset",
+            "description": "The offset into the results to return, defaults to 0.",
+            "in": "query",
+            "type": "integer",
+            "required": false,
+            "minimum": 0
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Downstream addresses were fetched successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "records": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/DownstreamAddress"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Set downstream address",
+        "description": "Sets the list of downstream addreses for the domain. This action deletes any existing\ndownstream address for the domain before creating new ones. If the 'records' parameter\nis an empty array, all downstream address records will be deleted.\n",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "records",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "records": {
+                  "type": "array",
+                  "maxItems": 10,
+                  "items": {
+                    "$ref": "#/definitions/DownstreamAddress"
+                  }
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The list of downstream addresses was set to be the list submitted with the request.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "records": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/DownstreamAddress"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "This domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/api-key": {
+      "put": {
+        "summary": "Update API key",
+        "description": "Update the API key that is associated with a domain.",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "updates",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "apiKey"
+              ],
+              "properties": {
+                "apiKey": {
+                  "type": "string",
+                  "description": "The new API key to associate with this domain."
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful update. The domain is now accessible using the new API key in the request body.\nThe domain is no longer accessible using the API key in the request header.\n"
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "The domain does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/domains/{domain}/settings": {
+      "put": {
+        "description": "Update the abuse policy settings (these settings determine how spam messages are handled), \ndownstream addresses, admins and aliases for a domain.\n",
+        "parameters": [
+          {
+            "name": "domain",
+            "description": "The domain name.",
+            "in": "path",
+            "type": "string",
+            "format": "hostname",
+            "required": true
+          },
+          {
+            "name": "settings",
+            "description": "The abuse policy settings, downstream addresses, admins and aliases for the domains. \n",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CompleteDomainSettings"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The domain settings were successfully updated"
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain is associated with an api\nkey that is different than the one in the request, the domain is\nassociated with a different customer, or the domain in the request\nis an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Domain Not Found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/{email}/lists/{listname}": {
+      "get": {
+        "summary": "Get recipient list entries",
+        "parameters": [
+          {
+            "name": "email",
+            "description": "The email address of the recipient whose list will be fetched.",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to fetch. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the entries",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ListItem"
+              }
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain in the user email is\nassociated with an api key that is different than the one in the\nrequest, the user is associated with a different customer, or the\ndomain in the user email is an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add item to recipient list",
+        "parameters": [
+          {
+            "name": "email",
+            "description": "The email address of the recipient whose list will be modified.",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to add an entry to. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/ListPost"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created the item",
+            "schema": {
+              "$ref": "#/definitions/ListItem"
+            }
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that the list item is not a valid\nip address, email address or domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Returned in the case that the domain in the user email is\nassociated with an api key that is different than the one in the\nrequest, the user is associated with a different customer, or the\ndomain in the user email is an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "This recipient does not exist.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete item from recipient list",
+        "parameters": [
+          {
+            "name": "email",
+            "description": "The email address of the recipient whose list will be modified.",
+            "in": "path",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "listname",
+            "description": "The name of the list to remove an entry from. One of 'safelist' or 'blocklist'. 'whitelist' and 'blacklist' are deprecated",
+            "in": "path",
+            "type": "string",
+            "enum": [
+              "blocklist",
+              "safelist",
+              "blacklist",
+              "whitelist"
+            ],
+            "required": true
+          },
+          {
+            "name": "item",
+            "description": "The list entry which should be removed.",
+            "in": "query",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted the item"
+          },
+          "403": {
+            "description": "Returned in the case that the domain in the user email is\nassociated with an api key that is different than the one in the\nrequest, the user is associated with a different customer, or the\ndomain in the user email is an alias domain.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "summary": "Get a list of your subscriptions to MailChannels Inbound",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success, a list of subscriptions is returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Subscription"
+              }
+            }
+          },
+          "404": {
+            "description": "We could not find a customer that matched the customerHandle",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "summary": "Retrieve the condition of the service",
+        "responses": {
+          "200": {
+            "description": "The service is in good condition"
+          }
+        }
+      }
+    },
+    "/users": {
+      "put": {
+        "summary": "Create a recipient",
+        "parameters": [
+          {
+            "name": "email_address",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "description": "The email address of the user to add"
+          },
+          {
+            "name": "admin",
+            "in": "query",
+            "type": "boolean",
+            "required": true,
+            "description": "Flag to indicate if the user is a domain admin or a regular user"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "type": "string",
+            "enum": [
+              "true",
+              "false",
+              "compute"
+            ],
+            "required": false,
+            "description": "Whether or not to filter mail for this recipient. There are three valid values.\n\n* true - Filtering policy will be applied to messages intended for this recipient.\n If this would exceed the protected-addresses limit, return an error.\n* false - Filtering policy will not be applied to messages intended for this recipient.\n* compute (default) - Filtering policy will be applied to messages intended for this recipient.\n If this would exceed the protected-addresses limit, filtering policy will\n not be applied, and no error will be returned.\n"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "list_entries": {
+                  "description": "safelist and blocklist entries to be added",
+                  "type": "object",
+                  "properties": {
+                    "blocklist": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "safelist": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returned in the case where the recipient already exists and in that case no changes\nwill be made to the safe/block list entries.\n"
+          },
+          "201": {
+            "description": "The recipient was created successfully.\n",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "recipient": {
+                  "$ref": "#/definitions/Recipient"
+                },
+                "list_entries": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/ListItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when the email_address is invalid.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Retuned when customer/API-key does not have the required privileges to make this request.\nAlso returned when an account is created with filter = true and there is no room in the\nprotected-addresses limit to filter mail for more recipients\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/report": {
+      "post": {
+        "summary": "Submit a false negative or false positive report",
+        "parameters": [
+          {
+            "name": "report_type",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "enum": [
+              "false_negative",
+              "false_positive"
+            ]
+          },
+          {
+            "name": "report_request_body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The report has been successfully submitted"
+          },
+          "400": {
+            "description": "Bad Request, returned in the case that the message content provided is not in accordance with the RFC 2822 \nspecifications of a message\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized, returned in the case that the message submitted does not belong to this customer\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "The message corresponds to a domain associated with a different customer, or the domain is associated \nwith an api key different than the one in the request.\n"
+          },
+          "404": {
+            "description": "Message not found\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GetDomainsResponse": {
+      "required": [
+        "domains",
+        "total"
+      ],
+      "properties": {
+        "domains": {
+          "description": "A list of domains",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Domain"
+          }
+        },
+        "total": {
+          "description": "The total number of domains that are accessible with the given API key\nthat match the list of domains in the 'domains' parameter. If there is\nno 'domains' parameter, this field is the total number of domains that\nare accessible with with this API key. A domain is accessible with a\ngiven API key if it is associated with that API key, or if it is not\nassociated with any API key.\n",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CommentedDomain": {
+      "required": [
+        "domain",
+        "code"
+      ],
+      "properties": {
+        "domain": {
+          "$ref": "#/definitions/Domain"
+        },
+        "code": {
+          "type": "integer",
+          "description": "* `201`: This domain was successfully created.\n* `400`: A 400 response is typically returned in the following case(s):\n 1. The domain name was an A label that did not meet the specifications in RFC 3490\n\n* `409`: The domain is already provisioned, and is associated with a different customer.\n* `500`: There was an error provisioning the domain. \n",
+          "enum": [
+            201,
+            400,
+            409,
+            500
+          ]
+        },
+        "comment": {
+          "type": "string",
+          "description": "More information about the result of domain provisioning."
+        }
+      }
+    },
+    "Domain": {
+      "required": [
+        "domain",
+        "subscriptionHandle"
+      ],
+      "properties": {
+        "domain": {
+          "description": "The domain name.",
+          "type": "string",
+          "format": "hostname"
+        },
+        "subscriptionHandle": {
+          "description": "The subscription 'handle' that identifies the subscription that this domain should be\nprovisioned against. Subscription handles can be retrieved from the `/subscriptions`\nendpoint.\n",
+          "type": "string"
+        },
+        "settings": {
+          "description": "The abuse policy settings for the domain. These settings determine how spam messages are handled.",
+          "$ref": "#/definitions/DomainSettings"
+        },
+        "admins": {
+          "description": "A list of email addresses that are the domain admins for the domain.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "downstreamAddresses": {
+          "description": "The locations of mail servers to which messages will be delivered\nafter filtering.\n",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DownstreamAddress"
+          }
+        },
+        "aliases": {
+          "description": "A list of aliases for the domain. Mail is accepted for these domains and\nrouted to the downstreamAddresses defined for the domain.\n",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DomainSettings": {
+      "properties": {
+        "abusePolicy": {
+          "description": "The abuse policy",
+          "type": "string",
+          "enum": [
+            "block",
+            "flag",
+            "quarantine"
+          ],
+          "x-nullable": true,
+          "minLength": 1
+        },
+        "abusePolicyOverride": {
+          "description": "If true, this abuse policy overrides the recipient abuse policy.",
+          "x-nullable": true,
+          "type": "boolean"
+        },
+        "spamHeaderName": {
+          "description": "The spam header name to use if the abuse policy is set to 'flag'.",
+          "type": "string",
+          "x-nullable": true,
+          "minLength": 1
+        },
+        "spamHeaderValue": {
+          "description": "The spam header value to use if the abuse policy is set to 'flag'.",
+          "type": "string",
+          "x-nullable": true,
+          "minLength": 1
+        }
+      }
+    },
+    "AdditionalDomainSettings": {
+      "properties": {
+        "admins": {
+          "description": "A list of email addresses that are the domain admins for the domain.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "downstreamAddresses": {
+          "description": "The locations of mail servers to which messages will be delivered\nafter filtering.\n",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DownstreamAddress"
+          }
+        },
+        "aliases": {
+          "description": "A list of aliases for the domain. Mail is accepted for these domains and\nrouted to the downstreamAddresses defined for the domain.\n",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CompleteDomainSettings": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DomainSettings"
+        },
+        {
+          "$ref": "#/definitions/AdditionalDomainSettings"
+        }
+      ]
+    },
+    "Subscription": {
+      "required": [
+        "handle",
+        "active",
+        "plan",
+        "limits",
+        "activeAccountsCount"
+      ],
+      "properties": {
+        "handle": {
+          "type": "string",
+          "description": "A unique identifier for this subscription. This is used to refer to this\nsubscription in other API calls.\n"
+        },
+        "active": {
+          "description": "If true, this subscription is currently enabled.\n",
+          "type": "boolean"
+        },
+        "plan": {
+          "$ref": "#/definitions/Plan",
+          "description": "The plan associated with this subscription.\n"
+        },
+        "limits": {
+          "type": "array",
+          "description": "A list of limits associated with this subscription. Limits are things like the maximum number of domains\nthat can be provisioned against this subscription, or whether some features are enabled.\n",
+          "items": {
+            "$ref": "#/definitions/Limit"
+          }
+        },
+        "activeAccountsCount": {
+          "description": "The number of domains currently provisioned against this subscription.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CommentedLoginLink": {
+      "type": "object",
+      "required": [
+        "domain",
+        "code"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "The domain the request was for."
+        },
+        "code": {
+          "type": "integer",
+          "description": "* `200`: The login link was successfully created\n* `400`: A 400 response is typically returned in the following case(s):\n 1. There was an error converting the A-label domain to a U-label domain name.\n\n* `401`: The domain does not belong to this customer.\n* `403`: The domain is associated with a different customer, associated with a different api key, or is an alias domain.\n* `404`: The domain does not exist.\n* `500`: There was an error creating the login link.\n",
+          "enum": [
+            200,
+            400,
+            401,
+            403,
+            404,
+            500
+          ]
+        },
+        "comment": {
+          "type": "string",
+          "description": "More information about the result of creating the login link."
+        },
+        "loginLink": {
+          "type": "string",
+          "description": "If a user browses to this URL, they will be automatically logged in as a domain admin."
+        }
+      }
+    },
+    "LoginLinkResponse": {
+      "required": [
+        "loginLink"
+      ],
+      "properties": {
+        "loginLink": {
+          "description": "If a user browses to this URL, they will be automatically logged in as a domain admin.",
+          "type": "string"
+        }
+      }
+    },
+    "Limit": {
+      "required": [
+        "featureHandle",
+        "value"
+      ],
+      "properties": {
+        "featureHandle": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Plan": {
+      "type": "object",
+      "required": [
+        "handle",
+        "name"
+      ],
+      "properties": {
+        "handle": {
+          "description": "A unique identifier for this plan.",
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A friendly name for this plan."
+        }
+      }
+    },
+    "ListItem": {
+      "properties": {
+        "item": {
+          "type": "string",
+          "description": "The value of this entry. The meaning of this value depends on the item_type."
+        },
+        "item_type": {
+          "type": "string",
+          "description": "The item type."
+        },
+        "action": {
+          "type": "string",
+          "description": "Which list this entry is on, e.g. safelist or blocklist."
+        }
+      }
+    },
+    "ListPost": {
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "item": {
+          "type": "string",
+          "description": "The value of the entry. The type of the entry is automatically determined based on the value."
+        }
+      }
+    },
+    "DownstreamAddress": {
+      "type": "object",
+      "required": [
+        "priority",
+        "weight",
+        "port",
+        "target"
+      ],
+      "properties": {
+        "priority": {
+          "description": "The priority of the dowsntream address. Only addresses with the highest priority (the lowest numerical\nvalue) are selected.\n",
+          "type": "integer",
+          "minimum": 0
+        },
+        "weight": {
+          "description": "Downstream addresses are selected in proportion to their weights. For example, if there are two\ndownstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time\nand B is selected 20% of the time.\n",
+          "type": "integer",
+          "minimum": 0
+        },
+        "port": {
+          "description": "TCP port on which the downstream mail server is listening.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "target": {
+          "description": "The canonical hostname of the host providing the service, ending in a dot.",
+          "type": "string",
+          "maxLength": 255
+        }
+      }
+    },
+    "Recipient": {
+      "properties": {
+        "email_address": {
+          "type": "string",
+          "description": "the email address of the user"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "array of roles the given user has"
+        },
+        "filter": {
+          "type": "boolean",
+          "description": "determines if policy should be applied to messages intended for this recipient\n",
+          "x-nullable": true
+        }
+      },
+      "required": [
+        "email_address",
+        "roles"
+      ]
+    },
+    "Alias": {
+      "type": "object",
+      "required": [
+        "domain",
+        "alias"
+      ],
+      "properties": {
+        "domain": {
+          "description": "The canonical domain for the alias",
+          "$ref": "#/definitions/Domain"
+        },
+        "alias": {
+          "description": "The alias domian name",
+          "type": "string"
+        }
+      }
+    },
+    "Report": {
+      "required": [
+        "messageContent"
+      ],
+      "properties": {
+        "messageContent": {
+          "description": "The full, unaltered message content in accordance with the RFC 2822 specifications without dot stuffing.",
+          "type": "string"
+        },
+        "smtpEnvelopeInformation": {
+          "description": "The SMTP envelope information",
+          "$ref": "#/definitions/EnvelopeInformation"
+        },
+        "sendingHostInformation": {
+          "description": "The sending host information",
+          "$ref": "#/definitions/HostInformation"
+        }
+      }
+    },
+    "EnvelopeInformation": {
+      "properties": {
+        "ehlo": {
+          "type": "string"
+        },
+        "mailFrom": {
+          "type": "string"
+        },
+        "rcptTo": {
+          "type": "string"
+        }
+      }
+    },
+    "HostInformation": {
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
