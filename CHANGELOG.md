@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.4.7
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.6...v0.4.7)
+
+### 🩹 Fixes
+
+- **sub-accounts:** Add missing `listApiKeys` options ([d3c8454](https://github.com/Yizack/mailchannels/commit/d3c8454))
+
+### 📖 Documentation
+
+- Add modules list styling to search results ([13291ea](https://github.com/Yizack/mailchannels/commit/13291ea))
+- Rename modules source plugin ([7f403c1](https://github.com/Yizack/mailchannels/commit/7f403c1))
+- Add `vitepress-plugin-llms` ([ce959d7](https://github.com/Yizack/mailchannels/commit/ce959d7))
+- Move `openapi` to `.openapi` to exclude from docs ([ad8ad35](https://github.com/Yizack/mailchannels/commit/ad8ad35))
+- **llm:** Ignore contributors page ([66079bb](https://github.com/Yizack/mailchannels/commit/66079bb))
+- **emails:** Update max email size error message to 30MB ([771a2db](https://github.com/Yizack/mailchannels/commit/771a2db))
+- Prefer `Badge` component slot for better llms.txt ([3711ea0](https://github.com/Yizack/mailchannels/commit/3711ea0))
+
+### 🏡 Chore
+
+- Improve project's `tsconfig.json` ([67bdeed](https://github.com/Yizack/mailchannels/commit/67bdeed))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.6
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.5...v0.4.6)
