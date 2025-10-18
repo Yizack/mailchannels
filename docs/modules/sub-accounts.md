@@ -258,6 +258,11 @@ const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 ### Params
 
 - `handle` `string` <Badge type="danger" text="required" />: The handle of the sub-account to retrieve the API keys for.
+- `options` `SubAccountsListApiKeyOptions` <Badge type="info" text="optional" />: List API keys options.
+  - `limit` `number` <Badge type="info" text="optional" />: The maximum number of API keys included in the response. Possible values are `1` to `1000`.
+  - `offset` `number` <Badge type="info" text="optional" />: Offset into the list of API keys to return.
+  > [!TIP]
+  > If no options are provided, the default limit is `100` and the offset is `0`.
 
 ### Response
 

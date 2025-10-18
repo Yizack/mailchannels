@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { SubAccounts } from "../src/modules/sub-accounts";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../src/types/sub-accounts/list";
-import type { SubAccountsApiKey } from "../src/types/sub-accounts/api-key";
+import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../src/types/sub-accounts/api-key";
 import type { SubAccountsSmtpPassword } from "../src/types/sub-accounts/smtp-password";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../src/types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../src/types/sub-accounts/create";
@@ -38,11 +38,12 @@ const fake = {
   createApiKey: {
     apiResponse: { id: 1, key: "api-key-value" },
     expectedResponse: {
-      key: { id: 1, value: "api-key-value" } as SubAccountsApiKey,
+      key: { id: 1, value: "api-key-value" },
       error: null
-    }
+    } satisfies SubAccountsCreateApiKeyResponse
   },
   listApiKeys: {
+    options: { limit: 10, offset: 0 } as SubAccountsListApiKeyOptions,
     apiResponse: [
       { id: 1, key: "api-key-1" },
       { id: 2, key: "api-key-2" }
@@ -51,9 +52,9 @@ const fake = {
       keys: [
         { id: 1, value: "api-key-1" },
         { id: 2, value: "api-key-2" }
-      ] satisfies SubAccountsApiKey[],
+      ],
       error: null
-    }
+    } satisfies SubAccountsListApiKeyResponse
   },
   createSmtpPassword: {
     apiResponse: {
@@ -426,7 +427,7 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.listApiKeys(fake.create.validHandle);
+    const result = await subAccounts.listApiKeys(fake.create.validHandle, fake.listApiKeys.options);
 
     expect(result).toEqual(fake.listApiKeys.expectedResponse);
     expect(mockClient.get).toHaveBeenCalled();
@@ -441,6 +442,32 @@ describe("listApiKeys", () => {
     const { keys, error } = await subAccounts.listApiKeys("");
 
     expect(error).toBe("No handle provided.");
+    expect(keys).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid limit", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle, { limit: 1001 });
+
+    expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
+    expect(keys).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid offset", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle, { offset: -1 });
+
+    expect(error).toBe("Offset must be greater than or equal to 0.");
     expect(keys).toEqual([]);
     expect(mockClient.get).not.toHaveBeenCalled();
   });

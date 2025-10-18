@@ -3,7 +3,7 @@ import type { SuccessResponse } from "../types/success-response";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
-import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
+import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
 import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
 import { ErrorCode, getStatusError } from "../utils/errors";
@@ -239,17 +239,28 @@ export class SubAccounts {
   /**
    * Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.
    * @param handle - Handle of the sub-account to retrieve the API key for.
+   * @param options - The options to filter the list of API keys.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
    * ```
    */
-  async listApiKeys (handle: string): Promise<SubAccountsListApiKeyResponse> {
+  async listApiKeys (handle: string, options?: SubAccountsListApiKeyOptions): Promise<SubAccountsListApiKeyResponse> {
     const data: SubAccountsListApiKeyResponse = { keys: [], error: null };
 
     if (!handle) {
       data.error = "No handle provided.";
+      return data;
+    }
+
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
+      data.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
       return data;
     }
 
@@ -265,6 +276,7 @@ export class SubAccounts {
       id: key.id,
       value: key.key
     }));
+
     return data;
   }
 
