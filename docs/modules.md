@@ -10,7 +10,7 @@ import { VPButton } from 'vitepress/theme-without-fonts'
 
 This is a list of modules available in the MailChannels SDK.
 
-## Email API <Badge type="warning" text="version 0.13.0" />
+## Email API <Badge type="warning">version 0.13.0</Badge>
 
 Leverage the power, scale, and reputation of MailChannels to get your mission-critical emails delivered to the inbox reliably, using the same battle-tested infrastructure that today delivers email for more domains than anyone else.
 
@@ -44,7 +44,7 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 <VPButton href="/modules/suppressions" text="Read documentation" theme="alt" style="text-decoration:none" />
 
-## Inbound API <Badge type="warning" text="version 1.2.0" />
+## Inbound API <Badge type="warning">version 1.2.0</Badge>
 
 A cloud-based spam filtering service that protects your users against spam, phishing, and malware.
 

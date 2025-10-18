@@ -2,13 +2,13 @@
 outline: deep
 ---
 
-# 🌐 Domains <Badge type="tip" text="module" /> <Badge type="tip" text="Inbound API" />
+# 🌐 Domains <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
 
 <!-- #region description -->
 Manage your MailChannels Inbound domains.
 <!-- #endregion description -->
 
-## Provision <Badge type="info" text="method" />
+## Provision <Badge type="info">method</Badge>
 
 Provision a single domain to use MailChannels Inbound.
 
@@ -41,48 +41,48 @@ const { data } = await mailchannels.domains.provision({
 
 ### Params
 
-- `options` `DomainsProvisionOptions & DomainsData` <Badge type="danger" text="required" />: The provision options and domain data.
-  - `subscriptionHandle` `string` <Badge type="danger" text="required" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+- `options` `DomainsProvisionOptions & DomainsData` <Badge type="danger">required</Badge>: The provision options and domain data.
+  - `subscriptionHandle` `string` <Badge type="danger">required</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
-  - `domain` `string` <Badge type="danger" text="required" />: The domain name.
-  - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-    - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-    - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-    - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-  - `admins` `string[] | null` <Badge type="info" text="optional" />: A list of email addresses that are the domain admins for the domain.
-  - `downstreamAddresses` `object[] | null` <Badge type="info" text="optional" />: The locations of mail servers to which messages will be delivered after filtering.
-    - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-    - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
-    - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `aliases` `string[] | null` <Badge type="info" text="optional" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+  - `domain` `string` <Badge type="danger">required</Badge>: The domain name.
+  - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+    - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+    - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+    - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+  - `admins` `string[] | null` <Badge type="info">optional</Badge>: A list of email addresses that are the domain admins for the domain.
+  - `downstreamAddresses` `object[] | null` <Badge type="info">optional</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+    - `priority` `number` <Badge type="danger">required</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+    - `weight` `number` <Badge type="danger">required</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `port` `number` <Badge type="danger">required</Badge>: TCP port on which the downstream mail server is listening.
+    - `target` `string` <Badge type="danger">required</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `aliases` `string[] | null` <Badge type="info">optional</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
     > [!NOTE]
     > Aliases are limited to 255 characters.
-  - `associateKey` `boolean` <Badge type="info" text="optional" />: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
-  - `overwrite` `boolean` <Badge type="info" text="optional" />: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
+  - `associateKey` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
+  - `overwrite` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
 
 ### Response
 
-- `data` `DomainsData | null` <Badge type="warning" text="nullable" />: The provisioned domain data.
-  - `domain` `string` <Badge text="guaranteed" />: The domain name.
-  - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-    - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-    - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-    - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-  - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
-  - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
-    - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-    - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
-    - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
-  - `subscriptionHandle` `string` <Badge text="guaranteed" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `data` `DomainsData | null` <Badge type="warning">nullable</Badge>: The provisioned domain data.
+  - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
+  - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+    - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+    - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+    - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+  - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
+  - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+    - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+    - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+    - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+  - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Bulk Provision <Badge type="info" text="method" />
+## Bulk Provision <Badge type="info">method</Badge>
 
 Provision up to 1000 domains to use MailChannels Inbound.
 
@@ -119,71 +119,71 @@ const { results } = await mailchannels.domains.bulkProvision({
 
 ### Params
 
-- `options` `DomainsBulkProvisionOptions` <Badge type="danger" text="required" />: The options to provision the domains.
-  - `subscriptionHandle` `string` <Badge type="danger" text="required" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+- `options` `DomainsBulkProvisionOptions` <Badge type="danger">required</Badge>: The options to provision the domains.
+  - `subscriptionHandle` `string` <Badge type="danger">required</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
-  - `associateKey` `boolean` <Badge type="info" text="optional" />: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
-  - `overwrite` `boolean` <Badge type="info" text="optional" />: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
-- `domains` `DomainsData[]` <Badge type="danger" text="required" />: A list of domain data to provision.
-  - `domain` `string` <Badge type="danger" text="required" />: The domain name.
-  - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-    - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-    - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-    - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-  - `admins` `string[] | null` <Badge type="info" text="optional" />: A list of email addresses that are the domain admins for the domain.
-  - `downstreamAddresses` `object[] | null` <Badge type="info" text="optional" />: The locations of mail servers to which messages will be delivered after filtering.
-    - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-    - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
-    - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `aliases` `string[] | null` <Badge type="info" text="optional" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+  - `associateKey` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
+  - `overwrite` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
+- `domains` `DomainsData[]` <Badge type="danger">required</Badge>: A list of domain data to provision.
+  - `domain` `string` <Badge type="danger">required</Badge>: The domain name.
+  - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+    - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+    - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+    - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+  - `admins` `string[] | null` <Badge type="info">optional</Badge>: A list of email addresses that are the domain admins for the domain.
+  - `downstreamAddresses` `object[] | null` <Badge type="info">optional</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+    - `priority` `number` <Badge type="danger">required</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+    - `weight` `number` <Badge type="danger">required</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `port` `number` <Badge type="danger">required</Badge>: TCP port on which the downstream mail server is listening.
+    - `target` `string` <Badge type="danger">required</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `aliases` `string[] | null` <Badge type="info">optional</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
     > [!NOTE]
     > Aliases are limited to 255 characters.
 
 ### Response
 
-- `results` `object | null` <Badge type="warning" text="nullable" />: If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
-  - `successes` `object[]` <Badge text="guaranteed" />: Domains that were successfully provisioned or updated.
-    - `code` `number` <Badge text="guaranteed" />
-    - `comment` `string` <Badge type="info" text="optional" />
-    - `domain` `DomainsData` <Badge text="guaranteed" />: The provisioned domain data.
-      - `domain` `string` <Badge text="guaranteed" />: The domain name.
-      - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-        - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-        - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-        - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-        - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-      - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
-      - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
-        - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-        - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-        - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
-        - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-      - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
-      - `subscriptionHandle` `string` <Badge text="guaranteed" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-  - `errors` `object[]` <Badge text="guaranteed" />: Domains that were not successfully provisioned.
-    - `code` `number` <Badge text="guaranteed" />
-    - `comment` `string` <Badge type="info" text="optional" />
-    - `domain` `DomainsData` <Badge text="guaranteed" />: The failed to provision domain data.
-      - `domain` `string` <Badge text="guaranteed" />: The domain name.
-      - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-        - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-        - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-        - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-        - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-      - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
-      - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
-        - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-        - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-        - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
-        - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-      - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
-      - `subscriptionHandle` `string` <Badge text="guaranteed" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `results` `object | null` <Badge type="warning">nullable</Badge>: If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
+  - `successes` `object[]` <Badge>guaranteed</Badge>: Domains that were successfully provisioned or updated.
+    - `code` `number` <Badge>guaranteed</Badge>
+    - `comment` `string` <Badge type="info">optional</Badge>
+    - `domain` `DomainsData` <Badge>guaranteed</Badge>: The provisioned domain data.
+      - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
+      - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+        - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+        - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+        - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+        - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+      - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
+      - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+        - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+        - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+        - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+        - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+      - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+      - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+  - `errors` `object[]` <Badge>guaranteed</Badge>: Domains that were not successfully provisioned.
+    - `code` `number` <Badge>guaranteed</Badge>
+    - `comment` `string` <Badge type="info">optional</Badge>
+    - `domain` `DomainsData` <Badge>guaranteed</Badge>: The failed to provision domain data.
+      - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
+      - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+        - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+        - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+        - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+        - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+      - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
+      - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+        - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+        - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+        - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+        - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+      - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+      - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## List <Badge type="info" text="method" />
+## List <Badge type="info">method</Badge>
 
 Fetch a list of all domains associated with this API key.
 
@@ -210,34 +210,34 @@ const { domains } = await mailchannels.domains.list()
 
 ### Params
 
-- `options` `DomainsListOptions` <Badge type="info" text="optional" />: List domains options.
-  - `domains` `string[]` <Badge type="info" text="optional" />: A list of domains to fetch. If this parameter is present, only domains whose name matches an item in this list are returned.
-  - `limit` `number` <Badge type="info" text="optional" />: The maximum number of domains included in the response. Possible values are 1 to 5000.
-  - `offset` `number` <Badge type="info" text="optional" />: Offset into the list of domains to return.
+- `options` `DomainsListOptions` <Badge type="info">optional</Badge>: List domains options.
+  - `domains` `string[]` <Badge type="info">optional</Badge>: A list of domains to fetch. If this parameter is present, only domains whose name matches an item in this list are returned.
+  - `limit` `number` <Badge type="info">optional</Badge>: The maximum number of domains included in the response. Possible values are 1 to 5000.
+  - `offset` `number` <Badge type="info">optional</Badge>: Offset into the list of domains to return.
   > [!TIP]
   > If no options are provided, the default limit is `10` and the offset is `0`.
 
 ### Response
 
-- `domains` `DomainsData[]` <Badge text="guaranteed" />: A list of domain data.
-  - `domain` `string` <Badge text="guaranteed" />: The domain name.
-  - `settings` `object` <Badge type="info" text="optional" />: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info" text="optional" />: The abuse policy.
-    - `abusePolicyOverride` `boolean` <Badge type="info" text="optional" />: If `true`, this abuse policy overrides the recipient abuse policy.
-    - `spamHeaderName` `string` <Badge type="info" text="optional" />: The header name to use if the abuse policy is set to `flag`.
-    - `spamHeaderValue` `string` <Badge type="info" text="optional" />: The header value to use if the abuse policy is set to `flag`.
-  - `admins` `string[] | null` <Badge type="warning" text="nullable" />: A list of email addresses that are the domain admins for the domain.
-  - `downstreamAddresses` `object[] | null` <Badge type="warning" text="nullable" />: The locations of mail servers to which messages will be delivered after filtering.
-    - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-    - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
-    - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `aliases` `string[] | null` <Badge type="warning" text="nullable" />: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
-  - `subscriptionHandle` `string` <Badge text="guaranteed" />: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `total` `number` <Badge text="guaranteed" />: The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `domains` `DomainsData[]` <Badge>guaranteed</Badge>: A list of domain data.
+  - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
+  - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+    - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+    - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+    - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+  - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
+  - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+    - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+    - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+    - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+    - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+  - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+- `total` `number` <Badge>guaranteed</Badge>: The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Delete <Badge type="info" text="method" />
+## Delete <Badge type="info">method</Badge>
 
 De-provision a domain to cease protecting it with MailChannels Inbound.
 
@@ -264,14 +264,14 @@ const { success } = await mailchannels.domains.delete('example.com')
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name to be removed.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name to be removed.
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Add List Entry <Badge type="info" text="method" />
+## Add List Entry <Badge type="info">method</Badge>
 
 Add an entry to a domain blocklist or safelist.
 
@@ -304,20 +304,20 @@ const { entry } = await mailchannels.domains.addListEntry('example.com', {
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name.
-- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
-  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The list to add the item to.
-  - `item` `string` <Badge type="danger" text="required" />: The item to add to the list. This can be a domain, email address, or IP address.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name.
+- `options` `ListEntryOptions` <Badge type="danger">required</Badge>: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The list to add the item to.
+  - `item` `string` <Badge type="danger">required</Badge>: The item to add to the list. This can be a domain, email address, or IP address.
 
 ### Response
 
-- `entry` `ListEntry | null` <Badge type="warning" text="nullable" />
-  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
-  - `item` `string` <Badge text="guaranteed" />
-  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `entry` `ListEntry | null` <Badge type="warning">nullable</Badge>
+  - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
+  - `item` `string` <Badge>guaranteed</Badge>
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## List Entries <Badge type="info" text="method" />
+## List Entries <Badge type="info">method</Badge>
 
 Get domain list entries.
 
@@ -344,18 +344,18 @@ const { entries } = await mailchannels.domains.listEntries('example.com', 'safel
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name whose list will be fetched.
-- `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to fetch.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name whose list will be fetched.
+- `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The name of the list to fetch.
 
 ### Response
 
-- `entries` `ListEntry[]` <Badge text="guaranteed" />
-  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
-  - `item` `string` <Badge text="guaranteed" />
-  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `entries` `ListEntry[]` <Badge>guaranteed</Badge>
+  - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
+  - `item` `string` <Badge>guaranteed</Badge>
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Delete List Entry <Badge type="info" text="method" />
+## Delete List Entry <Badge type="info">method</Badge>
 
 Delete item from domain list.
 
@@ -388,17 +388,17 @@ const { success } = await mailchannels.domains.deleteListEntry('example.com', {
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name whose list will be modified.
-- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
-  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to remove an entry from.
-  - `item` `string` <Badge type="danger" text="required" />: The list entry which should be removed. This can be a domain, email address, or IP address.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name whose list will be modified.
+- `options` `ListEntryOptions` <Badge type="danger">required</Badge>: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The name of the list to remove an entry from.
+  - `item` `string` <Badge type="danger">required</Badge>: The list entry which should be removed. This can be a domain, email address, or IP address.
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Create Login Link <Badge type="info" text="method" />
+## Create Login Link <Badge type="info">method</Badge>
 
 Generate a link that allows a user to log in as a domain administrator.
 
@@ -425,14 +425,14 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name.
 
 ### Response
 
-- `link` `string | null` <Badge type="warning" text="nullable" />: If a user browses to this URL, they will be automatically logged in as a domain admin.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `link` `string | null` <Badge type="warning">nullable</Badge>: If a user browses to this URL, they will be automatically logged in as a domain admin.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Set Downstream Address <Badge type="info" text="method" />
+## Set Downstream Address <Badge type="info">method</Badge>
 
 Sets the list of downstream addresses for the domain.
 
@@ -476,21 +476,21 @@ const { success } = await mailchannels.domains.setDownstreamAddress('example.com
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name to set downstream addresses for.
-- `records` `DomainsDownstreamAddress[]` <Badge type="danger" text="required" />: The list of downstream addresses to set for the domain.
-  - `port` `number` <Badge type="danger" text="required" />: TCP port on which the downstream mail server is listening.
-  - `priority` `number` <Badge type="danger" text="required" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-  - `target` `string` <Badge type="danger" text="required" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `weight` `number` <Badge type="danger" text="required" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name to set downstream addresses for.
+- `records` `DomainsDownstreamAddress[]` <Badge type="danger">required</Badge>: The list of downstream addresses to set for the domain.
+  - `port` `number` <Badge type="danger">required</Badge>: TCP port on which the downstream mail server is listening.
+  - `priority` `number` <Badge type="danger">required</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+  - `target` `string` <Badge type="danger">required</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `weight` `number` <Badge type="danger">required</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
 > [!IMPORTANT]
 > If the `records` parameter is an empty array, all downstream address records will be deleted.
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## List Downstream Addresses <Badge type="info" text="method" />
+## List Downstream Addresses <Badge type="info">method</Badge>
 
 Retrieve stored downstream addresses for the domain.
 
@@ -517,23 +517,23 @@ const { records } = await mailchannels.domains.listDownstreamAddresses('example.
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name to get downstream addresses records for.
-- `options` `DomainsListDownstreamAddressesOptions` <Badge type="info" text="optional" />: List domains options.
-  - `limit` `number` <Badge type="info" text="optional" />: The number of records to return.
-  - `offset` `number` <Badge type="info" text="optional" />: The offset into the records to return.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name to get downstream addresses records for.
+- `options` `DomainsListDownstreamAddressesOptions` <Badge type="info">optional</Badge>: List domains options.
+  - `limit` `number` <Badge type="info">optional</Badge>: The number of records to return.
+  - `offset` `number` <Badge type="info">optional</Badge>: The offset into the records to return.
   > [!TIP]
   > If no options are provided, the default limit is `10` and the offset is `0`.
 
 ### Response
 
-- `records` `DomainsDownstreamAddress[]` <Badge text="guaranteed" />
-  - `port` `number` <Badge text="guaranteed" />: TCP port on which the downstream mail server is listening.
-  - `priority` `number` <Badge text="guaranteed" />: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-  - `target` `string` <Badge text="guaranteed" />: The canonical hostname of the host providing the service, ending in a dot.
-  - `weight` `number` <Badge text="guaranteed" />: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `records` `DomainsDownstreamAddress[]` <Badge>guaranteed</Badge>
+  - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+  - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+  - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+  - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Update API Key <Badge type="info" text="method" />
+## Update API Key <Badge type="info">method</Badge>
 
 Update the API key that is associated with a domain.
 
@@ -560,15 +560,15 @@ const { success } = await mailchannels.domains.updateApiKey('example.com', 'your
 
 ### Params
 
-- `domain` `string` <Badge type="danger" text="required" />: The domain name.
-- `key` `string` <Badge type="danger" text="required" />: The new API key to associate with this domain.
+- `domain` `string` <Badge type="danger">required</Badge>: The domain name.
+- `key` `string` <Badge type="danger">required</Badge>: The new API key to associate with this domain.
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Bulk Create Login Links <Badge type="info" text="method" />
+## Bulk Create Login Links <Badge type="info">method</Badge>
 
 Generate a batch of links that allow a user to log in as a domain administrator to their different domains.
 
@@ -601,21 +601,21 @@ const { results } = await mailchannels.domains.bulkCreateLoginLinks([
 
 ### Params
 
-- `domains` `string[]` <Badge type="danger" text="required" />: A list of domain names to generate login links for. Maximum of `1000` domains per request.
+- `domains` `string[]` <Badge type="danger">required</Badge>: A list of domain names to generate login links for. Maximum of `1000` domains per request.
 
 ### Response
 
-- `results` `DomainsBulkCreateLoginLinks | null` <Badge type="warning" text="nullable" />
-  - `successes` `DomainsBulkCreateLoginLinkResult[]` <Badge text="guaranteed" />
-    - `domain` `string` <Badge text="guaranteed" />: The domain the request was for.
-    - `code` `200` <Badge text="guaranteed" />
-    - `comment` `string` <Badge type="info" text="optional" />
-    - `loginLink` `string` <Badge text="guaranteed" />: If a user browses to this URL, they will be automatically logged in as a domain admin.
-  - `errors` `DomainsBulkCreateLoginLinkResult[]` <Badge text="guaranteed" />
-    - `domain` `string` <Badge text="guaranteed" />: The domain the request was for.
-    - `code` `400 | 401 | 403 | 404 | 500` <Badge text="guaranteed" />
-    - `comment` `string` <Badge type="info" text="optional" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `results` `DomainsBulkCreateLoginLinks | null` <Badge type="warning">nullable</Badge>
+  - `successes` `DomainsBulkCreateLoginLinkResult[]` <Badge>guaranteed</Badge>
+    - `domain` `string` <Badge>guaranteed</Badge>: The domain the request was for.
+    - `code` `200` <Badge>guaranteed</Badge>
+    - `comment` `string` <Badge type="info">optional</Badge>
+    - `loginLink` `string` <Badge>guaranteed</Badge>: If a user browses to this URL, they will be automatically logged in as a domain admin.
+  - `errors` `DomainsBulkCreateLoginLinkResult[]` <Badge>guaranteed</Badge>
+    - `domain` `string` <Badge>guaranteed</Badge>: The domain the request was for.
+    - `code` `400 | 401 | 403 | 404 | 500` <Badge>guaranteed</Badge>
+    - `comment` `string` <Badge type="info">optional</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Type declarations
 

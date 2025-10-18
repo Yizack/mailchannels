@@ -2,13 +2,13 @@
 outline: deep
 ---
 
-# 📋 Lists <Badge type="tip" text="module" /> <Badge type="tip" text="Inbound API" />
+# 📋 Lists <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
 
 <!-- #region description -->
 Manage account-level lists.
 <!-- #endregion description -->
 
-## Add List Entry <Badge type="info" text="method" />
+## Add List Entry <Badge type="info">method</Badge>
 
 Add an entry to an account-level blocklist or safelist.
 
@@ -41,19 +41,19 @@ const { entry } = await mailchannels.lists.addListEntry({
 
 ### Params
 
-- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
-  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The list to add the item to.
-  - `item` `string` <Badge type="danger" text="required" />: The item to add to the list. This can be a domain, email address, or IP address.
+- `options` `ListEntryOptions` <Badge type="danger">required</Badge>: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The list to add the item to.
+  - `item` `string` <Badge type="danger">required</Badge>: The item to add to the list. This can be a domain, email address, or IP address.
 
 ### Response
 
-- `entry` `ListEntry | null` <Badge type="warning" text="nullable" />
-  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
-  - `item` `string` <Badge text="guaranteed" />
-  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `entry` `ListEntry | null` <Badge type="warning">nullable</Badge>
+  - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
+  - `item` `string` <Badge>guaranteed</Badge>
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## List Entries <Badge type="info" text="method" />
+## List Entries <Badge type="info">method</Badge>
 
 Get account-level list entries.
 
@@ -80,17 +80,17 @@ const { entries } = await mailchannels.lists.listEntries('safelist')
 
 ### Params
 
-- `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to fetch.
+- `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The name of the list to fetch.
 
 ### Response
 
-- `entries` `ListEntry[]` <Badge text="guaranteed" />
-  - `action` `"blocklist" | "safelist"` <Badge text="guaranteed" />
-  - `item` `string` <Badge text="guaranteed" />
-  - `type` `"domain" | "email_address" | "ip_address"` <Badge text="guaranteed" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `entries` `ListEntry[]` <Badge>guaranteed</Badge>
+  - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
+  - `item` `string` <Badge>guaranteed</Badge>
+  - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
-## Delete List Entry <Badge type="info" text="method" />
+## Delete List Entry <Badge type="info">method</Badge>
 
 Delete item from account-level list.
 
@@ -123,14 +123,14 @@ const { success } = await mailchannels.lists.deleteListEntry({
 
 ### Params
 
-- `options` `ListEntryOptions` <Badge type="danger" text="required" />: Add list entry options.
-  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger" text="required" />: The name of the list to remove an entry from.
-  - `item` `string` <Badge type="danger" text="required" />: The list entry which should be removed. This can be a domain, email address, or IP address.
+- `options` `ListEntryOptions` <Badge type="danger">required</Badge>: Add list entry options.
+  - `listName` `"blocklist" | "safelist" | "blacklist" | "whitelist"` <Badge type="danger">required</Badge>: The name of the list to remove an entry from.
+  - `item` `string` <Badge type="danger">required</Badge>: The list entry which should be removed. This can be a domain, email address, or IP address.
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Type declarations
 

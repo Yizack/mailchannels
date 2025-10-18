@@ -2,13 +2,13 @@
 outline: deep
 ---
 
-# ⚙️ Service <Badge type="tip" text="module" /> <Badge type="tip" text="Inbound API" />
+# ⚙️ Service <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
 
 <!-- #region description -->
 Get information about the service.
 <!-- #endregion description -->
 
-## Status <Badge type="info" text="method" />
+## Status <Badge type="info">method</Badge>
 
 Retrieve the condition of the service.
 
@@ -35,9 +35,9 @@ const { success } = await mailchannels.service.status()
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
-## Subscriptions <Badge type="info" text="method" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
+## Subscriptions <Badge type="info">method</Badge>
 
 Get a list of your subscriptions to MailChannels Inbound.
 
@@ -64,18 +64,18 @@ const { subscriptions } = await mailchannels.service.subscriptions()
 
 ### Response
   
-- `subscriptions` `object[]` <Badge text="guaranteed" />
-  - `active` `boolean` <Badge text="guaranteed" />
-  - `activeAccountsCount` `number` <Badge text="guaranteed" />
-  - `handle` `string` <Badge text="guaranteed" />
-  - `limits` `object[]` <Badge text="guaranteed" />
-    - `featureHandle` `string` <Badge text="guaranteed" />
-    - `value` `string` <Badge text="guaranteed" />
-  - `plan` `object` <Badge text="guaranteed" />
-    - `handle` `string` <Badge text="guaranteed" />
-    - `name` `string` <Badge text="guaranteed" />
-- `error` `string | null` <Badge type="warning" text="nullable" />
-## Report <Badge type="info" text="method" />
+- `subscriptions` `object[]` <Badge>guaranteed</Badge>
+  - `active` `boolean` <Badge>guaranteed</Badge>
+  - `activeAccountsCount` `number` <Badge>guaranteed</Badge>
+  - `handle` `string` <Badge>guaranteed</Badge>
+  - `limits` `object[]` <Badge>guaranteed</Badge>
+    - `featureHandle` `string` <Badge>guaranteed</Badge>
+    - `value` `string` <Badge>guaranteed</Badge>
+  - `plan` `object` <Badge>guaranteed</Badge>
+    - `handle` `string` <Badge>guaranteed</Badge>
+    - `name` `string` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
+## Report <Badge type="info">method</Badge>
 
 Submit a false negative or false positive report.
 
@@ -108,20 +108,20 @@ const { success } = await mailchannels.service.report({
 
 ### Params
 
-- `options` `ServiceReportOptions` <Badge type="danger" text="required" />: The report options.
-  - `type` `"false_negative" | "false_positive"` <Badge type="danger" text="required" />: The type of report. Can be either `false_positive` or `false_negative`.
-  - `messageContent` `string` <Badge type="danger" text="required" />: The full, unaltered message content in accordance with the RFC 2822 specifications without dot stuffing.
-  - `smtpEnvelopeInformation` `object` <Badge type="info" text="optional" />: The SMTP envelope information.
-    - `ehlo` `string` <Badge text="guaranteed" />
-    - `mailFrom` `string` <Badge text="guaranteed" />
-    - `rcptTo` `string` <Badge text="guaranteed" />
-  - `sendingHostInformation` `object` <Badge type="info" text="optional" />: The sending host information.
-    - `name` `string` <Badge text="guaranteed" />
+- `options` `ServiceReportOptions` <Badge type="danger">required</Badge>: The report options.
+  - `type` `"false_negative" | "false_positive"` <Badge type="danger">required</Badge>: The type of report. Can be either `false_positive` or `false_negative`.
+  - `messageContent` `string` <Badge type="danger">required</Badge>: The full, unaltered message content in accordance with the RFC 2822 specifications without dot stuffing.
+  - `smtpEnvelopeInformation` `object` <Badge type="info">optional</Badge>: The SMTP envelope information.
+    - `ehlo` `string` <Badge>guaranteed</Badge>
+    - `mailFrom` `string` <Badge>guaranteed</Badge>
+    - `rcptTo` `string` <Badge>guaranteed</Badge>
+  - `sendingHostInformation` `object` <Badge type="info">optional</Badge>: The sending host information.
+    - `name` `string` <Badge>guaranteed</Badge>
 
 ### Response
 
-- `success` `boolean` <Badge text="guaranteed" />: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning" text="nullable" />
+- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Type declarations
 
