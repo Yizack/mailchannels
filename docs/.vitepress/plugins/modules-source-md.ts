@@ -2,7 +2,7 @@ import type MarkdownIt from "markdown-it";
 
 const URL = "https://github.com/Yizack/mailchannels/blob/main";
 
-export const modulesSource = (md: MarkdownIt) => {
+export default (md: MarkdownIt) => {
   const render = md.render.bind(md);
   md.render = function (src, env = {}) {
     if (env.relativePath && env.relativePath.startsWith("modules/")) {
