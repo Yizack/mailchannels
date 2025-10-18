@@ -92,7 +92,7 @@ export class Emails {
         data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature.",
-          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 20MB. This includes the message itself, headers, and the combined size of any attachments."
+          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
         });
       }
     }).catch(() => null);
