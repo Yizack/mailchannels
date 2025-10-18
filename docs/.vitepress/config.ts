@@ -1,5 +1,6 @@
 import { type HeadConfig, defineConfig } from "vitepress";
 import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-icons";
+import llmstxt from "vitepress-plugin-llms";
 import sidebarConfig from "./sidebar";
 import navbarConfig from "./navbar";
 import modulesSourceMd from "./plugins/modules-source-md";
@@ -54,7 +55,9 @@ export default defineConfig({
   vite: {
     plugins: [
       // @ts-expect-error vite plugin types
-      groupIconVitePlugin()
+      groupIconVitePlugin(),
+      // @ts-expect-error vite plugin types
+      llmstxt()
     ]
   },
   sitemap: {
