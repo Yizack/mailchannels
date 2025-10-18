@@ -58,7 +58,8 @@ html.dark {
   transform: translateY(0);
 }
 
-.vp-doc[class*="_modules"] ul li > code + code:has(+ span.VPBadge) {
+.vp-doc[class*="_modules"] ul li > code + code:has(+ span.VPBadge),
+.result[href*="/modules"] .vp-doc ul li > code + code:has(+ span.VPBadge, + badge) {
   color: var(--vp-c-important-1);
 }
 
@@ -86,12 +87,14 @@ html.dark {
   pointer-events: auto;
 }
 
-.vp-doc[class*="_modules"] ul {
+.vp-doc[class*="_modules"] ul,
+.result[href*="/modules"] .vp-doc ul {
   margin-left: calc(-0.82rem - 1px);
   padding-left: calc(2.07rem + 1px);
 }
 
-.vp-doc[class*="_modules"] li > ul {
+.vp-doc[class*="_modules"] li > ul,
+.result[href*="/modules"] .vp-doc li > ul {
   border-left: 1px solid;
   border-color: var(--vp-c-divider);
   margin-left: calc(-0.82rem - 2px);
