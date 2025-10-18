@@ -18,10 +18,16 @@
     "moduleResolution": "Bundler",
     "declaration": true
   },
+  "include": [
+    "src/**/*",
+    "playground/**/*",
+    "docs/**/*",
+    "docs/.vitepress/**/*"
+  ],
   "exclude": [
-    "dist/**",
-    "docs/**",
-    "playground/**",
-    "examples/**"
+    "node_modules",
+    "dist",
+    "docs/snippets",
+    "docs/.vitepress/theme"
   ]
 }

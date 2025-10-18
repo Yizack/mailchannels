@@ -8,7 +8,11 @@ const {
   MAILCHANNELS_SUBSCRIPTION_HANDLE: subscriptionHandle,
   MAILCHANNELS_EMAIL: email,
   MAILCHANNELS_SECOND_DOMAIN: secondDomain
-} = process.env as Record<string, string>;
+} = process.env;
+
+if (!apiKey || !dkimDomain || !subscriptionHandle || !email || !secondDomain) {
+  throw new Error("Missing environment variables");
+}
 
 const mailchannels = new MailChannels(apiKey);
 const { results, error } = await mailchannels.domains.bulkProvision({

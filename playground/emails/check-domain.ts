@@ -8,7 +8,11 @@ const {
   MAILCHANNELS_DKIM_SELECTOR: dkimSelector,
   MAILCHANNELS_DKIM_PRIVATE_KEY: dkimPrivateKey,
   MAILCHANNELS_SENDER_ID: senderId
-} = process.env as Record<string, string>;
+} = process.env;
+
+if (!apiKey || !dkimDomain) {
+  throw new Error("Missing environment variables");
+}
 
 const mailchannels = new MailChannels(apiKey);
 const { results, error } = await mailchannels.emails.checkDomain({

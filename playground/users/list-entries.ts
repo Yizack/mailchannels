@@ -5,7 +5,11 @@ process.loadEnvFile();
 const {
   MAILCHANNELS_API_KEY: apiKey,
   MAILCHANNELS_DKIM_DOMAIN: dkimDomain
-} = process.env as Record<string, string>;
+} = process.env;
+
+if (!apiKey || !dkimDomain) {
+  throw new Error("Missing environment variables");
+}
 
 const mailchannels = new MailChannels(apiKey);
 const { entries, error } = await mailchannels.users.listEntries(`test@${dkimDomain}`, "safelist");

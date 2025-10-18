@@ -4,7 +4,11 @@ process.loadEnvFile();
 
 const {
   MAILCHANNELS_API_KEY: apiKey
-} = process.env as Record<string, string>;
+} = process.env;
+
+if (!apiKey) {
+  throw new Error("Missing environment variables");
+}
 
 const mailchannels = new MailChannels(apiKey);
 const { account, error } = await mailchannels.subAccounts.create("My Company", "validhandle1234");
