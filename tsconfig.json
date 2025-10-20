@@ -19,14 +19,12 @@
     "declaration": true
   },
   "include": [
-    "src/**/*",
-    "playground/**/*",
-    "docs/**/*",
+    "src",
+    "playground",
+    "docs",
     "docs/.vitepress/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "dist",
     "docs/snippets",
     "docs/.vitepress/theme"
   ]
