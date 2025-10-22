@@ -120,8 +120,9 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { success, data } = await emails.send(fake.send.options);
+    const { success, data, error } = await emails.send(fake.send.options);
 
+    expect(error).toBeNull();
     expect(success).toBe(true);
     expect(data).toEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
@@ -180,17 +181,19 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const result = await emails.send(fake.send.options);
+    const { success, error } = await emails.send(fake.send.options);
 
-    expect(result.success).toBe(false);
+    expect(error).toBeTruthy();
+    expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.BadRequest } });
-      })
+      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => new Promise((_, reject) => {
+        onResponse({ response: { ok: false } });
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -198,6 +201,49 @@ describe("send", () => {
 
     expect(error).toBeTruthy();
     expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with trackings disabled", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.send.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, data, error } = await emails.send({
+      ...fake.send.options,
+      tracking: {
+        click: false,
+        open: false
+      }
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(data).toEqual(fake.send.expectedResponse.data);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with no tracking", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.send.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, data, error } = await emails.send({
+      ...fake.send.options,
+      tracking: undefined
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(data).toEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -218,9 +264,10 @@ describe("checkDomain", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
-        onResponseError({ response: { status: ErrorCode.BadRequest } });
-      })
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { ok: false } });
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -248,9 +295,10 @@ describe("createDkimKey", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: ErrorCode.BadRequest } });
-      })
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -289,9 +337,10 @@ describe("getDkimKeys", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: ErrorCode.BadRequest } });
-      })
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);

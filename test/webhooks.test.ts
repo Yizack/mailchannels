@@ -179,9 +179,10 @@ describe("getSigningKey", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
         onResponseError({ response: { status: ErrorCode.NotFound } });
-      })
+        reject();
+      }))
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
