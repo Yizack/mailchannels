@@ -16,8 +16,7 @@ Retrieve the condition of the service.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Service } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Service } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
@@ -27,6 +26,7 @@ const { success } = await service.status()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.service.status()
@@ -45,8 +45,7 @@ Get a list of your subscriptions to MailChannels Inbound.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Service } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Service } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
@@ -56,6 +55,7 @@ const { subscriptions } = await service.subscriptions()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { subscriptions } = await mailchannels.service.subscriptions()
@@ -83,8 +83,7 @@ Submit a false negative or false positive report.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Service } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Service } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
@@ -97,6 +96,7 @@ const { success } = await service.report({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.service.report({

@@ -16,8 +16,7 @@ Create a recipient user.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Users } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Users } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -29,6 +28,7 @@ const { user } = await users.create('name@example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { user } = await mailchannels.users.create('name@example.com', {
@@ -74,8 +74,7 @@ Add an entry to a recipient user blocklist or safelist.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Users } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Users } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -88,6 +87,7 @@ const { entry } = await users.addListEntry('name@example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.users.addListEntry('name@example.com', {
@@ -120,8 +120,7 @@ Get recipient list entries.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Users } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Users } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -131,6 +130,7 @@ const { entries } = await users.listEntries('name@example.com', 'safelist')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { entries } = await mailchannels.users.listEntries('name@example.com', 'safelist')
@@ -158,8 +158,7 @@ Delete item from recipient list.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Users } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Users } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
@@ -172,6 +171,7 @@ const { success } = await users.deleteListEntry('name@example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.users.deleteListEntry('name@example.com', {

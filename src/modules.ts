@@ -10,6 +10,3 @@ export { Domains } from "./modules/domains";
 export { Lists } from "./modules/lists";
 export { Users } from "./modules/users";
 export { Service } from "./modules/service";
-
-// Types
-export type * from "./types";

@@ -15,8 +15,7 @@ Creates a new sub-account under the parent account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -26,6 +25,7 @@ const { account } = await subAccounts.create('My Company', 'validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
@@ -59,8 +59,7 @@ Retrieves all sub-accounts associated with the parent account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -70,6 +69,7 @@ const { accounts } = await subAccounts.list()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { accounts } = await mailchannels.subAccounts.list()
@@ -100,8 +100,7 @@ Deletes the sub-account identified by its handle.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -111,6 +110,7 @@ const { success } = await subAccounts.delete('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.delete('validhandle123')
@@ -134,8 +134,7 @@ Suspends the sub-account identified by its handle. This action disables the acco
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -145,6 +144,7 @@ const { success } = await subAccounts.suspend('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.suspend('validhandle123')
@@ -168,8 +168,7 @@ Activates a suspended sub-account identified by its handle, restoring its abilit
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -179,6 +178,7 @@ const { success } = await subAccounts.activate('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.activate('validhandle123')
@@ -202,8 +202,7 @@ Creates a new API key for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -213,6 +212,7 @@ const { key } = await subAccounts.createApiKey('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
@@ -238,8 +238,7 @@ Retrieves details of all API keys associated with the specified sub-account. For
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -249,6 +248,7 @@ const { keys } = await subAccounts.listApiKeys('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
@@ -279,8 +279,7 @@ Deletes the API key identified by its ID for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -290,6 +289,7 @@ const { success } = await subAccounts.deleteApiKey('validhandle123', 1)
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
@@ -314,8 +314,7 @@ Creates a new API key for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -325,6 +324,7 @@ const { password } = await subAccounts.createSmtpPassword('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
@@ -351,8 +351,7 @@ Retrieves details of all API keys associated with the specified sub-account. For
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -362,6 +361,7 @@ const { keys } = await subAccounts.listSmtpPasswords('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
@@ -388,8 +388,7 @@ Deletes the SMTP password identified by its ID for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -399,6 +398,7 @@ const { success } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
@@ -426,8 +426,7 @@ Retrieves the limit of a specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -437,6 +436,7 @@ const { limit } = await subAccounts.getLimit('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
@@ -461,8 +461,7 @@ Sets the limit for the specified sub-account.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -472,6 +471,7 @@ const { success } = await subAccounts.setLimit('validhandle123', { sends: 1000 }
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
@@ -499,8 +499,7 @@ Deletes the limit for the specified sub-account. After a successful deletion, th
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -510,6 +509,7 @@ const { success } = await subAccounts.deleteLimit('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
@@ -533,8 +533,7 @@ Retrieves usage statistics for the specified sub-account during the current bill
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { SubAccounts } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
@@ -544,6 +543,7 @@ const { usage } = await subAccounts.getUsage('validhandle123')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
