@@ -1,6 +1,36 @@
 # Changelog
 
 
+## v0.5.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.7...v0.5.0)
+
+### 💅 Refactors
+
+- ⚠️  Single import pattern module exports + update docs ([#19](https://github.com/Yizack/mailchannels/pull/19))
+
+### 📖 Documentation
+
+- Update disclaimer ([40dd4bc](https://github.com/Yizack/mailchannels/commit/40dd4bc))
+- Fix code block highlighting in guide example ([8cae28a](https://github.com/Yizack/mailchannels/commit/8cae28a))
+- Badge `tip` type not neccessary ([580e3e9](https://github.com/Yizack/mailchannels/commit/580e3e9))
+
+### 🏡 Chore
+
+- Simplify tsconfig ([6fc6f48](https://github.com/Yizack/mailchannels/commit/6fc6f48))
+
+### ✅ Tests
+
+- Add missing Promise rejection in mock implementations for api error handling scenarios ([4387945](https://github.com/Yizack/mailchannels/commit/4387945))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Single import pattern module exports + update docs ([#19](https://github.com/Yizack/mailchannels/pull/19))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.4.7
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.6...v0.4.7)
