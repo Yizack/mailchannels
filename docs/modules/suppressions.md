@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 🚫 Suppressions <Badge type="tip">module</Badge> <Badge type="tip">Email API</Badge>
+# 🚫 Suppressions <Badge>module</Badge> <Badge>Email API</Badge>
 
 <!-- #region description -->
 Manage your MailChannels account suppressions list.

@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 📋 Lists <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
+# 📋 Lists <Badge>module</Badge> <Badge>Inbound API</Badge>
 
 <!-- #region description -->
 Manage account-level lists.

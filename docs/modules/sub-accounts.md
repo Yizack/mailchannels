@@ -1,4 +1,4 @@
-# 🪪 Sub-Accounts <Badge type="tip">module</Badge> <Badge type="tip">Email API</Badge>
+# 🪪 Sub-Accounts <Badge>module</Badge> <Badge>Email API</Badge>
 
 <!-- #region description -->
 Manage your sub-accounts associated with your MailChannels account.

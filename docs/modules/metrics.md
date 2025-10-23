@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 📊 Metrics <Badge type="tip">module</Badge> <Badge type="tip">Email API</Badge>
+# 📊 Metrics <Badge>module</Badge> <Badge>Email API</Badge>
 
 <!-- #region description -->
 This module allows you to retrieve metrics for messages sent from your account.

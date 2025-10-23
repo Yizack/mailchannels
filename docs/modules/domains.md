@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 🌐 Domains <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
+# 🌐 Domains <Badge>module</Badge> <Badge>Inbound API</Badge>
 
 <!-- #region description -->
 Manage your MailChannels Inbound domains.

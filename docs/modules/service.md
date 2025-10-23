@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# ⚙️ Service <Badge type="tip">module</Badge> <Badge type="tip">Inbound API</Badge>
+# ⚙️ Service <Badge>module</Badge> <Badge>Inbound API</Badge>
 
 <!-- #region description -->
 Get information about the service.

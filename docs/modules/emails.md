@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# 📧 Emails <Badge type="tip">module</Badge> <Badge type="tip">Email API</Badge>
+# 📧 Emails <Badge>module</Badge> <Badge>Email API</Badge>
 
 <!-- #region description -->
 This module allows you to send emails and check domain settings for secure email delivery.
