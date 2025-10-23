@@ -16,8 +16,7 @@ Provision a single domain to use MailChannels Inbound.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -30,6 +29,7 @@ const { data } = await domains.provision({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { data } = await mailchannels.domains.provision({
@@ -90,8 +90,7 @@ Provision up to 1000 domains to use MailChannels Inbound.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -106,6 +105,7 @@ const { results } = await domains.bulkProvision({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { results } = await mailchannels.domains.bulkProvision({
@@ -191,8 +191,7 @@ Fetch a list of all domains associated with this API key.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -202,6 +201,7 @@ const { domains: domainsList } = await domains.list()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { domains } = await mailchannels.domains.list()
@@ -245,8 +245,7 @@ De-provision a domain to cease protecting it with MailChannels Inbound.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -256,6 +255,7 @@ const { success } = await domains.delete('example.com')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.domains.delete('example.com')
@@ -279,8 +279,7 @@ Add an entry to a domain blocklist or safelist.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -293,6 +292,7 @@ const { entry } = await domains.addListEntry('example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { entry } = await mailchannels.domains.addListEntry('example.com', {
@@ -325,8 +325,7 @@ Get domain list entries.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -336,6 +335,7 @@ const { entries } = await domains.listEntries('example.com', 'safelist')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { entries } = await mailchannels.domains.listEntries('example.com', 'safelist')
@@ -363,8 +363,7 @@ Delete item from domain list.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -377,6 +376,7 @@ const { success } = await domains.deleteListEntry('example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.domains.deleteListEntry('example.com', {
@@ -406,8 +406,7 @@ Generate a link that allows a user to log in as a domain administrator.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -417,6 +416,7 @@ const { link } = await domains.createLoginLink("example.com")
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { link } = await mailchannels.domains.createLoginLink("example.com")
@@ -443,8 +443,7 @@ Sets the list of downstream addresses for the domain.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -461,6 +460,7 @@ const { success } = await domains.setDownstreamAddress('example.com', [
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.domains.setDownstreamAddress('example.com', [
@@ -498,8 +498,7 @@ Retrieve stored downstream addresses for the domain.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -509,6 +508,7 @@ const { records } = await domains.listDownstreamAddresses('example.com')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { records } = await mailchannels.domains.listDownstreamAddresses('example.com')
@@ -541,8 +541,7 @@ Update the API key that is associated with a domain.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -552,6 +551,7 @@ const { success } = await domains.updateApiKey('example.com', 'your-api-key')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
@@ -576,8 +576,7 @@ Generate a batch of links that allow a user to log in as a domain administrator 
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Domains } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
@@ -590,6 +589,7 @@ const { results } = await domains.bulkCreateLoginLinks([
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { results } = await mailchannels.domains.bulkCreateLoginLinks([

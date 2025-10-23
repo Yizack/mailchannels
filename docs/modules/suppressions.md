@@ -16,8 +16,7 @@ Creates suppression entries for the specified account. Parent accounts can creat
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Suppressions } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -36,6 +35,7 @@ const { success } = await suppressions.create({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.suppressions.create({
@@ -75,8 +75,7 @@ Deletes suppression entry associated with the account based on the specified rec
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Suppressions } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -86,6 +85,7 @@ const { success } = await suppressions.delete("name@example.com", "api")
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.suppressions.delete("name@example.com", "api")
@@ -112,8 +112,7 @@ Retrieve suppression entries associated with the specified account. Supports fil
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Suppressions } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
@@ -123,6 +122,7 @@ const { list } = await suppressions.list()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { list } = await mailchannels.suppressions.list()

@@ -16,8 +16,7 @@ Enrolls the user to receive event notifications via webhooks.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -27,6 +26,7 @@ const { success } = await webhooks.enroll("https://example.com/api/webhooks/mail
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels")
@@ -50,8 +50,7 @@ Lists all the webhook endpoints that are enrolled to receive event notifications
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -61,6 +60,7 @@ const { webhooks: webhooksList } = await webhooks.list()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { webhooks } = await mailchannels.webhooks.list()
@@ -81,8 +81,7 @@ Deletes all registered webhook endpoints for the user.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -92,6 +91,7 @@ const { success } = await webhooks.delete()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.webhooks.delete()
@@ -111,8 +111,7 @@ Retrieves the public key used to verify signatures on incoming webhook payloads.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -122,6 +121,7 @@ const { key } = await webhooks.getSigningKey('key-id')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { key } = await mailchannels.webhooks.getSigningKey('key-id')
@@ -148,8 +148,7 @@ Validates whether your enrolled webhook(s) respond with an HTTP `2xx` status cod
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Webhooks } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
@@ -159,6 +158,7 @@ const { allPassed, results } = await webhooks.validate('optional-request-id')
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')

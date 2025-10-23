@@ -16,8 +16,7 @@ Retrieve engagement metrics for messages sent from your account, including count
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Metrics } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -27,6 +26,7 @@ const { engagement } = await metrics.engagement()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { engagement } = await mailchannels.metrics.engagement()
@@ -73,8 +73,7 @@ Retrieve performance metrics for messages sent from your account, including coun
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Metrics } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -84,6 +83,7 @@ const { performance } = await metrics.performance()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { performance } = await mailchannels.metrics.performance()
@@ -126,8 +126,7 @@ Retrieve recipient behaviour metrics for messages sent from your account, includ
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Metrics } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -137,6 +136,7 @@ const { behaviour } = await metrics.recipientBehaviour()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { behaviour } = await mailchannels.metrics.recipientBehaviour()
@@ -175,8 +175,7 @@ Retrieve volume metrics for messages sent from your account, including counts of
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Metrics } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -186,6 +185,7 @@ const { volume } = await metrics.volume()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { volume } = await mailchannels.metrics.volume()
@@ -228,8 +228,7 @@ Retrieves usage statistics during the current billing period.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Metrics } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
@@ -239,6 +238,7 @@ const { usage } = await metrics.usage()
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { usage } = await mailchannels.metrics.usage()

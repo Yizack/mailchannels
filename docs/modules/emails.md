@@ -16,8 +16,7 @@ Sends an email message to one or more recipients.
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Emails } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -33,6 +32,7 @@ const { success, data } = await emails.send({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success, data } = await mailchannels.emails.send({
@@ -116,8 +116,7 @@ Validates a domain's email authentication setup by retrieving its DKIM, SPF, and
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Emails } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -135,6 +134,7 @@ const { results } = await emails.checkDomain({
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.emails.checkDomain({
@@ -202,8 +202,7 @@ Create a DKIM key pair for a specified domain and selector using the specified a
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Emails } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -215,6 +214,7 @@ const { key } = await emails.createDkimKey('example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { key } = await mailchannels.emails.createDkimKey('example.com', {
@@ -259,8 +259,7 @@ Search for DKIM keys by customer handle and domain, with optional filters. If se
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Emails } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -272,6 +271,7 @@ const { keys } = await emails.getDkimKeys('example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
@@ -317,8 +317,7 @@ Update fields of an existing DKIM key pair for the specified domain and selector
 
 ::: code-group
 ```ts [modular.ts]
-import { MailChannelsClient } from 'mailchannels-sdk'
-import { Emails } from 'mailchannels-sdk/modules'
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
@@ -331,6 +330,7 @@ const { success } = await emails.updateDkimKey('example.com', {
 
 ```ts [full.ts]
 import { MailChannels } from 'mailchannels-sdk'
+
 const mailchannels = new MailChannels('your-api-key')
 
 const { success } = await mailchannels.emails.updateDkimKey('example.com', {

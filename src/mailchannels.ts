@@ -2,6 +2,7 @@ import { MailChannelsClient } from "./client";
 import { Domains, Emails, Lists, Metrics, Service, SubAccounts, Suppressions, Users, Webhooks } from "./modules";
 
 export { MailChannelsClient };
+export * from "./modules";
 export type * from "./types";
 
 export class MailChannels extends MailChannelsClient {
