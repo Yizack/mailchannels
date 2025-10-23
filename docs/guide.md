@@ -50,7 +50,7 @@ This method is useful when building an application on top of MailChannels and yo
 
 In this example, we import the `MailChannelsClient` and the `Emails` module to send an email.
 
-```ts{1,2}
+```ts{1}
 import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
