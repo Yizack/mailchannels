@@ -39,12 +39,13 @@ In this example, we import the whole library and use the `MailChannels` class to
 import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
+
 const { success, data } = await mailchannels.emails.send({
   // ...
 })
 ```
 
-This method is useful when building an application on top of MailChannels and you need to use multiple modules from the library.
+This approach is useful when building an application on top of MailChannels and you need to use all or multiple modules from the library.
 
 ### Importing only the modules you need
 
@@ -55,12 +56,13 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
+
 const { success, data } = await emails.send({
   // ...
 })
 ```
 
-This method is useful when you only need to use a specific module from the library and want to reduce the bundle size.
+This approach is tree-shakable and is useful when you only need to use specific modules from the library and want to reduce the bundle size of your application.
 
 ### Error handling
 
