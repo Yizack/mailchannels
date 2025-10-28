@@ -48,13 +48,13 @@
     "docs:snippets": "jiti docs/scripts/snippets"
   },
   "dependencies": {
-    "ofetch": "^1.4.1"
+    "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {
     "@eslint/compat": "^1.4.0",
     "@stylistic/eslint-plugin": "^5.5.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.9.2",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "@vitest/coverage-v8": "^4.0.4",
@@ -70,5 +70,5 @@
     "vitepress-plugin-llms": "^1.8.1",
     "vitest": "^4.0.4"
   },
-  "packageManager": "pnpm@10.19.0"
+  "packageManager": "pnpm@10.20.0"
 }
