@@ -154,20 +154,20 @@ Already implemented features are marked with a checkmark. Please open an issue i
 pnpm install
 
 # Build the package
-npm run build
+pnpm build
 
 # Run ESLint
-npm run lint
+pnpm lint
 
 # Run Vitest
-npm run test
-npm run test:watch
+pnpm test
+pnpm test:watch
 
 # Run typecheck
-npm run test:types
+pnpm test:types
 
 # Release new version
-npm run release
+pnpm release
 ```
 
 </details>
