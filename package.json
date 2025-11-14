@@ -51,7 +51,7 @@
     "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.4.1",
+    "@eslint/compat": "^2.0.0",
     "@stylistic/eslint-plugin": "^5.5.0",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^24.10.0",
