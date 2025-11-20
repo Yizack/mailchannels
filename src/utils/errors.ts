@@ -23,7 +23,7 @@ export const getStatusError = (
     details = payload;
   }
   else if ((payload as { message?: string })?.message) {
-    details = (payload as { message?: string }).message;
+    details = (payload as { message?: string }).message || "";
   }
   else if (Array.isArray((payload as { errors?: string[] })?.errors) && (payload as { errors?: string[] }).errors?.length) {
     details = (payload as { errors: string[] }).errors.join(", ");
