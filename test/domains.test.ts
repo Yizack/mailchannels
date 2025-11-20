@@ -139,6 +139,32 @@ describe("provision", () => {
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.provision(fake.provision);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.provision(fake.provision);
+
+    expect(error).toBe("Failed to provision domain.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("bulkProvision", () => {
@@ -199,6 +225,32 @@ describe("bulkProvision", () => {
     ]);
 
     expect(error).toBeTruthy();
+    expect(results).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
+
+    expect(error).toBe("failure");
+    expect(results).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
+
+    expect(error).toBe("Failed to provision domains.");
     expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

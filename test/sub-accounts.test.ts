@@ -230,7 +230,7 @@ describe("list", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -239,6 +239,32 @@ describe("list", () => {
     const { accounts, error } = await subAccounts.list();
 
     expect(error).toBeTruthy();
+    expect(accounts).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { accounts, error } = await subAccounts.list();
+
+    expect(error).toBe("failure");
+    expect(accounts).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { accounts, error } = await subAccounts.list();
+
+    expect(error).toBe("Failed to fetch sub-accounts.");
     expect(accounts).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
