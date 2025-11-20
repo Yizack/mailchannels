@@ -52,12 +52,12 @@
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.0",
-    "@stylistic/eslint-plugin": "^5.5.0",
+    "@stylistic/eslint-plugin": "^5.6.1",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.10.0",
-    "@typescript-eslint/eslint-plugin": "^8.46.4",
-    "@typescript-eslint/parser": "^8.46.4",
-    "@vitest/coverage-v8": "^4.0.8",
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "@vitest/coverage-v8": "^4.0.10",
     "changelogen": "^0.6.2",
     "eslint": "^9.39.1",
     "eslint-plugin-import-x": "^4.16.1",
@@ -67,8 +67,8 @@
     "unbuild": "^3.6.1",
     "vitepress": "^1.6.4",
     "vitepress-plugin-group-icons": "^1.6.5",
-    "vitepress-plugin-llms": "^1.9.1",
-    "vitest": "^4.0.8"
+    "vitepress-plugin-llms": "^1.9.3",
+    "vitest": "^4.0.10"
   },
-  "packageManager": "pnpm@10.21.0"
+  "packageManager": "pnpm@10.22.0"
 }
