@@ -18,7 +18,8 @@ export const getStatusError = (
 
   const payload = (response as FetchResponse<unknown>)._data ?? (response as unknown as { data?: unknown }).data;
 
-  let details = "";
+  let details: string | undefined = "";
+
   if (typeof payload === "string") {
     details = payload;
   }
