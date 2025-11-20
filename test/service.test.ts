@@ -76,6 +76,32 @@ describe("subscriptions", () => {
     expect(subscriptions).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { subscriptions, error } = await service.subscriptions();
+
+    expect(error).toBe("failure");
+    expect(subscriptions).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { subscriptions, error } = await service.subscriptions();
+
+    expect(error).toBe("Failed to fetch subscriptions.");
+    expect(subscriptions).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("report", () => {

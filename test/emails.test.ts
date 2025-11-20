@@ -435,4 +435,36 @@ describe("updateDkimKey", () => {
     expect(error).toBe("Selector must be between 1 and 63 characters.");
     expect(mockClient.patch).not.toHaveBeenCalled();
   });
+
+  it("should handle try-catch block errors", async () => {
+    const mockClient = {
+      patch: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.updateDkimKey("example.com", {
+      selector: "mailchannels",
+      status: "retired"
+    });
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.patch).toHaveBeenCalled();
+  });
+
+  it("should handle try-catch block with non-Error rejections", async () => {
+    const mockClient = {
+      patch: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.updateDkimKey("example.com", {
+      selector: "mailchannels",
+      status: "retired"
+    });
+
+    expect(error).toBe("Failed to update DKIM key.");
+    expect(success).toBe(false);
+    expect(mockClient.patch).toHaveBeenCalled();
+  });
 });

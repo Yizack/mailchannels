@@ -16,15 +16,18 @@ export const getStatusError = (
 ) => {
   const statusText = errors[response.status] || "Unknown error.";
 
-  let details = "";
-  if (typeof response._data === "string") {
-    details = response._data;
+  const payload = (response as FetchResponse<unknown>)._data ?? (response as unknown as { data?: unknown }).data;
+
+  let details: string | undefined;
+
+  if (typeof payload === "string") {
+    details = payload;
   }
-  else if (response._data?.message) {
-    details = response._data.message;
+  else if ((payload as { message?: string })?.message) {
+    details = (payload as { message?: string }).message;
   }
-  else if (Array.isArray(response._data?.errors) && response._data.errors.length) {
-    details = response._data.errors.join(", ");
+  else if (Array.isArray((payload as { errors?: string[] })?.errors) && (payload as { errors?: string[] }).errors?.length) {
+    details = (payload as { errors: string[] }).errors.join(", ");
   }
 
   return details ? `${statusText} ${details}` : statusText;

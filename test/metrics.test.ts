@@ -177,6 +177,32 @@ describe("engagement", () => {
     expect(engagement).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { engagement, error } = await metrics.engagement();
+
+    expect(error).toBe("failure");
+    expect(engagement).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { engagement, error } = await metrics.engagement();
+
+    expect(error).toBe("Failed to fetch engagement metrics.");
+    expect(engagement).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("performance", () => {
@@ -205,6 +231,32 @@ describe("performance", () => {
     const { performance, error } = await metrics.performance();
 
     expect(error).toBeTruthy();
+    expect(performance).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { performance, error } = await metrics.performance();
+
+    expect(error).toBe("failure");
+    expect(performance).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { performance, error } = await metrics.performance();
+
+    expect(error).toBe("Failed to fetch performance metrics.");
     expect(performance).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -239,6 +291,32 @@ describe("recipientBehaviour", () => {
     expect(behaviour).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { behaviour, error } = await metrics.recipientBehaviour();
+
+    expect(error).toBe("failure");
+    expect(behaviour).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { behaviour, error } = await metrics.recipientBehaviour();
+
+    expect(error).toBe("Failed to fetch recipient behaviour metrics.");
+    expect(behaviour).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("volume", () => {
@@ -270,6 +348,32 @@ describe("volume", () => {
     expect(volume).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { volume, error } = await metrics.volume();
+
+    expect(error).toBe("failure");
+    expect(volume).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { volume, error } = await metrics.volume();
+
+    expect(error).toBe("Failed to fetch volume metrics.");
+    expect(volume).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("usage", () => {
@@ -298,6 +402,32 @@ describe("usage", () => {
     const { usage, error } = await metrics.usage();
 
     expect(error).toBeTruthy();
+    expect(usage).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { usage, error } = await metrics.usage();
+
+    expect(error).toBe("failure");
+    expect(usage).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { usage, error } = await metrics.usage();
+
+    expect(error).toBe("Failed to fetch usage metrics.");
     expect(usage).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

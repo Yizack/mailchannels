@@ -314,20 +314,27 @@ export class Emails {
       status: options.status
     };
 
-    await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
-      body: payload,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
+    try {
+      await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
+        body: payload,
+        ignoreResponseError: true,
+        onResponse: async ({ response }) => {
+          if (response.ok) {
+            data.success = true;
+            return;
+          }
+          data.error = getStatusError(response, {
+            [ErrorCode.BadRequest]: "Bad Request.",
+            [ErrorCode.NotFound]: "Specified key pair not found, or the DKIM domain or selector path parameter is missing."
+          });
         }
-        data.error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.NotFound]: "Specified key pair not found, or the DKIM domain or selector path parameter is missing."
-        });
+      });
+    }
+    catch (error) {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
       }
-    });
+    }
 
     return data;
   }

@@ -119,16 +119,42 @@ describe("list", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { webhooks: webhooksList, error } = await webhooks.list();
+    const { webhooks: list, error } = await webhooks.list();
 
     expect(error).toBeTruthy();
-    expect(webhooksList).toEqual([]);
+    expect(list).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors when onResponseError is not triggered", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { webhooks: list, error } = await webhooks.list();
+
+    expect(error).toBe("failure");
+    expect(list).toEqual([]);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { webhooks: list, error } = await webhooks.list();
+
+    expect(error).toBe("Failed to fetch webhooks.");
+    expect(list).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
