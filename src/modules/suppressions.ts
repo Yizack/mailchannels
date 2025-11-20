@@ -27,7 +27,8 @@ export class Suppressions {
       suppression_entries: entries.map(entry => ({
         notes: entry.notes,
         recipient: entry.recipient,
-        suppression_types: Array.from(new Set(entry.types))
+        // Default to non-transactional when caller omits types
+        suppression_types: Array.from(new Set(entry.types || ["non-transactional"]))
       }))
     };
 

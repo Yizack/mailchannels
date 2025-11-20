@@ -49,7 +49,14 @@ export class Service {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }
-    }).catch(() => []);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch subscriptions.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
 
     data.subscriptions = response;
     return data;

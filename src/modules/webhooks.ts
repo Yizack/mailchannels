@@ -65,7 +65,14 @@ export class Webhooks {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response);
       }
-    }).catch(() => []);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
 
     data.webhooks = response.map(({ webhook }) => webhook);
     return data;

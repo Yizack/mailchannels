@@ -92,7 +92,14 @@ export class SubAccounts {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response);
       }
-    }).catch(() => []);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch sub-accounts.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
 
     data.accounts = response.map(account => ({
       companyName: account.company_name,

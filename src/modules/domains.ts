@@ -43,7 +43,12 @@ export class Domains {
           [ErrorCode.Conflict]: `The domain '${options.domain}' is already provisioned, and is associated with a different customer.`
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to provision domain.";
+      }
+      return null;
+    });
 
     data.data = response;
     return data;
@@ -97,7 +102,12 @@ export class Domains {
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own."
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to provision domains.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 

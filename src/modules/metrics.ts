@@ -39,7 +39,12 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 
@@ -85,7 +90,12 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 
@@ -129,7 +139,12 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 
@@ -171,7 +186,12 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 
@@ -206,7 +226,12 @@ export class Metrics {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
+      }
+      return null;
+    });
 
     if (!response) return data;
 

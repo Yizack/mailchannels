@@ -1,6 +1,13 @@
 # Changelog
 
 
+## Unreleased
+
+### 🩹 Fixes
+
+- Default suppression types to `non-transactional` and surface fetch failures instead of returning empty data for webhooks, service, sub-accounts, domains, metrics, and DKIM updates
+- Make status error parsing resilient to non-ofetch responses and wrap DKIM updates in structured error handling
+
 ## v0.5.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.7...v0.5.0)
@@ -714,4 +721,3 @@
 ### ❤️ Contributors
 
 - Yizack Rangel ([@Yizack](https://github.com/Yizack))
-
