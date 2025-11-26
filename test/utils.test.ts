@@ -19,6 +19,10 @@ describe("parseRecipient", () => {
     expect(recipient).toEqual(fake.object);
   });
 
+  it("should parse email without name", () => {
+    const recipient = parseRecipient("name@example.com");
+    expect(recipient).toEqual({ email: "name@example.com" });
+  });
 });
 
 describe("parseArrayRecipients", () => {
