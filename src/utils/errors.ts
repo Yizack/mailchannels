@@ -10,24 +10,26 @@ export const enum ErrorCode {
   UnprocessableEntity = 422
 }
 
+type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string;
+
 export const getStatusError = (
-  response: FetchResponse<{ message?: string, errors?: string[] } | string>,
+  response: FetchResponse<MailChannelsErrorResponse>,
   errors: Record<number, string> = {}
 ) => {
   const statusText = errors[response.status] || "Unknown error.";
 
-  const payload = (response as FetchResponse<unknown>)._data ?? (response as unknown as { data?: unknown }).data;
+  const payload = response._data ?? (response as { data?: MailChannelsErrorResponse }).data;
 
   let details: string | undefined;
 
   if (typeof payload === "string") {
     details = payload;
   }
-  else if ((payload as { message?: string })?.message) {
-    details = (payload as { message?: string }).message;
+  else if (payload?.message) {
+    details = payload.message;
   }
-  else if (Array.isArray((payload as { errors?: string[] })?.errors) && (payload as { errors?: string[] }).errors?.length) {
-    details = (payload as { errors: string[] }).errors.join(", ");
+  else if (Array.isArray(payload?.errors) && payload.errors?.length) {
+    details = payload.errors.join(", ");
   }
 
   return details ? `${statusText} ${details}` : statusText;
