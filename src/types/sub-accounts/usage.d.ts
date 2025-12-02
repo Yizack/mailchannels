@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface SubAccountsUsage {
   /**
    * The end date of the current billing period (ISO 8601 format).
@@ -15,7 +17,4 @@ export interface SubAccountsUsage {
   total: number;
 }
 
-export interface SubAccountsUsageResponse {
-  usage: SubAccountsUsage | null;
-  error: string | null;
-}
+export type SubAccountsUsageResponse = DataResponse<SubAccountsUsage>;

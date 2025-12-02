@@ -21,7 +21,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { data } = await domains.provision({
+const { data, error } = await domains.provision({
   domain: 'example.com',
   subscriptionHandle: 'your-subscription-handle'
 })
@@ -32,7 +32,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { data } = await mailchannels.domains.provision({
+const { data, error } = await mailchannels.domains.provision({
   domain: 'example.com',
   subscriptionHandle: 'your-subscription-handle'
 })
@@ -95,7 +95,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { results } = await domains.bulkProvision({
+const { data, error } = await domains.bulkProvision({
   subscriptionHandle: 'your-subscription-handle'
 }, [
   { domain: 'example.com' },
@@ -108,7 +108,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { results } = await mailchannels.domains.bulkProvision({
+const { data, error } = await mailchannels.domains.bulkProvision({
   subscriptionHandle: 'your-subscription-handle'
 }, [
   { domain: 'example.com' },
@@ -144,7 +144,7 @@ const { results } = await mailchannels.domains.bulkProvision({
 
 ### Response
 
-- `results` `object | null` <Badge type="warning">nullable</Badge>: If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
+- `data` `object | null` <Badge type="warning">nullable</Badge>: If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
   - `successes` `object[]` <Badge>guaranteed</Badge>: Domains that were successfully provisioned or updated.
     - `code` `number` <Badge>guaranteed</Badge>
     - `comment` `string` <Badge type="info">optional</Badge>
@@ -196,7 +196,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { domains: domainsList } = await domains.list()
+const { data, error } = await domains.list()
 ```
 
 ```ts [full.ts]
@@ -204,7 +204,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { domains } = await mailchannels.domains.list()
+const { data, error } = await mailchannels.domains.list()
 ```
 :::
 
@@ -219,22 +219,23 @@ const { domains } = await mailchannels.domains.list()
 
 ### Response
 
-- `domains` `DomainsData[]` <Badge>guaranteed</Badge>: A list of domain data.
-  - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
-  - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
-    - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
-    - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
-    - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
-    - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
-  - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
-  - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
-    - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
-    - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-    - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
-    - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
-  - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
-  - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `total` `number` <Badge>guaranteed</Badge>: The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
+- `data` `object | null` <Badge type="warning">nullable</Badge>
+  - `domains` `DomainsData[]` <Badge>guaranteed</Badge>: A list of domain data.
+    - `domain` `string` <Badge>guaranteed</Badge>: The domain name.
+    - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
+      - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.
+      - `abusePolicyOverride` `boolean` <Badge type="info">optional</Badge>: If `true`, this abuse policy overrides the recipient abuse policy.
+      - `spamHeaderName` `string` <Badge type="info">optional</Badge>: The header name to use if the abuse policy is set to `flag`.
+      - `spamHeaderValue` `string` <Badge type="info">optional</Badge>: The header value to use if the abuse policy is set to `flag`.
+    - `admins` `string[] | null` <Badge type="warning">nullable</Badge>: A list of email addresses that are the domain admins for the domain.
+    - `downstreamAddresses` `object[] | null` <Badge type="warning">nullable</Badge>: The locations of mail servers to which messages will be delivered after filtering.
+      - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
+      - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
+      - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
+      - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
+    - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
+    - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
+  - `total` `number` <Badge>guaranteed</Badge>: The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Delete <Badge type="info">method</Badge>
@@ -250,7 +251,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success } = await domains.delete('example.com')
+const { success, error } = await domains.delete('example.com')
 ```
 
 ```ts [full.ts]
@@ -258,7 +259,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.domains.delete('example.com')
+const { success, error } = await mailchannels.domains.delete('example.com')
 ```
 :::
 
@@ -284,7 +285,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { entry } = await domains.addListEntry('example.com', {
+const { data, error } = await domains.addListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -295,7 +296,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.domains.addListEntry('example.com', {
+const { data, error } = await mailchannels.domains.addListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -311,7 +312,7 @@ const { entry } = await mailchannels.domains.addListEntry('example.com', {
 
 ### Response
 
-- `entry` `ListEntry | null` <Badge type="warning">nullable</Badge>
+- `data` `ListEntry | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -330,7 +331,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { entries } = await domains.listEntries('example.com', 'safelist')
+const { data, error } = await domains.listEntries('example.com', 'safelist')
 ```
 
 ```ts [full.ts]
@@ -338,7 +339,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entries } = await mailchannels.domains.listEntries('example.com', 'safelist')
+const { data, error } = await mailchannels.domains.listEntries('example.com', 'safelist')
 ```
 :::
 
@@ -349,7 +350,7 @@ const { entries } = await mailchannels.domains.listEntries('example.com', 'safel
 
 ### Response
 
-- `entries` `ListEntry[]` <Badge>guaranteed</Badge>
+- `data` `ListEntry[] | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -368,7 +369,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success } = await domains.deleteListEntry('example.com', {
+const { success, error } = await domains.deleteListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -379,7 +380,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.domains.deleteListEntry('example.com', {
+const { success, error } = await mailchannels.domains.deleteListEntry('example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -411,7 +412,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { link } = await domains.createLoginLink("example.com")
+const { data, error } = await domains.createLoginLink("example.com")
 ```
 
 ```ts [full.ts]
@@ -419,7 +420,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { link } = await mailchannels.domains.createLoginLink("example.com")
+const { data, error } = await mailchannels.domains.createLoginLink("example.com")
 ```
 :::
 
@@ -429,7 +430,8 @@ const { link } = await mailchannels.domains.createLoginLink("example.com")
 
 ### Response
 
-- `link` `string | null` <Badge type="warning">nullable</Badge>: If a user browses to this URL, they will be automatically logged in as a domain admin.
+- `data` `object | null` <Badge type="warning">nullable</Badge>
+  - `link` `string` <Badge>guaranteed</Badge>: If a user browses to this URL, they will be automatically logged in as a domain admin.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Set Downstream Address <Badge type="info">method</Badge>
@@ -448,7 +450,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success } = await domains.setDownstreamAddress('example.com', [
+const { success, error } = await domains.setDownstreamAddress('example.com', [
   {
     port: 25,
     priority: 10,
@@ -463,7 +465,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.domains.setDownstreamAddress('example.com', [
+const { success, error } = await mailchannels.domains.setDownstreamAddress('example.com', [
   {
     port: 25,
     priority: 10,
@@ -503,7 +505,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { records } = await domains.listDownstreamAddresses('example.com')
+const { data, error } = await domains.listDownstreamAddresses('example.com')
 ```
 
 ```ts [full.ts]
@@ -511,7 +513,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { records } = await mailchannels.domains.listDownstreamAddresses('example.com')
+const { data, error } = await mailchannels.domains.listDownstreamAddresses('example.com')
 ```
 :::
 
@@ -526,7 +528,7 @@ const { records } = await mailchannels.domains.listDownstreamAddresses('example.
 
 ### Response
 
-- `records` `DomainsDownstreamAddress[]` <Badge>guaranteed</Badge>
+- `data` `DomainsDownstreamAddress[] | null` <Badge type="warning">nullable</Badge>
   - `port` `number` <Badge>guaranteed</Badge>: TCP port on which the downstream mail server is listening.
   - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
   - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
@@ -546,7 +548,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { success } = await domains.updateApiKey('example.com', 'your-api-key')
+const { success, error } = await domains.updateApiKey('example.com', 'your-api-key')
 ```
 
 ```ts [full.ts]
@@ -554,7 +556,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
+const { success, error } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
 ```
 :::
 
@@ -581,7 +583,7 @@ import { MailChannelsClient, Domains } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const domains = new Domains(mailchannels)
 
-const { results } = await domains.bulkCreateLoginLinks([
+const { data, error } = await domains.bulkCreateLoginLinks([
   'example.com',
   'example2.com'
 ])
@@ -592,7 +594,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { results } = await mailchannels.domains.bulkCreateLoginLinks([
+const { data, error } = await mailchannels.domains.bulkCreateLoginLinks([
   'example.com',
   'example2.com'
 ])
@@ -605,7 +607,7 @@ const { results } = await mailchannels.domains.bulkCreateLoginLinks([
 
 ### Response
 
-- `results` `DomainsBulkCreateLoginLinks | null` <Badge type="warning">nullable</Badge>
+- `data` `DomainsBulkCreateLoginLinks | null` <Badge type="warning">nullable</Badge>
   - `successes` `DomainsBulkCreateLoginLinkResult[]` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>: The domain the request was for.
     - `code` `200` <Badge>guaranteed</Badge>
@@ -624,8 +626,9 @@ const { results } = await mailchannels.domains.bulkCreateLoginLinks([
 <details>
   <summary>All type declarations</summary>
 
-  **Success Response**
+  **Responses**
 
+  <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
   **Provision type declarations**

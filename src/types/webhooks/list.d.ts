@@ -1,4 +1,3 @@
-export interface WebhooksListResponse {
-  webhooks: string[];
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type WebhooksListResponse = DataResponse<string[]>;

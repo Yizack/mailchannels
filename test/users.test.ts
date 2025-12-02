@@ -43,9 +43,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { user } = await users.create(fake.create.email);
+    const { data, error } = await users.create(fake.create.email);
 
-    expect(user).toEqual({
+    expect(data).toEqual({
       email: fake.create.apiResponse.recipient.email_address,
       roles: fake.create.apiResponse.recipient.roles,
       filter: fake.create.apiResponse.recipient.filter,
@@ -55,6 +55,7 @@ describe("create", () => {
         action
       }))
     });
+    expect(error).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
 
@@ -64,9 +65,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { user, error } = await users.create("");
+    const { data, error } = await users.create("");
 
-    expect(user).toBeNull();
+    expect(data).toBeNull();
     expect(error).toBe("No email address provided.");
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -80,10 +81,10 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { user, error } = await users.create(fake.create.email);
+    const { data, error } = await users.create(fake.create.email);
 
     expect(error).toBeTruthy();
-    expect(user).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
 });
@@ -95,13 +96,14 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entry } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+    const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(entry).toEqual({
+    expect(data).toEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     });
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -111,10 +113,10 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entry, error } = await users.addListEntry("", fake.addListEntry.options);
+    const { data, error } = await users.addListEntry("", fake.addListEntry.options);
 
     expect(error).toBe("No email provided.");
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -125,10 +127,10 @@ describe("addListEntry", () => {
 
     const users = new Users(mockClient);
     // @ts-expect-error listName is not provided
-    const { entry, error } = await users.addListEntry(fake.create.email, {});
+    const { data, error } = await users.addListEntry(fake.create.email, {});
 
     expect(error).toBe("No list name provided.");
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -141,10 +143,10 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entry, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+    const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
     expect(error).toBeTruthy();
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -156,13 +158,14 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entries } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+    const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
-    expect(entries).toEqual([{
+    expect(data).toEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     }]);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -172,10 +175,10 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entries, error } = await users.listEntries("", fake.addListEntry.options.listName);
+    const { data, error } = await users.listEntries("", fake.addListEntry.options.listName);
 
     expect(error).toBe("No email provided.");
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -186,10 +189,10 @@ describe("listEntries", () => {
 
     const users = new Users(mockClient);
     // @ts-expect-error listName is not provided
-    const { entries, error } = await users.listEntries(fake.create.email, "");
+    const { data, error } = await users.listEntries(fake.create.email, "");
 
     expect(error).toBe("No list name provided.");
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -202,10 +205,10 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { entries, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+    const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
     expect(error).toBeTruthy();
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -219,9 +222,10 @@ describe("deleteListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
-    const { success } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
+    const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 

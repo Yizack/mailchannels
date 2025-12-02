@@ -5,3 +5,8 @@ export interface SuccessResponse {
   success: boolean;
   error: string | null;
 }
+
+export interface DataResponse<T> {
+  data: T | null;
+  error: string | null;
+}

@@ -12,4 +12,4 @@ export type * from "./users";
 export type * from "./service";
 
 // Shared types
-export type * from "./success-response";
+export type * from "./responses";

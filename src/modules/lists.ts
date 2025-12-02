@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import { getStatusError } from "../utils/errors";
@@ -13,7 +13,7 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entry } = await mailchannels.lists.addListEntry({
+   * const { data, error } = await mailchannels.lists.addListEntry({
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -22,28 +22,28 @@ export class Lists {
   async addListEntry (options: ListEntryOptions): Promise<ListEntryResponse> {
     const { listName, item } = options;
 
-    const data: ListEntryResponse = { entry: null, error: null };
+    const result: ListEntryResponse = { data: null, error: null };
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.entry = {
+    result.data = {
       action: response.action,
       item: response.item,
       type: response.item_type
     };
-    return data;
+    return result;
   }
 
   /**
@@ -52,31 +52,31 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entries } = await mailchannels.lists.listEntries('safelist')
+   * const { data, error } = await mailchannels.lists.listEntries('safelist')
    * ```
    */
   async listEntries (listName: ListNames): Promise<ListEntriesResponse> {
-    const data: ListEntriesResponse = { entries: [], error: null };
+    const result: ListEntriesResponse = { data: null, error: null };
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/lists/${listName}`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.entries = response.map(({ action, item, item_type }) => ({
+    result.data = response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
     }));
-    return data;
+    return result;
   }
 
   /**
@@ -85,7 +85,7 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.lists.deleteListEntry({
+   * const { success, error } = await mailchannels.lists.deleteListEntry({
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -94,11 +94,11 @@ export class Lists {
   async deleteListEntry (options: ListEntryOptions): Promise<SuccessResponse> {
     const { listName, item } = options;
 
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     await this.mailchannels.delete(`/inbound/v1/lists/${listName}`, {
@@ -106,13 +106,13 @@ export class Lists {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     });
 
-    return data;
+    return result;
   }
 }

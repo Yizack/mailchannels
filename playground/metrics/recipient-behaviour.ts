@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { behaviour, error } = await mailchannels.metrics.recipientBehaviour();
+const { data, error } = await mailchannels.metrics.recipientBehaviour();
 
-console.info(JSON.stringify({ behaviour, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

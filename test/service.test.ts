@@ -26,9 +26,10 @@ describe("status", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const { success } = await service.status();
+    const { success, error } = await service.status();
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -55,9 +56,10 @@ describe("subscriptions", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const result = await service.subscriptions();
+    const { data, error } = await service.subscriptions();
 
-    expect(result.subscriptions).toEqual(fake.subscriptions.apiResponse);
+    expect(data).toEqual(fake.subscriptions.apiResponse);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -70,10 +72,10 @@ describe("subscriptions", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const { subscriptions, error } = await service.subscriptions();
+    const { data, error } = await service.subscriptions();
 
     expect(error).toBeTruthy();
-    expect(subscriptions).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -83,10 +85,10 @@ describe("subscriptions", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const { subscriptions, error } = await service.subscriptions();
+    const { data, error } = await service.subscriptions();
 
     expect(error).toBe("failure");
-    expect(subscriptions).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -96,10 +98,10 @@ describe("subscriptions", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const { subscriptions, error } = await service.subscriptions();
+    const { data, error } = await service.subscriptions();
 
     expect(error).toBe("Failed to fetch subscriptions.");
-    expect(subscriptions).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -113,9 +115,10 @@ describe("report", () => {
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
-    const { success } = await service.report(fake.report);
+    const { success, error } = await service.report(fake.report);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 

@@ -12,10 +12,10 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { keys, error } = await mailchannels.emails.rotateDkimKey(dkimDomain, "mailchannels_test", {
+const { data, error } = await mailchannels.emails.rotateDkimKey(dkimDomain, "mailchannels_test", {
   newKey: {
     selector: "mc_test"
   }
 });
 
-console.info(JSON.stringify({ keys, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

@@ -21,7 +21,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { success } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels")
+const { success, error } = await webhooks.enroll("https://example.com/api/webhooks/mailchannels")
 ```
 
 ```ts [full.ts]
@@ -29,7 +29,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels")
+const { success, error } = await mailchannels.webhooks.enroll("https://example.com/api/webhooks/mailchannels")
 ```
 :::
 
@@ -55,7 +55,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { webhooks: webhooksList } = await webhooks.list()
+const { data, error } = await webhooks.list()
 ```
 
 ```ts [full.ts]
@@ -63,14 +63,13 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { webhooks } = await mailchannels.webhooks.list()
+const { data, error } = await mailchannels.webhooks.list()
 ```
 :::
 
 ### Response
 
-- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `webhooks` `string[]` <Badge>guaranteed</Badge>
+- `data` `string[] | null` <Badge type="warning">nullable</Badge>
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Delete <Badge type="info">method</Badge>
@@ -86,7 +85,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { success } = await webhooks.delete()
+const { success, error } = await webhooks.delete()
 ```
 
 ```ts [full.ts]
@@ -94,7 +93,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.webhooks.delete()
+const { success, error } = await mailchannels.webhooks.delete()
 ```
 :::
 
@@ -116,7 +115,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { key } = await webhooks.getSigningKey('key-id')
+const { data, error } = await webhooks.getSigningKey('key-id')
 ```
 
 ```ts [full.ts]
@@ -124,7 +123,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.webhooks.getSigningKey('key-id')
+const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
 ```
 :::
 
@@ -137,7 +136,8 @@ const { key } = await mailchannels.webhooks.getSigningKey('key-id')
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `key` `string | null` <Badge type="warning">nullable</Badge>
+- `data` `object | null` <Badge type="warning">nullable</Badge>
+  - `key` `string` <Badge>guaranteed</Badge>
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Validate <Badge type="info">method</Badge>
@@ -153,7 +153,7 @@ import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const webhooks = new Webhooks(mailchannels)
 
-const { allPassed, results } = await webhooks.validate('optional-request-id')
+const { data, error } = await webhooks.validate('optional-request-id')
 ```
 
 ```ts [full.ts]
@@ -161,7 +161,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')
+const { data, error } = await mailchannels.webhooks.validate('optional-request-id')
 ```
 :::
 
@@ -173,14 +173,14 @@ const { allPassed, results } = await mailchannels.webhooks.validate('optional-re
 
 ### Response
 
-- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `allPassed` `boolean` <Badge>guaranteed</Badge>: Indicates whether all webhook validations passed
-- `results` `object[]` <Badge>guaranteed</Badge>: Detailed results for each tested webhook, including whether it returned a 2xx status code, along with its response status code and body.
-  - `result` `"passed" | "failed"` <Badge>guaranteed</Badge>: Indicates whether the webhook responded with a 2xx HTTP status code.
-  - `webhook` `string` <Badge>guaranteed</Badge>: The webhook that was validated.
-  - `response` `object` <Badge>guaranteed</Badge>: The HTTP response returned by the webhook, including status code and response body. A null value indicates no response was received. Possible reasons include timeouts, connection failures, or other network-related issues.
-    - `body` `string` <Badge type="info">optional</Badge>: Response body from webhook. Returns an error if unprocessable or too large.
-    - `status` `number` <Badge>guaranteed</Badge>: HTTP status code returned by the webhook.
+- `data` `object | null` <Badge type="warning">nullable</Badge>
+  - `allPassed` `boolean` <Badge>guaranteed</Badge>: Indicates whether all webhook validations passed
+  - `results` `object[]` <Badge>guaranteed</Badge>: Detailed results for each tested webhook, including whether it returned a 2xx status code, along with its response status code and body.
+    - `result` `"passed" | "failed"` <Badge>guaranteed</Badge>: Indicates whether the webhook responded with a 2xx HTTP status code.
+    - `webhook` `string` <Badge>guaranteed</Badge>: The webhook that was validated.
+    - `response` `object` <Badge>guaranteed</Badge>: The HTTP response returned by the webhook, including status code and response body. A null value indicates no response was received. Possible reasons include timeouts, connection failures, or other network-related issues.
+      - `body` `string` <Badge type="info">optional</Badge>: Response body from webhook. Returns an error if unprocessable or too large.
+      - `status` `number` <Badge>guaranteed</Badge>: HTTP status code returned by the webhook.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Type declarations
@@ -190,8 +190,9 @@ const { allPassed, results } = await mailchannels.webhooks.validate('optional-re
 <details>
   <summary>All type declarations</summary>
 
-  **Success Response**
+  **Responses**
 
+  <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
   **List type declarations**

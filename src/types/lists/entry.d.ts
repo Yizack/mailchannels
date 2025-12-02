@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export type ListNames = "blocklist" | "safelist" | "blacklist" | "whitelist";
 
 export interface ListEntryOptions {
@@ -17,12 +19,6 @@ export interface ListEntry {
   type: "domain" | "email_address" | "ip_address";
 }
 
-export interface ListEntryResponse {
-  entry: ListEntry | null;
-  error: string | null;
-}
+export type ListEntryResponse = DataResponse<ListEntry>;
 
-export interface ListEntriesResponse {
-  entries: ListEntry[];
-  error: string | null;
-}
+export type ListEntriesResponse = DataResponse<ListEntry[]>;

@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { entries, error } = await mailchannels.lists.listEntries("safelist");
+const { data, error } = await mailchannels.lists.listEntries("safelist");
 
-console.info(JSON.stringify({ entries, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

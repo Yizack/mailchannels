@@ -25,13 +25,14 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
-    const { entry } = await lists.addListEntry(fake.addListEntry.options);
+    const { data, error } = await lists.addListEntry(fake.addListEntry.options);
 
-    expect(entry).toEqual({
+    expect(data).toEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     });
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -42,10 +43,10 @@ describe("addListEntry", () => {
 
     const lists = new Lists(mockClient);
     // @ts-expect-error listName is not provided
-    const { entry, error } = await lists.addListEntry({});
+    const { data, error } = await lists.addListEntry({});
 
     expect(error).toBe("No list name provided.");
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -58,10 +59,10 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
-    const { entry, error } = await lists.addListEntry(fake.addListEntry.options);
+    const { data, error } = await lists.addListEntry(fake.addListEntry.options);
 
     expect(error).toBeTruthy();
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -73,13 +74,14 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
-    const { entries } = await lists.listEntries(fake.addListEntry.options.listName);
+    const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(entries).toEqual([{
+    expect(data).toEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     }]);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -90,10 +92,10 @@ describe("listEntries", () => {
 
     const lists = new Lists(mockClient);
     // @ts-expect-error listName is not provided
-    const { entries, error } = await lists.listEntries("");
+    const { data, error } = await lists.listEntries("");
 
     expect(error).toBe("No list name provided.");
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -106,10 +108,10 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
-    const { entries, error } = await lists.listEntries(fake.addListEntry.options.listName);
+    const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
     expect(error).toBeTruthy();
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -123,9 +125,10 @@ describe("deleteListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
-    const { success } = await lists.deleteListEntry(fake.addListEntry.options);
+    const { success, error } = await lists.deleteListEntry(fake.addListEntry.options);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 

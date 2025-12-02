@@ -21,7 +21,7 @@ import { MailChannelsClient, Users } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
 
-const { user } = await users.create('name@example.com', {
+const { data, error } = await users.create('name@example.com', {
   admin: true
 })
 ```
@@ -31,7 +31,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { user } = await mailchannels.users.create('name@example.com', {
+const { data, error } = await mailchannels.users.create('name@example.com', {
   admin: true
 })
 ```
@@ -56,7 +56,7 @@ const { user } = await mailchannels.users.create('name@example.com', {
 
 ### Response
 
-- `user` `object | null` <Badge type="warning">nullable</Badge>
+- `data` `object | null` <Badge type="warning">nullable</Badge>
   - `email` `string` <Badge>guaranteed</Badge>
   - `roles` `string[]` <Badge>guaranteed</Badge>
   - `filter` `boolean` <Badge type="info">optional</Badge>
@@ -79,7 +79,7 @@ import { MailChannelsClient, Users } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
 
-const { entry } = await users.addListEntry('name@example.com', {
+const { data, error } = await users.addListEntry('name@example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -90,7 +90,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.users.addListEntry('name@example.com', {
+const { data, error } = await mailchannels.users.addListEntry('name@example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -106,7 +106,7 @@ const { entry } = await mailchannels.users.addListEntry('name@example.com', {
 
 ### Response
 
-- `entry` `ListEntry | null` <Badge type="warning">nullable</Badge>
+- `data` `ListEntry | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -125,7 +125,7 @@ import { MailChannelsClient, Users } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
 
-const { entries } = await users.listEntries('name@example.com', 'safelist')
+const { data, error } = await users.listEntries('name@example.com', 'safelist')
 ```
 
 ```ts [full.ts]
@@ -133,7 +133,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entries } = await mailchannels.users.listEntries('name@example.com', 'safelist')
+const { data, error } = await mailchannels.users.listEntries('name@example.com', 'safelist')
 ```
 :::
 
@@ -144,7 +144,7 @@ const { entries } = await mailchannels.users.listEntries('name@example.com', 'sa
 
 ### Response
 
-- `entries` `ListEntry[]` <Badge>guaranteed</Badge>
+- `data` `ListEntry[] | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -163,7 +163,7 @@ import { MailChannelsClient, Users } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const users = new Users(mailchannels)
 
-const { success } = await users.deleteListEntry('name@example.com', {
+const { success, error } = await users.deleteListEntry('name@example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -174,7 +174,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.users.deleteListEntry('name@example.com', {
+const { success, error } = await mailchannels.users.deleteListEntry('name@example.com', {
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -199,6 +199,11 @@ const { success } = await mailchannels.users.deleteListEntry('name@example.com',
 
 <details>
   <summary>All type declarations</summary>
+
+  **Responses**
+
+  <<< @/snippets/data-response.ts
+  <<< @/snippets/success-response.ts
 
   **Create type declarations**
 

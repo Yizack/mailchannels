@@ -1,8 +1,7 @@
+import type { DataResponse } from "../responses";
+
 export interface SubAccountsLimit {
   sends: number;
 }
 
-export interface SubAccountsLimitResponse {
-  limit: SubAccountsLimit | null;
-  error: string | null;
-}
+export type SubAccountsLimitResponse = DataResponse<SubAccountsLimit>;

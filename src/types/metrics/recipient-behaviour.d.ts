@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { MetricsBucket } from ".";
 
 export interface MetricsRecipientBehaviour {
@@ -26,7 +27,4 @@ export interface MetricsRecipientBehaviour {
   unsubscribed: number;
 }
 
-export interface MetricsRecipientBehaviourResponse {
-  behaviour: MetricsRecipientBehaviour | null;
-  error: string | null;
-}
+export type MetricsRecipientBehaviourResponse = DataResponse<MetricsRecipientBehaviour>;

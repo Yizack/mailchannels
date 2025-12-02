@@ -89,7 +89,7 @@ const fake = {
     ]
   },
   bulkCreateLoginLinksResponse: {
-    results: {
+    data: {
       successes: [
         {
           domain: "example1.com",
@@ -174,12 +174,12 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
       { domain: fake.provision.domain },
       { domain: fake.provision.domain }
     ]);
 
-    expect(results).toEqual(fake.bulkProvisionResponse);
+    expect(data).toEqual(fake.bulkProvisionResponse);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -190,10 +190,10 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, []);
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, []);
 
     expect(error).toBe("No domains provided.");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -203,10 +203,10 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, new Array(1001).fill(fake.provision.domain));
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, new Array(1001).fill(fake.provision.domain));
 
     expect(error).toBe("The maximum number of domains to be provisioned is 1000.");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -219,13 +219,13 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [
       { domain: fake.provision.domain },
       { domain: fake.provision.domain }
     ]);
 
     expect(error).toBeTruthy();
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -235,10 +235,10 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
 
     expect(error).toBe("failure");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -248,10 +248,10 @@ describe("bulkProvision", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
+    const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
 
     expect(error).toBe("Failed to provision domains.");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -263,9 +263,9 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { domains: domainsList, error } = await domains.list();
+    const { data, error } = await domains.list();
 
-    expect(domainsList).toEqual(fake.list);
+    expect(data?.domains).toEqual(fake.list);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -276,10 +276,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { domains: domainsList, error } = await domains.list({ limit: 5001 });
+    const { data, error } = await domains.list({ limit: 5001 });
 
     expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 5000.");
-    expect(domainsList).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -289,10 +289,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { domains: domainsList, error } = await domains.list({ offset: -1 });
+    const { data, error } = await domains.list({ offset: -1 });
 
     expect(error).toBe("Offset must be greater than or equal to 0.");
-    expect(domainsList).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -305,10 +305,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { domains: domainsList, error } = await domains.list();
+    const { data, error } = await domains.list();
 
     expect(error).toBeTruthy();
-    expect(domainsList).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -365,9 +365,9 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entry, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+    const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(entry).toEqual({
+    expect(data).toEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -382,10 +382,10 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entry, error } = await domains.addListEntry("", fake.addListEntry.options);
+    const { data, error } = await domains.addListEntry("", fake.addListEntry.options);
 
     expect(error).toBe("No domain provided.");
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -396,10 +396,10 @@ describe("addListEntry", () => {
 
     const domains = new Domains(mockClient);
     // @ts-expect-error listName is not provided
-    const { entry, error } = await domains.addListEntry(fake.provision.domain, {});
+    const { data, error } = await domains.addListEntry(fake.provision.domain, {});
 
     expect(error).toBe("No list name provided.");
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -412,10 +412,10 @@ describe("addListEntry", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entry, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+    const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
     expect(error).toBeTruthy();
-    expect(entry).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -427,9 +427,9 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entries, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+    const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
-    expect(entries).toEqual([{
+    expect(data).toEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -444,10 +444,10 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entries, error } = await domains.listEntries("", fake.addListEntry.options.listName);
+    const { data, error } = await domains.listEntries("", fake.addListEntry.options.listName);
 
     expect(error).toBe("No domain provided.");
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -458,10 +458,10 @@ describe("listEntries", () => {
 
     const domains = new Domains(mockClient);
     // @ts-expect-error listName is not provided
-    const { entries, error } = await domains.listEntries(fake.provision.domain, "");
+    const { data, error } = await domains.listEntries(fake.provision.domain, "");
 
     expect(error).toBe("No list name provided.");
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -474,10 +474,10 @@ describe("listEntries", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { entries, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+    const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
     expect(error).toBeTruthy();
-    expect(entries).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -548,9 +548,9 @@ describe("createLoginLink", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { link, error } = await domains.createLoginLink(fake.provision.domain);
+    const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
-    expect(link).toBe(fake.loginLink);
+    expect(data).toEqual({ link: fake.loginLink });
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -561,10 +561,10 @@ describe("createLoginLink", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { link, error } = await domains.createLoginLink("");
+    const { data, error } = await domains.createLoginLink("");
 
     expect(error).toBe("No domain provided.");
-    expect(link).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -577,10 +577,10 @@ describe("createLoginLink", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { link, error } = await domains.createLoginLink(fake.provision.domain);
+    const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
     expect(error).toBeTruthy();
-    expect(link).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -652,9 +652,9 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain);
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
-    expect(records).toEqual(fake.listDownstreamAddresses);
+    expect(data).toEqual(fake.listDownstreamAddresses);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -665,10 +665,10 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records, error } = await domains.listDownstreamAddresses("");
+    const { data, error } = await domains.listDownstreamAddresses("");
 
     expect(error).toBe("No domain provided.");
-    expect(records).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -678,10 +678,10 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain, { limit: -1 });
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain, { limit: -1 });
 
     expect(error).toBe("The limit value is invalid. Only positive values are allowed.");
-    expect(records).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -691,10 +691,10 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain, { offset: -1 });
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain, { offset: -1 });
 
     expect(error).toBe("Offset must be greater than or equal to 0.");
-    expect(records).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -707,10 +707,10 @@ describe("listDownstreamAddresses", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { records, error } = await domains.listDownstreamAddresses(fake.provision.domain);
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
     expect(error).toBeTruthy();
-    expect(records).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -780,12 +780,12 @@ describe("bulkCreateLoginLinks", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkCreateLoginLinks([
+    const { data, error } = await domains.bulkCreateLoginLinks([
       "example1.com",
       "example2.com"
     ]);
 
-    expect(results).toEqual(fake.bulkCreateLoginLinksResponse);
+    expect(data).toEqual(fake.bulkCreateLoginLinksResponse);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -796,10 +796,10 @@ describe("bulkCreateLoginLinks", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkCreateLoginLinks([]);
+    const { data, error } = await domains.bulkCreateLoginLinks([]);
 
     expect(error).toBe("No domains provided.");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -809,10 +809,10 @@ describe("bulkCreateLoginLinks", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkCreateLoginLinks(new Array(1001).fill("example.com"));
+    const { data, error } = await domains.bulkCreateLoginLinks(new Array(1001).fill("example.com"));
 
     expect(error).toBe("The maximum number of domains to create login links for is 1000.");
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -825,13 +825,13 @@ describe("bulkCreateLoginLinks", () => {
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
-    const { results, error } = await domains.bulkCreateLoginLinks([
+    const { data, error } = await domains.bulkCreateLoginLinks([
       "example1.com",
       "example2.com"
     ]);
 
     expect(error).toBeTruthy();
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

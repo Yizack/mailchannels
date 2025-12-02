@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface SubAccountsSmtpPassword {
   /**
    * Whether the SMTP password is enabled.
@@ -13,12 +15,6 @@ export interface SubAccountsSmtpPassword {
   value: string;
 }
 
-export interface SubAccountsCreateSmtpPasswordResponse {
-  password: SubAccountsSmtpPassword | null;
-  error: string | null;
-}
+export type SubAccountsCreateSmtpPasswordResponse = DataResponse<SubAccountsSmtpPassword>;
 
-export interface SubAccountsListSmtpPasswordResponse {
-  passwords: SubAccountsSmtpPassword[];
-  error: string | null;
-}
+export type SubAccountsListSmtpPasswordResponse = DataResponse<SubAccountsSmtpPassword[]>;

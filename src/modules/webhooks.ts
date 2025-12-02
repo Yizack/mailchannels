@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import type { SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
@@ -15,20 +15,20 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
+   * const { success, error } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
   async enroll (endpoint: string): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!endpoint) {
-      data.error = "No endpoint provided.";
-      return data;
+      result.error = "No endpoint provided.";
+      return result;
     }
 
     if (endpoint.length > 8000) {
-      data.error = "The endpoint exceeds the maximum length of 8000 characters.";
-      return data;
+      result.error = "The endpoint exceeds the maximum length of 8000 characters.";
+      return result;
     }
 
     await this.mailchannels.post<void>("/tx/v1/webhook", {
@@ -38,16 +38,16 @@ export class Webhooks {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -55,27 +55,27 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { webhooks } = await mailchannels.webhooks.list()
+   * const { data, error } = await mailchannels.webhooks.list()
    * ```
    */
   async list (): Promise<WebhooksListResponse> {
-    const data: WebhooksListResponse = { webhooks: [], error: null };
+    const result: WebhooksListResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.webhooks = response.map(({ webhook }) => webhook);
-    return data;
+    result.data = response.map(({ webhook }) => webhook);
+    return result;
   }
 
   /**
@@ -83,24 +83,24 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.webhooks.delete()
+   * const { success, error } = await mailchannels.webhooks.delete()
    * ```
    */
   async delete (): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (!response.ok) {
-          data.error = getStatusError(response);
+          result.error = getStatusError(response);
           return;
         }
-        data.success = true;
+        result.success = true;
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -109,25 +109,27 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
+   * const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
   async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
-    const data: WebhooksSigningKeyResponse = { key: null, error: null };
+    const result: WebhooksSigningKeyResponse = { data: null, error: null };
     const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
       query: {
         id
       },
       onResponseError: ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });
       }
     }).catch(() => null);
 
-    data.key = response?.key || null;
-    return data;
+    if (response) {
+      result.data = { key: response.key };
+    }
+    return result;
   }
 
   /**
@@ -136,15 +138,15 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')
+   * const { data, error } = await mailchannels.webhooks.validate('optional-request-id')
    * ```
    */
   async validate (requestId?: string): Promise<WebhooksValidateResponse> {
-    const data: WebhooksValidateResponse = { allPassed: false, results: [], error: null };
+    const result: WebhooksValidateResponse = { data: null, error: null };
 
     if (requestId && requestId.length > 28) {
-      data.error = "The request id should not exceed 28 characters.";
-      return data;
+      result.error = "The request id should not exceed 28 characters.";
+      return result;
     }
 
     const response = await this.mailchannels.post<WebhooksValidateApiResponse>("/tx/v1/webhook/validate", {
@@ -152,18 +154,20 @@ export class Webhooks {
         request_id: requestId
       },
       onResponseError: ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "No webhooks found for the account."
         });
       }
     }).catch(() => null);
 
-    if (response) {
-      data.allPassed = response.all_passed;
-      data.results = response.results;
-    }
+    if (!response) return result;
 
-    return data;
+    result.data = {
+      allPassed: response.all_passed,
+      results: response.results
+    };
+
+    return result;
   }
 }

@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { SuppressionsTypes } from "./create";
 
 export type SuppressionsSource = "api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all";
@@ -43,7 +44,4 @@ export interface SuppressionsListEntry {
   types: SuppressionsTypes[];
 }
 
-export interface SuppressionsListResponse {
-  list: SuppressionsListEntry[];
-  error: string | null;
-}
+export type SuppressionsListResponse = DataResponse<SuppressionsListEntry[]>;

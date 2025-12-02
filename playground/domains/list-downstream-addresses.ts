@@ -12,6 +12,6 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { records, error } = await mailchannels.domains.listDownstreamAddresses(dkimDomain);
+const { data, error } = await mailchannels.domains.listDownstreamAddresses(dkimDomain);
 
-console.info(JSON.stringify({ records, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

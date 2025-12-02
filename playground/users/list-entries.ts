@@ -12,6 +12,6 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { entries, error } = await mailchannels.users.listEntries(`test@${dkimDomain}`, "safelist");
+const { data, error } = await mailchannels.users.listEntries(`test@${dkimDomain}`, "safelist");
 
-console.info(JSON.stringify({ entries, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

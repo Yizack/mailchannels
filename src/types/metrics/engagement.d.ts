@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { MetricsBucket } from ".";
 
 export interface MetricsEngagement {
@@ -18,7 +19,4 @@ export interface MetricsEngagement {
   startTime: string;
 }
 
-export interface MetricsEngagementResponse {
-  engagement: MetricsEngagement | null;
-  error: string | null;
-}
+export type MetricsEngagementResponse = DataResponse<MetricsEngagement>;

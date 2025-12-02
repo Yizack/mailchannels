@@ -121,7 +121,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { results } = await emails.checkDomain({
+const { data, error } = await emails.checkDomain({
   domain: 'example.com',
   dkim: {
     domain: 'example.com',
@@ -137,7 +137,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.emails.checkDomain({
+const { data, error } = await mailchannels.emails.checkDomain({
   domain: 'example.com',
   dkim: {
     domain: 'example.com',
@@ -171,7 +171,7 @@ const { success } = await mailchannels.emails.checkDomain({
 
 ### Response
 
-- `results` `object | null` <Badge type="warning">nullable</Badge>: The results of the domain checks.
+- `data` `object | null` <Badge type="warning">nullable</Badge>: The results of the domain checks.
   - `dkim` `object[]` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>
     - `keyStatus` `"active" | "revoked" | "retired" | "provided" | "rotated"` <Badge>guaranteed</Badge>: The human readable status of the DKIM key used for verification.
@@ -192,7 +192,7 @@ const { success } = await mailchannels.emails.checkDomain({
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of SPF check.
     - `verdict` `"passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown"` <Badge>guaranteed</Badge>
   - `references` `string[]` <Badge type="info">optional</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>: Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed. Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
 
 ## Create DKIM Key <Badge type="info">method</Badge>
 
@@ -207,7 +207,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { key } = await emails.createDkimKey('example.com', {
+const { data, error } = await emails.createDkimKey('example.com', {
   selector: 'mailchannels'
 })
 ```
@@ -217,7 +217,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.emails.createDkimKey('example.com', {
+const { data, error } = await mailchannels.emails.createDkimKey('example.com', {
   selector: 'mailchannels'
 })
 ```
@@ -236,22 +236,22 @@ const { key } = await mailchannels.emails.createDkimKey('example.com', {
 
 ### Response
 
-- `key` `EmailsDkimKey | null` <Badge type="warning">nullable</Badge>: The created DKIM key information.
+- `data` `EmailsDkimKey | null` <Badge type="warning">nullable</Badge>: The created DKIM key information.
   - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-  - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
+  - `createdAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key pair was created.
   - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
     - `name` `string` <Badge>guaranteed</Badge>
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
   - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
-  - `gracePeriodExpiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
+  - `gracePeriodExpiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
-  - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
+  - `retiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp when a rotated key pair is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
   - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-  - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+  - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Get DKIM Keys <Badge type="info">method</Badge>
 
@@ -266,7 +266,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { keys } = await emails.getDkimKeys('example.com', {
+const { data, error } = await emails.getDkimKeys('example.com', {
   includeDnsRecord: true
 })
 ```
@@ -276,7 +276,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
+const { data, error } = await mailchannels.emails.getDkimKeys('example.com', {
   includeDnsRecord: true
 })
 ```
@@ -296,22 +296,22 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
 
 ### Response
 
-- `keys` `Optional<EmailsDkimKey, "dnsRecords">[]` <Badge>guaranteed</Badge>: List of keys matching the filter. Empty if no keys match the filter.
+- `data` `Optional<EmailsDkimKey, "dnsRecords">[] | null` <Badge type="warning">nullable</Badge>: List of keys matching the filter. Empty if no keys match the filter.
   - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-  - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
-  - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
+  - `createdAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key pair was created.
+  - `dnsRecords` `object[]` <Badge type="info">optional</Badge>: Suggested DNS records for the DKIM key. Only included if `includeDnsRecord` is `true`.
     - `name` `string` <Badge>guaranteed</Badge>
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
   - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
-  - `gracePeriodExpiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
+  - `gracePeriodExpiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
-  - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
+  - `retiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp when a rotated key pair is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
   - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-  - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+  - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Update DKIM Key <Badge type="info">method</Badge>
 
@@ -326,7 +326,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { success } = await emails.updateDkimKey('example.com', {
+const { success, error } = await emails.updateDkimKey('example.com', {
   selector: 'mailchannels',
   status: 'retired'
 })
@@ -337,7 +337,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.emails.updateDkimKey('example.com', {
+const { success, error } = await mailchannels.emails.updateDkimKey('example.com', {
   selector: 'mailchannels',
   status: 'retired'
 })
@@ -359,7 +359,7 @@ const { success } = await mailchannels.emails.updateDkimKey('example.com', {
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Rotate DKIM Key <Badge type="info">method</Badge>
 
@@ -374,7 +374,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { keys, error } = await emails.rotateDkimKey('example.com', 'mailchannels', {
+const { data, error } = await emails.rotateDkimKey('example.com', 'mailchannels', {
   newKey: {
     selector: 'new-selector'
   }
@@ -386,7 +386,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', 'mailchannels', {
+const { data, error } = await mailchannels.emails.rotateDkimKey('example.com', 'mailchannels', {
   newKey: {
     selector: 'new-selector'
   }
@@ -404,38 +404,38 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
 
 ### Response
 
-- `keys` `object | null` <Badge type="warning">nullable</Badge>: The rotated and new DKIM key information.
+- `data` `object | null` <Badge type="warning">nullable</Badge>: The rotated and new DKIM key information.
   - `new` `EmailsDkimKey` <Badge>guaranteed</Badge>
     - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-    - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
+    - `createdAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key pair was created.
     - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
       - `name` `string` <Badge>guaranteed</Badge>
       - `type` `string` <Badge>guaranteed</Badge>
       - `value` `string` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
-    - `gracePeriodExpiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
+    - `gracePeriodExpiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
     - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
     - `publicKey` `string` <Badge>guaranteed</Badge>
-    - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
+    - `retiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp when a rotated key pair is retired.
     - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
     - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-    - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
+    - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
   - `rotated` `EmailsDkimKey` <Badge>guaranteed</Badge>
     - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-    - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
+    - `createdAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key pair was created.
     - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
       - `name` `string` <Badge>guaranteed</Badge>
       - `type` `string` <Badge>guaranteed</Badge>
       - `value` `string` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
-    - `gracePeriodExpiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
+    - `gracePeriodExpiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
     - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
     - `publicKey` `string` <Badge>guaranteed</Badge>
-    - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
+    - `retiresAt` `string` <Badge type="info">optional</Badge>: UTC timestamp when a rotated key pair is retired.
     - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
     - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-    - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+    - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Type declarations
 
@@ -444,8 +444,9 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
 <details>
   <summary>All type declarations</summary>
 
-  **Success Response**
+  **Responses**
 
+  <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
   **Send type declarations**
@@ -474,6 +475,7 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
   **Get DKIM Keys type declarations**
 
   <<< @/snippets/emails-get-dkim-keys-options.ts
+  <<< @/snippets/optional.ts
   <<< @/snippets/emails-get-dkim-keys-response.ts
 
   **Update DKIM Key type declarations**
