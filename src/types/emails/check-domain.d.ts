@@ -18,12 +18,12 @@ interface EmailsCheckDomainDkim {
 export interface EmailsCheckDomainOptions {
   /**
    * Each item may include DKIM `domain`, `selector` and `privateKey`. Up to 10 items are allowed. The absence or presence of these fields affects how DKIM settings are validated:
-   * - If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
-   * - If `domain` and `selector` are present, use the stored private key for the given domain and selector.
-   * - If only `domain` is present, use all stored keys for the given domain.
-   * - If none are present, use all stored keys for the `domain` provided in the domain field of the request.
-   * - If `privateKey` is present, `selector` must be present.
-   * - If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
+   * 1. If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
+   * 2. If `domain` and `selector` are present, use the stored private key for the given domain and selector.
+   * 3. If only `domain` is present, use all stored keys for the given domain.
+   * 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
+   * 5. If `privateKey` is present, `selector` must be present.
+   * 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
    */
   dkim?: EmailsCheckDomainDkim[] | EmailsCheckDomainDkim;
   /**

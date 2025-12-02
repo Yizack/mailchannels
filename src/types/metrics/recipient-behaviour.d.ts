@@ -1,6 +1,9 @@
 import type { MetricsBucket } from ".";
 
 export interface MetricsRecipientBehaviour {
+  /**
+   * A series of metrics aggregations bucketed by time interval (e.g. hour, day).
+   */
   buckets: {
     unsubscribeDelivered: MetricsBucket[];
     unsubscribed: MetricsBucket[];

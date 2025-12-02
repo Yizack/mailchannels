@@ -1,12 +1,13 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../types/metrics/volume";
 import type { MetricsUsageResponse } from "../types/metrics/usage";
+import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../types/metrics/senders";
 
 const mapBuckets = (arr: { count: number, period_start: string }[]) => {
   return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
@@ -239,6 +240,53 @@ export class Metrics {
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
+    };
+
+    return data;
+  }
+
+  /**
+   * Retrieves a list of senders, either sub-accounts or campaigns, with their associated message metrics. Sorted by total # of sent messages (processed + dropped). Supports optional filter for time range, and optional settings for limit, offset, and sort order. Note: senders without any messages in the given time range will not be included in the results. The default time range is from one month ago to now, and the default sort order is descending.
+   * @param type - The type of senders to retrieve metrics for. Can be either `sub-accounts` or `campaigns`.
+   * @param options - Optional filter options for time range, limit, offset, and sort order.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { senders } = await mailchannels.metrics.senders('campaigns')
+   * ```
+   */
+  async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
+    const data: MetricsSendersResponse = { senders: null, error: null };
+
+    const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
+      query: {
+        start_time: options?.startTime,
+        end_time: options?.endTime,
+        limit: options?.limit,
+        offset: options?.offset,
+        sort_order: options?.sortOrder
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch senders metrics.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
+
+    data.senders = {
+      endTime: response.end_time,
+      limit: response.limit,
+      offset: response.offset,
+      senders: response.senders,
+      startTime: response.start_time,
+      total: response.total
     };
 
     return data;

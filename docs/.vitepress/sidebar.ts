@@ -27,7 +27,8 @@ export default [
               { text: "Check Domain", link: "/modules/emails#check-domain-method" },
               { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key-method" },
               { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys-method" },
-              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" }
+              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" },
+              { text: "Rotate DKIM Key", link: "/modules/emails#rotate-dkim-key-method" }
             ]
           },
           {
@@ -71,7 +72,8 @@ export default [
               { text: "Performance", link: "/modules/metrics#performance-method" },
               { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour-method" },
               { text: "Volume", link: "/modules/metrics#volume-method" },
-              { text: "Usage", link: "/modules/metrics#usage-method" }
+              { text: "Usage", link: "/modules/metrics#usage-method" },
+              { text: "Senders", link: "/modules/metrics#senders-method" }
             ]
           },
           {

@@ -60,3 +60,18 @@ export interface MetricsUsageApiResponse {
   period_start_date: string;
   total_usage: number;
 }
+
+export interface MetricsSendersApiResponse {
+  end_time: string;
+  limit: number;
+  offset: number;
+  senders: {
+    bounced: number;
+    delivered: number;
+    dropped: number;
+    name: string;
+    processed: number;
+  }[];
+  start_time: string;
+  total: number;
+}

@@ -15,6 +15,8 @@ export interface EmailsCreateDkimKeyOptions {
   selector: string;
 }
 
+export type EmailsDkimKeyStatus = "active" | "retired" | "revoked" | "rotated";
+
 export interface EmailsDkimKey {
   /**
    * Algorithm used for the key pair.
@@ -23,7 +25,7 @@ export interface EmailsDkimKey {
   /**
    * Timestamp when the key pair was created.
    */
-  createdAt: string;
+  createdAt?: string;
   /**
    * Suggested DNS records for the DKIM key.
    */
@@ -37,10 +39,18 @@ export interface EmailsDkimKey {
    */
   domain: string;
   /**
+   * UTC timestamp after which you can no longer use the rotated key for signing.
+   */
+  gracePeriodExpiresAt?: string;
+  /**
    * Key length in bits.
    */
   length: 1024 | 2048 | 3072 | 4096;
   publicKey: string;
+  /**
+   * UTC timestamp when a rotated key pair is retired.
+   */
+  retiresAt?: string;
   /**
    * Selector assigned to the key pair.
    */
@@ -48,11 +58,11 @@ export interface EmailsDkimKey {
   /**
    * Status of the key.
    */
-  status: "active" | "revoked" | "retired";
+  status: EmailsDkimKeyStatus;
   /**
    * Timestamp when the key was last modified.
    */
-  statusModifiedAt: string;
+  statusModifiedAt?: string;
 }
 
 export interface EmailsCreateDkimKeyResponse {

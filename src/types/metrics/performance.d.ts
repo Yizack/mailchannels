@@ -5,6 +5,9 @@ export interface MetricsPerformance {
    * Count of messages bounced during the specified time range.
    */
   bounced: number;
+  /**
+   * A series of metrics aggregations bucketed by time interval (e.g. hour, day).
+   */
   buckets: {
     bounced: MetricsBucket[];
     delivered: MetricsBucket[];

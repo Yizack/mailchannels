@@ -103,24 +103,31 @@ export interface EmailsCreateDkimKeyPayload {
 
 export interface EmailsCreateDkimKeyApiResponse {
   algorithm: string;
-  created_at: string;
+  created_at?: string;
   dkim_dns_records: {
     name: string;
     type: string;
     value: string;
   }[];
   domain: string;
+  gracePeriodExpiresAt?: string;
   key_length: 1024 | 2048 | 4096 | 3072 | 4096;
   public_key: string;
+  retiresAt?: string;
   selector: string;
-  status: "active" | "retired" | "revoked";
-  status_modified_at: string;
+  status: EmailsDkimKey["status"];
+  status_modified_at?: string;
 }
 
 export interface EmailsGetDkimKeysPayload {
   selector?: string;
-  status?: "active" | "retired" | "revoked";
+  status?: EmailsDkimKey["status"];
   offset?: number;
   limit?: number;
   include_dns_record?: boolean;
+}
+
+export interface EmailsRotateDkimKeyApiResponse {
+  new_key: EmailsCreateDkimKeyApiResponse;
+  rotated_key: EmailsCreateDkimKeyApiResponse;
 }

@@ -3,6 +3,7 @@ export * from "./performance";
 export * from "./recipient-behaviour";
 export * from "./volume";
 export * from "./usage";
+export * from "./senders";
 
 export interface MetricsBucket {
   /**
