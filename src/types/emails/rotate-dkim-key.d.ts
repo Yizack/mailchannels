@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { EmailsDkimKey } from "./create-dkim-key";
 
 export interface EmailsRotateDkimKeyOptions {
@@ -8,8 +9,6 @@ export interface EmailsRotateDkimKeyOptions {
     selector: string;
   };
 }
-
-import type { DataResponse } from "../responses";
 
 export type EmailsRotateDkimKeyResponse = DataResponse<{
   new: EmailsDkimKey;

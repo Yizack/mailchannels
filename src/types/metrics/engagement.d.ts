@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { MetricsBucket } from ".";
 
 export interface MetricsEngagement {
@@ -17,7 +18,5 @@ export interface MetricsEngagement {
   openTrackingDelivered: number;
   startTime: string;
 }
-
-import type { DataResponse } from "../responses";
 
 export type MetricsEngagementResponse = DataResponse<MetricsEngagement>;

@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export type MetricsSendersType = "sub-accounts" | "campaigns";
 
 export interface MetricsSendersOptions {
@@ -48,7 +50,5 @@ export interface MetricsSenders {
    */
   total: number;
 }
-
-import type { DataResponse } from "../responses";
 
 export type MetricsSendersResponse = DataResponse<MetricsSenders>;
