@@ -661,7 +661,7 @@ const { results } = await mailchannels.domains.bulkCreateLoginLinks([
   **Create Login Link type declarations**
 
   <<< @/snippets/domains-create-login-link-response.ts
-  
+
   **Bulk Create Login Links type declarations**
 
   <<< @/snippets/domains-bulk-create-login-link-result.ts

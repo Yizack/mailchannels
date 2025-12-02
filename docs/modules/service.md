@@ -63,7 +63,7 @@ const { subscriptions } = await mailchannels.service.subscriptions()
 :::
 
 ### Response
-  
+
 - `subscriptions` `object[]` <Badge>guaranteed</Badge>
   - `active` `boolean` <Badge>guaranteed</Badge>
   - `activeAccountsCount` `number` <Badge>guaranteed</Badge>

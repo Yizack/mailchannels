@@ -481,7 +481,7 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
   <<< @/snippets/emails-update-dkim-key-options.ts
 
   **Rotate DKIM Key type declarations**
-  
+
   <<< @/snippets/emails-rotate-dkim-key-options.ts
   <<< @/snippets/emails-rotate-dkim-key-response.ts
 </details>
