@@ -1,6 +1,6 @@
 import type { EmailsCheckDomainVerdict } from "./check-domain";
 import type { EmailsSendAttachment, EmailsSendRecipient, EmailsSendTracking } from "./send";
-import type { EmailsDkimKey } from "./create-dkim-key";
+import type { EmailsDkimKey, EmailsDkimKeyStatus } from "./create-dkim-key";
 
 interface EmailsSendPersonalization {
   bcc?: EmailsSendRecipient[];
@@ -103,23 +103,25 @@ export interface EmailsCreateDkimKeyPayload {
 
 export interface EmailsCreateDkimKeyApiResponse {
   algorithm: string;
-  created_at: string;
+  created_at?: string;
   dkim_dns_records: {
     name: string;
     type: string;
     value: string;
   }[];
   domain: string;
+  gracePeriodExpiresAt?: string;
   key_length: 1024 | 2048 | 4096 | 3072 | 4096;
   public_key: string;
+  retiresAt?: string;
   selector: string;
-  status: "active" | "retired" | "revoked";
-  status_modified_at: string;
+  status: EmailsDkimKeyStatus;
+  status_modified_at?: string;
 }
 
 export interface EmailsGetDkimKeysPayload {
   selector?: string;
-  status?: "active" | "retired" | "revoked";
+  status?: EmailsDkimKeyStatus;
   offset?: number;
   limit?: number;
   include_dns_record?: boolean;

@@ -206,7 +206,7 @@ export class Emails {
       onResponseError: async ({ response }) => {
         data.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.Conflict]: "Key pair already created for customer_handle, domain, and selector."
+          [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
     }).catch(() => null);
@@ -218,8 +218,10 @@ export class Emails {
       createdAt: response.created_at,
       dnsRecords: response.dkim_dns_records,
       domain: response.domain,
+      gracePeriodExpiresAt: response.gracePeriodExpiresAt,
       length: response.key_length,
       publicKey: response.public_key,
+      retiresAt: response.retiresAt,
       selector: response.selector,
       status: response.status,
       statusModifiedAt: response.status_modified_at
@@ -229,7 +231,7 @@ export class Emails {
   }
 
   /**
-   * Search for DKIM keys by customer handle and domain, with optional filters. If selector is provided, at most one key will be returned.
+   * Search for DKIM keys by domain, with optional filters. If selector is provided, at most one key will be returned.
    * @param domain - The domain to search DKIM keys for.
    * @param options - The options to filter DKIM keys by.
    * @example
@@ -325,7 +327,7 @@ export class Emails {
           }
           data.error = getStatusError(response, {
             [ErrorCode.BadRequest]: "Bad Request.",
-            [ErrorCode.NotFound]: "Specified key pair not found, or the DKIM domain or selector path parameter is missing."
+            [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
           });
         }
       });

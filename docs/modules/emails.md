@@ -158,12 +158,12 @@ const { success } = await mailchannels.emails.checkDomain({
     - `selector` `string` <Badge type="info">optional</Badge>: The DKIM selector to use.
     > [!TIP]
     > The absence or presence of these fields affects how DKIM settings are validated:
-    > - If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
-    > - If `domain` and `selector` are present, use the stored private key for the given domain and selector.
-    > - If only `domain` is present, use all stored keys for the given domain.
-    > - If none are present, use all stored keys for the `domain` provided in the domain field of the request.
-    > - If `privateKey` is present, `selector` must be present.
-    > - If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
+    > 1. If `domain`, `selector`, and `privateKey` are all present, verify using the provided domain, selector, and key.
+    > 2. If `domain` and `selector` are present, use the stored private key for the given domain and selector.
+    > 3. If only `domain` is present, use all stored keys for the given domain.
+    > 4. If none are present, use all stored keys for the `domain` provided in the domain field of the request.
+    > 5. If `privateKey` is present, `selector` must be present.
+    > 6. If `selector` is present and `domain` is not, the domain will be taken from the domain field of the request.
   - `domain` `string` <Badge type="danger">required</Badge>: Domain used for sending emails. If `dkim` settings are not provided, or `dkim` settings are provided with no `domain`, the stored dkim settings for this domain will be used.
   - `senderId` `string` <Badge type="info">optional</Badge>: Used exclusively for [Domain Lockdown](https://support.mailchannels.com/hc/en-us/articles/16918954360845-Secure-your-domain-name-against-spoofing-with-Domain-Lockdown) verification. If you're not using senderid to associate your domain with your account, you can disregard this field.
     > [!INFO]
@@ -174,7 +174,7 @@ const { success } = await mailchannels.emails.checkDomain({
 - `results` `object | null` <Badge type="warning">nullable</Badge>: The results of the domain checks.
   - `dkim` `object[]` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>
-    - `keyStatus` `"active" | "revoked" | "retired" | "provided"` <Badge>guaranteed</Badge>: The human readable status of the DKIM key used for verification.
+    - `keyStatus` `"active" | "revoked" | "retired" | "provided" | "rotated"` <Badge>guaranteed</Badge>: The human readable status of the DKIM key used for verification.
     - `selector` `string` <Badge>guaranteed</Badge>
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of DKIM check.
     - `verdict` `"passed" | "failed"` <Badge>guaranteed</Badge>
@@ -238,22 +238,24 @@ const { key } = await mailchannels.emails.createDkimKey('example.com', {
 
 - `key` `EmailsDkimKey | null` <Badge type="warning">nullable</Badge>: The created DKIM key information.
   - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-  - `createdAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key pair was created.
+  - `createdAt` `string` <Badge>nullable</Badge>: Timestamp when the key pair was created.
   - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
     - `name` `string` <Badge>guaranteed</Badge>
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
   - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
+  - `gracePeriodExpiresAt` `string` <Badge>nullable</Badge>: UTC timestamp after which you can no longer use the rotated key for signing.
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
+  - `retiresAt` `string` <Badge>nullable</Badge>: UTC timestamp when a rotated key pair is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
-  - `status` `"active" | "revoked" | "retired"` <Badge>guaranteed</Badge>: Status of the key.
-  - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
+  - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
+  - `statusModifiedAt` `string` <Badge>nullable</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
 
 ## Get DKIM Keys <Badge type="info">method</Badge>
 
-Search for DKIM keys by customer handle and domain, with optional filters. If selector is provided, at most one key will be returned.
+Search for DKIM keys by domain, with optional filters. If selector is provided, at most one key will be returned.
 
 ### Usage
 
@@ -285,9 +287,9 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
 - `domain` `string` <Badge type="danger">required</Badge>: The domain to get the DKIM keys for.
 - `options` `EmailsGetDkimKeysOptions` <Badge type="info">optional</Badge>: Optional filter options.
   - `selector` `string` <Badge type="info">optional</Badge>: Selector to filter keys by. Must be a maximum of 63 characters.
-  - `status` `"active" | "revoked" | "retired"` <Badge type="info">optional</Badge>: Status to filter keys by.
+  - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge type="info">optional</Badge>: Status to filter keys by.
     > [!TIP]
-    > Possible values: `active`, `revoked`, `retired`.
+    > Possible values: `active`, `revoked`, `retired`, `rotated`.
   - `offset` `number` <Badge type="info">optional</Badge>: Number of results to skip from the start. Must be a positive integer. Defaults to `0`.
   - `limit` `number` <Badge type="info">optional</Badge>: Maximum number of keys to return. Maximum is `100` and minimum is `1`. Defaults to `10`.
   - `includeDnsRecord` `boolean` <Badge type="info">optional</Badge>: If `true`, includes the suggested DKIM DNS record for each returned key. Defaults to `false`.
@@ -305,7 +307,7 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
-  - `status` `"active" | "revoked" | "retired"` <Badge>guaranteed</Badge>: Status of the key.
+  - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
   - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
 
@@ -345,11 +347,12 @@ const { success } = await mailchannels.emails.updateDkimKey('example.com', {
 - `domain` `string` <Badge type="danger">required</Badge>: The domain of the DKIM key to update.
 - `options` `EmailsUpdateDkimKeyOptions` <Badge type="danger">required</Badge>: Update DKIM key options.
   - `selector` `string` <Badge type="danger">required</Badge>: Selector of the DKIM key to update. Must be a maximum of 63 characters.
-  - `status` `"revoked" | "retired"` <Badge type="danger">required</Badge>: New status of the DKIM key pair.
+  - `status` `"revoked" | "retired" | "rotated"` <Badge type="danger">required</Badge>: New status of the DKIM key pair.
     > [!TIP]
-    > Possible values: `revoked`, `retired`.
+    > Possible values: `revoked`, `retired`, `rotated`.
     > - `revoked`: Indicates that the key is compromised and should not be used.
     > - `retired`: Indicates that the key has been rotated and is no longer in use.
+    > - `rotated`: Indicates that the key is going through the rotation process. Only active key pairs can be updated to this status, and no new key pair is created. The rotated key can be used to sign emails for 3 days after the status update, and will automatically change to `retired` 2 weeks after update. For a smooth key transition, it is recommended to create and publish a new key pair before signing is disabled for the rotated key.
 
 ### Response
 
