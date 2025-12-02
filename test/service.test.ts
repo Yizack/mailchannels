@@ -58,7 +58,7 @@ describe("subscriptions", () => {
     const service = new Service(mockClient);
     const { data, error } = await service.subscriptions();
 
-    expect(data).toEqual(fake.subscriptions.apiResponse);
+    expect(data).toStrictEqual(fake.subscriptions.apiResponse);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

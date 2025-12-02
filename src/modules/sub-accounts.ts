@@ -1,4 +1,6 @@
 import type { MailChannelsClient } from "../client";
+import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
@@ -6,7 +8,6 @@ import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/s
 import type { SubAccountsCreateApiKeyResponse, SubAccountsListApiKeyOptions, SubAccountsListApiKeyResponse } from "../types/sub-accounts/api-key";
 import type { SubAccountsCreateSmtpPasswordResponse, SubAccountsListSmtpPasswordResponse } from "../types/sub-accounts/smtp-password";
 import type { SubAccountsLimit, SubAccountsLimitResponse } from "../types/sub-accounts/limit";
-import { ErrorCode, getStatusError } from "../utils/errors";
 import type { SubAccountsUsageResponse } from "../types/sub-accounts/usage";
 
 export class SubAccounts {
@@ -56,11 +57,11 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       companyName: response.company_name,
       enabled: response.enabled,
       handle: response.handle
-    };
+    });
 
     return result;
   }
@@ -101,11 +102,11 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = response.map(account => ({
+    result.data = clean(response.map(account => ({
       companyName: account.company_name,
       enabled: account.enabled,
       handle: account.handle
-    }));
+    })));
 
     return result;
   }
@@ -236,10 +237,11 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       id: response.id,
       value: response.key
-    };
+    });
+
     return result;
   }
 
@@ -281,10 +283,10 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = response.map(key => ({
+    result.data = clean(response.map(key => ({
       id: key.id,
       value: key.key
-    }));
+    })));
 
     return result;
   }
@@ -352,11 +354,12 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       enabled: response.enabled,
       id: response.id,
       value: response.smtp_password
-    };
+    });
+
     return result;
   }
 
@@ -387,11 +390,11 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = response.map(password => ({
+    result.data = clean(response.map(password => ({
       enabled: password.enabled,
       id: password.id,
       value: password.smtp_password
-    }));
+    })));
 
     return result;
   }
@@ -457,7 +460,7 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = response;
+    result.data = clean(response);
     return result;
   }
 
@@ -557,11 +560,11 @@ export class SubAccounts {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
-    };
+    });
 
     return result;
   }

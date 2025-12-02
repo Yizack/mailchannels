@@ -45,7 +45,7 @@ describe("create", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.create(fake.create.email);
 
-    expect(data).toEqual({
+    expect(data).toStrictEqual({
       email: fake.create.apiResponse.recipient.email_address,
       roles: fake.create.apiResponse.recipient.roles,
       filter: fake.create.apiResponse.recipient.filter,
@@ -98,7 +98,7 @@ describe("addListEntry", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(data).toEqual({
+    expect(data).toStrictEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -160,7 +160,7 @@ describe("listEntries", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
-    expect(data).toEqual([{
+    expect(data).toStrictEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type

@@ -1,5 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
@@ -49,7 +50,7 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       buckets: {
         click: mapBuckets(response.buckets.click),
         clickTrackingDelivered: mapBuckets(response.buckets.click_tracking_delivered),
@@ -62,7 +63,7 @@ export class Metrics {
       open: response.open,
       openTrackingDelivered: response.open_tracking_delivered,
       startTime: response.start_time
-    };
+    });
 
     return result;
   }
@@ -100,7 +101,7 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       bounced: response.bounced,
       buckets: {
         bounced: mapBuckets(response.buckets.bounced),
@@ -111,7 +112,7 @@ export class Metrics {
       endTime: response.end_time,
       processed: response.processed,
       startTime: response.start_time
-    };
+    });
 
     return result;
   }
@@ -149,7 +150,7 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       buckets: {
         unsubscribeDelivered: mapBuckets(response.buckets.unsubscribe_delivered),
         unsubscribed: mapBuckets(response.buckets.unsubscribed)
@@ -158,7 +159,7 @@ export class Metrics {
       startTime: response.start_time,
       unsubscribeDelivered: response.unsubscribe_delivered,
       unsubscribed: response.unsubscribed
-    };
+    });
 
     return result;
   }
@@ -196,7 +197,7 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       buckets: {
         delivered: mapBuckets(response.buckets.delivered),
         dropped: mapBuckets(response.buckets.dropped),
@@ -207,7 +208,7 @@ export class Metrics {
       endTime: response.end_time,
       processed: response.processed,
       startTime: response.start_time
-    };
+    });
 
     return result;
   }
@@ -236,11 +237,11 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
-    };
+    });
 
     return result;
   }
@@ -280,14 +281,14 @@ export class Metrics {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       endTime: response.end_time,
       limit: response.limit,
       offset: response.offset,
       senders: response.senders,
       startTime: response.start_time,
       total: response.total
-    };
+    });
 
     return result;
   }

@@ -130,7 +130,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list(fake.list.options);
 
-    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(data).toStrictEqual(fake.list.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

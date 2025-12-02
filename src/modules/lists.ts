@@ -1,8 +1,9 @@
 import type { MailChannelsClient } from "../client";
+import { getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
-import { getStatusError } from "../utils/errors";
 
 export class Lists {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -38,11 +39,11 @@ export class Lists {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
-    };
+    });
     return result;
   }
 
@@ -71,11 +72,11 @@ export class Lists {
 
     if (!response) return result;
 
-    result.data = response.map(({ action, item, item_type }) => ({
+    result.data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
-    }));
+    })));
     return result;
   }
 

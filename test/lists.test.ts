@@ -27,7 +27,7 @@ describe("addListEntry", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.addListEntry(fake.addListEntry.options);
 
-    expect(data).toEqual({
+    expect(data).toStrictEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -76,7 +76,7 @@ describe("listEntries", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(data).toEqual([{
+    expect(data).toStrictEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
