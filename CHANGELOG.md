@@ -1,6 +1,48 @@
 # Changelog
 
 
+## v0.6.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.5.0...v0.6.0)
+
+### 🚀 Enhancements
+
+- Update Email API version to `0.15.0` ([#38](https://github.com/Yizack/mailchannels/pull/38))
+
+### 🩹 Fixes
+
+- Improve error handling and defaults ([#34](https://github.com/Yizack/mailchannels/pull/34))
+- Add `clean()` helper to recursively remove undefined in mapped responses ([#40](https://github.com/Yizack/mailchannels/pull/40))
+
+### 💅 Refactors
+
+- ⚠️  Standarize responses across entire SDK ([#39](https://github.com/Yizack/mailchannels/pull/39))
+
+### 📖 Documentation
+
+- Improve wording of usage explanations in guide ([4f7fe2d](https://github.com/Yizack/mailchannels/commit/4f7fe2d))
+- Update development section to use pnpm commands ([39bea1d](https://github.com/Yizack/mailchannels/commit/39bea1d))
+- Fix sidebar anchor links missing `method` suffix ([75ba491](https://github.com/Yizack/mailchannels/commit/75ba491))
+- Update readme with new endpoints in progress ([c6f27aa](https://github.com/Yizack/mailchannels/commit/c6f27aa))
+- Update README title and image alt text ([36f15b7](https://github.com/Yizack/mailchannels/commit/36f15b7))
+
+### 🏡 Chore
+
+- **utils:** Simplify error payload types ([4c8702d](https://github.com/Yizack/mailchannels/commit/4c8702d))
+
+### ✅ Tests
+
+- Add parse email without name test ([96a4357](https://github.com/Yizack/mailchannels/commit/96a4357))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Standarize responses across entire SDK ([#39](https://github.com/Yizack/mailchannels/pull/39))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+- Ken Simpson <ksimpson@ttul.org>
+
 ## v0.5.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.4.7...v0.5.0)
