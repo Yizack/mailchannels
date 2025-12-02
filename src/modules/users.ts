@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
+import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Users {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -49,7 +50,7 @@ export class Users {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       email: response.recipient.email_address,
       roles: response.recipient.roles,
       filter: response.recipient.filter,
@@ -58,7 +59,7 @@ export class Users {
         type: item_type,
         action
       }))
-    };
+    });
 
     return result;
   }
@@ -103,11 +104,12 @@ export class Users {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
-    };
+    });
+
     return result;
   }
 
@@ -145,11 +147,12 @@ export class Users {
 
     if (!response) return result;
 
-    result.data = response.map(({ action, item, item_type }) => ({
+    result.data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
-    }));
+    })));
+
     return result;
   }
 

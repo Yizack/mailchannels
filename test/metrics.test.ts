@@ -195,7 +195,7 @@ describe("engagement", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.engagement(fake.options);
 
-    expect(data).toEqual(fake.engagement.expectedResponse.data);
+    expect(data).toStrictEqual(fake.engagement.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -252,7 +252,7 @@ describe("performance", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.performance(fake.options);
 
-    expect(data).toEqual(fake.performance.expectedResponse.data);
+    expect(data).toStrictEqual(fake.performance.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -309,7 +309,7 @@ describe("recipientBehaviour", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.recipientBehaviour(fake.options);
 
-    expect(data).toEqual(fake.recipientBehaviour.expectedResponse.data);
+    expect(data).toStrictEqual(fake.recipientBehaviour.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -366,7 +366,7 @@ describe("volume", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.volume(fake.options);
 
-    expect(data).toEqual(fake.volume.expectedResponse.data);
+    expect(data).toStrictEqual(fake.volume.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -423,7 +423,7 @@ describe("usage", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(data).toEqual(fake.usage.expectedResponse.data);
+    expect(data).toStrictEqual(fake.usage.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -480,7 +480,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns");
 
-    expect(data).toEqual(fake.senders.expectedResponse.data);
+    expect(data).toStrictEqual(fake.senders.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

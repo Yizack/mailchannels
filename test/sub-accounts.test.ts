@@ -117,7 +117,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
 
-    expect(data).toEqual(fake.create.expectedResponse.data);
+    expect(data).toStrictEqual(fake.create.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -156,7 +156,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.validCompanyName);
 
-    expect(data).toEqual(fake.create.expectedResponse.data);
+    expect(data).toStrictEqual(fake.create.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -187,7 +187,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list();
 
-    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(data).toStrictEqual(fake.list.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -200,7 +200,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list(fake.list.options);
 
-    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(data).toStrictEqual(fake.list.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -418,7 +418,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const result = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(result).toEqual(fake.createApiKey.expectedResponse);
+    expect(result).toStrictEqual(fake.createApiKey.expectedResponse);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -462,7 +462,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const result = await subAccounts.listApiKeys(fake.create.validHandle, fake.listApiKeys.options);
 
-    expect(result).toEqual(fake.listApiKeys.expectedResponse);
+    expect(result).toStrictEqual(fake.listApiKeys.expectedResponse);
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -576,7 +576,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const result = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(result).toEqual(fake.createSmtpPassword.expectedResponse);
+    expect(result).toStrictEqual(fake.createSmtpPassword.expectedResponse);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -619,7 +619,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const result = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(result).toEqual(fake.listSmtpPasswords.expectedResponse);
+    expect(result).toStrictEqual(fake.listSmtpPasswords.expectedResponse);
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -707,7 +707,7 @@ describe("getLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
 
-    expect(data).toEqual(fake.getLimit.expectedResponse.data);
+    expect(data).toStrictEqual(fake.getLimit.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -840,7 +840,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
-    expect(data).toEqual(fake.getUsage.expectedResponse.data);
+    expect(data).toStrictEqual(fake.getUsage.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

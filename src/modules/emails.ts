@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
-import { stripPemHeaders } from "../utils/helpers";
+import { clean, stripPemHeaders } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
@@ -100,7 +100,7 @@ export class Emails {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       rendered: response.data,
       requestId: response.request_id,
       results: response.results?.map(result => ({
@@ -109,7 +109,7 @@ export class Emails {
         reason: result.reason,
         status: result.status
       }))
-    };
+    });
 
     return result;
   }
@@ -159,7 +159,7 @@ export class Emails {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       dkim: response.check_results.dkim.map(dkimResults => ({
         domain: dkimResults.dkim_domain,
         keyStatus: dkimResults.dkim_key_status,
@@ -171,7 +171,7 @@ export class Emails {
       senderDomain: response.check_results.sender_domain,
       spf: response.check_results.spf,
       references: response.references
-    };
+    });
     return result;
   }
 
@@ -214,7 +214,7 @@ export class Emails {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       algorithm: response.algorithm,
       createdAt: response.created_at,
       dnsRecords: response.dkim_dns_records,
@@ -226,7 +226,7 @@ export class Emails {
       selector: response.selector,
       status: response.status,
       statusModifiedAt: response.status_modified_at
-    };
+    });
 
     return result;
   }
@@ -278,7 +278,7 @@ export class Emails {
 
     if (!response) return result;
 
-    result.data = response.keys.map(key => ({
+    result.data = clean(response.keys.map(key => ({
       algorithm: key.algorithm,
       createdAt: key.created_at,
       dnsRecords: key.dkim_dns_records,
@@ -290,7 +290,7 @@ export class Emails {
       selector: key.selector,
       status: key.status,
       statusModifiedAt: key.status_modified_at
-    }));
+    })));
 
     return result;
   }
@@ -308,11 +308,11 @@ export class Emails {
    * })
    */
   async updateDkimKey (domain: string, options: EmailsUpdateDkimKeyOptions): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!options.selector || options.selector.length > 63) {
-      data.error = "Selector must be between 1 and 63 characters.";
-      return data;
+      result.error = "Selector must be between 1 and 63 characters.";
+      return result;
     }
 
     const payload = {
@@ -323,19 +323,19 @@ export class Emails {
       body: payload,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
         });
       }
     }).catch((error) => {
-      data.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+      result.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -391,7 +391,7 @@ export class Emails {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       new: {
         algorithm: response.new_key.algorithm,
         createdAt: response.new_key.created_at,
@@ -418,7 +418,7 @@ export class Emails {
         status: response.rotated_key.status,
         statusModifiedAt: response.rotated_key.status_modified_at
       }
-    };
+    });
 
     return result;
   }

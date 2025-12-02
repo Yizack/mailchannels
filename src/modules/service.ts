@@ -1,8 +1,9 @@
 import type { MailChannelsClient } from "../client";
+import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
 import type { ServiceReportOptions } from "../types/service/report";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Service {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -58,7 +59,7 @@ export class Service {
 
     if (!response) return result;
 
-    result.data = response;
+    result.data = clean(response);
     return result;
   }
 

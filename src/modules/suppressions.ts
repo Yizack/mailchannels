@@ -1,5 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
@@ -125,14 +126,14 @@ export class Suppressions {
 
     if (!response) return result;
 
-    result.data = response.suppression_list.map(entry => ({
+    result.data = clean(response.suppression_list.map(entry => ({
       createdAt: entry.created_at,
       notes: entry.notes,
       recipient: entry.recipient,
       sender: entry.sender,
       source: entry.source,
       types: entry.suppression_types
-    }));
+    })));
 
     return result;
   }

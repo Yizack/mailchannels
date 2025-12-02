@@ -119,7 +119,7 @@ describe("provision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.provision(fake.provision);
 
-    expect(data).toBe(fake.provision);
+    expect(data).toStrictEqual(fake.provision);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -179,7 +179,7 @@ describe("bulkProvision", () => {
       { domain: fake.provision.domain }
     ]);
 
-    expect(data).toEqual(fake.bulkProvisionResponse);
+    expect(data).toStrictEqual(fake.bulkProvisionResponse);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -265,7 +265,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list();
 
-    expect(data?.domains).toEqual(fake.list);
+    expect(data?.domains).toStrictEqual(fake.list);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -367,7 +367,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(data).toEqual({
+    expect(data).toStrictEqual({
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -429,7 +429,7 @@ describe("listEntries", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
-    expect(data).toEqual([{
+    expect(data).toStrictEqual([{
       action: fake.addListEntry.apiResponse.action,
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
@@ -550,7 +550,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
-    expect(data).toEqual({ link: fake.loginLink });
+    expect(data).toStrictEqual({ link: fake.loginLink });
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -654,7 +654,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
-    expect(data).toEqual(fake.listDownstreamAddresses);
+    expect(data).toStrictEqual(fake.listDownstreamAddresses);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -785,7 +785,7 @@ describe("bulkCreateLoginLinks", () => {
       "example2.com"
     ]);
 
-    expect(data).toEqual(fake.bulkCreateLoginLinksResponse);
+    expect(data).toStrictEqual(fake.bulkCreateLoginLinksResponse);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

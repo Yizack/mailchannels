@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
+import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
 import type { WebhooksValidateApiResponse } from "../types/webhooks/internal";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -74,7 +75,7 @@ export class Webhooks {
 
     if (!response) return result;
 
-    result.data = response.map(({ webhook }) => webhook);
+    result.data = clean(response.map(({ webhook }) => webhook));
     return result;
   }
 
@@ -126,9 +127,9 @@ export class Webhooks {
       }
     }).catch(() => null);
 
-    if (response) {
-      result.data = { key: response.key };
-    }
+    if (!response) return result;
+
+    result.data = clean({ key: response.key });
     return result;
   }
 
@@ -163,10 +164,10 @@ export class Webhooks {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       allPassed: response.all_passed,
       results: response.results
-    };
+    });
 
     return result;
   }

@@ -121,7 +121,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.list();
 
-    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(data).toStrictEqual(fake.list.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -210,7 +210,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(data).toEqual(fake.signingKey.expectedResponse.data);
+    expect(data).toStrictEqual(fake.signingKey.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -241,7 +241,7 @@ describe("validate", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.validate();
 
-    expect(data).toEqual(fake.validateResponse.expectedResponse.data);
+    expect(data).toStrictEqual(fake.validateResponse.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

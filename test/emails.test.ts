@@ -207,7 +207,7 @@ describe("send", () => {
 
     expect(error).toBeNull();
     expect(success).toBe(true);
-    expect(data).toEqual(fake.send.expectedResponse.data);
+    expect(data).toStrictEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -306,7 +306,7 @@ describe("send", () => {
 
     expect(error).toBeNull();
     expect(success).toBe(true);
-    expect(data).toEqual(fake.send.expectedResponse.data);
+    expect(data).toStrictEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -326,7 +326,7 @@ describe("send", () => {
 
     expect(error).toBeNull();
     expect(success).toBe(true);
-    expect(data).toEqual(fake.send.expectedResponse.data);
+    expect(data).toStrictEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -340,7 +340,7 @@ describe("checkDomain", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(data).toEqual(fake.checkDomain.expectedResponse.data);
+    expect(data).toStrictEqual(fake.checkDomain.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -371,7 +371,7 @@ describe("createDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
 
-    expect(data).toEqual(fake.createDkimKey.expectedResponse.data);
+    expect(data).toStrictEqual(fake.createDkimKey.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -413,7 +413,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { includeDnsRecord: true });
 
-    expect(data).toEqual([fake.createDkimKey.expectedResponse.data]);
+    expect(data).toStrictEqual([fake.createDkimKey.expectedResponse.data]);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -561,7 +561,7 @@ describe("rotateDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
-    expect(data).toEqual(fake.rotateDkimKey.expectedResponse.data);
+    expect(data).toStrictEqual(fake.rotateDkimKey.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

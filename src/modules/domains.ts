@@ -1,4 +1,6 @@
 import type { MailChannelsClient } from "../client";
+import { ErrorCode, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -8,7 +10,6 @@ import type { DomainsListOptions, DomainsListResponse } from "../types/domains/l
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
 import type { DomainsDownstreamAddress, DomainsListDownstreamAddressesOptions, DomainsListDownstreamAddressesResponse } from "../types/domains/downstream-addresses";
 import type { DomainsBulkCreateLoginLinks, DomainsBulkCreateLoginLinksResponse } from "../types/domains/bulk-create-login-links";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Domains {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -50,7 +51,7 @@ export class Domains {
       return null;
     });
 
-    result.data = response;
+    result.data = clean(response);
     return result;
   }
 
@@ -111,7 +112,7 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = response;
+    result.data = clean(response);
     return result;
   }
 
@@ -146,10 +147,10 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       domains: response.domains,
       total: response.total
-    };
+    });
 
     return result;
   }
@@ -228,11 +229,11 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
-    };
+    });
     return result;
   }
 
@@ -270,11 +271,11 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = response.map(({ action, item, item_type }) => ({
+    result.data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
-    }));
+    })));
     return result;
   }
 
@@ -353,9 +354,9 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = {
+    result.data = clean({
       link: response.loginLink
-    };
+    });
     return result;
   }
 
@@ -446,7 +447,7 @@ export class Domains {
     }).catch(() => null);
 
     if (!response) return result;
-    result.data = response.records;
+    result.data = clean(response.records);
     return result;
   }
 
@@ -526,7 +527,7 @@ export class Domains {
 
     if (!response) return result;
 
-    result.data = response;
+    result.data = clean(response);
     return result;
   }
 }
