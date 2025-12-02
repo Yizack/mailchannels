@@ -81,7 +81,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Create DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/create-dkim-key-pair)
   - ✅ [Retrieve DKIM Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-dkim-keys)
   - ✅ [Update DKIM Key Status](https://docs.mailchannels.net/email-api/api-reference/update-dkim-key-status)
-  - 🚧 [Rotate DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/rotate-dkim-key-pair)
+  - ✅ [Rotate DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/rotate-dkim-key-pair)
 - 📢 Webhooks
   - ✅ [Enroll for Webhook Notifications](https://docs.mailchannels.net/email-api/api-reference/enroll-for-webhook-notifications)
   - ✅ [Retrieve Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/retrieve-customer-webhooks)
