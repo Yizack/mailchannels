@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { key, error } = await mailchannels.webhooks.getSigningKey("mckey");
+const { data, error } = await mailchannels.webhooks.getSigningKey("mckey");
 
-console.info(JSON.stringify({ key, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

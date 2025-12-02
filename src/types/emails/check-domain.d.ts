@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { EmailsDkimKey } from "./create-dkim-key";
 
 interface EmailsCheckDomainDkim {
