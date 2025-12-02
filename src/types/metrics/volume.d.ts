@@ -1,6 +1,9 @@
 import type { MetricsBucket } from ".";
 
 export interface MetricsVolume {
+  /**
+   * A series of metrics aggregations bucketed by time interval (e.g. hour, day).
+   */
   buckets: {
     delivered: MetricsBucket[];
     dropped: MetricsBucket[];

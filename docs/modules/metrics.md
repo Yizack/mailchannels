@@ -44,7 +44,7 @@ const { engagement } = await mailchannels.metrics.engagement()
 ### Response
 
 - `engagement` `MetricsEngagement | null` <Badge type="warning">nullable</Badge>
-  - `buckets` `object` <Badge>guaranteed</Badge>
+  - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `click` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
@@ -102,7 +102,7 @@ const { performance } = await mailchannels.metrics.performance()
 
 - `performance` `MetricsPerformance | null` <Badge type="warning">nullable</Badge>
   - `bounced` `number` <Badge>guaranteed</Badge>: Count of messages bounced during the specified time range.
-  - `buckets` `object` <Badge>guaranteed</Badge>
+  - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `bounced` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
@@ -154,7 +154,7 @@ const { behaviour } = await mailchannels.metrics.recipientBehaviour()
 ### Response
 
 - `behaviour` `MetricsRecipientBehaviour | null` <Badge type="warning">nullable</Badge>
-  - `buckets` `object` <Badge>guaranteed</Badge>
+  - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `unsubscribeDelivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
@@ -203,7 +203,7 @@ const { volume } = await mailchannels.metrics.volume()
 ### Response
 
 - `volume` `MetricsVolume | null` <Badge type="warning">nullable</Badge>
-  - `buckets` `object` <Badge>guaranteed</Badge>
+  - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `delivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
       - `periodStart` `string` <Badge>guaranteed</Badge>: The starting date and time of the time period this bucket represents.
