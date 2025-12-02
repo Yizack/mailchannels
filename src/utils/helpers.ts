@@ -1,10 +1,15 @@
 export const stripPemHeaders = (pem: string) => pem.replace(/-----[^-]+-----|\s|#.*$/gm, "");
 
-export const clean = <T>(value: T): T => {
-  if (Array.isArray(value)) {
+/**
+ * Recursively removes undefined values from objects and arrays.
+ * @param data - The data to clean
+ * @returns The cleaned data with `undefined` properties removed
+ */
+export const clean = <T>(data: T): T => {
+  if (Array.isArray(data)) {
     const result: unknown[] = [];
-    for (let i = 0; i < value.length; i++) {
-      const cleaned = clean(value[i]);
+    for (let i = 0; i < data.length; i++) {
+      const cleaned = clean(data[i]);
       if (cleaned !== undefined) {
         result.push(cleaned);
       }
@@ -12,9 +17,9 @@ export const clean = <T>(value: T): T => {
     return result as T;
   }
 
-  if (value && typeof value === "object" && value.constructor === Object) {
+  if (data && typeof data === "object" && data.constructor === Object) {
     const result: Record<string, unknown> = {};
-    const obj = value as Record<string, unknown>;
+    const obj = data as Record<string, unknown>;
     const keys = Object.keys(obj);
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]!;
@@ -26,5 +31,5 @@ export const clean = <T>(value: T): T => {
     return result as T;
   }
 
-  return value;
+  return data;
 };
