@@ -27,9 +27,27 @@ components:
     CheckDomainBody:
       properties:
         dkim_settings:
-          description: 'Each item must include DKIM domain, selector and private key.
-
+          description: 'Each item may include DKIM domain, selector and private key.
             Up to 10 items are allowed.
+
+            The absence or presence of these fields affects how DKIM settings are
+            validated:
+
+            1. If dkim_domain, dkim_selector, and dkim_private_key are all present,
+            verify using the provided domain, selector, and key.
+
+            2. If dkim_domain and dkim_selector are present, use the stored private
+            key for the given domain and selector.
+
+            3. If only dkim_domain is present, use all stored keys for the given domain.
+
+            4. If none are present, use all stored keys for the domain provided in
+            the `domain` field of the request.
+
+            5. If dkim_private_key is present, dkim_selector must be present.
+
+            6. If dkim_selector is present and dkim_domain is not, the domain will
+            be taken from the `domain` field of the request.
 
             '
           items:
@@ -145,12 +163,27 @@ components:
 
             '
           type: string
+        gracePeriodExpiresAt:
+          description: 'UTC timestamp after which you can no longer use the rotated
+            key for signing
+
+            '
+          format: date-time
+          nullable: true
+          type: string
         key_length:
           description: 'Key length in bits
 
             '
           type: integer
         public_key:
+          type: string
+        retiresAt:
+          description: 'UTC timestamp when a rotated key pair is retired
+
+            '
+          format: date-time
+          nullable: true
           type: string
         selector:
           description: 'Selector assigned to the key pair
@@ -162,6 +195,7 @@ components:
           - active
           - retired
           - revoked
+          - rotated
           type: string
         status_modified_at:
           description: 'Timestamp when the key was last modified
@@ -234,9 +268,27 @@ components:
           enum:
           - revoked
           - retired
+          - rotated
           type: string
       required:
       - status
+      type: object
+    DKIMKeyRotateRequest:
+      properties:
+        new_key:
+          $ref: '#/components/schemas/NewKey'
+      required:
+      - new_key
+      type: object
+    DKIMKeyRotateResponse:
+      properties:
+        new_key:
+          $ref: '#/components/schemas/DKIMKeyInfo'
+        rotated_key:
+          $ref: '#/components/schemas/DKIMKeyInfo'
+      required:
+      - new_key
+      - rotated_key
       type: object
     DkimResult:
       properties:
@@ -264,26 +316,7 @@ components:
           type: string
       type: object
     DkimSetting:
-      description: 'Domain, selector and private key for DKIM signing. the absence
-        or presence of these
-
-        fields affects how DKIM settings are validated:
-
-        1. If dkim_domain, dkim_selector, and dkim_private_key are all present, verify
-        using the provided domain, selector, and key.
-
-        2. If dkim_domain and dkim_selector are present, use the stored private key
-        for the given domain and selector.
-
-        3. If only dkim_domain is present, use all stored keys for the given domain.
-
-        4. If none are present, use all stored keys for the domain provided in the
-        `domain` field of the request.
-
-        5. If dkim_private_key is present, dkim_selector must be present.
-
-        6. If dkim_selector is present and dkim_domain is not, the domain will be
-        taken from the `domain` field of the request.
+      description: 'Domain, selector and private key for DKIM signing.
 
         '
       properties:
@@ -520,6 +553,8 @@ components:
     MetricsEngagement:
       properties:
         buckets:
+          description: A series of metrics aggregations bucketed by time interval
+            (e.g. hour, day)
           properties:
             click:
               items:
@@ -603,6 +638,8 @@ components:
           minimum: 0
           type: integer
         buckets:
+          description: A series of metrics aggregations bucketed by time interval
+            (e.g. hour, day)
           properties:
             bounced:
               items:
@@ -654,6 +691,8 @@ components:
     MetricsRecipientBehaviour:
       properties:
         buckets:
+          description: A series of metrics aggregations bucketed by time interval
+            (e.g. hour, day)
           properties:
             unsubscribe_delivered:
               items:
@@ -704,9 +743,63 @@ components:
       - unsubscribe_delivered
       - buckets
       type: object
+    MetricsSender:
+      properties:
+        bounced:
+          minimum: 0
+          type: integer
+        delivered:
+          minimum: 0
+          type: integer
+        dropped:
+          minimum: 0
+          type: integer
+        name:
+          maxLength: 255
+          type: string
+        processed:
+          minimum: 0
+          type: integer
+      required:
+      - name
+      - processed
+      - delivered
+      - bounced
+      - dropped
+      type: object
+    MetricsSenderResponse:
+      properties:
+        end_time:
+          format: date-time
+          type: string
+        limit:
+          type: integer
+        offset:
+          type: integer
+        senders:
+          items:
+            $ref: '#/components/schemas/MetricsSender'
+          type: array
+        start_time:
+          format: date-time
+          type: string
+        total:
+          description: 'The total number of senders in this category that sent messages
+            in the given time range.
+
+            '
+          type: integer
+      required:
+      - limit
+      - offset
+      - total
+      - senders
+      type: object
     MetricsVolume:
       properties:
         buckets:
+          description: A series of metrics aggregations bucketed by time interval
+            (e.g. hour, day)
           properties:
             delivered:
               items:
@@ -762,6 +855,16 @@ components:
       - delivered
       - dropped
       - buckets
+      type: object
+    NewKey:
+      properties:
+        selector:
+          description: Selector for the new key pair
+          maxLength: 63
+          minLength: 1
+          type: string
+      required:
+      - selector
       type: object
     Personalization:
       properties:
@@ -1206,7 +1309,7 @@ info:
 
     '
   title: Email API
-  version: 0.13.0
+  version: 0.15.0
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -1254,8 +1357,7 @@ paths:
       summary: DKIM, SPF & Domain Lockdown Check
   /domains/{domain}/dkim-keys:
     get:
-      description: 'Search for DKIM keys by customer handle and domain, with optional
-        filters.
+      description: 'Search for DKIM keys by domain, with optional filters.
 
         If selector is provided, at most one key will be returned.
 
@@ -1281,6 +1383,7 @@ paths:
           - active
           - retired
           - revoked
+          - rotated
           type: string
       - description: 'Number of keys to skip before returning results.
 
@@ -1378,8 +1481,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Bad Request
         '409':
-          description: 'Key pair already created for customer_handle, domain, and
-            selector
+          description: 'Key pair already created for domain, and selector
 
             '
         '500':
@@ -1395,6 +1497,18 @@ paths:
         revoked: Indicates that the key is compromised and should not be used.
 
         retired: Indicates that the key has been rotated and is no longer in use.
+
+        rotated: Indicates that the key is going through the rotation process. Only
+        active key pairs can be
+
+        updated to this status, and no new key pair is created. The rotated key can
+        be used to sign emails for 3 days after
+
+        the status update, and will automatically change to ''retired'' 2 weeks after
+        update. For a smooth key transition,
+
+        it is recommended to create and publish a new key pair before signing is disabled
+        for the rotated key.
 
         '
       parameters:
@@ -1431,11 +1545,81 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Status not supported
         '404':
-          description: Specified key pair not found, or the DKIM domain or selector
-            path parameter is missing
+          description: 'Specified key pair not found, or no active key for rotation
+
+            This may also occur if the DKIM domain or selector path parameter is missing.
+
+            '
         '500':
           description: Internal Server Error
       summary: Update DKIM Key Status
+  /domains/{domain}/dkim-keys/{selector}/rotate:
+    post:
+      description: Rotate an active DKIM key pair. Mark the original key as 'rotated',
+        and create a new key pair with the required new key selector, reusing the
+        same algorithm and key length. The rotated key remains valid for signing for
+        a 3-day grace period, and is automatically changed to 'retired' 2 weeks after
+        rotation. Publish the new key to its DNS TXT record before rotated key expires
+        for signing as emails sent with an unpublished key will fail DKIM validation
+        by receiving providers. After the grace period, only the new key is valid
+        for signing if published.
+      parameters:
+      - in: path
+        name: domain
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: selector
+        required: true
+        schema:
+          maxLength: 63
+          minLength: 1
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DKIMKeyRotateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DKIMKeyRotateResponse'
+          description: Key pair status updated and new key pair created successfully
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '404':
+          description: Specified key pair not found
+        '409':
+          description: 'Key pair already created for domain, and provided new key
+            selector.
+
+            '
+        '500':
+          description: Internal Server Error
+        '503':
+          description: Temporarily unavailable for maintenance
+          headers:
+            Retry-After:
+              description: 'Suggested wait time in seconds before retrying.
+
+                '
+              schema:
+                example: '20'
+                type: string
+      summary: Rotate DKIM Key Pair
   /metrics/engagement:
     get:
       description: 'Retrieve engagement metrics for messages sent from your account,
@@ -1692,6 +1876,113 @@ paths:
         '500':
           description: Internal Server Error
       summary: Retrieve Recipient Behaviour Metrics
+  /metrics/senders/{sender_type}:
+    get:
+      description: 'Retrieves a list of senders, either sub-accounts or campaigns,
+        with their associated message metrics.
+
+        Sorted by total # of sent messages (processed + dropped)
+
+        Supports optional filter for time range, and optional settings for limit,
+        offset, and sort order.
+
+        Note: senders without any messages in the given time range will not be included
+        in the results.
+
+        The default time range is from one month ago to now, and the default sort
+        order is descending.
+
+        '
+      parameters:
+      - in: path
+        name: sender_type
+        required: true
+        schema:
+          enum:
+          - campaigns
+          - sub-accounts
+          type: string
+      - description: 'The beginning of the time range for retrieving top senders metrics
+          (inclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ
+
+          Defaults to one month ago if not provided.
+
+          '
+        in: query
+        name: start_time
+        required: false
+        schema:
+          type: string
+      - description: 'The end of the time range for retrieving top senders metrics
+          (exclusive).
+
+          Formats: YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ
+
+          Defaults to the current time if not provided.
+
+          '
+        in: query
+        name: end_time
+        required: false
+        schema:
+          type: string
+      - description: 'The maximum number of senders to return
+
+          The default is 10.
+
+          '
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          maximum: 1000
+          minimum: 1
+          type: integer
+      - description: 'The number of senders to skip before returning results.
+
+          '
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+      - description: 'The order in which to sort the results, based on total messages
+          (processed + dropped).
+
+          '
+        in: query
+        name: sort_order
+        required: false
+        schema:
+          default: desc
+          enum:
+          - asc
+          - desc
+          type: string
+      - in: header
+        name: X-Api-Key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricsSenderResponse'
+          description: 'Successfully retrieved top senders metrics
+
+            '
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+      summary: Retrieve sender metrics
   /metrics/volume:
     get:
       description: 'Retrieve volume metrics for messages sent from your account,
