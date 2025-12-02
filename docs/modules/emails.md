@@ -192,7 +192,7 @@ const { data, error } = await mailchannels.emails.checkDomain({
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of SPF check.
     - `verdict` `"passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown"` <Badge>guaranteed</Badge>
   - `references` `string[]` <Badge type="info">optional</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>: Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed. Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
 
 ## Create DKIM Key <Badge type="info">method</Badge>
 
@@ -251,7 +251,7 @@ const { data, error } = await mailchannels.emails.createDkimKey('example.com', {
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
   - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
   - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Get DKIM Keys <Badge type="info">method</Badge>
 
@@ -299,7 +299,7 @@ const { data, error } = await mailchannels.emails.getDkimKeys('example.com', {
 - `data` `Optional<EmailsDkimKey, "dnsRecords">[] | null` <Badge type="warning">nullable</Badge>: List of keys matching the filter. Empty if no keys match the filter.
   - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
   - `createdAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key pair was created.
-  - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
+  - `dnsRecords` `object[]` <Badge type="info">optional</Badge>: Suggested DNS records for the DKIM key. Only included if `includeDnsRecord` is `true`.
     - `name` `string` <Badge>guaranteed</Badge>
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
@@ -311,7 +311,7 @@ const { data, error } = await mailchannels.emails.getDkimKeys('example.com', {
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
   - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
   - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Update DKIM Key <Badge type="info">method</Badge>
 
@@ -359,7 +359,7 @@ const { success, error } = await mailchannels.emails.updateDkimKey('example.com'
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Rotate DKIM Key <Badge type="info">method</Badge>
 
@@ -435,7 +435,7 @@ const { data, error } = await mailchannels.emails.rotateDkimKey('example.com', '
     - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
     - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
     - `statusModifiedAt` `string` <Badge type="info">optional</Badge>: Timestamp when the key was last modified.
-- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+- `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the operation failed.
 
 ## Type declarations
 
@@ -475,6 +475,7 @@ const { data, error } = await mailchannels.emails.rotateDkimKey('example.com', '
   **Get DKIM Keys type declarations**
 
   <<< @/snippets/emails-get-dkim-keys-options.ts
+  <<< @/snippets/optional.ts
   <<< @/snippets/emails-get-dkim-keys-response.ts
 
   **Update DKIM Key type declarations**
