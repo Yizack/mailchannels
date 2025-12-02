@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface DomainsData {
   /**
    * The domain name.
@@ -72,41 +74,29 @@ export interface DomainsProvisionOptions {
 
 export type DomainsBulkProvisionOptions = DomainsProvisionOptions & Pick<DomainsData, "subscriptionHandle">;
 
-export interface DomainsProvisionResponse {
-  /**
-   * The provisioned domain data.
-   */
-  data: DomainsData | null;
-  error: string | null;
-}
+export type DomainsProvisionResponse = DataResponse<DomainsData>;
 
-export interface DomainsBulkProvisionResponse {
+export type DomainsBulkProvisionResponse = DataResponse<{
   /**
-   * If the request was processed successfully, this does not necessarily mean all the domains in the request were successfully provisioned.
+   * Domains that were successfully provisioned or updated.
    */
-  results: {
+  successes: {
     /**
-     * Domains that were successfully provisioned or updated.
+     * The provisioned domain data.
      */
-    successes: {
-      /**
-       * The provisioned domain data.
-       */
-      domain: DomainsData;
-      code: number;
-      comment?: string;
-    }[];
+    domain: DomainsData;
+    code: number;
+    comment?: string;
+  }[];
+  /**
+   * Domains that were not successfully provisioned.
+   */
+  errors: {
     /**
-     * Domains that were not successfully provisioned.
+     * The failed to provision domain data.
      */
-    errors: {
-      /**
-       * The failed to provision domain data.
-       */
-      domain: DomainsData;
-      code: number;
-      comment?: string;
-    }[];
-  } | null;
-  error: string | null;
-}
+    domain: DomainsData;
+    code: number;
+    comment?: string;
+  }[];
+}>;

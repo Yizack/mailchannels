@@ -21,7 +21,7 @@ import { MailChannelsClient, Lists } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
 
-const { entry } = await lists.addListEntry({
+const { data, error } = await lists.addListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -32,7 +32,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entry } = await mailchannels.lists.addListEntry({
+const { data, error } = await mailchannels.lists.addListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -47,7 +47,7 @@ const { entry } = await mailchannels.lists.addListEntry({
 
 ### Response
 
-- `entry` `ListEntry | null` <Badge type="warning">nullable</Badge>
+- `data` `ListEntry | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -66,7 +66,7 @@ import { MailChannelsClient, Lists } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
 
-const { entries } = await lists.listEntries('safelist')
+const { data, error } = await lists.listEntries('safelist')
 ```
 
 ```ts [full.ts]
@@ -74,7 +74,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { entries } = await mailchannels.lists.listEntries('safelist')
+const { data, error } = await mailchannels.lists.listEntries('safelist')
 ```
 :::
 
@@ -84,7 +84,7 @@ const { entries } = await mailchannels.lists.listEntries('safelist')
 
 ### Response
 
-- `entries` `ListEntry[]` <Badge>guaranteed</Badge>
+- `data` `ListEntry[] | null` <Badge type="warning">nullable</Badge>
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
@@ -103,7 +103,7 @@ import { MailChannelsClient, Lists } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const lists = new Lists(mailchannels)
 
-const { success } = await lists.deleteListEntry({
+const { success, error } = await lists.deleteListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -114,7 +114,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.lists.deleteListEntry({
+const { success, error } = await mailchannels.lists.deleteListEntry({
   listName: 'safelist',
   item: 'name@domain.com'
 })
@@ -138,6 +138,10 @@ const { success } = await mailchannels.lists.deleteListEntry({
 
 <details>
   <summary>All type declarations</summary>
+
+  **Responses**
+
+  <<< @/snippets/data-response.ts
 
   **List Entry type declarations**
 

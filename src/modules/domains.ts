@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import type { SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { DomainsAddListEntryApiResponse, DomainsBulkProvisionApiResponse } from "../types/domains/internal";
@@ -19,7 +19,7 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { data } = await mailchannels.domains.provision({
+   * const { data, error } = await mailchannels.domains.provision({
    *   domain: 'example.com',
    *   subscriptionHandle: 'your-subscription-handle'
    * })
@@ -28,7 +28,7 @@ export class Domains {
   async provision (options: DomainsProvisionOptions & DomainsData): Promise<DomainsProvisionResponse> {
     const { associateKey, overwrite, ...payload } = options;
 
-    const data: DomainsProvisionResponse = { data: null, error: null };
+    const result: DomainsProvisionResponse = { data: null, error: null };
 
     const response = await this.mailchannels.post<DomainsBulkProvisionApiResponse>("/inbound/v1/domains", {
       query: {
@@ -37,21 +37,21 @@ export class Domains {
       },
       body: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request, returned in the case that an error occurs while converting an A-label domain to a U-label domain name.",
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own.",
           [ErrorCode.Conflict]: `The domain '${options.domain}' is already provisioned, and is associated with a different customer.`
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to provision domain.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to provision domain.";
       }
       return null;
     });
 
-    data.data = response;
-    return data;
+    result.data = response;
+    return result;
   }
 
   /**
@@ -61,7 +61,7 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { results } = await mailchannels.domains.bulkProvision({
+   * const { data, error } = await mailchannels.domains.bulkProvision({
    *   subscriptionHandle: 'your-subscription-handle'
    * }, [
    *   {
@@ -77,19 +77,19 @@ export class Domains {
   async bulkProvision (options: DomainsBulkProvisionOptions, domains: Omit<DomainsData, "subscriptionHandle">[]): Promise<DomainsBulkProvisionResponse> {
     const { associateKey, overwrite, subscriptionHandle } = options;
 
-    const data: DomainsBulkProvisionResponse = { results: null, error: null };
+    const result: DomainsBulkProvisionResponse = { data: null, error: null };
 
     if (!domains || !domains.length) {
-      data.error = "No domains provided.";
-      return data;
+      result.error = "No domains provided.";
+      return result;
     }
 
     if (domains.length > 1000) {
-      data.error = "The maximum number of domains to be provisioned is 1000.";
-      return data;
+      result.error = "The maximum number of domains to be provisioned is 1000.";
+      return result;
     }
 
-    const response = await this.mailchannels.post<DomainsBulkProvisionResponse["results"]>("/inbound/v1/domains/batch", {
+    const response = await this.mailchannels.post<DomainsBulkProvisionResponse["data"]>("/inbound/v1/domains/batch", {
       query: {
         subscriptionHandle,
         "associate-key": associateKey,
@@ -97,22 +97,22 @@ export class Domains {
       },
       body: { domains },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request, returned in the case that a domain name fails RFC 5891 validation.",
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to provision domains.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to provision domains.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.results = response;
-    return data;
+    result.data = response;
+    return result;
   }
 
   /**
@@ -121,34 +121,37 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { domains } = await mailchannels.domains.list()
+   * const { data, error } = await mailchannels.domains.list()
    * ```
    */
   async list (options?: DomainsListOptions): Promise<DomainsListResponse> {
-    const data: DomainsListResponse = { domains: [], total: 0, error: null };
+    const result: DomainsListResponse = { data: null, error: null };
 
     if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 5000)) {
-      data.error = "The limit value is invalid. Possible limit values are 1 to 5000.";
-      return data;
+      result.error = "The limit value is invalid. Possible limit values are 1 to 5000.";
+      return result;
     }
 
     if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
+      result.error = "Offset must be greater than or equal to 0.";
+      return result;
     }
 
     const response = await this.mailchannels.get<{ domains: DomainsData[], total: number }>("/inbound/v1/domains", {
       query: options,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.domains = response.domains;
-    data.total = response.total;
-    return data;
+    result.data = {
+      domains: response.domains,
+      total: response.total
+    };
+
+    return result;
   }
 
   /**
@@ -157,32 +160,32 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.domains.delete('example.com')
+   * const { success, error } = await mailchannels.domains.delete('example.com')
    * ```
    */
   async delete (domain: string): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     await this.mailchannels.delete<void>(`/inbound/v1/domains/${domain}`, {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -192,7 +195,7 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entry } = await mailchannels.domains.addListEntry('example.com', {
+   * const { data, error } = await mailchannels.domains.addListEntry('example.com', {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -201,36 +204,36 @@ export class Domains {
   async addListEntry (domain: string, options: ListEntryOptions): Promise<ListEntryResponse> {
     const { listName, item } = options;
 
-    const data: ListEntryResponse = { entry: null, error: null };
+    const result: ListEntryResponse = { data: null, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     const response = await this.mailchannels.post<DomainsAddListEntryApiResponse>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.entry = {
+    result.data = {
       action: response.action,
       item: response.item,
       type: response.item_type
     };
-    return data;
+    return result;
   }
 
   /**
@@ -240,39 +243,39 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entries } = await mailchannels.domains.listEntries('example.com', 'safelist')
+   * const { data, error } = await mailchannels.domains.listEntries('example.com', 'safelist')
    * ```
    */
   async listEntries (domain: string, listName: ListNames): Promise<ListEntriesResponse> {
-    const data: ListEntriesResponse = { entries: [], error: null };
+    const result: ListEntriesResponse = { data: null, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/domains/${domain}/lists/${listName}`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.entries = response.map(({ action, item, item_type }) => ({
+    result.data = response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
     }));
-    return data;
+    return result;
   }
 
   /**
@@ -282,7 +285,7 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.domains.deleteListEntry('example.com', {
+   * const { success, error } = await mailchannels.domains.deleteListEntry('example.com', {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -291,16 +294,16 @@ export class Domains {
   async deleteListEntry (domain: string, options: ListEntryOptions): Promise<SuccessResponse> {
     const { listName, item } = options;
 
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      result.error = "No list name provided.";
+      return result;
     }
 
     await this.mailchannels.delete(`/inbound/v1/domains/${domain}/lists/${listName}`, {
@@ -308,17 +311,17 @@ export class Domains {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -327,20 +330,20 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { link } = await mailchannels.domains.createLoginLink('example.com')
+   * const { data, error } = await mailchannels.domains.createLoginLink('example.com')
    * ```
    */
   async createLoginLink (domain: string): Promise<DomainsCreateLoginLinkResponse> {
-    const data: DomainsCreateLoginLinkResponse = { link: null, error: null };
+    const result: DomainsCreateLoginLinkResponse = { data: null, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     const response = await this.mailchannels.get<{ loginLink: string }>(`/inbound/v1/domains/${domain}/login-link`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Unauthorized]: "The domain does not belong to this customer.",
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
@@ -348,10 +351,12 @@ export class Domains {
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.link = response.loginLink;
-    return data;
+    result.data = {
+      link: response.loginLink
+    };
+    return result;
   }
 
   /**
@@ -361,7 +366,7 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.domains.setDownstreamAddress('example.com', [
+   * const { success, error } = await mailchannels.domains.setDownstreamAddress('example.com', [
    *   {
    *     port: 25,
    *     priority: 10,
@@ -372,16 +377,16 @@ export class Domains {
    * ```
    */
   async setDownstreamAddress (domain: string, records: DomainsDownstreamAddress[] = []): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (records.length > 10) {
-      data.error = "The maximum of records to be set is 10.";
-      return data;
+      result.error = "The maximum of records to be set is 10.";
+      return result;
     }
 
     await this.mailchannels.put<void>(`/inbound/v1/domains/${domain}/downstream-address`, {
@@ -389,17 +394,17 @@ export class Domains {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -409,40 +414,40 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { records } = await mailchannels.domains.listDownstreamAddresses('example.com')
+   * const { data, error } = await mailchannels.domains.listDownstreamAddresses('example.com')
    * ```
    */
   async listDownstreamAddresses (domain: string, options?: DomainsListDownstreamAddressesOptions): Promise<DomainsListDownstreamAddressesResponse> {
-    const data: DomainsListDownstreamAddressesResponse = { records: [], error: null };
+    const result: DomainsListDownstreamAddressesResponse = { data: null, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (typeof options?.limit === "number" && options.limit < 1) {
-      data.error = "The limit value is invalid. Only positive values are allowed.";
-      return data;
+      result.error = "The limit value is invalid. Only positive values are allowed.";
+      return result;
     }
 
     if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
+      result.error = "Offset must be greater than or equal to 0.";
+      return result;
     }
 
     const response = await this.mailchannels.get<{ records: DomainsDownstreamAddress[] }>(`/inbound/v1/domains/${domain}/downstream-address`, {
       query: options,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
     }).catch(() => null);
 
-    if (!response) return data;
-    data.records = response.records;
-    return data;
+    if (!response) return result;
+    result.data = response.records;
+    return result;
   }
 
   /**
@@ -452,20 +457,20 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
+   * const { success, error } = await mailchannels.domains.updateApiKey('example.com', 'your-api-key')
    * ```
    */
   async updateApiKey (domain: string, key: string): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      data.error = "No domain provided.";
-      return data;
+      result.error = "No domain provided.";
+      return result;
     }
 
     if (!key) {
-      data.error = "No API key provided.";
-      return data;
+      result.error = "No API key provided.";
+      return result;
     }
 
     await this.mailchannels.put<void>(`/inbound/v1/domains/${domain}/api-key`, {
@@ -473,17 +478,17 @@ export class Domains {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: "The domain does not exist."
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -492,20 +497,20 @@ export class Domains {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { results } = await mailchannels.domains.bulkCreateLoginLinks(['example.com', 'example2.com'])
+   * const { data, error } = await mailchannels.domains.bulkCreateLoginLinks(['example.com', 'example2.com'])
    * ```
    */
   async bulkCreateLoginLinks (domains: string[]): Promise<DomainsBulkCreateLoginLinksResponse> {
-    const data: DomainsBulkCreateLoginLinksResponse = { results: null, error: null };
+    const result: DomainsBulkCreateLoginLinksResponse = { data: null, error: null };
 
     if (!domains || !domains.length) {
-      data.error = "No domains provided.";
-      return data;
+      result.error = "No domains provided.";
+      return result;
     }
 
     if (domains.length > 1000) {
-      data.error = "The maximum number of domains to create login links for is 1000.";
-      return data;
+      result.error = "The maximum number of domains to create login links for is 1000.";
+      return result;
     }
 
     const response = await this.mailchannels.post<DomainsBulkCreateLoginLinks>("/inbound/v1/domains/batch/login-link", {
@@ -513,15 +518,15 @@ export class Domains {
         domains: domains.map(domain => ({ domain }))
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.results = response;
-    return data;
+    result.data = response;
+    return result;
   }
 }

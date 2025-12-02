@@ -38,65 +38,56 @@ export interface EmailsCheckDomainOptions {
 
 export type EmailsCheckDomainVerdict = "passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown";
 
-export interface EmailsCheckDomainResponse {
+export type EmailsCheckDomainResponse = DataResponse<{
+  dkim: {
+    domain: string;
+    /**
+     * The human readable status of the DKIM key used for verification.
+     */
+    keyStatus?: EmailsDkimKey["status"] | "provided";
+    selector: string;
+    /**
+     * A human-readable explanation of DKIM check.
+     */
+    reason?: string;
+    verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+  }[];
+  domainLockdown: {
+    /**
+     * A human-readable explanation of Domain Lockdown check.
+     */
+    reason?: string;
+    verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+  };
   /**
-   * The results of the domain checks.
+   * These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
    */
-  results: {
-    dkim: {
-      domain: string;
+  senderDomain: {
+    a: {
       /**
-       * The human readable status of the DKIM key used for verification.
-       */
-      keyStatus?: EmailsDkimKey["status"] | "provided";
-      selector: string;
-      /**
-       * A human-readable explanation of DKIM check.
+       * A human-readable explanation of A record check.
        */
       reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-    }[];
-    domainLockdown: {
+    };
+    mx: {
       /**
-       * A human-readable explanation of Domain Lockdown check.
+       * A human-readable explanation of MX record check.
        */
       reason?: string;
       verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
     };
     /**
-     * These results are here to help avoid [SDNF](https://support.mailchannels.com/hc/en-us/articles/203155500-550-5-2-1-SDNF-Sender-Domain-Not-Found) (Sender Domain Not Found) blocks. For messages not to get blocked by SDNF, we require either an MX or A record to exist for the sender domain.
+     * Overall verdict. Passed if either A or MX record check passed.
      */
-    senderDomain: {
-      a: {
-        /**
-         * A human-readable explanation of A record check.
-         */
-        reason?: string;
-        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-      };
-      mx: {
-        /**
-         * A human-readable explanation of MX record check.
-         */
-        reason?: string;
-        verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-      };
-      /**
-       * Overall verdict. Passed if either A or MX record check passed.
-       */
-      verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
-    };
-    spf: {
-      /**
-       * A human-readable explanation of SPF check.
-       */
-      reason?: string;
-      verdict: EmailsCheckDomainVerdict;
-    };
-    references?: string[];
-  } | null;
-  /**
-   * Link to SPF, Domain Lockdown or DKIM references, displayed if any verdict is not passed.
-   */
-  error: string | null;
-}
+    verdict: Extract<EmailsCheckDomainVerdict, "passed" | "failed">;
+  };
+  spf: {
+    /**
+     * A human-readable explanation of SPF check.
+     */
+    reason?: string;
+    verdict: EmailsCheckDomainVerdict;
+  };
+  references?: string[];
+}>;

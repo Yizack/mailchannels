@@ -26,7 +26,6 @@ export interface MetricsRecipientBehaviour {
   unsubscribed: number;
 }
 
-export interface MetricsRecipientBehaviourResponse {
-  behaviour: MetricsRecipientBehaviour | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type MetricsRecipientBehaviourResponse = DataResponse<MetricsRecipientBehaviour>;

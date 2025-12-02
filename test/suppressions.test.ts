@@ -40,7 +40,7 @@ const fake = {
       ]
     } satisfies SuppressionsListApiResponse,
     expectedResponse: {
-      list: [
+      data: [
         {
           createdAt: "2024-07-29T15:51:28.071Z",
           notes: "string",
@@ -128,9 +128,9 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { list, error } = await suppressions.list(fake.list.options);
+    const { data, error } = await suppressions.list(fake.list.options);
 
-    expect(list).toEqual(fake.list.expectedResponse.list);
+    expect(data).toEqual(fake.list.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -141,10 +141,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { list, error } = await suppressions.list({ ...fake.list.options, limit: 0 });
+    const { data, error } = await suppressions.list({ ...fake.list.options, limit: 0 });
 
     expect(error).toBe("The limit must be between 1 and 1000.");
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -154,10 +154,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { list, error } = await suppressions.list({ ...fake.list.options, limit: 1001 });
+    const { data, error } = await suppressions.list({ ...fake.list.options, limit: 1001 });
 
     expect(error).toBe("The limit must be between 1 and 1000.");
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -167,10 +167,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { list, error } = await suppressions.list({ ...fake.list.options, offset: -1 });
+    const { data, error } = await suppressions.list({ ...fake.list.options, offset: -1 });
 
     expect(error).toBe("Offset must be greater than or equal to 0.");
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -183,10 +183,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
-    const { list, error } = await suppressions.list();
+    const { data, error } = await suppressions.list();
 
     expect(error).toBeTruthy();
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

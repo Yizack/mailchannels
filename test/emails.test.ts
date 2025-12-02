@@ -48,7 +48,7 @@ const fake = {
       }
     },
     expectedResponse: {
-      results: {
+      data: {
         spf: { verdict: "passed" },
         domainLockdown: { verdict: "passed" },
         senderDomain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
@@ -91,7 +91,7 @@ const fake = {
       status_modified_at: "2024-07-29T15:51:28.071Z"
     } satisfies EmailsCreateDkimKeyApiResponse,
     expectedResponse: {
-      key: {
+      data: {
         algorithm: "rsa",
         createdAt: "2024-07-29T15:51:28.071Z",
         dnsRecords: [{
@@ -107,7 +107,7 @@ const fake = {
         statusModifiedAt: "2024-07-29T15:51:28.071Z"
       },
       error: null
-    } as EmailsCreateDkimKeyResponse
+    } satisfies EmailsCreateDkimKeyResponse
   },
   rotateDkimKey: {
     options: {
@@ -152,7 +152,7 @@ const fake = {
       }
     } satisfies EmailsRotateDkimKeyApiResponse,
     expectedResponse: {
-      keys: {
+      data: {
         new: {
           algorithm: "rsa",
           dnsRecords: [
@@ -338,9 +338,9 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
+    const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(results).toEqual(fake.checkDomain.expectedResponse.results);
+    expect(data).toEqual(fake.checkDomain.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -354,10 +354,10 @@ describe("checkDomain", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { results, error } = await emails.checkDomain(fake.checkDomain.options);
+    const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
     expect(error).toBeTruthy();
-    expect(results).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -369,9 +369,9 @@ describe("createDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { key, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
+    const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
 
-    expect(key).toEqual(fake.createDkimKey.expectedResponse.key);
+    expect(data).toEqual(fake.createDkimKey.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -385,10 +385,10 @@ describe("createDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { key, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
+    const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
 
     expect(error).toBeTruthy();
-    expect(key).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -396,10 +396,10 @@ describe("createDkimKey", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { key, error } = await emails.createDkimKey("example.com", { selector: "a".repeat(64) });
+    const { data, error } = await emails.createDkimKey("example.com", { selector: "a".repeat(64) });
 
     expect(error).toBe("Selector must be between 1 and 63 characters.");
-    expect(key).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 });
@@ -411,9 +411,9 @@ describe("getDkimKeys", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.getDkimKeys("example.com", { includeDnsRecord: true });
+    const { data, error } = await emails.getDkimKeys("example.com", { includeDnsRecord: true });
 
-    expect(keys).toEqual([fake.createDkimKey.expectedResponse.key]);
+    expect(data).toEqual([fake.createDkimKey.expectedResponse.data]);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -427,10 +427,10 @@ describe("getDkimKeys", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.getDkimKeys("example.com", { includeDnsRecord: true });
+    const { data, error } = await emails.getDkimKeys("example.com", { includeDnsRecord: true });
 
     expect(error).toBeTruthy();
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -438,10 +438,10 @@ describe("getDkimKeys", () => {
     const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.getDkimKeys("example.com", { selector: "a".repeat(64) });
+    const { data, error } = await emails.getDkimKeys("example.com", { selector: "a".repeat(64) });
 
     expect(error).toBe("Selector must be a maximum of 63 characters.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -449,10 +449,10 @@ describe("getDkimKeys", () => {
     const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.getDkimKeys("example.com", { limit: 101 });
+    const { data, error } = await emails.getDkimKeys("example.com", { limit: 101 });
 
     expect(error).toBe("Limit must be between 1 and 100.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -460,10 +460,10 @@ describe("getDkimKeys", () => {
     const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.getDkimKeys("example.com", { offset: -10 });
+    const { data, error } = await emails.getDkimKeys("example.com", { offset: -10 });
 
     expect(error).toBe("Offset value is invalid. Only positive values are allowed.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 });
@@ -559,9 +559,9 @@ describe("rotateDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
+    const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
-    expect(keys).toEqual(fake.rotateDkimKey.expectedResponse.keys);
+    expect(data).toEqual(fake.rotateDkimKey.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -570,9 +570,9 @@ describe("rotateDkimKey", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "a".repeat(64), fake.rotateDkimKey.options);
+    const { data, error } = await emails.rotateDkimKey("example.com", "a".repeat(64), fake.rotateDkimKey.options);
 
-    expect(keys).toBeNull();
+    expect(data).toBeNull();
     expect(error).toBe("Selector must be between 1 and 63 characters.");
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -581,13 +581,13 @@ describe("rotateDkimKey", () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", {
+    const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", {
       newKey: {
         selector: "a".repeat(64)
       }
     });
 
-    expect(keys).toBeNull();
+    expect(data).toBeNull();
     expect(error).toBe("New key selector must be between 1 and 63 characters.");
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -601,10 +601,10 @@ describe("rotateDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
+    const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
     expect(error).toBeTruthy();
-    expect(keys).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -614,10 +614,10 @@ describe("rotateDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
+    const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
     expect(error).toBe("failure");
-    expect(keys).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -627,10 +627,10 @@ describe("rotateDkimKey", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
+    const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
     expect(error).toBe("Failed to rotate DKIM key.");
-    expect(keys).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

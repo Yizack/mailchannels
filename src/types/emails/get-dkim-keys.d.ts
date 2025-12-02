@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { EmailsDkimKey } from "./create-dkim-key";
 
 export interface EmailsGetDkimKeysOptions {
@@ -28,10 +29,4 @@ export interface EmailsGetDkimKeysOptions {
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export interface EmailsGetDkimKeysResponse {
-  /**
-   * List of keys matching the filter. Empty if no keys match the filter.
-   */
-  keys: Optional<EmailsDkimKey, "dnsRecords">[];
-  error: string | null;
-}
+export type EmailsGetDkimKeysResponse = DataResponse<Optional<EmailsDkimKey, "dnsRecords">[]>;

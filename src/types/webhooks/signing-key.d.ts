@@ -1,4 +1,5 @@
-export interface WebhooksSigningKeyResponse {
-  key: string | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type WebhooksSigningKeyResponse = DataResponse<{
+  key: string;
+}>;

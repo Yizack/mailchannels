@@ -31,7 +31,6 @@ export interface MetricsPerformance {
   startTime: string;
 }
 
-export interface MetricsPerformanceResponse {
-  performance: MetricsPerformance | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type MetricsPerformanceResponse = DataResponse<MetricsPerformance>;

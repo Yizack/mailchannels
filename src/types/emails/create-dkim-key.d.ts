@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface EmailsCreateDkimKeyOptions {
   /**
    * Algorithm used for the new key pair Currently, only RSA is supported.
@@ -65,10 +67,4 @@ export interface EmailsDkimKey {
   statusModifiedAt?: string;
 }
 
-export interface EmailsCreateDkimKeyResponse {
-  /**
-   * The created DKIM key information.
-   */
-  key: EmailsDkimKey | null;
-  error: string | null;
-}
+export type EmailsCreateDkimKeyResponse = DataResponse<EmailsDkimKey>;

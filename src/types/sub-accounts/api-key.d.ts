@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface SubAccountsApiKey {
   /**
    * The API key ID for the sub-account.
@@ -9,10 +11,7 @@ export interface SubAccountsApiKey {
   value: string;
 }
 
-export interface SubAccountsCreateApiKeyResponse {
-  key: SubAccountsApiKey | null;
-  error: string | null;
-}
+export type SubAccountsCreateApiKeyResponse = DataResponse<SubAccountsApiKey>;
 
 export interface SubAccountsListApiKeyOptions {
   /**
@@ -27,7 +26,4 @@ export interface SubAccountsListApiKeyOptions {
   offset?: number;
 }
 
-export interface SubAccountsListApiKeyResponse {
-  keys: SubAccountsApiKey[];
-  error: string | null;
-}
+export type SubAccountsListApiKeyResponse = DataResponse<SubAccountsApiKey[]>;

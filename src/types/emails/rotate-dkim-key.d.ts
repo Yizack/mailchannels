@@ -9,10 +9,9 @@ export interface EmailsRotateDkimKeyOptions {
   };
 }
 
-export interface EmailsRotateDkimKeyResponse {
-  keys: {
-    new: EmailsDkimKey;
-    rotated: EmailsDkimKey;
-  } | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type EmailsRotateDkimKeyResponse = DataResponse<{
+  new: EmailsDkimKey;
+  rotated: EmailsDkimKey;
+}>;

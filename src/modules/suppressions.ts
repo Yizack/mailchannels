@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { SuccessResponse } from "../types/success-response";
+import type { SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
 
@@ -13,12 +13,12 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.suppressions.create({
+   * const { success, error } = await mailchannels.suppressions.create({
    * // ...
    * });
    */
   async create (options: SuppressionsCreateOptions): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     const { addToSubAccounts, entries } = options;
 
@@ -37,10 +37,10 @@ export class Suppressions {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Conflict. One or more suppression entries in the request already exist and cannot be created again.",
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
@@ -48,7 +48,7 @@ export class Suppressions {
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -58,11 +58,11 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.suppressions.delete('name@example.com', 'api');
+   * const { success, error } = await mailchannels.suppressions.delete('name@example.com', 'api');
    * ```
    */
   async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    const result: SuccessResponse = { success: false, error: null };
 
     await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${recipient}`, {
       query: {
@@ -71,16 +71,16 @@ export class Suppressions {
       ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
-          data.success = true;
+          result.success = true;
           return;
         }
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     });
 
-    return data;
+    return result;
   }
 
   /**
@@ -88,21 +88,21 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { list }= await mailchannels.suppressions.list();
+   * const { data, error } = await mailchannels.suppressions.list();
    * ```
    * @param options - Options to filter and customize the suppression entries retrieval.
    */
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
-    const data: SuppressionsListResponse = { list: [], error: null };
+    const result: SuppressionsListResponse = { data: null, error: null };
 
     if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      data.error = "The limit must be between 1 and 1000.";
-      return data;
+      result.error = "The limit must be between 1 and 1000.";
+      return result;
     }
 
     if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
+      result.error = "Offset must be greater than or equal to 0.";
+      return result;
     }
 
     const payload: SuppressionsListPayload = {
@@ -117,15 +117,15 @@ export class Suppressions {
     const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
       query: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch(() => null);
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.list = response.suppression_list.map(entry => ({
+    result.data = response.suppression_list.map(entry => ({
       createdAt: entry.created_at,
       notes: entry.notes,
       recipient: entry.recipient,
@@ -134,6 +134,6 @@ export class Suppressions {
       types: entry.suppression_types
     }));
 
-    return data;
+    return result;
   }
 }

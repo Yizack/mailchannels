@@ -31,7 +31,6 @@ export interface MetricsVolume {
   startTime: string;
 }
 
-export interface MetricsVolumeResponse {
-  volume: MetricsVolume | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type MetricsVolumeResponse = DataResponse<MetricsVolume>;

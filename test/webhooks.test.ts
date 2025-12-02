@@ -4,6 +4,8 @@ import { Webhooks } from "../src/modules/webhooks";
 import { ErrorCode } from "../src/utils/errors";
 import type { WebhooksValidateApiResponse } from "../src/types/webhooks/internal";
 import type { WebhooksValidateResponse } from "../src/types/webhooks/validate";
+import type { WebhooksListResponse } from "../src/types/webhooks/list";
+import type { WebhooksSigningKeyResponse } from "../src/types/webhooks/signing-key";
 
 const fake = {
   enroll: {
@@ -16,12 +18,16 @@ const fake = {
     ],
     expectedResponse: {
       error: null,
-      webhooks: ["https://example.com/webhook1", "https://example.com/webhook2"]
-    }
+      data: ["https://example.com/webhook1", "https://example.com/webhook2"]
+    } satisfies WebhooksListResponse
   },
   signingKey: {
     id: "key-id",
-    apiResponse: { error: null, key: "public-key" }
+    apiResponse: { id: "key-id", key: "public-key" },
+    expectedResponse: {
+      data: { key: "public-key" },
+      error: null
+    } satisfies WebhooksSigningKeyResponse
   },
   validateResponse: {
     apiResponse: {
@@ -35,14 +41,16 @@ const fake = {
       }]
     } satisfies WebhooksValidateApiResponse,
     expectedResponse: {
-      allPassed: true,
-      results: [{
-        result: "passed",
-        webhook: "https://example.com/webhook",
-        response: {
-          status: 200
-        }
-      }],
+      data: {
+        allPassed: true,
+        results: [{
+          result: "passed",
+          webhook: "https://example.com/webhook",
+          response: {
+            status: 200
+          }
+        }]
+      },
       error: null
     } satisfies WebhooksValidateResponse
   }
@@ -57,9 +65,10 @@ describe("enroll", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success } = await webhooks.enroll(fake.enroll.endpoint);
+    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -110,9 +119,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const result = await webhooks.list();
+    const { data, error } = await webhooks.list();
 
-    expect(result).toEqual(fake.list.expectedResponse);
+    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -125,10 +135,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { webhooks: list, error } = await webhooks.list();
+    const { data, error } = await webhooks.list();
 
     expect(error).toBeTruthy();
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -138,10 +148,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { webhooks: list, error } = await webhooks.list();
+    const { data, error } = await webhooks.list();
 
     expect(error).toBe("failure");
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -151,10 +161,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { webhooks: list, error } = await webhooks.list();
+    const { data, error } = await webhooks.list();
 
     expect(error).toBe("Failed to fetch webhooks.");
-    expect(list).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -168,9 +178,10 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { success } = await webhooks.delete();
+    const { success, error } = await webhooks.delete();
 
     expect(mockClient.delete).toHaveBeenCalled();
+    expect(error).toBeNull();
     expect(success).toBe(true);
   });
 
@@ -197,9 +208,10 @@ describe("getSigningKey", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const result = await webhooks.getSigningKey(fake.signingKey.id);
+    const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(result).toEqual(fake.signingKey.apiResponse);
+    expect(data).toEqual(fake.signingKey.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -212,10 +224,10 @@ describe("getSigningKey", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { key, error } = await webhooks.getSigningKey(fake.signingKey.id);
+    const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
     expect(error).toBeTruthy();
-    expect(key).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -227,9 +239,10 @@ describe("validate", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const result = await webhooks.validate();
+    const { data, error } = await webhooks.validate();
 
-    expect(result).toEqual(fake.validateResponse.expectedResponse);
+    expect(data).toEqual(fake.validateResponse.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -242,11 +255,10 @@ describe("validate", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { allPassed, results, error } = await webhooks.validate();
+    const { data, error } = await webhooks.validate();
 
     expect(error).toBeTruthy();
-    expect(allPassed).toBe(false);
-    expect(results).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -256,11 +268,10 @@ describe("validate", () => {
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
-    const { allPassed, results, error } = await webhooks.validate("this-request-id-is-way-too-long");
+    const { data, error } = await webhooks.validate("this-request-id-is-way-too-long");
 
     expect(error).toBe("The request id should not exceed 28 characters.");
-    expect(allPassed).toBe(false);
-    expect(results).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 });

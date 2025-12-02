@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface UsersCreateOptions {
   /**
    * Flag to indicate if the user is a domain admin or a regular user.
@@ -21,16 +23,13 @@ export interface UsersCreateOptions {
   };
 }
 
-export interface UsersCreateResponse {
-  user: {
-    email: string;
-    roles: string[];
-    filter?: boolean;
-    listEntries: {
-      item: string;
-      type: "domain" | "email_address" | "ip_address";
-      action: "safelist" | "blocklist";
-    }[];
-  } | null;
-  error: string | null;
-}
+export type UsersCreateResponse = DataResponse<{
+  email: string;
+  roles: string[];
+  filter?: boolean;
+  listEntries: {
+    item: string;
+    type: "domain" | "email_address" | "ip_address";
+    action: "safelist" | "blocklist";
+  }[];
+}>;

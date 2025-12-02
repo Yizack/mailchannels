@@ -21,7 +21,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { engagement } = await metrics.engagement()
+const { data, error } = await metrics.engagement()
 ```
 
 ```ts [full.ts]
@@ -29,7 +29,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { engagement } = await mailchannels.metrics.engagement()
+const { data, error } = await mailchannels.metrics.engagement()
 ```
 :::
 
@@ -43,7 +43,7 @@ const { engagement } = await mailchannels.metrics.engagement()
 
 ### Response
 
-- `engagement` `MetricsEngagement | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsEngagement | null` <Badge type="warning">nullable</Badge>
   - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `click` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
@@ -78,7 +78,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { performance } = await metrics.performance()
+const { data, error } = await metrics.performance()
 ```
 
 ```ts [full.ts]
@@ -86,7 +86,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { performance } = await mailchannels.metrics.performance()
+const { data, error } = await mailchannels.metrics.performance()
 ```
 :::
 
@@ -100,7 +100,7 @@ const { performance } = await mailchannels.metrics.performance()
 
 ### Response
 
-- `performance` `MetricsPerformance | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsPerformance | null` <Badge type="warning">nullable</Badge>
   - `bounced` `number` <Badge>guaranteed</Badge>: Count of messages bounced during the specified time range.
   - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `bounced` `MetricsBucket[]` <Badge>guaranteed</Badge>
@@ -131,7 +131,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { behaviour } = await metrics.recipientBehaviour()
+const { data, error } = await metrics.recipientBehaviour()
 ```
 
 ```ts [full.ts]
@@ -139,7 +139,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { behaviour } = await mailchannels.metrics.recipientBehaviour()
+const { data, error } = await mailchannels.metrics.recipientBehaviour()
 ```
 :::
 
@@ -153,7 +153,7 @@ const { behaviour } = await mailchannels.metrics.recipientBehaviour()
 
 ### Response
 
-- `behaviour` `MetricsRecipientBehaviour | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsRecipientBehaviour | null` <Badge type="warning">nullable</Badge>
   - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `unsubscribeDelivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
@@ -180,7 +180,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { volume } = await metrics.volume()
+const { data, error } = await metrics.volume()
 ```
 
 ```ts [full.ts]
@@ -188,7 +188,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { volume } = await mailchannels.metrics.volume()
+const { data, error } = await mailchannels.metrics.volume()
 ```
 :::
 
@@ -202,7 +202,7 @@ const { volume } = await mailchannels.metrics.volume()
 
 ### Response
 
-- `volume` `MetricsVolume | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsVolume | null` <Badge type="warning">nullable</Badge>
   - `buckets` `object` <Badge>guaranteed</Badge>: A series of metrics aggregations bucketed by time interval (e.g. hour, day).
     - `delivered` `MetricsBucket[]` <Badge>guaranteed</Badge>
       - `count` `number` <Badge>guaranteed</Badge>: The number of events or occurrences aggregated within this time period.
@@ -233,7 +233,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { usage } = await metrics.usage()
+const { data, error } = await metrics.usage()
 ```
 
 ```ts [full.ts]
@@ -241,7 +241,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { usage } = await mailchannels.metrics.usage()
+const { data, error } = await mailchannels.metrics.usage()
 ```
 :::
 
@@ -266,7 +266,7 @@ import { MailChannelsClient, Metrics } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const metrics = new Metrics(mailchannels)
 
-const { senders } = await metrics.senders("campaigns")
+const { data, error } = await metrics.senders("campaigns")
 ```
 
 ```ts [full.ts]
@@ -274,7 +274,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { senders } = await mailchannels.metrics.senders("campaigns")
+const { data, error } = await mailchannels.metrics.senders("campaigns")
 ```
 :::
 
@@ -290,7 +290,7 @@ const { senders } = await mailchannels.metrics.senders("campaigns")
 
 ### Response
 
-- `senders` `MetricsSenders | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsSenders | null` <Badge type="warning">nullable</Badge>
   - `endTime` `string` <Badge>guaranteed</Badge>
   - `limit` `number` <Badge>guaranteed</Badge>
   - `offset` `number` <Badge>guaranteed</Badge>
@@ -310,6 +310,12 @@ const { senders } = await mailchannels.metrics.senders("campaigns")
 
 <details>
   <summary>All type declarations</summary>
+
+  **Responses**
+
+  <<< @/snippets/data-response.ts
+
+  **Shared metrics type declarations**
 
   <<< @/snippets/metrics-options.ts
   <<< @/snippets/metrics-bucket.ts

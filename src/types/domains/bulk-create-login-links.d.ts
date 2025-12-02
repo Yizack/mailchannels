@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 interface DomainsBulkCreateLoginLinkResult {
   /**
    * The domain the request was for.
@@ -19,7 +21,4 @@ export interface DomainsBulkCreateLoginLinks {
   errors: Omit<DomainsBulkCreateLoginLinkResult, "loginLink">[];
 }
 
-export interface DomainsBulkCreateLoginLinksResponse {
-  results: DomainsBulkCreateLoginLinks | null;
-  error: string | null;
-}
+export type DomainsBulkCreateLoginLinksResponse = DataResponse<DomainsBulkCreateLoginLinks>;

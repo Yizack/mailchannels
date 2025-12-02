@@ -18,7 +18,6 @@ export interface MetricsEngagement {
   startTime: string;
 }
 
-export interface MetricsEngagementResponse {
-  engagement: MetricsEngagement | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type MetricsEngagementResponse = DataResponse<MetricsEngagement>;

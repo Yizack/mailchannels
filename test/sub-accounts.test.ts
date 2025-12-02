@@ -17,7 +17,7 @@ const fake = {
     invalidHandle: "Invalid_Handle!",
     apiResponse: { company_name: "My Company", enabled: true, handle: "validhandle123" } satisfies SubAccountsCreateApiResponse,
     expectedResponse: {
-      account: { companyName: "My Company", enabled: true, handle: "validhandle123" },
+      data: { companyName: "My Company", enabled: true, handle: "validhandle123" },
       error: null
     } satisfies SubAccountsCreateResponse
   },
@@ -28,7 +28,7 @@ const fake = {
       { company_name: "Another Company", enabled: false, handle: "sub-account-2" }
     ] satisfies SubAccountsListApiResponse,
     expectedResponse: {
-      accounts: [
+      data: [
         { companyName: "My Company", enabled: true, handle: "sub-account-1" },
         { companyName: "Another Company", enabled: false, handle: "sub-account-2" }
       ],
@@ -38,7 +38,7 @@ const fake = {
   createApiKey: {
     apiResponse: { id: 1, key: "api-key-value" },
     expectedResponse: {
-      key: { id: 1, value: "api-key-value" },
+      data: { id: 1, value: "api-key-value" },
       error: null
     } satisfies SubAccountsCreateApiKeyResponse
   },
@@ -49,7 +49,7 @@ const fake = {
       { id: 2, key: "api-key-2" }
     ],
     expectedResponse: {
-      keys: [
+      data: [
         { id: 1, value: "api-key-1" },
         { id: 2, value: "api-key-2" }
       ],
@@ -63,7 +63,7 @@ const fake = {
       smtp_password: "smtp-password-value"
     } satisfies SubAccountsCreateSmtpPasswordApiResponse,
     expectedResponse: {
-      password: {
+      data: {
         enabled: true,
         id: 1,
         value: "smtp-password-value"
@@ -77,7 +77,7 @@ const fake = {
       { enabled: false, id: 2, smtp_password: "password-2" }
     ],
     expectedResponse: {
-      passwords: [
+      data: [
         { enabled: true, id: 1, value: "password-1" },
         { enabled: false, id: 2, value: "password-2" }
       ] satisfies SubAccountsSmtpPassword[],
@@ -87,7 +87,7 @@ const fake = {
   getLimit: {
     apiResponse: { sends: 1 },
     expectedResponse: {
-      limit: { sends: 1 },
+      data: { sends: 1 },
       error: null
     }
   },
@@ -98,7 +98,7 @@ const fake = {
       total_usage: 1234
     } satisfies SubAccountsUsageApiResponse,
     expectedResponse: {
-      usage: {
+      data: {
         endDate: "2025-04-11",
         startDate: "2025-03-12",
         total: 1234
@@ -115,9 +115,9 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
+    const { data, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
 
-    expect(account).toEqual(fake.create.expectedResponse.account);
+    expect(data).toEqual(fake.create.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -127,10 +127,10 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.invalidCompanyName, fake.create.validHandle);
+    const { data, error } = await subAccounts.create(fake.create.invalidCompanyName, fake.create.validHandle);
 
     expect(error).toBe("Invalid company name. Company name must be between 3 and 128 characters.");
-    expect(account).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -140,10 +140,10 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.invalidHandle);
+    const { data, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.invalidHandle);
 
     expect(error).toBe("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
-    expect(account).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -153,9 +153,10 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account } = await subAccounts.create(fake.create.validCompanyName);
+    const { data, error } = await subAccounts.create(fake.create.validCompanyName);
 
-    expect(account).toEqual(fake.create.expectedResponse.account);
+    expect(data).toEqual(fake.create.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -168,10 +169,10 @@ describe("create", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { account, error } = await subAccounts.create(fake.create.validHandle);
+    const { data, error } = await subAccounts.create(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(account).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -183,9 +184,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.list();
+    const { data, error } = await subAccounts.list();
 
-    expect(result).toEqual(fake.list.expectedResponse);
+    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -195,9 +197,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const result = await subAccounts.list(fake.list.options);
+    const { data, error } = await subAccounts.list(fake.list.options);
 
-    expect(result).toEqual(fake.list.expectedResponse);
+    expect(data).toEqual(fake.list.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -207,10 +210,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { accounts, error } = await subAccounts.list({ limit: 1001 });
+    const { data, error } = await subAccounts.list({ limit: 1001 });
 
     expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
-    expect(accounts).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -220,10 +223,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { accounts, error } = await subAccounts.list({ offset: -1 });
+    const { data, error } = await subAccounts.list({ offset: -1 });
 
     expect(error).toBe("Offset must be greater than or equal to 0.");
-    expect(accounts).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -236,10 +239,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { accounts, error } = await subAccounts.list();
+    const { data, error } = await subAccounts.list();
 
     expect(error).toBeTruthy();
-    expect(accounts).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -249,10 +252,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { accounts, error } = await subAccounts.list();
+    const { data, error } = await subAccounts.list();
 
     expect(error).toBe("failure");
-    expect(accounts).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -262,10 +265,10 @@ describe("list", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { accounts, error } = await subAccounts.list();
+    const { data, error } = await subAccounts.list();
 
     expect(error).toBe("Failed to fetch sub-accounts.");
-    expect(accounts).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -279,9 +282,10 @@ describe("delete", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success } = await subAccounts.delete(fake.create.validHandle);
+    const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
@@ -323,9 +327,10 @@ describe("suspend", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success } = await subAccounts.suspend(fake.create.validHandle);
+    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -367,9 +372,10 @@ describe("activate", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success } = await subAccounts.activate(fake.create.validHandle);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -421,10 +427,10 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { key, error } = await subAccounts.createApiKey("");
+    const { data, error } = await subAccounts.createApiKey("");
 
     expect(error).toBe("No handle provided.");
-    expect(key).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -437,10 +443,10 @@ describe("createApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { key, error } = await subAccounts.createApiKey(fake.create.validHandle);
+    const { data, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(key).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -465,10 +471,10 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { keys, error } = await subAccounts.listApiKeys("");
+    const { data, error } = await subAccounts.listApiKeys("");
 
     expect(error).toBe("No handle provided.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -478,10 +484,10 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle, { limit: 1001 });
+    const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle, { limit: 1001 });
 
     expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -491,10 +497,10 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle, { offset: -1 });
+    const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle, { offset: -1 });
 
     expect(error).toBe("Offset must be greater than or equal to 0.");
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -507,10 +513,10 @@ describe("listApiKeys", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { keys, error } = await subAccounts.listApiKeys(fake.create.validHandle);
+    const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(keys).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -524,9 +530,10 @@ describe("deleteApiKey", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
@@ -578,10 +585,10 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { password, error } = await subAccounts.createSmtpPassword("");
+    const { data, error } = await subAccounts.createSmtpPassword("");
 
     expect(error).toBe("No handle provided.");
-    expect(password).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -594,10 +601,10 @@ describe("createSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { password, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+    const { data, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(password).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 });
@@ -621,10 +628,10 @@ describe("listSmtpPasswords", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { passwords, error } = await subAccounts.listSmtpPasswords("");
+    const { data, error } = await subAccounts.listSmtpPasswords("");
 
     expect(error).toBe("No handle provided.");
-    expect(passwords).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -637,10 +644,10 @@ describe("listSmtpPasswords", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { passwords, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+    const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(passwords).toEqual([]);
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -654,9 +661,10 @@ describe("deleteSmtpPassword", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { success } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
     expect(success).toBe(true);
+    expect(error).toBeNull();
     expect(mockClient.delete).toHaveBeenCalled();
   });
 
@@ -696,9 +704,9 @@ describe("getLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+    const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
 
-    expect(limit).toEqual(fake.getLimit.expectedResponse.limit);
+    expect(data).toEqual(fake.getLimit.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -709,10 +717,10 @@ describe("getLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { limit, error } = await subAccounts.getLimit("");
+    const { data, error } = await subAccounts.getLimit("");
 
     expect(error).toBe("No handle provided.");
-    expect(limit).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -725,9 +733,9 @@ describe("getLimit", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { limit, error } = await subAccounts.getLimit(fake.create.validHandle);
+    const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
     expect(error).toBeTruthy();
-    expect(limit).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -829,9 +837,9 @@ describe("getUsage", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+    const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
-    expect(usage).toEqual(fake.getUsage.expectedResponse.usage);
+    expect(data).toEqual(fake.getUsage.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -842,10 +850,10 @@ describe("getUsage", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { usage, error } = await subAccounts.getUsage("");
+    const { data, error } = await subAccounts.getUsage("");
 
     expect(error).toBe("No handle provided.");
-    expect(usage).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
 
@@ -858,10 +866,10 @@ describe("getUsage", () => {
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
-    const { usage, error } = await subAccounts.getUsage(fake.create.validHandle);
+    const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
     expect(error).toBeTruthy();
-    expect(usage).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

@@ -49,7 +49,6 @@ export interface MetricsSenders {
   total: number;
 }
 
-export interface MetricsSendersResponse {
-  senders: MetricsSenders | null;
-  error: string | null;
-}
+import type { DataResponse } from "../responses";
+
+export type MetricsSendersResponse = DataResponse<MetricsSenders>;

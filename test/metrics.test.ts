@@ -32,7 +32,7 @@ const fake = {
       start_time: "2024-07-29T15:51:28.071Z"
     } satisfies MetricsEngagementApiResponse,
     expectedResponse: {
-      engagement: {
+      data: {
         buckets: {
           click: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
           clickTrackingDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
@@ -63,7 +63,7 @@ const fake = {
       start_time: "2024-07-29T15:51:28.071Z"
     } satisfies MetricsPerformanceApiResponse,
     expectedResponse: {
-      performance: {
+      data: {
         bounced: 0,
         buckets: {
           bounced: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
@@ -90,7 +90,7 @@ const fake = {
       unsubscribed: 0
     } satisfies MetricsRecipientBehaviourApiResponse,
     expectedResponse: {
-      behaviour: {
+      data: {
         buckets: {
           unsubscribeDelivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
           unsubscribed: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }]
@@ -117,7 +117,7 @@ const fake = {
       start_time: "2024-07-29T15:51:28.071Z"
     } satisfies MetricsVolumeApiResponse,
     expectedResponse: {
-      volume: {
+      data: {
         buckets: {
           delivered: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
           dropped: [{ count: 0, periodStart: "2024-07-29T15:51:28.071Z" }],
@@ -139,7 +139,7 @@ const fake = {
       total_usage: 5000
     } satisfies MetricsUsageApiResponse,
     expectedResponse: {
-      usage: {
+      data: {
         endDate: "2025-04-11",
         startDate: "2025-03-12",
         total: 5000
@@ -165,7 +165,7 @@ const fake = {
       ]
     } satisfies MetricsSendersApiResponse,
     expectedResponse: {
-      senders: {
+      data: {
         startTime: "2025-11-02T03:37:58.989566774Z",
         endTime: "2025-12-02T03:37:58.989566774Z",
         limit: 10,
@@ -193,9 +193,9 @@ describe("engagement", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { engagement, error } = await metrics.engagement(fake.options);
+    const { data, error } = await metrics.engagement(fake.options);
 
-    expect(engagement).toEqual(fake.engagement.expectedResponse.engagement);
+    expect(data).toEqual(fake.engagement.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -209,10 +209,10 @@ describe("engagement", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { engagement, error } = await metrics.engagement();
+    const { data, error } = await metrics.engagement();
 
     expect(error).toBeTruthy();
-    expect(engagement).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -222,10 +222,10 @@ describe("engagement", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { engagement, error } = await metrics.engagement();
+    const { data, error } = await metrics.engagement();
 
     expect(error).toBe("failure");
-    expect(engagement).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -235,10 +235,10 @@ describe("engagement", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { engagement, error } = await metrics.engagement();
+    const { data, error } = await metrics.engagement();
 
     expect(error).toBe("Failed to fetch engagement metrics.");
-    expect(engagement).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -250,9 +250,9 @@ describe("performance", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { performance, error } = await metrics.performance(fake.options);
+    const { data, error } = await metrics.performance(fake.options);
 
-    expect(performance).toEqual(fake.performance.expectedResponse.performance);
+    expect(data).toEqual(fake.performance.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -266,10 +266,10 @@ describe("performance", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { performance, error } = await metrics.performance();
+    const { data, error } = await metrics.performance();
 
     expect(error).toBeTruthy();
-    expect(performance).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -279,10 +279,10 @@ describe("performance", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { performance, error } = await metrics.performance();
+    const { data, error } = await metrics.performance();
 
     expect(error).toBe("failure");
-    expect(performance).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -292,10 +292,10 @@ describe("performance", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { performance, error } = await metrics.performance();
+    const { data, error } = await metrics.performance();
 
     expect(error).toBe("Failed to fetch performance metrics.");
-    expect(performance).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -307,9 +307,9 @@ describe("recipientBehaviour", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { behaviour, error } = await metrics.recipientBehaviour(fake.options);
+    const { data, error } = await metrics.recipientBehaviour(fake.options);
 
-    expect(behaviour).toEqual(fake.recipientBehaviour.expectedResponse.behaviour);
+    expect(data).toEqual(fake.recipientBehaviour.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -323,10 +323,10 @@ describe("recipientBehaviour", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { behaviour, error } = await metrics.recipientBehaviour();
+    const { data, error } = await metrics.recipientBehaviour();
 
     expect(error).toBeTruthy();
-    expect(behaviour).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -336,10 +336,10 @@ describe("recipientBehaviour", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { behaviour, error } = await metrics.recipientBehaviour();
+    const { data, error } = await metrics.recipientBehaviour();
 
     expect(error).toBe("failure");
-    expect(behaviour).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -349,10 +349,10 @@ describe("recipientBehaviour", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { behaviour, error } = await metrics.recipientBehaviour();
+    const { data, error } = await metrics.recipientBehaviour();
 
     expect(error).toBe("Failed to fetch recipient behaviour metrics.");
-    expect(behaviour).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -364,9 +364,9 @@ describe("volume", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { volume, error } = await metrics.volume(fake.options);
+    const { data, error } = await metrics.volume(fake.options);
 
-    expect(volume).toEqual(fake.volume.expectedResponse.volume);
+    expect(data).toEqual(fake.volume.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -380,10 +380,10 @@ describe("volume", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { volume, error } = await metrics.volume();
+    const { data, error } = await metrics.volume();
 
     expect(error).toBeTruthy();
-    expect(volume).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -393,10 +393,10 @@ describe("volume", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { volume, error } = await metrics.volume();
+    const { data, error } = await metrics.volume();
 
     expect(error).toBe("failure");
-    expect(volume).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -406,10 +406,10 @@ describe("volume", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { volume, error } = await metrics.volume();
+    const { data, error } = await metrics.volume();
 
     expect(error).toBe("Failed to fetch volume metrics.");
-    expect(volume).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -421,9 +421,9 @@ describe("usage", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { usage, error } = await metrics.usage();
+    const { data, error } = await metrics.usage();
 
-    expect(usage).toEqual(fake.usage.expectedResponse.usage);
+    expect(data).toEqual(fake.usage.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -437,10 +437,10 @@ describe("usage", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { usage, error } = await metrics.usage();
+    const { data, error } = await metrics.usage();
 
     expect(error).toBeTruthy();
-    expect(usage).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -450,10 +450,10 @@ describe("usage", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { usage, error } = await metrics.usage();
+    const { data, error } = await metrics.usage();
 
     expect(error).toBe("failure");
-    expect(usage).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -463,10 +463,10 @@ describe("usage", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { usage, error } = await metrics.usage();
+    const { data, error } = await metrics.usage();
 
     expect(error).toBe("Failed to fetch usage metrics.");
-    expect(usage).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });
@@ -478,9 +478,9 @@ describe("senders", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { senders, error } = await metrics.senders("campaigns");
+    const { data, error } = await metrics.senders("campaigns");
 
-    expect(senders).toEqual(fake.senders.expectedResponse.senders);
+    expect(data).toEqual(fake.senders.expectedResponse.data);
     expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -494,10 +494,10 @@ describe("senders", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { senders, error } = await metrics.senders("campaigns");
+    const { data, error } = await metrics.senders("campaigns");
 
     expect(error).toBeTruthy();
-    expect(senders).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -507,10 +507,10 @@ describe("senders", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { senders, error } = await metrics.senders("campaigns");
+    const { data, error } = await metrics.senders("campaigns");
 
     expect(error).toBe("failure");
-    expect(senders).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 
@@ -520,10 +520,10 @@ describe("senders", () => {
     } as unknown as MailChannelsClient;
 
     const metrics = new Metrics(mockClient);
-    const { senders, error } = await metrics.senders("campaigns");
+    const { data, error } = await metrics.senders("campaigns");
 
     expect(error).toBe("Failed to fetch senders metrics.");
-    expect(senders).toBeNull();
+    expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

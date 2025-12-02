@@ -1,4 +1,6 @@
-export interface WebhooksValidateResponse {
+import type { DataResponse } from "../responses";
+
+export type WebhooksValidateResponse = DataResponse<{
   /**
    * Indicates whether all webhook validations passed.
    */
@@ -29,5 +31,4 @@ export interface WebhooksValidateResponse {
       status: number;
     } | null;
   }[];
-  error: string | null;
-}
+}>;

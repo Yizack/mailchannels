@@ -21,7 +21,7 @@ import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-const { success } = await suppressions.create({
+const { success, error } = await suppressions.create({
   addToSubAccounts: false,
   entries: [
     {
@@ -38,7 +38,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.suppressions.create({
+const { success, error } = await mailchannels.suppressions.create({
   addToSubAccounts: false,
   entries: [
     {
@@ -80,7 +80,7 @@ import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-const { success } = await suppressions.delete("name@example.com", "api")
+const { success, error } = await suppressions.delete("name@example.com", "api")
 ```
 
 ```ts [full.ts]
@@ -88,7 +88,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.suppressions.delete("name@example.com", "api")
+const { success, error } = await mailchannels.suppressions.delete("name@example.com", "api")
 ```
 :::
 
@@ -117,7 +117,7 @@ import { MailChannelsClient, Suppressions } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const suppressions = new Suppressions(mailchannels)
 
-const { list } = await suppressions.list()
+const { data, error } = await suppressions.list()
 ```
 
 ```ts [full.ts]
@@ -125,7 +125,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { list } = await mailchannels.suppressions.list()
+const { data, error } = await mailchannels.suppressions.list()
 ```
 :::
 
@@ -143,7 +143,7 @@ const { list } = await mailchannels.suppressions.list()
 
 ### Response
 
-- `list` `SuppressionsListEntry[]` <Badge>guaranteed</Badge>
+- `data` `SuppressionsListEntry[] | null` <Badge type="warning">nullable</Badge>
   - `createdAt` `string` <Badge>guaranteed</Badge>
   - `notes` `string | null` <Badge type="info">optional</Badge>
   - `recipient` `string` <Badge>guaranteed</Badge>: The email address that is suppressed.
@@ -158,6 +158,11 @@ const { list } = await mailchannels.suppressions.list()
 
 <details>
   <summary>All type declarations</summary>
+
+  **Responses**
+
+  <<< @/snippets/data-response.ts
+  <<< @/snippets/success-response.ts
 
   **Create type declarations**
 

@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export interface DomainsListDownstreamAddressesOptions {
   /**
    * The number of records to return.
@@ -30,7 +32,4 @@ export interface DomainsDownstreamAddress {
   weight: number;
 }
 
-export interface DomainsListDownstreamAddressesResponse {
-  records: DomainsDownstreamAddress[];
-  error: string | null;
-}
+export type DomainsListDownstreamAddressesResponse = DataResponse<DomainsDownstreamAddress[]>;

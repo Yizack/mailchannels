@@ -22,11 +22,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { engagement } = await mailchannels.metrics.engagement()
+   * const { data, error } = await mailchannels.metrics.engagement()
    * ```
    */
   async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
-    const data: MetricsEngagementResponse = { engagement: null, error: null };
+    const result: MetricsEngagementResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
       query: {
@@ -36,20 +36,20 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.engagement = {
+    result.data = {
       buckets: {
         click: mapBuckets(response.buckets.click),
         clickTrackingDelivered: mapBuckets(response.buckets.click_tracking_delivered),
@@ -64,7 +64,7 @@ export class Metrics {
       startTime: response.start_time
     };
 
-    return data;
+    return result;
   }
 
   /**
@@ -73,11 +73,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { performance } = await mailchannels.metrics.performance()
+   * const { data, error } = await mailchannels.metrics.performance()
    * ```
    */
   async performance (options?: MetricsOptions): Promise<MetricsPerformanceResponse> {
-    const data: MetricsPerformanceResponse = { performance: null, error: null };
+    const result: MetricsPerformanceResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
       query: {
@@ -87,20 +87,20 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.performance = {
+    result.data = {
       bounced: response.bounced,
       buckets: {
         bounced: mapBuckets(response.buckets.bounced),
@@ -113,7 +113,7 @@ export class Metrics {
       startTime: response.start_time
     };
 
-    return data;
+    return result;
   }
 
   /**
@@ -122,11 +122,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { behaviour } = await mailchannels.metrics.recipientBehaviour()
+   * const { data, error } = await mailchannels.metrics.recipientBehaviour()
    * ```
    */
   async recipientBehaviour (options?: MetricsOptions): Promise<MetricsRecipientBehaviourResponse> {
-    const data: MetricsRecipientBehaviourResponse = { behaviour: null, error: null };
+    const result: MetricsRecipientBehaviourResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
       query: {
@@ -136,20 +136,20 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.behaviour = {
+    result.data = {
       buckets: {
         unsubscribeDelivered: mapBuckets(response.buckets.unsubscribe_delivered),
         unsubscribed: mapBuckets(response.buckets.unsubscribed)
@@ -160,7 +160,7 @@ export class Metrics {
       unsubscribed: response.unsubscribed
     };
 
-    return data;
+    return result;
   }
 
   /**
@@ -169,11 +169,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { volume } = await mailchannels.metrics.volume()
+   * const { data, error } = await mailchannels.metrics.volume()
    * ```
    */
   async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
-    const data: MetricsVolumeResponse = { volume: null, error: null };
+    const result: MetricsVolumeResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
       query: {
@@ -183,20 +183,20 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.volume = {
+    result.data = {
       buckets: {
         delivered: mapBuckets(response.buckets.delivered),
         dropped: mapBuckets(response.buckets.dropped),
@@ -209,7 +209,7 @@ export class Metrics {
       startTime: response.start_time
     };
 
-    return data;
+    return result;
   }
 
   /**
@@ -217,32 +217,32 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { usage } = await mailchannels.metrics.usage()
+   * const { data, error } = await mailchannels.metrics.usage()
    * ```
    */
   async usage (): Promise<MetricsUsageResponse> {
-    const data: MetricsUsageResponse = { usage: null, error: null };
+    const result: MetricsUsageResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsUsageApiResponse>("/tx/v1/usage", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        result.error = getStatusError(response);
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.usage = {
+    result.data = {
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
     };
 
-    return data;
+    return result;
   }
 
   /**
@@ -252,11 +252,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { senders } = await mailchannels.metrics.senders('campaigns')
+   * const { data, error } = await mailchannels.metrics.senders('campaigns')
    * ```
    */
   async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
-    const data: MetricsSendersResponse = { senders: null, error: null };
+    const result: MetricsSendersResponse = { data: null, error: null };
 
     const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
       query: {
@@ -267,20 +267,20 @@ export class Metrics {
         sort_order: options?.sortOrder
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
     }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch senders metrics.";
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch senders metrics.";
       }
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return result;
 
-    data.senders = {
+    result.data = {
       endTime: response.end_time,
       limit: response.limit,
       offset: response.offset,
@@ -289,6 +289,6 @@ export class Metrics {
       total: response.total
     };
 
-    return data;
+    return result;
   }
 }

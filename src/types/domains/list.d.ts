@@ -1,3 +1,4 @@
+import type { DataResponse } from "../responses";
 import type { DomainsData } from "./provision";
 
 export interface DomainsListOptions {
@@ -17,7 +18,7 @@ export interface DomainsListOptions {
   offset?: number;
 }
 
-export interface DomainsListResponse {
+export type DomainsListResponse = DataResponse<{
   /**
    * A list of domains.
    */
@@ -26,5 +27,4 @@ export interface DomainsListResponse {
    * The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
    */
   total: number;
-  error: string | null;
-}
+}>;

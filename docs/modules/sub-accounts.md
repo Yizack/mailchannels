@@ -20,7 +20,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { account } = await subAccounts.create('My Company', 'validhandle123')
+const { data, error } = await subAccounts.create('My Company', 'validhandle123')
 ```
 
 ```ts [full.ts]
@@ -28,7 +28,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { account } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
+const { data, error } = await mailchannels.subAccounts.create('My Company', 'validhandle123')
 ```
 :::
 
@@ -45,7 +45,7 @@ const { account } = await mailchannels.subAccounts.create('My Company', 'validha
 
 ### Response
 
-- `account` `SubAccountsAccount | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsAccount | null` <Badge type="warning">nullable</Badge>
   - `companyName` `string` <Badge>guaranteed</Badge>: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge>guaranteed</Badge>: If the sub-account is enabled.
   - `handle` `string` <Badge>guaranteed</Badge>: The handle for the sub-account.
@@ -64,7 +64,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { accounts } = await subAccounts.list()
+const { data, error } = await subAccounts.list()
 ```
 
 ```ts [full.ts]
@@ -72,7 +72,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { accounts } = await mailchannels.subAccounts.list()
+const { data, error } = await mailchannels.subAccounts.list()
 ```
 :::
 
@@ -86,7 +86,7 @@ const { accounts } = await mailchannels.subAccounts.list()
 
 ### Response
 
-- `accounts` `SubAccountsAccount[]` <Badge>guaranteed</Badge>
+- `data` `SubAccountsAccount[] | null` <Badge type="warning">nullable</Badge>
   - `companyName` `string` <Badge>guaranteed</Badge>: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge>guaranteed</Badge>: If the sub-account is enabled.
   - `handle` `string` <Badge>guaranteed</Badge>: The handle for the sub-account.
@@ -105,7 +105,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.delete('validhandle123')
+const { success, error } = await subAccounts.delete('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -113,7 +113,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.delete('validhandle123')
+const { success, error } = await mailchannels.subAccounts.delete('validhandle123')
 ```
 :::
 
@@ -139,7 +139,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.suspend('validhandle123')
+const { success, error } = await subAccounts.suspend('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -147,7 +147,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.suspend('validhandle123')
+const { success, error } = await mailchannels.subAccounts.suspend('validhandle123')
 ```
 :::
 
@@ -173,7 +173,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.activate('validhandle123')
+const { success, error } = await subAccounts.activate('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -181,7 +181,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.activate('validhandle123')
+const { success, error } = await mailchannels.subAccounts.activate('validhandle123')
 ```
 :::
 
@@ -207,7 +207,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { key } = await subAccounts.createApiKey('validhandle123')
+const { data, error } = await subAccounts.createApiKey('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -215,7 +215,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
+const { data, error } = await mailchannels.subAccounts.createApiKey('validhandle123')
 ```
 :::
 
@@ -225,7 +225,7 @@ const { key } = await mailchannels.subAccounts.createApiKey('validhandle123')
 
 ### Response
 
-- `key` `SubAccountsApiKey | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsApiKey | null` <Badge type="warning">nullable</Badge>
   - `id` `number` <Badge>guaranteed</Badge>: The API key ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: API key for the sub-account.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
@@ -243,7 +243,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { keys } = await subAccounts.listApiKeys('validhandle123')
+const { data, error } = await subAccounts.listApiKeys('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -251,7 +251,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
+const { data, error } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 ```
 :::
 
@@ -266,7 +266,7 @@ const { keys } = await mailchannels.subAccounts.listApiKeys('validhandle123')
 
 ### Response
 
-- `keys` `SubAccountsApiKey[]` <Badge>guaranteed</Badge>
+- `data` `SubAccountsApiKey[] | null` <Badge type="warning">nullable</Badge>
   - `id` `number` <Badge>guaranteed</Badge>: The API key ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: API key for the sub-account.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
@@ -284,7 +284,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.deleteApiKey('validhandle123', 1)
+const { success, error } = await subAccounts.deleteApiKey('validhandle123', 1)
 ```
 
 ```ts [full.ts]
@@ -292,7 +292,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
+const { success, error } = await mailchannels.subAccounts.deleteApiKey('validhandle123', 1)
 ```
 :::
 
@@ -319,7 +319,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { password } = await subAccounts.createSmtpPassword('validhandle123')
+const { data, error } = await subAccounts.createSmtpPassword('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -327,7 +327,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { password } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
+const { data, error } = await mailchannels.subAccounts.createSmtpPassword('validhandle123')
 ```
 :::
 
@@ -337,7 +337,7 @@ const { password } = await mailchannels.subAccounts.createSmtpPassword('validhan
 
 ### Response
 
-- `password` `SubAccountsSmtpPassword | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsSmtpPassword | null` <Badge type="warning">nullable</Badge>
   - `enabled` `boolean` <Badge>guaranteed</Badge>: Whether the SMTP password is enabled.
   - `id` `number` <Badge>guaranteed</Badge>: The SMTP password ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: SMTP password for the sub-account.
@@ -356,7 +356,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { keys } = await subAccounts.listSmtpPasswords('validhandle123')
+const { data, error } = await subAccounts.listSmtpPasswords('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -364,7 +364,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
+const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validhandle123')
 ```
 :::
 
@@ -374,7 +374,7 @@ const { keys } = await mailchannels.subAccounts.listSmtpPasswords('validhandle12
 
 ### Response
 
-- `passwords` `SubAccountsSmtpPassword[]` <Badge>guaranteed</Badge>
+- `data` `SubAccountsSmtpPassword[] | null` <Badge type="warning">nullable</Badge>
   - `enabled` `boolean` <Badge>guaranteed</Badge>: Whether the SMTP password is enabled.
   - `id` `number` <Badge>guaranteed</Badge>: The SMTP password ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: SMTP password for the sub-account.
@@ -393,7 +393,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success, error } = await subAccounts.deleteSmtpPassword('validhandle123', 1)
 ```
 
 ```ts [full.ts]
@@ -401,7 +401,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
+const { success, error } = await mailchannels.subAccounts.deleteSmtpPassword('validhandle123', 1)
 ```
 :::
 
@@ -431,7 +431,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { limit } = await subAccounts.getLimit('validhandle123')
+const { data, error } = await subAccounts.getLimit('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -439,7 +439,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
+const { data, error } = await mailchannels.subAccounts.getLimit('validhandle123')
 ```
 :::
 
@@ -449,7 +449,7 @@ const { limit } = await mailchannels.subAccounts.getLimit('validhandle123')
 
 ### Response
 
-- `limit` `SubAccountsLimit | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsLimit | null` <Badge type="warning">nullable</Badge>
   - `sends` `number` <Badge>guaranteed</Badge>
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
@@ -466,7 +466,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
+const { success, error } = await subAccounts.setLimit('validhandle123', { sends: 1000 })
 ```
 
 ```ts [full.ts]
@@ -474,7 +474,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
+const { success, error } = await mailchannels.subAccounts.setLimit('validhandle123', { sends: 1000 })
 ```
 :::
 
@@ -504,7 +504,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { success } = await subAccounts.deleteLimit('validhandle123')
+const { success, error } = await subAccounts.deleteLimit('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -512,7 +512,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.subAccounts.deleteLimit('validhandle123')
+const { success, error } = await mailchannels.subAccounts.deleteLimit('validhandle123')
 ```
 :::
 
@@ -538,7 +538,7 @@ import { MailChannelsClient, SubAccounts } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const subAccounts = new SubAccounts(mailchannels)
 
-const { usage } = await subAccounts.getUsage('validhandle123')
+const { data, error } = await subAccounts.getUsage('validhandle123')
 ```
 
 ```ts [full.ts]
@@ -546,7 +546,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
+const { data, error } = await mailchannels.subAccounts.getUsage('validhandle123')
 ```
 :::
 
@@ -556,7 +556,7 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
 
 ### Response
 
-- `usage` `SubAccountsUsage | null` <Badge type="warning">nullable</Badge>
+- `data` `SubAccountsUsage | null` <Badge type="warning">nullable</Badge>
   - `endDate` `string` <Badge type="info">optional</Badge>: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge type="info">optional</Badge>: The start date of the current billing period (ISO 8601 format).
   - `total` `number` <Badge>guaranteed</Badge>: The total usage for the current billing period.
@@ -569,8 +569,9 @@ const { usage } = await mailchannels.subAccounts.getUsage('validhandle123')
 <details>
   <summary>All type declarations</summary>
 
-  **Success Response**
+  **Responses**
 
+  <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
   **Account type declarations**

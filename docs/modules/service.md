@@ -21,7 +21,7 @@ import { MailChannelsClient, Service } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
 
-const { success } = await service.status()
+const { success, error } = await service.status()
 ```
 
 ```ts [full.ts]
@@ -29,7 +29,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.service.status()
+const { success, error } = await mailchannels.service.status()
 ```
 :::
 
@@ -50,7 +50,7 @@ import { MailChannelsClient, Service } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
 
-const { subscriptions } = await service.subscriptions()
+const { data, error } = await service.subscriptions()
 ```
 
 ```ts [full.ts]
@@ -58,13 +58,13 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { subscriptions } = await mailchannels.service.subscriptions()
+const { data, error } = await mailchannels.service.subscriptions()
 ```
 :::
 
 ### Response
 
-- `subscriptions` `object[]` <Badge>guaranteed</Badge>
+- `data` `object[] | null` <Badge type="warning">nullable</Badge>
   - `active` `boolean` <Badge>guaranteed</Badge>
   - `activeAccountsCount` `number` <Badge>guaranteed</Badge>
   - `handle` `string` <Badge>guaranteed</Badge>
@@ -75,6 +75,7 @@ const { subscriptions } = await mailchannels.service.subscriptions()
     - `handle` `string` <Badge>guaranteed</Badge>
     - `name` `string` <Badge>guaranteed</Badge>
 - `error` `string | null` <Badge type="warning">nullable</Badge>
+
 ## Report <Badge type="info">method</Badge>
 
 Submit a false negative or false positive report.
@@ -88,7 +89,7 @@ import { MailChannelsClient, Service } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const service = new Service(mailchannels)
 
-const { success } = await service.report({
+const { success, error } = await service.report({
   type: 'false_positive',
   messageContent: 'Your message content'
 })
@@ -99,7 +100,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success } = await mailchannels.service.report({
+const { success, error } = await mailchannels.service.report({
   type: 'false_positive',
   messageContent: 'Your message content'
 })
@@ -130,8 +131,9 @@ const { success } = await mailchannels.service.report({
 <details>
   <summary>All type declarations</summary>
 
-  **Success Response**
+  **Responses**
 
+  <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
   **Subscriptions type declarations**
