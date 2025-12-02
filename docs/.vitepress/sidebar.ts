@@ -27,7 +27,8 @@ export default [
               { text: "Check Domain", link: "/modules/emails#check-domain-method" },
               { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key-method" },
               { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys-method" },
-              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" }
+              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" },
+              { text: "Rotate DKIM Key", link: "/modules/emails#rotate-dkim-key-method" }
             ]
           },
           {
