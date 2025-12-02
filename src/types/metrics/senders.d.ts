@@ -2,12 +2,12 @@ export type MetricsSendersType = "sub-accounts" | "campaigns";
 
 export interface MetricsSendersOptions {
   /**
-   * The beginning of the time range for retrieving top senders metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` Defaults to one month ago if not provided.
+   * The beginning of the time range for retrieving top senders metrics (inclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to one month ago if not provided.
    * @example "2025-11-02T03:13:35.761763554Z"
    */
   startTime?: string;
   /**
-   * The end of the time range for retrieving top senders metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ` Defaults to the current time if not provided.
+   * The end of the time range for retrieving top senders metrics (exclusive). Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`. Defaults to the current time if not provided.
    * @example "2025-12-02T03:13:35.761763554Z"
    */
   endTime?: string;

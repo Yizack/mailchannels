@@ -72,7 +72,8 @@ export default [
               { text: "Performance", link: "/modules/metrics#performance-method" },
               { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour-method" },
               { text: "Volume", link: "/modules/metrics#volume-method" },
-              { text: "Usage", link: "/modules/metrics#usage-method" }
+              { text: "Usage", link: "/modules/metrics#usage-method" },
+              { text: "Senders", link: "/modules/metrics#senders-method" }
             ]
           },
           {
