@@ -32,6 +32,7 @@ describe("addListEntry", () => {
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     });
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
@@ -80,6 +81,7 @@ describe("listEntries", () => {
       item: fake.addListEntry.apiResponse.item,
       type: fake.addListEntry.apiResponse.item_type
     }]);
+    expect(error).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 

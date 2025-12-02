@@ -118,6 +118,7 @@ describe("create", () => {
     const { data, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.validHandle);
 
     expect(data).toEqual(fake.create.expectedResponse.data);
+    expect(error).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
 
