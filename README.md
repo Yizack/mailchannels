@@ -1,6 +1,6 @@
-![MailChannels](/docs/public/images/presentation.png)
+![MailChannels Node.js SDK](/docs/public/images/presentation.png)
 
-# MailChannels
+# MailChannels Node.js SDK
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
