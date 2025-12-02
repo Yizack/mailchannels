@@ -283,8 +283,10 @@ export class Emails {
       createdAt: key.created_at,
       dnsRecords: key.dkim_dns_records,
       domain: key.domain,
+      gracePeriodExpiresAt: key.gracePeriodExpiresAt,
       length: key.key_length,
       publicKey: key.public_key,
+      retiresAt: key.retiresAt,
       selector: key.selector,
       status: key.status,
       statusModifiedAt: key.status_modified_at

@@ -567,14 +567,14 @@ describe("rotateDkimKey", () => {
   });
 
   it("should return error if selector is missing or more than 63 characters", async () => {
-    const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
     const { keys, error } = await emails.rotateDkimKey("example.com", "a".repeat(64), fake.rotateDkimKey.options);
 
     expect(keys).toBeNull();
     expect(error).toBe("Selector must be between 1 and 63 characters.");
-    expect(mockClient.patch).not.toHaveBeenCalled();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should return error if new selector is missing or more than 63 characters", async () => {

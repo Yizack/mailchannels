@@ -298,7 +298,7 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
 
 - `keys` `Optional<EmailsDkimKey, "dnsRecords">[]` <Badge>guaranteed</Badge>: List of keys matching the filter. Empty if no keys match the filter.
   - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-  - `createdAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key pair was created.
+  - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
   - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
     - `name` `string` <Badge>guaranteed</Badge>
     - `type` `string` <Badge>guaranteed</Badge>
@@ -310,7 +310,7 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
   - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
   - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-  - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
+  - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
 
 ## Update DKIM Key <Badge type="info">method</Badge>
@@ -407,7 +407,7 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
 - `keys` `object | null` <Badge type="warning">nullable</Badge>: The rotated and new DKIM key information.
   - `new` `EmailsDkimKey` <Badge>guaranteed</Badge>
     - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-    - `createdAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key pair was created.
+    - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
     - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
       - `name` `string` <Badge>guaranteed</Badge>
       - `type` `string` <Badge>guaranteed</Badge>
@@ -419,10 +419,10 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
     - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
     - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
     - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-    - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
+    - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
   - `rotated` `EmailsDkimKey` <Badge>guaranteed</Badge>
     - `algorithm` `string` <Badge>guaranteed</Badge>: Algorithm used for the key pair.
-    - `createdAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key pair was created.
+    - `createdAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key pair was created.
     - `dnsRecords` `object[]` <Badge>guaranteed</Badge>: Suggested DNS records for the DKIM key.
       - `name` `string` <Badge>guaranteed</Badge>
       - `type` `string` <Badge>guaranteed</Badge>
@@ -434,7 +434,7 @@ const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', '
     - `retiresAt` `string` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key pair is retired.
     - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
     - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
-    - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
+    - `statusModifiedAt` `string` <Badge type="warning">nullable</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
 
 ## Type declarations
