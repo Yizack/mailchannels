@@ -15,7 +15,7 @@ export interface EmailsCreateDkimKeyOptions {
   selector: string;
 }
 
-export type EmailsDkimKeyStatus = "active" | "retired" | "revoked" | "rotated";
+type EmailsDkimKeyStatus = "active" | "retired" | "revoked" | "rotated";
 
 export interface EmailsDkimKey {
   /**

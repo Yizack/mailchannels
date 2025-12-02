@@ -1,6 +1,6 @@
 import type { EmailsCheckDomainVerdict } from "./check-domain";
 import type { EmailsSendAttachment, EmailsSendRecipient, EmailsSendTracking } from "./send";
-import type { EmailsDkimKey, EmailsDkimKeyStatus } from "./create-dkim-key";
+import type { EmailsDkimKey } from "./create-dkim-key";
 
 interface EmailsSendPersonalization {
   bcc?: EmailsSendRecipient[];
@@ -115,14 +115,19 @@ export interface EmailsCreateDkimKeyApiResponse {
   public_key: string;
   retiresAt?: string;
   selector: string;
-  status: EmailsDkimKeyStatus;
+  status: EmailsDkimKey["status"];
   status_modified_at?: string;
 }
 
 export interface EmailsGetDkimKeysPayload {
   selector?: string;
-  status?: EmailsDkimKeyStatus;
+  status?: EmailsDkimKey["status"];
   offset?: number;
   limit?: number;
   include_dns_record?: boolean;
+}
+
+export interface EmailsRotateDkimKeyApiResponse {
+  new_key: EmailsCreateDkimKeyApiResponse;
+  rotated_key: EmailsCreateDkimKeyApiResponse;
 }

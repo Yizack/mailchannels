@@ -3,12 +3,13 @@ import { ErrorCode, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { stripPemHeaders } from "../utils/helpers";
 import type { SuccessResponse } from "../types/success-response";
-import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse } from "../types/emails/create-dkim-key";
 import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../types/emails/get-dkim-keys";
 import type { EmailsUpdateDkimKeyOptions } from "../types/emails/update-dkim-key";
+import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "../types/emails/rotate-dkim-key";
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -316,27 +317,106 @@ export class Emails {
       status: options.status
     };
 
-    try {
-      await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
-        body: payload,
-        ignoreResponseError: true,
-        onResponse: async ({ response }) => {
-          if (response.ok) {
-            data.success = true;
-            return;
-          }
-          data.error = getStatusError(response, {
-            [ErrorCode.BadRequest]: "Bad Request.",
-            [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
-          });
+    await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
+      body: payload,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
         }
-      });
-    }
-    catch (error) {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
+        });
       }
+    }).catch((error) => {
+      data.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+    });
+
+    return data;
+  }
+
+  /**
+   * Rotate an active DKIM key pair. Mark the original key as `rotated`, and create a new key pair with the required new key selector, reusing the same algorithm and key length. The rotated key remains valid for signing for a 3-day grace period, and is automatically changed to `retired` 2 weeks after rotation. Publish the new key to its DNS TXT record before rotated key expires for signing as emails sent with an unpublished key will fail DKIM validation by receiving providers. After the grace period, only the new key is valid for signing if published.
+   * @param domain - The domain the DKIM key belongs to.
+   * @param selector - The selector of the DKIM key to rotate.
+   * @param options - The options to rotate the DKIM key.
+   * @param options.newKey.selector - The selector for the new key pair. Must be a maximum of 63 characters.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { keys, error } = await mailchannels.emails.rotateDkimKey('example.com', 'mailchannels', {
+   *   newKey: {
+   *     selector: 'new-selector'
+   *   }
+   * })
+   * ```
+   */
+  async rotateDkimKey (domain: string, selector: string, options: EmailsRotateDkimKeyOptions): Promise<EmailsRotateDkimKeyResponse> {
+    const data: EmailsRotateDkimKeyResponse = { keys: null, error: null };
+
+    if (!selector || selector.length > 63) {
+      data.error = "Selector must be between 1 and 63 characters.";
+      return data;
     }
+
+    if (!options.newKey.selector || options.newKey.selector.length > 63) {
+      data.error = "New key selector must be between 1 and 63 characters.";
+      return data;
+    }
+
+    const payload = {
+      new_key: {
+        selector: options.newKey.selector
+      }
+    };
+
+    const response = await this.mailchannels.post<EmailsRotateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${selector}/rotate`, {
+      body: payload,
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found.",
+          [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
+        });
+      }
+    }).catch((error) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to rotate DKIM key.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
+
+    data.keys = {
+      new: {
+        algorithm: response.new_key.algorithm,
+        createdAt: response.new_key.created_at,
+        dnsRecords: response.new_key.dkim_dns_records,
+        domain: response.new_key.domain,
+        gracePeriodExpiresAt: response.new_key.gracePeriodExpiresAt,
+        length: response.new_key.key_length,
+        publicKey: response.new_key.public_key,
+        retiresAt: response.new_key.retiresAt,
+        selector: response.new_key.selector,
+        status: response.new_key.status,
+        statusModifiedAt: response.new_key.status_modified_at
+      },
+      rotated: {
+        algorithm: response.rotated_key.algorithm,
+        createdAt: response.rotated_key.created_at,
+        dnsRecords: response.rotated_key.dkim_dns_records,
+        domain: response.rotated_key.domain,
+        gracePeriodExpiresAt: response.rotated_key.gracePeriodExpiresAt,
+        length: response.rotated_key.key_length,
+        publicKey: response.rotated_key.public_key,
+        retiresAt: response.rotated_key.retiresAt,
+        selector: response.rotated_key.selector,
+        status: response.rotated_key.status,
+        statusModifiedAt: response.rotated_key.status_modified_at
+      }
+    };
 
     return data;
   }

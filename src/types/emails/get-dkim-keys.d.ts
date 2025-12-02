@@ -1,4 +1,4 @@
-import type { EmailsDkimKeyStatus } from "./create-dkim-key";
+import type { EmailsDkimKey } from "./create-dkim-key";
 
 export interface EmailsGetDkimKeysOptions {
   /**
@@ -8,7 +8,7 @@ export interface EmailsGetDkimKeysOptions {
   /**
    * Status to filter keys by.
    */
-  status?: EmailsDkimKeyStatus;
+  status?: EmailsDkimKey["status"];
   /**
    * Number of keys to skip before returning results.
    * @default 0
