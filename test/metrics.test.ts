@@ -216,7 +216,7 @@ describe("engagement", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -273,7 +273,7 @@ describe("performance", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -330,7 +330,7 @@ describe("recipientBehaviour", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -387,7 +387,7 @@ describe("volume", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -444,7 +444,7 @@ describe("usage", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -501,7 +501,7 @@ describe("senders", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;

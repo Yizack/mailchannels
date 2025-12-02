@@ -77,7 +77,7 @@ describe("subscriptions", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors should handle catch block errors", async () => {
+  it("should handle catch block errors if onResponseError is not triggered", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;

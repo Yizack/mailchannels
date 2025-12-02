@@ -578,7 +578,7 @@ describe("rotateDkimKey", () => {
   });
 
   it("should return error if new selector is missing or more than 63 characters", async () => {
-    const mockClient = { patch: vi.fn() } as unknown as MailChannelsClient;
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
     const { keys, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", {
@@ -589,7 +589,7 @@ describe("rotateDkimKey", () => {
 
     expect(keys).toBeNull();
     expect(error).toBe("New key selector must be between 1 and 63 characters.");
-    expect(mockClient.patch).not.toHaveBeenCalled();
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 
   it("should contain error on api response error", async () => {
