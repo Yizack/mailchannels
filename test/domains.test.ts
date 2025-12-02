@@ -140,7 +140,7 @@ describe("provision", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -229,7 +229,7 @@ describe("bulkProvision", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;

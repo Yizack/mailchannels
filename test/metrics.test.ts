@@ -3,10 +3,11 @@ import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
 import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformanceResponse } from "../src/types/metrics";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
 import type { MetricsRecipientBehaviourResponse } from "../src/types/metrics/recipient-behaviour";
 import type { MetricsVolumeResponse } from "../src/types/metrics/volume";
 import type { MetricsUsageResponse } from "../src/types/metrics/usage";
+import type { MetricsSendersResponse } from "../src/types/metrics/senders";
 
 const fake = {
   options: {
@@ -145,6 +146,43 @@ const fake = {
       },
       error: null
     } satisfies MetricsUsageResponse
+  },
+  senders: {
+    apiResponse: {
+      start_time: "2025-11-02T03:37:58.989566774Z",
+      end_time: "2025-12-02T03:37:58.989566774Z",
+      limit: 10,
+      offset: 0,
+      total: 1,
+      senders: [
+        {
+          name: "",
+          processed: 14,
+          delivered: 14,
+          dropped: 0,
+          bounced: 0
+        }
+      ]
+    } satisfies MetricsSendersApiResponse,
+    expectedResponse: {
+      senders: {
+        startTime: "2025-11-02T03:37:58.989566774Z",
+        endTime: "2025-12-02T03:37:58.989566774Z",
+        limit: 10,
+        offset: 0,
+        total: 1,
+        senders: [
+          {
+            name: "",
+            processed: 14,
+            delivered: 14,
+            dropped: 0,
+            bounced: 0
+          }
+        ]
+      },
+      error: null
+    } satisfies MetricsSendersResponse
   }
 };
 
@@ -178,7 +216,7 @@ describe("engagement", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -235,7 +273,7 @@ describe("performance", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -292,7 +330,7 @@ describe("recipientBehaviour", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -349,7 +387,7 @@ describe("volume", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -406,7 +444,7 @@ describe("usage", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
-  it("should handle catch block errors when onResponseError is not triggered", async () => {
+  it("should handle catch block errors should handle catch block errors", async () => {
     const mockClient = {
       get: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -429,6 +467,63 @@ describe("usage", () => {
 
     expect(error).toBe("Failed to fetch usage metrics.");
     expect(usage).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("senders", () => {
+  it("should successfully retrieve senders metrics", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.senders.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { senders, error } = await metrics.senders("campaigns");
+
+    expect(senders).toEqual(fake.senders.expectedResponse.senders);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { senders, error } = await metrics.senders("campaigns");
+
+    expect(error).toBeTruthy();
+    expect(senders).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { senders, error } = await metrics.senders("campaigns");
+
+    expect(error).toBe("failure");
+    expect(senders).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { senders, error } = await metrics.senders("campaigns");
+
+    expect(error).toBe("Failed to fetch senders metrics.");
+    expect(senders).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

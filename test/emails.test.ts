@@ -519,7 +519,7 @@ describe("updateDkimKey", () => {
     expect(mockClient.patch).not.toHaveBeenCalled();
   });
 
-  it("should handle try-catch block errors", async () => {
+  it("should handle catch block errors", async () => {
     const mockClient = {
       patch: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -535,7 +535,7 @@ describe("updateDkimKey", () => {
     expect(mockClient.patch).toHaveBeenCalled();
   });
 
-  it("should handle try-catch block with non-Error rejections", async () => {
+  it("should handle catch block with non-Error rejections", async () => {
     const mockClient = {
       patch: vi.fn().mockRejectedValueOnce("error")
     } as unknown as MailChannelsClient;
@@ -608,7 +608,7 @@ describe("rotateDkimKey", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should handle try-catch block errors", async () => {
+  it("should handle catch block errors", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce(new Error("failure"))
     } as unknown as MailChannelsClient;
@@ -621,7 +621,7 @@ describe("rotateDkimKey", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should handle try-catch block with non-Error rejections", async () => {
+  it("should handle catch block with non-Error rejections", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce("error")
     } as unknown as MailChannelsClient;
