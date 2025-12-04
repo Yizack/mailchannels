@@ -43,7 +43,7 @@
     "test:types": "tsc --noEmit",
     "test:watch": "vitest watch",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "(git fetch --unshallow || git fetch --all) && vitepress build docs",
+    "docs:build": "(git fetch --unshallow -q || git fetch --all -q) && vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:snippets": "jiti docs/scripts/snippets"
   },
