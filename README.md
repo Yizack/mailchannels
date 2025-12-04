@@ -43,8 +43,8 @@ This library provides a simple way to interact with the [MailChannels API](https
 
 ## <a name="requirements">📏 Requirements</a>
 
-- MailChannels account
-- Email API key
+- [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
+- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
 
 ## <a name="quick-setup">🏃 Quick setup</a>
 

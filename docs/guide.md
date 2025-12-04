@@ -7,6 +7,11 @@ Getting started with `mailchannels-sdk`
 <!-- @include: ../README.md#overview -->
 <!-- @include: ../README.md#note -->
 
+## Requirements
+
+- [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
+- [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
+
 ## Installation
 
 Add `mailchannels-sdk` dependency to your project
@@ -40,8 +45,11 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, data } = await mailchannels.emails.send({
-  // ...
+const { data, error } = await mailchannels.emails.send({
+  from: "Name <from@example.com>",
+  to: "to@example.com",
+  subject: "Test email",
+  html: "<p>Hello World</p>"
 })
 ```
 
@@ -57,8 +65,11 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { success, data } = await emails.send({
-  // ...
+const { data, error } = await emails.send({
+  from: "Name <from@example.com>",
+  to: "to@example.com",
+  subject: "Test email",
+  html: "<p>Hello World</p>"
 })
 ```
 
@@ -69,7 +80,7 @@ This approach is tree-shakable and is useful when you only need to use specific 
 All methods in this SDK return an object containing an `error` property besides the actual response data to avoid throwing exceptions. If the request was successful, the `error` property will be `null`. If there was an error, the `error` property will contain a `string` with the error message.
 
 ```ts{1}
-const { success, data, error } = await emails.send({
+const { error } = await emails.send({
   // ...
 })
 ```
