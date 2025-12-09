@@ -54,10 +54,10 @@
     "@eslint/compat": "^2.0.0",
     "@stylistic/eslint-plugin": "^5.6.1",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.48.1",
-    "@typescript-eslint/parser": "^8.48.1",
-    "@vitest/coverage-v8": "^4.0.14",
+    "@types/node": "^24.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "@vitest/coverage-v8": "^4.0.15",
     "changelogen": "^0.6.2",
     "eslint": "^9.39.1",
     "eslint-plugin-import-x": "^4.16.1",
@@ -68,7 +68,7 @@
     "vitepress": "^1.6.4",
     "vitepress-plugin-group-icons": "^1.6.5",
     "vitepress-plugin-llms": "^1.9.3",
-    "vitest": "^4.0.14"
+    "vitest": "^4.0.15"
   },
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.25.0"
 }
