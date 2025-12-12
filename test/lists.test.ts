@@ -162,7 +162,7 @@ describe("listEntries", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(error).toBe("Failed fetch list entries.");
+    expect(error).toBe("Failed to fetch list entries.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

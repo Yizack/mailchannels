@@ -72,7 +72,7 @@ export class Lists {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      result.error = getResultError(result, error, "Failed fetch list entries.");
+      result.error = getResultError(result, error, "Failed to fetch list entries.");
       return null;
     });
 
