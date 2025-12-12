@@ -47,3 +47,7 @@ export const validateOffset = (offset?: number) => {
   }
   return null;
 };
+
+export const mapBuckets = (arr: { count: number, period_start: string }[]) => {
+  return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
+};

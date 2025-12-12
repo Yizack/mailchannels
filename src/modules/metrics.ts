@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import { clean, validateLimit, validateOffset } from "../utils/helpers";
+import { clean, mapBuckets, validateLimit, validateOffset } from "../utils/helpers";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
@@ -9,10 +9,6 @@ import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipie
 import type { MetricsVolumeResponse } from "../types/metrics/volume";
 import type { MetricsUsageResponse } from "../types/metrics/usage";
 import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../types/metrics/senders";
-
-const mapBuckets = (arr: { count: number, period_start: string }[]) => {
-  return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
-};
 
 export class Metrics {
   constructor (protected mailchannels: MailChannelsClient) {}
