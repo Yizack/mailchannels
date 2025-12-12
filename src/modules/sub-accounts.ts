@@ -47,13 +47,18 @@ export class SubAccounts {
         company_name: companyName,
         handle
       },
-      onResponseError: ({ response }) => {
+      onResponseError: async ({ response }) => {
         result.error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
           [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create sub-account.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -89,7 +94,7 @@ export class SubAccounts {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
+    }).catch((error) => {
       if (!result.error) {
         result.error = error instanceof Error ? error.message : "Failed to fetch sub-accounts.";
       }
@@ -132,6 +137,8 @@ export class SubAccounts {
         }
         result.success = true;
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete sub-account.";
     });
 
     return result;
@@ -165,6 +172,8 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to suspend sub-account.";
     });
 
     return result;
@@ -199,6 +208,8 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to activate sub-account.";
     });
 
     return result;
@@ -229,7 +240,12 @@ export class SubAccounts {
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create sub-account API key.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -271,7 +287,12 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account API keys.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -312,6 +333,8 @@ export class SubAccounts {
           [ErrorCode.BadRequest]: "Missing or invalid API key ID."
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete sub-account API key.";
     });
 
     return result;
@@ -342,7 +365,12 @@ export class SubAccounts {
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create sub-account SMTP password.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -378,7 +406,12 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account SMTP passwords.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -420,6 +453,8 @@ export class SubAccounts {
           [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete sub-account SMTP password.";
     });
 
     return result;
@@ -448,7 +483,12 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account limit.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -487,6 +527,8 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to set sub-account limit.";
     });
 
     return result;
@@ -520,6 +562,8 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete sub-account limit.";
     });
 
     return result;
@@ -548,7 +592,12 @@ export class SubAccounts {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account usage.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 

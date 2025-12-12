@@ -96,7 +96,12 @@ export class Emails {
           [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to send email.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -155,7 +160,12 @@ export class Emails {
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to check domain.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -210,7 +220,12 @@ export class Emails {
           [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create DKIM key.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -272,7 +287,12 @@ export class Emails {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch DKIM keys.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -319,6 +339,7 @@ export class Emails {
 
     await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
       body: payload,
+      ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
           result.success = true;

@@ -46,6 +46,8 @@ export class Webhooks {
           [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to enroll webhook.";
     });
 
     return result;
@@ -66,7 +68,7 @@ export class Webhooks {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
+    }).catch((error) => {
       if (!result.error) {
         result.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
       }
@@ -99,6 +101,8 @@ export class Webhooks {
         }
         result.success = true;
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete webhooks.";
     });
 
     return result;
@@ -119,13 +123,18 @@ export class Webhooks {
       query: {
         id
       },
-      onResponseError: ({ response }) => {
+      onResponseError: async ({ response }) => {
         result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to get signing key.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -154,13 +163,18 @@ export class Webhooks {
       body: {
         request_id: requestId
       },
-      onResponseError: ({ response }) => {
+      onResponseError: async ({ response }) => {
         result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "No webhooks found for the account."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to validate webhooks.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 

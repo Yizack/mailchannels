@@ -176,6 +176,32 @@ describe("create", () => {
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.create(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.create(fake.create.validHandle);
+
+    expect(error).toBe("Failed to create sub-account.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("list", () => {
@@ -317,6 +343,32 @@ describe("delete", () => {
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.delete(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.delete(fake.create.validHandle);
+
+    expect(error).toBe("Failed to delete sub-account.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
 });
 
 describe("suspend", () => {
@@ -359,6 +411,32 @@ describe("suspend", () => {
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.suspend(fake.create.validHandle);
+
+    expect(error).toBe("Failed to suspend sub-account.");
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -407,6 +485,32 @@ describe("activate", () => {
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.activate(fake.create.validHandle);
+
+    expect(error).toBe("Failed to activate sub-account.");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("createApiKey", () => {
@@ -451,6 +555,31 @@ describe("createApiKey", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.createApiKey(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.createApiKey(fake.create.validHandle);
+
+    expect(error).toBe("Failed to create sub-account API key.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("listApiKeys", () => {
@@ -520,6 +649,32 @@ describe("listApiKeys", () => {
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle);
+
+    expect(error).toBe("Failed to fetch sub-account API keys.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("deleteApiKey", () => {
@@ -562,6 +717,32 @@ describe("deleteApiKey", () => {
     const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
+
+    expect(error).toBe("Failed to delete sub-account API key.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -608,6 +789,32 @@ describe("createSmtpPassword", () => {
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
+
+    expect(error).toBe("Failed to create sub-account SMTP password.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("listSmtpPasswords", () => {
@@ -648,6 +855,32 @@ describe("listSmtpPasswords", () => {
     const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
+
+    expect(error).toBe("Failed to fetch sub-account SMTP passwords.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -696,6 +929,32 @@ describe("deleteSmtpPassword", () => {
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
+
+    expect(error).toBe("Failed to delete sub-account SMTP password.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
 });
 
 describe("getLimit", () => {
@@ -736,6 +995,30 @@ describe("getLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
+    expect(error).toBe("Failed to fetch sub-account limit.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -784,6 +1067,32 @@ describe("setLimit", () => {
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
+
+    expect(error).toBe("Failed to set sub-account limit.");
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
 });
 
 describe("deleteLimit", () => {
@@ -829,6 +1138,32 @@ describe("deleteLimit", () => {
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
+
+    expect(error).toBe("Failed to delete sub-account limit.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
 });
 
 describe("getUsage", () => {
@@ -870,6 +1205,32 @@ describe("getUsage", () => {
     const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const subAccounts = new SubAccounts(mockClient);
+    const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
+
+    expect(error).toBe("Failed to fetch sub-account usage.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

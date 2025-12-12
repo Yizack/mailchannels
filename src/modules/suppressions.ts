@@ -47,6 +47,8 @@ export class Suppressions {
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to create suppression entries.";
     });
 
     return result;
@@ -79,6 +81,8 @@ export class Suppressions {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete suppression entry.";
     });
 
     return result;
@@ -118,7 +122,12 @@ export class Suppressions {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch suppression entries.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 

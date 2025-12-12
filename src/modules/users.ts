@@ -46,7 +46,12 @@ export class Users {
           [ErrorCode.BadRequest]: `The email address '${email}' is invalid.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create user.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -100,7 +105,12 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to add user list entry.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -143,7 +153,12 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch user list entries.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -197,6 +212,8 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete user list entry.";
     });
 
     return result;

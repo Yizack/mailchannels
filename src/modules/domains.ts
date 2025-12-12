@@ -44,7 +44,7 @@ export class Domains {
           [ErrorCode.Conflict]: `The domain '${options.domain}' is already provisioned, and is associated with a different customer.`
         });
       }
-    }).catch((error: unknown) => {
+    }).catch((error) => {
       if (!result.error) {
         result.error = error instanceof Error ? error.message : "Failed to provision domain.";
       }
@@ -103,7 +103,7 @@ export class Domains {
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own."
         });
       }
-    }).catch((error: unknown) => {
+    }).catch((error) => {
       if (!result.error) {
         result.error = error instanceof Error ? error.message : "Failed to provision domains.";
       }
@@ -139,7 +139,12 @@ export class Domains {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch domains.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -180,6 +185,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete domain.";
     });
 
     return result;
@@ -221,7 +228,12 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to add domain list entry.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -263,7 +275,12 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to fetch domain list entries.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -316,6 +333,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete domain list entry.";
     });
 
     return result;
@@ -346,7 +365,12 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create login link.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -399,6 +423,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to set downstream address.";
     });
 
     return result;
@@ -436,7 +462,12 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to list downstream addresses.";
+      }
+      return null;
+    });
 
     if (!response) return result;
     result.data = clean(response.records);
@@ -479,6 +510,8 @@ export class Domains {
           [ErrorCode.NotFound]: "The domain does not exist."
         });
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to update domain API key.";
     });
 
     return result;
@@ -515,7 +548,12 @@ export class Domains {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to create login links.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 

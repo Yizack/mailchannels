@@ -28,6 +28,8 @@ export class Service {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to fetch service status.";
     });
 
     return result;
@@ -50,7 +52,7 @@ export class Service {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }
-    }).catch((error: unknown) => {
+    }).catch((error) => {
       if (!result.error) {
         result.error = error instanceof Error ? error.message : "Failed to fetch subscriptions.";
       }
@@ -84,6 +86,7 @@ export class Service {
         report_type: type
       },
       body: payload,
+      ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
           result.success = true;
@@ -91,6 +94,8 @@ export class Service {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to submit report.";
     });
 
     return result;

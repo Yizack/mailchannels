@@ -329,6 +329,32 @@ describe("send", () => {
     expect(data).toStrictEqual(fake.send.expectedResponse.data);
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send(fake.send.options);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send(fake.send.options);
+
+    expect(error).toBe("Failed to send email.");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("checkDomain", () => {
@@ -357,6 +383,32 @@ describe("checkDomain", () => {
     const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain(fake.checkDomain.options);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain(fake.checkDomain.options);
+
+    expect(error).toBe("Failed to check domain.");
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -412,6 +464,32 @@ describe("createDkimKey", () => {
     expect(error).toBe("Selector must be between 1 and 63 characters.");
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
+
+    expect(error).toBe("Failed to create DKIM key.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });
 
@@ -476,6 +554,32 @@ describe("getDkimKeys", () => {
     expect(error).toBe("Offset must be greater than or equal to 0.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.getDkimKeys("example.com");
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.getDkimKeys("example.com");
+
+    expect(error).toBe("Failed to fetch DKIM keys.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
   });
 });
 

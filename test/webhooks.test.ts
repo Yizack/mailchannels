@@ -110,6 +110,32 @@ describe("enroll", () => {
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
+
+    expect(error).toBe("Failed to enroll webhook.");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("list", () => {
@@ -199,6 +225,32 @@ describe("delete", () => {
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { success, error } = await webhooks.delete();
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { success, error } = await webhooks.delete();
+
+    expect(error).toBe("Failed to delete webhooks.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
 });
 
 describe("getSigningKey", () => {
@@ -227,6 +279,32 @@ describe("getSigningKey", () => {
     const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
+
+    expect(error).toBe("Failed to get signing key.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -273,5 +351,31 @@ describe("validate", () => {
     expect(error).toBe("The request id should not exceed 28 characters.");
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.validate();
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.validate();
+
+    expect(error).toBe("Failed to validate webhooks.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
   });
 });

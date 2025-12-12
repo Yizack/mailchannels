@@ -35,7 +35,12 @@ export class Lists {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed to add list entry.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -68,7 +73,12 @@ export class Lists {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      if (!result.error) {
+        result.error = error instanceof Error ? error.message : "Failed fetch list entries.";
+      }
+      return null;
+    });
 
     if (!response) return result;
 
@@ -112,6 +122,8 @@ export class Lists {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = error instanceof Error ? error.message : "Failed to delete list entry.";
     });
 
     return result;
