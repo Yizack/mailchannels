@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import { clean } from "../utils/helpers";
+import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
@@ -258,6 +258,12 @@ export class Metrics {
    */
   async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
     const result: MetricsSendersResponse = { data: null, error: null };
+
+    result.error =
+      validateLimit(options?.limit, 1000) ||
+      validateOffset(options?.offset);
+
+    if (result.error) return result;
 
     const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
       query: {

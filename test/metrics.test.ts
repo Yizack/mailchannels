@@ -485,6 +485,32 @@ describe("senders", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
+  it("should contain error for invalid limit", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { data, error } = await metrics.senders("campaigns", { limit: 1001 });
+
+    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid offset", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const { data, error } = await metrics.senders("campaigns", { offset: -1 });
+
+    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
