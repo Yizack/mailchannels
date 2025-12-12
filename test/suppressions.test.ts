@@ -87,6 +87,32 @@ describe("create", () => {
     expect(error).toBeTruthy();
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.create(fake.create.options);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.create(fake.create.options);
+
+    expect(error).toBe("Failed to create suppression entries.");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("delete", () => {
@@ -117,6 +143,32 @@ describe("delete", () => {
 
     expect(success).toBe(false);
     expect(error).toBeTruthy();
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.delete(fake.delete.recipient, fake.delete.source);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.delete(fake.delete.recipient, fake.delete.source);
+
+    expect(error).toBe("Failed to delete suppression entry.");
+    expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
 });
@@ -186,6 +238,32 @@ describe("list", () => {
     const { data, error } = await suppressions.list();
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { data, error } = await suppressions.list();
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const suppressions = new Suppressions(mockClient);
+    const { data, error } = await suppressions.list();
+
+    expect(error).toBe("Failed to fetch suppression entries.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
@@ -46,6 +46,8 @@ export class Webhooks {
           [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to enroll webhook.");
     });
 
     return result;
@@ -66,10 +68,8 @@ export class Webhooks {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch webhooks.");
       return null;
     });
 
@@ -99,6 +99,8 @@ export class Webhooks {
         }
         result.success = true;
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete webhooks.");
     });
 
     return result;
@@ -119,13 +121,16 @@ export class Webhooks {
       query: {
         id
       },
-      onResponseError: ({ response }) => {
+      onResponseError: async ({ response }) => {
         result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to get signing key.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -154,13 +159,16 @@ export class Webhooks {
       body: {
         request_id: requestId
       },
-      onResponseError: ({ response }) => {
+      onResponseError: async ({ response }) => {
         result.error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "No webhooks found for the account."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to validate webhooks.");
+      return null;
+    });
 
     if (!response) return result;
 

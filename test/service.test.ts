@@ -47,6 +47,32 @@ describe("status", () => {
     expect(error).toBeTruthy();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success, error } = await service.status();
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success, error } = await service.status();
+
+    expect(error).toBe("Failed to fetch service status.");
+    expect(success).toBe(false);
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("subscriptions", () => {
@@ -134,6 +160,32 @@ describe("report", () => {
 
     expect(success).toBe(false);
     expect(error).toBeTruthy();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success, error } = await service.report(fake.report);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const service = new Service(mockClient);
+    const { success, error } = await service.report(fake.report);
+
+    expect(error).toBe("Failed to submit report.");
+    expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
 });

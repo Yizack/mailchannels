@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
@@ -47,6 +47,8 @@ export class Suppressions {
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to create suppression entries.");
     });
 
     return result;
@@ -79,6 +81,8 @@ export class Suppressions {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete suppression entry.");
     });
 
     return result;
@@ -118,7 +122,10 @@ export class Suppressions {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch suppression entries.");
+      return null;
+    });
 
     if (!response) return result;
 

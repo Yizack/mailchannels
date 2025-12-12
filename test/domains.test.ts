@@ -311,6 +311,32 @@ describe("list", () => {
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.list();
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.list();
+
+    expect(error).toBe("Failed to fetch domains.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("delete", () => {
@@ -353,6 +379,32 @@ describe("delete", () => {
     const { success, error } = await domains.delete(fake.provision.domain);
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.delete(fake.provision.domain);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.delete(fake.provision.domain);
+
+    expect(error).toBe("Failed to delete domain.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -418,6 +470,32 @@ describe("addListEntry", () => {
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBe("Failed to add domain list entry.");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
 });
 
 describe("listEntries", () => {
@@ -480,6 +558,32 @@ describe("listEntries", () => {
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
+
+    expect(error).toBe("Failed to fetch domain list entries.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("deleteListEntry", () => {
@@ -539,6 +643,32 @@ describe("deleteListEntry", () => {
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
+
+    expect(error).toBe("Failed to delete domain list entry.");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
 });
 
 describe("createLoginLink", () => {
@@ -580,6 +710,32 @@ describe("createLoginLink", () => {
     const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.createLoginLink(fake.provision.domain);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.createLoginLink(fake.provision.domain);
+
+    expect(error).toBe("Failed to create login link.");
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -640,6 +796,32 @@ describe("setDownstreamAddress", () => {
     const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
+
+    expect(error).toBe("Failed to set downstream address.");
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -713,6 +895,32 @@ describe("listDownstreamAddresses", () => {
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
+
+    expect(error).toBe("Failed to list downstream addresses.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("updateApiKey", () => {
@@ -768,6 +976,32 @@ describe("updateApiKey", () => {
     const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
+
+    expect(error).toBe("Failed to update domain API key.");
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -831,6 +1065,38 @@ describe("bulkCreateLoginLinks", () => {
     ]);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.bulkCreateLoginLinks([
+      "example1.com",
+      "example2.com"
+    ]);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    const { data, error } = await domains.bulkCreateLoginLinks([
+      "example1.com",
+      "example2.com"
+    ]);
+
+    expect(error).toBe("Failed to create login links.");
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

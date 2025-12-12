@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
@@ -44,10 +44,8 @@ export class Domains {
           [ErrorCode.Conflict]: `The domain '${options.domain}' is already provisioned, and is associated with a different customer.`
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to provision domain.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to provision domain.");
       return null;
     });
 
@@ -103,10 +101,8 @@ export class Domains {
           [ErrorCode.Forbidden]: "The limit on associated domains is reached or you are attempting to associate a domain with a subscription that is not your own."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to provision domains.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to provision domains.");
       return null;
     });
 
@@ -139,7 +135,10 @@ export class Domains {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch domains.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -180,6 +179,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete domain.");
     });
 
     return result;
@@ -221,7 +222,10 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to add domain list entry.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -263,7 +267,10 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch domain list entries.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -316,6 +323,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete domain list entry.");
     });
 
     return result;
@@ -346,7 +355,10 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to create login link.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -399,6 +411,8 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to set downstream address.");
     });
 
     return result;
@@ -436,7 +450,10 @@ export class Domains {
           [ErrorCode.NotFound]: `The domain '${domain}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to list downstream addresses.");
+      return null;
+    });
 
     if (!response) return result;
     result.data = clean(response.records);
@@ -479,6 +496,8 @@ export class Domains {
           [ErrorCode.NotFound]: "The domain does not exist."
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to update domain API key.");
     });
 
     return result;
@@ -515,7 +534,10 @@ export class Domains {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to create login links.");
+      return null;
+    });
 
     if (!response) return result;
 

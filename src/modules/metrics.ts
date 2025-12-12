@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, mapBuckets, validateLimit, validateOffset } from "../utils/helpers";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
@@ -37,10 +37,8 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch engagement metrics.");
       return null;
     });
 
@@ -88,10 +86,8 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch performance metrics.");
       return null;
     });
 
@@ -137,10 +133,8 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch recipient behaviour metrics.");
       return null;
     });
 
@@ -184,10 +178,8 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch volume metrics.");
       return null;
     });
 
@@ -224,10 +216,8 @@ export class Metrics {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch usage metrics.");
       return null;
     });
 
@@ -274,10 +264,8 @@ export class Metrics {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch senders metrics.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch senders metrics.");
       return null;
     });
 

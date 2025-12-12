@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { getStatusError } from "../utils/errors";
+import { getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -35,7 +35,10 @@ export class Lists {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to add list entry.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -68,7 +71,10 @@ export class Lists {
       onResponseError: async ({ response }) => {
         result.error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch list entries.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -112,6 +118,8 @@ export class Lists {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete list entry.");
     });
 
     return result;

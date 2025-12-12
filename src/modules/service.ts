@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
@@ -28,6 +28,8 @@ export class Service {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch service status.");
     });
 
     return result;
@@ -50,10 +52,8 @@ export class Service {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }
-    }).catch((error: unknown) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch subscriptions.";
-      }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch subscriptions.");
       return null;
     });
 
@@ -84,6 +84,7 @@ export class Service {
         report_type: type
       },
       body: payload,
+      ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
           result.success = true;
@@ -91,6 +92,8 @@ export class Service {
         }
         result.error = getStatusError(response);
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to submit report.");
     });
 
     return result;

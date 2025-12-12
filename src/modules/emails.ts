@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
@@ -96,7 +96,10 @@ export class Emails {
           [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to send email.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -155,7 +158,10 @@ export class Emails {
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to check domain.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -210,7 +216,10 @@ export class Emails {
           [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to create DKIM key.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -272,7 +281,10 @@ export class Emails {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch DKIM keys.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -319,6 +331,7 @@ export class Emails {
 
     await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
       body: payload,
+      ignoreResponseError: true,
       onResponse: async ({ response }) => {
         if (response.ok) {
           result.success = true;
@@ -330,7 +343,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+      result.error = getResultError(result, error, "Failed to update DKIM key.");
     });
 
     return result;
@@ -381,9 +394,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to rotate DKIM key.";
-      }
+      result.error = getResultError(result, error, "Failed to rotate DKIM key.");
       return null;
     });
 

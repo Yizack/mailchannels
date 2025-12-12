@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -46,7 +46,10 @@ export class Users {
           [ErrorCode.BadRequest]: `The email address '${email}' is invalid.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to create user.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -100,7 +103,10 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to add user list entry.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -143,7 +149,10 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to fetch user list entries.");
+      return null;
+    });
 
     if (!response) return result;
 
@@ -197,6 +206,8 @@ export class Users {
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
+    }).catch((error) => {
+      result.error = getResultError(result, error, "Failed to delete user list entry.");
     });
 
     return result;

@@ -87,6 +87,32 @@ describe("create", () => {
     expect(data).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.create(fake.create.email);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.put).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      put: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.create(fake.create.email);
+
+    expect(error).toBe("Failed to create user.");
+    expect(data).toBeNull();
+    expect(mockClient.put).toHaveBeenCalled();
+  });
 });
 
 describe("addListEntry", () => {
@@ -146,6 +172,32 @@ describe("addListEntry", () => {
     const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
     expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      post: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBe("Failed to add user list entry.");
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -211,6 +263,32 @@ describe("listEntries", () => {
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+
+    expect(error).toBe("failure");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      get: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
+
+    expect(error).toBe("Failed to fetch user list entries.");
+    expect(data).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
 });
 
 describe("deleteListEntry", () => {
@@ -267,6 +345,32 @@ describe("deleteListEntry", () => {
     const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
 
     expect(error).toBeTruthy();
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block errors", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce(new Error("failure"))
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBe("failure");
+    expect(success).toBe(false);
+    expect(mockClient.delete).toHaveBeenCalled();
+  });
+
+  it("should handle catch block with non-Error rejections", async () => {
+    const mockClient = {
+      delete: vi.fn().mockRejectedValueOnce("error")
+    } as unknown as MailChannelsClient;
+
+    const users = new Users(mockClient);
+    const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
+
+    expect(error).toBe("Failed to delete user list entry.");
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
