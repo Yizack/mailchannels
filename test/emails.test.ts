@@ -462,7 +462,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { limit: 101 });
 
-    expect(error).toBe("Limit must be between 1 and 100.");
+    expect(error).toBe("The limit value must be between 1 and 100.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

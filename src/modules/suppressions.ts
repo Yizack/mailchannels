@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import { clean } from "../utils/helpers";
+import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
@@ -96,15 +96,11 @@ export class Suppressions {
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
     const result: SuppressionsListResponse = { data: null, error: null };
 
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      result.error = "The limit must be between 1 and 1000.";
-      return result;
-    }
+    result.error =
+      validateLimit(options?.limit, 1000) ||
+      validateOffset(options?.offset);
 
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      result.error = "Offset must be greater than or equal to 0.";
-      return result;
-    }
+    if (result.error) return result;
 
     const payload: SuppressionsListPayload = {
       recipient: options?.recipient,

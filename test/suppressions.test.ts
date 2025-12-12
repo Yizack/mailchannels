@@ -143,7 +143,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list({ ...fake.list.options, limit: 0 });
 
-    expect(error).toBe("The limit must be between 1 and 1000.");
+    expect(error).toBe("The limit value must be between 1 and 1000.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -156,7 +156,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list({ ...fake.list.options, limit: 1001 });
 
-    expect(error).toBe("The limit must be between 1 and 1000.");
+    expect(error).toBe("The limit value must be between 1 and 1000.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

@@ -213,7 +213,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list({ limit: 1001 });
 
-    expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
+    expect(error).toBe("The limit value must be between 1 and 1000.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -487,7 +487,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle, { limit: 1001 });
 
-    expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
+    expect(error).toBe("The limit value must be between 1 and 1000.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

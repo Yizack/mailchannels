@@ -33,3 +33,17 @@ export const clean = <T>(data: T): T => {
 
   return data;
 };
+
+export const validateLimit = (limit?: number, max?: number) => {
+  if (typeof limit === "number" && (limit < 1 || (max && limit > max))) {
+    return "The limit value " + (max ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed.");
+  }
+  return null;
+};
+
+export const validateOffset = (offset?: number) => {
+  if (typeof offset === "number" && offset < 0) {
+    return "Offset must be greater than or equal to 0.";
+  }
+  return null;
+};

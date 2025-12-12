@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import { clean } from "../utils/helpers";
+import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
@@ -78,15 +78,11 @@ export class SubAccounts {
   async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
     const result: SubAccountsListResponse = { data: null, error: null };
 
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      result.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
-      return result;
-    }
+    result.error =
+      validateLimit(options?.limit, 1000) ||
+      validateOffset(options?.offset);
 
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      result.error = "Offset must be greater than or equal to 0.";
-      return result;
-    }
+    if (result.error) return result;
 
     const response = await this.mailchannels.get<SubAccountsListApiResponse>("/tx/v1/sub-account", {
       query: options,
@@ -263,15 +259,11 @@ export class SubAccounts {
       return result;
     }
 
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      result.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
-      return result;
-    }
+    result.error =
+      validateLimit(options?.limit, 1000) ||
+      validateOffset(options?.offset);
 
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      result.error = "Offset must be greater than or equal to 0.";
-      return result;
-    }
+    if (result.error) return result;
 
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {

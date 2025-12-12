@@ -278,7 +278,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list({ limit: 5001 });
 
-    expect(error).toBe("The limit value is invalid. Possible limit values are 1 to 5000.");
+    expect(error).toBe("The limit value must be between 1 and 5000.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

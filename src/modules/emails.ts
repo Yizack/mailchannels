@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
-import { clean, stripPemHeaders } from "../utils/helpers";
+import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
@@ -250,14 +250,12 @@ export class Emails {
       result.error = "Selector must be between 1 and 63 characters.";
       return result;
     }
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 100)) {
-      result.error = "Limit must be between 1 and 100.";
-      return result;
-    }
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      result.error = "Offset must be greater than or equal to 0.";
-      return result;
-    }
+
+    result.error =
+      validateLimit(options?.limit, 100) ||
+      validateOffset(options?.offset);
+
+    if (result.error) return result;
 
     const payload: EmailsGetDkimKeysPayload = {
       selector: options?.selector,
