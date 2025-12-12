@@ -211,6 +211,26 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should successfully send an email with only text content", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.send.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    // @ts-expect-error testing without html content
+    delete fake.send.options.html;
+
+    const emails = new Emails(mockClient);
+    const { success, data, error } = await emails.send(fake.send.options);
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(data).toStrictEqual(fake.send.expectedResponse.data);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
   it("should contain error when from field is missing", async () => {
     const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
     const emails = new Emails(mockClient);
