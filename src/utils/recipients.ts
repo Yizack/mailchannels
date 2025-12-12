@@ -1,15 +1,28 @@
 import type { EmailsSendRecipient } from "../types/emails/send";
 
 /**
+ * Validates if a string is a valid email address
+ */
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+/**
  * Parses name-address pair string to MailChannels format
  */
-export const parseRecipientString = (input: string) => {
+export const parseRecipientString = (input: string): EmailsSendRecipient | undefined => {
   const trimmed = input.trim();
-  const match = trimmed.match(/^([^<]*)<([^@\s]+@[^>\s]+)>$/);
+  const match = trimmed.match(/^([^<]*)<([^>]*)>$/);
+
   if (match) {
     const [, name, email] = match;
-    return { email: email?.trim() || "", name: name?.trim() };
+    if (!email?.trim() || !isValidEmail(email.trim())) return undefined;
+
+    return { email: email.trim(), name: name?.trim() };
   }
+
+  if (!isValidEmail(trimmed)) return undefined;
+
   return { email: trimmed };
 };
 
@@ -21,26 +34,24 @@ export const parseRecipient = (recipient?: EmailsSendRecipient | string) => {
     return parseRecipientString(recipient);
   }
 
-  if (recipient?.email) {
-    return { email: recipient.email, name: recipient.name };
-  }
+  if (!recipient?.email || !isValidEmail(recipient.email)) return undefined;
+
+  return { email: recipient.email, name: recipient.name };
 };
 
 /**
  * Parses any array of recipients format to MailChannels format
  */
 export const parseArrayRecipients = (recipients?: EmailsSendRecipient | EmailsSendRecipient[] | string[] | string) => {
-  if (!recipients) return;
+  if (!recipients) return undefined;
 
-  if (typeof recipients === "string") {
-    return [parseRecipientString(recipients)];
-  }
+  const arr = typeof recipients === "string" ? (
+    [parseRecipientString(recipients)]
+  ) : Array.isArray(recipients) ? (
+    recipients.map(parseRecipient)
+  ) : [recipients];
 
-  if (Array.isArray(recipients)) {
-    return recipients
-      .map(recipient => parseRecipient(recipient))
-      .filter((recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient));
-  }
+  const filtered = arr.filter((recipient): recipient is NonNullable<typeof recipient> => Boolean(recipient));
 
-  return [recipients];
+  return filtered.length > 0 ? filtered : undefined;
 };
