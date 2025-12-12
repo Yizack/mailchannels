@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
@@ -29,7 +29,7 @@ export class Service {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to fetch service status.";
+      result.error = getResultError(result, error, "Failed to fetch service status.");
     });
 
     return result;
@@ -53,9 +53,7 @@ export class Service {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch subscriptions.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch subscriptions.");
       return null;
     });
 
@@ -95,7 +93,7 @@ export class Service {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to submit report.";
+      result.error = getResultError(result, error, "Failed to submit report.");
     });
 
     return result;

@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
@@ -48,7 +48,7 @@ export class Suppressions {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to create suppression entries.";
+      result.error = getResultError(result, error, "Failed to create suppression entries.");
     });
 
     return result;
@@ -82,7 +82,7 @@ export class Suppressions {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete suppression entry.";
+      result.error = getResultError(result, error, "Failed to delete suppression entry.");
     });
 
     return result;
@@ -123,9 +123,7 @@ export class Suppressions {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch suppression entries.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch suppression entries.");
       return null;
     });
 

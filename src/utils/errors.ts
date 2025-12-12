@@ -34,3 +34,8 @@ export const getStatusError = (
 
   return details ? `${statusText} ${details}` : statusText;
 };
+
+export function getResultError (result: { error: string | null }, error: unknown, fallback: string) {
+  if (result.error) return result.error;
+  return error instanceof Error ? error.message : fallback;
+}

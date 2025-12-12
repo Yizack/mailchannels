@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
@@ -97,9 +97,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to send email.";
-      }
+      result.error = getResultError(result, error, "Failed to send email.");
       return null;
     });
 
@@ -161,9 +159,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to check domain.";
-      }
+      result.error = getResultError(result, error, "Failed to check domain.");
       return null;
     });
 
@@ -221,9 +217,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create DKIM key.";
-      }
+      result.error = getResultError(result, error, "Failed to create DKIM key.");
       return null;
     });
 
@@ -288,9 +282,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch DKIM keys.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch DKIM keys.");
       return null;
     });
 
@@ -351,7 +343,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+      result.error = getResultError(result, error, "Failed to update DKIM key.");
     });
 
     return result;
@@ -402,9 +394,7 @@ export class Emails {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to rotate DKIM key.";
-      }
+      result.error = getResultError(result, error, "Failed to rotate DKIM key.");
       return null;
     });
 

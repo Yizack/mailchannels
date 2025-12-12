@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, mapBuckets, validateLimit, validateOffset } from "../utils/helpers";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
@@ -38,9 +38,7 @@ export class Metrics {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch engagement metrics.");
       return null;
     });
 
@@ -89,9 +87,7 @@ export class Metrics {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch performance metrics.");
       return null;
     });
 
@@ -138,9 +134,7 @@ export class Metrics {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch recipient behaviour metrics.");
       return null;
     });
 
@@ -185,9 +179,7 @@ export class Metrics {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch volume metrics.");
       return null;
     });
 
@@ -225,9 +217,7 @@ export class Metrics {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch usage metrics.");
       return null;
     });
 
@@ -275,9 +265,7 @@ export class Metrics {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch senders metrics.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch senders metrics.");
       return null;
     });
 

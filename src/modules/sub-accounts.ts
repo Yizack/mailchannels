@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
@@ -54,9 +54,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create sub-account.";
-      }
+      result.error = getResultError(result, error, "Failed to create sub-account.");
       return null;
     });
 
@@ -95,9 +93,7 @@ export class SubAccounts {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch sub-accounts.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch sub-accounts.");
       return null;
     });
 
@@ -138,7 +134,7 @@ export class SubAccounts {
         result.success = true;
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete sub-account.";
+      result.error = getResultError(result, error, "Failed to delete sub-account.");
     });
 
     return result;
@@ -173,7 +169,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to suspend sub-account.";
+      result.error = getResultError(result, error, "Failed to suspend sub-account.");
     });
 
     return result;
@@ -209,7 +205,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to activate sub-account.";
+      result.error = getResultError(result, error, "Failed to activate sub-account.");
     });
 
     return result;
@@ -241,9 +237,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create sub-account API key.";
-      }
+      result.error = getResultError(result, error, "Failed to create sub-account API key.");
       return null;
     });
 
@@ -288,9 +282,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account API keys.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch sub-account API keys.");
       return null;
     });
 
@@ -334,7 +326,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete sub-account API key.";
+      result.error = getResultError(result, error, "Failed to delete sub-account API key.");
     });
 
     return result;
@@ -366,9 +358,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create sub-account SMTP password.";
-      }
+      result.error = getResultError(result, error, "Failed to create sub-account SMTP password.");
       return null;
     });
 
@@ -407,9 +397,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account SMTP passwords.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch sub-account SMTP passwords.");
       return null;
     });
 
@@ -454,7 +442,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete sub-account SMTP password.";
+      result.error = getResultError(result, error, "Failed to delete sub-account SMTP password.");
     });
 
     return result;
@@ -484,9 +472,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account limit.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch sub-account limit.");
       return null;
     });
 
@@ -528,7 +514,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to set sub-account limit.";
+      result.error = getResultError(result, error, "Failed to set sub-account limit.");
     });
 
     return result;
@@ -563,7 +549,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete sub-account limit.";
+      result.error = getResultError(result, error, "Failed to delete sub-account limit.");
     });
 
     return result;
@@ -593,9 +579,7 @@ export class SubAccounts {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch sub-account usage.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch sub-account usage.");
       return null;
     });
 

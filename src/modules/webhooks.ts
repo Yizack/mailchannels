@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
@@ -47,7 +47,7 @@ export class Webhooks {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to enroll webhook.";
+      result.error = getResultError(result, error, "Failed to enroll webhook.");
     });
 
     return result;
@@ -69,9 +69,7 @@ export class Webhooks {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch webhooks.");
       return null;
     });
 
@@ -102,7 +100,7 @@ export class Webhooks {
         result.success = true;
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete webhooks.";
+      result.error = getResultError(result, error, "Failed to delete webhooks.");
     });
 
     return result;
@@ -130,9 +128,7 @@ export class Webhooks {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to get signing key.";
-      }
+      result.error = getResultError(result, error, "Failed to get signing key.");
       return null;
     });
 
@@ -170,9 +166,7 @@ export class Webhooks {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to validate webhooks.";
-      }
+      result.error = getResultError(result, error, "Failed to validate webhooks.");
       return null;
     });
 

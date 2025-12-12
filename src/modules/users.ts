@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -47,9 +47,7 @@ export class Users {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create user.";
-      }
+      result.error = getResultError(result, error, "Failed to create user.");
       return null;
     });
 
@@ -106,9 +104,7 @@ export class Users {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to add user list entry.";
-      }
+      result.error = getResultError(result, error, "Failed to add user list entry.");
       return null;
     });
 
@@ -154,9 +150,7 @@ export class Users {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch user list entries.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch user list entries.");
       return null;
     });
 
@@ -213,7 +207,7 @@ export class Users {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete user list entry.";
+      result.error = getResultError(result, error, "Failed to delete user list entry.");
     });
 
     return result;

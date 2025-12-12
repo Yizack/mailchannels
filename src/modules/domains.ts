@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
@@ -45,9 +45,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to provision domain.";
-      }
+      result.error = getResultError(result, error, "Failed to provision domain.");
       return null;
     });
 
@@ -104,9 +102,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to provision domains.";
-      }
+      result.error = getResultError(result, error, "Failed to provision domains.");
       return null;
     });
 
@@ -140,9 +136,7 @@ export class Domains {
         result.error = getStatusError(response);
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch domains.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch domains.");
       return null;
     });
 
@@ -186,7 +180,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete domain.";
+      result.error = getResultError(result, error, "Failed to delete domain.");
     });
 
     return result;
@@ -229,9 +223,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to add domain list entry.";
-      }
+      result.error = getResultError(result, error, "Failed to add domain list entry.");
       return null;
     });
 
@@ -276,9 +268,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to fetch domain list entries.";
-      }
+      result.error = getResultError(result, error, "Failed to fetch domain list entries.");
       return null;
     });
 
@@ -334,7 +324,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to delete domain list entry.";
+      result.error = getResultError(result, error, "Failed to delete domain list entry.");
     });
 
     return result;
@@ -366,9 +356,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create login link.";
-      }
+      result.error = getResultError(result, error, "Failed to create login link.");
       return null;
     });
 
@@ -424,7 +412,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to set downstream address.";
+      result.error = getResultError(result, error, "Failed to set downstream address.");
     });
 
     return result;
@@ -463,9 +451,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to list downstream addresses.";
-      }
+      result.error = getResultError(result, error, "Failed to list downstream addresses.");
       return null;
     });
 
@@ -511,7 +497,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      result.error = error instanceof Error ? error.message : "Failed to update domain API key.";
+      result.error = getResultError(result, error, "Failed to update domain API key.");
     });
 
     return result;
@@ -549,9 +535,7 @@ export class Domains {
         });
       }
     }).catch((error) => {
-      if (!result.error) {
-        result.error = error instanceof Error ? error.message : "Failed to create login links.";
-      }
+      result.error = getResultError(result, error, "Failed to create login links.");
       return null;
     });
 
