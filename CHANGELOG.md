@@ -1,6 +1,41 @@
 # Changelog
 
 
+## v0.6.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.0...v0.6.1)
+
+### 🩹 Fixes
+
+- **metrics:** Add validation for limit and offset in `senders` method ([406dcc2](https://github.com/Yizack/mailchannels/commit/406dcc2))
+- Status error parsing resilient beyond ofetch-specific internals (#34 follow-up) ([#44](https://github.com/Yizack/mailchannels/pull/44), [#34](https://github.com/Yizack/mailchannels/issues/34))
+- **utils:** Improve recipient parsing and add edge case tests ([d7cf593](https://github.com/Yizack/mailchannels/commit/d7cf593))
+
+### 💅 Refactors
+
+- Add limit and offset validation helpers ([7c3f4f0](https://github.com/Yizack/mailchannels/commit/7c3f4f0))
+
+### 📖 Documentation
+
+- Update requirements section and usage examples ([150e817](https://github.com/Yizack/mailchannels/commit/150e817))
+- Update contributors list ([92641f2](https://github.com/Yizack/mailchannels/commit/92641f2))
+- **types:** Add data and error description to responses ([5647662](https://github.com/Yizack/mailchannels/commit/5647662))
+
+### 🏡 Chore
+
+- Silence git fetch in docs:build script ([6a5169d](https://github.com/Yizack/mailchannels/commit/6a5169d))
+- Update vitest coverage and exclude types ([9be8fa6](https://github.com/Yizack/mailchannels/commit/9be8fa6))
+- **emails:** Update some validation messages ([f48786e](https://github.com/Yizack/mailchannels/commit/f48786e))
+- **metrics:** Move `mapBuckets` to helpers ([6e5ad75](https://github.com/Yizack/mailchannels/commit/6e5ad75))
+
+### ✅ Tests
+
+- **emails:** Add test for sending email with only text content ([452b99a](https://github.com/Yizack/mailchannels/commit/452b99a))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.6.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.5.0...v0.6.0)
