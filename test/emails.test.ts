@@ -402,6 +402,17 @@ describe("createDkimKey", () => {
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
+
+  it("should return error if no selector is provided", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.createDkimKey("example.com", { selector: "" });
+
+    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
 });
 
 describe("getDkimKeys", () => {
@@ -440,7 +451,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { selector: "a".repeat(64) });
 
-    expect(error).toBe("Selector must be a maximum of 63 characters.");
+    expect(error).toBe("Selector must be between 1 and 63 characters.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -462,7 +473,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { offset: -10 });
 
-    expect(error).toBe("Offset value is invalid. Only positive values are allowed.");
+    expect(error).toBe("Offset must be greater than or equal to 0.");
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

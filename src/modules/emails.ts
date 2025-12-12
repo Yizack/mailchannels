@@ -247,7 +247,7 @@ export class Emails {
     const result: EmailsGetDkimKeysResponse = { data: null, error: null };
 
     if (options?.selector && options.selector.length > 63) {
-      result.error = "Selector must be a maximum of 63 characters.";
+      result.error = "Selector must be between 1 and 63 characters.";
       return result;
     }
     if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 100)) {
@@ -255,7 +255,7 @@ export class Emails {
       return result;
     }
     if (typeof options?.offset === "number" && options.offset < 0) {
-      result.error = "Offset value is invalid. Only positive values are allowed.";
+      result.error = "Offset must be greater than or equal to 0.";
       return result;
     }
 
