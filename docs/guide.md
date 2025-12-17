@@ -89,7 +89,6 @@ All methods in this SDK return an object with both `data` and `error` properties
   - `message`: A human-readable description of the error
   - `statusCode`: The HTTP status code from the API (e.g., `400`, `404`), or `null` if the error is not related to an HTTP request
 
-
 ```ts{5,13-15,18}
 import { MailChannels } from 'mailchannels-sdk'
 
