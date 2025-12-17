@@ -54,9 +54,7 @@ export default defineConfig({
   },
   vite: {
     plugins: [
-      // @ts-expect-error vite plugin types
       groupIconVitePlugin(),
-      // @ts-expect-error vite plugin types
       llmstxt({
         ignoreFiles: ["contributors.md"]
       })
