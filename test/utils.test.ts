@@ -78,7 +78,7 @@ describe("getStatusError", () => {
   it("should return default error message", () => {
     const response = { status: 500 };
     const error = getStatusError(response as ErrorResponse);
-    expect(error).toStrictEqual("Unknown error.");
+    expect(error).toStrictEqual({ message: "Unknown error.", statusCode: 500 });
   });
 
   it("should return custom error message", () => {
@@ -86,25 +86,25 @@ describe("getStatusError", () => {
     const error = getStatusError(response as ErrorResponse, {
       404: "Custom not found error."
     });
-    expect(error).toStrictEqual("Custom not found error.");
+    expect(error).toStrictEqual({ message: "Custom not found error.", statusCode: 404 });
   });
 
   it("should return error message from response string", () => {
     const response = { _data: "Server is down" };
     const error = getStatusError(response as ErrorResponse);
-    expect(error).toStrictEqual("Unknown error. Server is down");
+    expect(error).toStrictEqual({ message: "Unknown error. Server is down", statusCode: null });
   });
 
   it("should return error message from response object", () => {
     const response = { _data: { message: "Invalid request" } };
     const error = getStatusError(response as ErrorResponse);
-    expect(error).toStrictEqual("Unknown error. Invalid request");
+    expect(error).toStrictEqual({ message: "Unknown error. Invalid request", statusCode: null });
   });
 
   it("should return error message from response array", () => {
     const response = { _data: { errors: ["Invalid email", "Name is required"] } };
     const error = getStatusError(response as ErrorResponse);
-    expect(error).toStrictEqual("Unknown error. Invalid email, Name is required");
+    expect(error).toStrictEqual({ message: "Unknown error. Invalid email, Name is required", statusCode: null });
   });
 });
 

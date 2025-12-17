@@ -56,7 +56,7 @@ describe("status", () => {
     const service = new Service(mockClient);
     const { success, error } = await service.status();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -69,7 +69,7 @@ describe("status", () => {
     const service = new Service(mockClient);
     const { success, error } = await service.status();
 
-    expect(error).toBe("Failed to fetch service status.");
+    expect(error).toStrictEqual({ message: "Failed to fetch service status.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -113,7 +113,7 @@ describe("subscriptions", () => {
     const service = new Service(mockClient);
     const { data, error } = await service.subscriptions();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -126,7 +126,7 @@ describe("subscriptions", () => {
     const service = new Service(mockClient);
     const { data, error } = await service.subscriptions();
 
-    expect(error).toBe("Failed to fetch subscriptions.");
+    expect(error).toStrictEqual({ message: "Failed to fetch subscriptions.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -171,7 +171,7 @@ describe("report", () => {
     const service = new Service(mockClient);
     const { success, error } = await service.report(fake.report);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -184,7 +184,7 @@ describe("report", () => {
     const service = new Service(mockClient);
     const { success, error } = await service.report(fake.report);
 
-    expect(error).toBe("Failed to submit report.");
+    expect(error).toStrictEqual({ message: "Failed to submit report.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });

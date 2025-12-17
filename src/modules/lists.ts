@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { getResultError, getStatusError } from "../utils/errors";
+import { createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -26,7 +26,7 @@ export class Lists {
     const result: ListEntryResponse = { data: null, error: null };
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -63,7 +63,7 @@ export class Lists {
     const result: ListEntriesResponse = { data: null, error: null };
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -104,7 +104,7 @@ export class Lists {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 

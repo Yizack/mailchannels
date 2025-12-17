@@ -148,7 +148,7 @@ describe("provision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.provision(fake.provision);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -161,7 +161,7 @@ describe("provision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.provision(fake.provision);
 
-    expect(error).toBe("Failed to provision domain.");
+    expect(error).toStrictEqual({ message: "Failed to provision domain.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -192,7 +192,7 @@ describe("bulkProvision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, []);
 
-    expect(error).toBe("No domains provided.");
+    expect(error).toStrictEqual({ message: "No domains provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -205,7 +205,7 @@ describe("bulkProvision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, new Array(1001).fill(fake.provision.domain));
 
-    expect(error).toBe("The maximum number of domains to be provisioned is 1000.");
+    expect(error).toStrictEqual({ message: "The maximum number of domains to be provisioned is 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -237,7 +237,7 @@ describe("bulkProvision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -250,7 +250,7 @@ describe("bulkProvision", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkProvision({ subscriptionHandle: fake.provision.subscriptionHandle }, [{ domain: fake.provision.domain }]);
 
-    expect(error).toBe("Failed to provision domains.");
+    expect(error).toStrictEqual({ message: "Failed to provision domains.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -278,7 +278,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list({ limit: 5001 });
 
-    expect(error).toBe("The limit value must be between 1 and 5000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 5000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -291,7 +291,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list({ offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -320,7 +320,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -333,7 +333,7 @@ describe("list", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.list();
 
-    expect(error).toBe("Failed to fetch domains.");
+    expect(error).toStrictEqual({ message: "Failed to fetch domains.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -363,7 +363,7 @@ describe("delete", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.delete("");
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -391,7 +391,7 @@ describe("delete", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.delete(fake.provision.domain);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -404,7 +404,7 @@ describe("delete", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.delete(fake.provision.domain);
 
-    expect(error).toBe("Failed to delete domain.");
+    expect(error).toStrictEqual({ message: "Failed to delete domain.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -436,7 +436,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.addListEntry("", fake.addListEntry.options);
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -450,7 +450,7 @@ describe("addListEntry", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await domains.addListEntry(fake.provision.domain, {});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -479,7 +479,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -492,7 +492,7 @@ describe("addListEntry", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.addListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBe("Failed to add domain list entry.");
+    expect(error).toStrictEqual({ message: "Failed to add domain list entry.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -524,7 +524,7 @@ describe("listEntries", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listEntries("", fake.addListEntry.options.listName);
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -538,7 +538,7 @@ describe("listEntries", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await domains.listEntries(fake.provision.domain, "");
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -567,7 +567,7 @@ describe("listEntries", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -580,7 +580,7 @@ describe("listEntries", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listEntries(fake.provision.domain, fake.addListEntry.options.listName);
 
-    expect(error).toBe("Failed to fetch domain list entries.");
+    expect(error).toStrictEqual({ message: "Failed to fetch domain list entries.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -610,7 +610,7 @@ describe("deleteListEntry", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.deleteListEntry("", fake.addListEntry.options);
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -624,7 +624,7 @@ describe("deleteListEntry", () => {
     // @ts-expect-error listName is not provided
     const { success, error } = await domains.deleteListEntry(fake.provision.domain, {});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -652,7 +652,7 @@ describe("deleteListEntry", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -665,7 +665,7 @@ describe("deleteListEntry", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.deleteListEntry(fake.provision.domain, fake.addListEntry.options);
 
-    expect(error).toBe("Failed to delete domain list entry.");
+    expect(error).toStrictEqual({ message: "Failed to delete domain list entry.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -693,7 +693,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.createLoginLink("");
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -722,7 +722,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -735,7 +735,7 @@ describe("createLoginLink", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.createLoginLink(fake.provision.domain);
 
-    expect(error).toBe("Failed to create login link.");
+    expect(error).toStrictEqual({ message: "Failed to create login link.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -765,7 +765,7 @@ describe("setDownstreamAddress", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.setDownstreamAddress("", fake.listDownstreamAddresses.records);
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -780,7 +780,7 @@ describe("setDownstreamAddress", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, records);
 
-    expect(error).toBe("The maximum of records to be set is 10.");
+    expect(error).toStrictEqual({ message: "The maximum of records to be set is 10.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -808,7 +808,7 @@ describe("setDownstreamAddress", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -821,7 +821,7 @@ describe("setDownstreamAddress", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.setDownstreamAddress(fake.provision.domain, fake.listDownstreamAddresses.records);
 
-    expect(error).toBe("Failed to set downstream address.");
+    expect(error).toStrictEqual({ message: "Failed to set downstream address.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -849,7 +849,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses("");
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -862,7 +862,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain, { limit: -1 });
 
-    expect(error).toBe("The limit value is invalid. Only positive values are allowed.");
+    expect(error).toStrictEqual({ message: "The limit value is invalid. Only positive values are allowed.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -875,7 +875,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain, { offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -904,7 +904,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -917,7 +917,7 @@ describe("listDownstreamAddresses", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.listDownstreamAddresses(fake.provision.domain);
 
-    expect(error).toBe("Failed to list downstream addresses.");
+    expect(error).toStrictEqual({ message: "Failed to list downstream addresses.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -947,7 +947,7 @@ describe("updateApiKey", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.updateApiKey("", "new-api-key");
 
-    expect(error).toBe("No domain provided.");
+    expect(error).toStrictEqual({ message: "No domain provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -960,7 +960,7 @@ describe("updateApiKey", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.updateApiKey(fake.provision.domain, "");
 
-    expect(error).toBe("No API key provided.");
+    expect(error).toStrictEqual({ message: "No API key provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -988,7 +988,7 @@ describe("updateApiKey", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -1001,7 +1001,7 @@ describe("updateApiKey", () => {
     const domains = new Domains(mockClient);
     const { success, error } = await domains.updateApiKey(fake.provision.domain, "new-api-key");
 
-    expect(error).toBe("Failed to update domain API key.");
+    expect(error).toStrictEqual({ message: "Failed to update domain API key.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -1032,7 +1032,7 @@ describe("bulkCreateLoginLinks", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkCreateLoginLinks([]);
 
-    expect(error).toBe("No domains provided.");
+    expect(error).toStrictEqual({ message: "No domains provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -1045,7 +1045,7 @@ describe("bulkCreateLoginLinks", () => {
     const domains = new Domains(mockClient);
     const { data, error } = await domains.bulkCreateLoginLinks(new Array(1001).fill("example.com"));
 
-    expect(error).toBe("The maximum number of domains to create login links for is 1000.");
+    expect(error).toStrictEqual({ message: "The maximum number of domains to create login links for is 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -1080,7 +1080,7 @@ describe("bulkCreateLoginLinks", () => {
       "example2.com"
     ]);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -1096,7 +1096,7 @@ describe("bulkCreateLoginLinks", () => {
       "example2.com"
     ]);
 
-    expect(error).toBe("Failed to create login links.");
+    expect(error).toStrictEqual({ message: "Failed to create login links.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

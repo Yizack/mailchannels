@@ -224,7 +224,7 @@ describe("engagement", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.engagement();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -237,7 +237,7 @@ describe("engagement", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.engagement();
 
-    expect(error).toBe("Failed to fetch engagement metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch engagement metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -281,7 +281,7 @@ describe("performance", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.performance();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -294,7 +294,7 @@ describe("performance", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.performance();
 
-    expect(error).toBe("Failed to fetch performance metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch performance metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -338,7 +338,7 @@ describe("recipientBehaviour", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.recipientBehaviour();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -351,7 +351,7 @@ describe("recipientBehaviour", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.recipientBehaviour();
 
-    expect(error).toBe("Failed to fetch recipient behaviour metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch recipient behaviour metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -395,7 +395,7 @@ describe("volume", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.volume();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -408,7 +408,7 @@ describe("volume", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.volume();
 
-    expect(error).toBe("Failed to fetch volume metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch volume metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -452,7 +452,7 @@ describe("usage", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -465,7 +465,7 @@ describe("usage", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.usage();
 
-    expect(error).toBe("Failed to fetch usage metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch usage metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -493,7 +493,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns", { limit: 1001 });
 
-    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -506,7 +506,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns", { offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -535,7 +535,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns");
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -548,7 +548,7 @@ describe("senders", () => {
     const metrics = new Metrics(mockClient);
     const { data, error } = await metrics.senders("campaigns");
 
-    expect(error).toBe("Failed to fetch senders metrics.");
+    expect(error).toStrictEqual({ message: "Failed to fetch senders metrics.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

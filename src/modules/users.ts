@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -28,7 +28,7 @@ export class Users {
     const result: UsersCreateResponse = { data: null, error: null };
 
     if (!email) {
-      result.error = "No email address provided.";
+      result.error = createError("No email address provided.");
       return result;
     }
 
@@ -86,12 +86,12 @@ export class Users {
     const result: ListEntryResponse = { data: null, error: null };
 
     if (!email) {
-      result.error = "No email provided.";
+      result.error = createError("No email provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -133,12 +133,12 @@ export class Users {
     const result: ListEntriesResponse = { data: null, error: null };
 
     if (!email) {
-      result.error = "No email provided.";
+      result.error = createError("No email provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -184,12 +184,12 @@ export class Users {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!email) {
-      result.error = "No email provided.";
+      result.error = createError("No email provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 

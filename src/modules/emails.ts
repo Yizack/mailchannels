@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
@@ -36,18 +36,18 @@ export class Emails {
 
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
-      result.error = "No sender provided. Use the `from` option to specify a sender";
+      result.error = createError("No sender provided. Use the `from` option to specify a sender");
       return result;
     }
 
     const parsedTo = parseArrayRecipients(to);
     if (!parsedTo || !parsedTo.length) {
-      result.error = "No recipients provided. Use the `to` option to specify at least one recipient";
+      result.error = createError("No recipients provided. Use the `to` option to specify at least one recipient");
       return result;
     }
 
     if (!text && !html) {
-      result.error = "No email content provided";
+      result.error = createError("No email content provided");
       return result;
     }
 
@@ -197,7 +197,7 @@ export class Emails {
     const result: EmailsCreateDkimKeyResponse = { data: null, error: null };
 
     if (!options.selector || options.selector.length > 63) {
-      result.error = "Selector must be between 1 and 63 characters.";
+      result.error = createError("Selector must be between 1 and 63 characters.");
     }
 
     if (result.error) return result;
@@ -256,7 +256,7 @@ export class Emails {
     const result: EmailsGetDkimKeysResponse = { data: null, error: null };
 
     if (options?.selector && options.selector.length > 63) {
-      result.error = "Selector must be between 1 and 63 characters.";
+      result.error = createError("Selector must be between 1 and 63 characters.");
       return result;
     }
 
@@ -321,7 +321,7 @@ export class Emails {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!options.selector || options.selector.length > 63) {
-      result.error = "Selector must be between 1 and 63 characters.";
+      result.error = createError("Selector must be between 1 and 63 characters.");
       return result;
     }
 
@@ -369,12 +369,12 @@ export class Emails {
     const result: EmailsRotateDkimKeyResponse = { data: null, error: null };
 
     if (!selector || selector.length > 63) {
-      result.error = "Selector must be between 1 and 63 characters.";
+      result.error = createError("Selector must be between 1 and 63 characters.");
       return result;
     }
 
     if (!options.newKey.selector || options.newKey.selector.length > 63) {
-      result.error = "New key selector must be between 1 and 63 characters.";
+      result.error = createError("New key selector must be between 1 and 63 characters.");
       return result;
     }
 

@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
@@ -23,12 +23,12 @@ export class Webhooks {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!endpoint) {
-      result.error = "No endpoint provided.";
+      result.error = createError("No endpoint provided.");
       return result;
     }
 
     if (endpoint.length > 8000) {
-      result.error = "The endpoint exceeds the maximum length of 8000 characters.";
+      result.error = createError("The endpoint exceeds the maximum length of 8000 characters.");
       return result;
     }
 
@@ -151,7 +151,7 @@ export class Webhooks {
     const result: WebhooksValidateResponse = { data: null, error: null };
 
     if (requestId && requestId.length > 28) {
-      result.error = "The request id should not exceed 28 characters.";
+      result.error = createError("The request id should not exceed 28 characters.");
       return result;
     }
 

@@ -241,7 +241,7 @@ describe("send", () => {
 
     const { success, error } = await emails.send(options);
 
-    expect(error).toBe("No sender provided. Use the `from` option to specify a sender");
+    expect(error).toStrictEqual({ message: "No sender provided. Use the `from` option to specify a sender", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -256,7 +256,7 @@ describe("send", () => {
 
     const { success, error } = await emails.send(options);
 
-    expect(error).toBe("No recipients provided. Use the `to` option to specify at least one recipient");
+    expect(error).toStrictEqual({ message: "No recipients provided. Use the `to` option to specify at least one recipient", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -271,7 +271,7 @@ describe("send", () => {
 
     const { success, error } = await emails.send(options);
 
-    expect(error).toBe("No email content provided");
+    expect(error).toStrictEqual({ message: "No email content provided", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -358,7 +358,7 @@ describe("send", () => {
     const emails = new Emails(mockClient);
     const { success, error } = await emails.send(fake.send.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -371,7 +371,7 @@ describe("send", () => {
     const emails = new Emails(mockClient);
     const { success, error } = await emails.send(fake.send.options);
 
-    expect(error).toBe("Failed to send email.");
+    expect(error).toStrictEqual({ message: "Failed to send email.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -415,7 +415,7 @@ describe("checkDomain", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -428,7 +428,7 @@ describe("checkDomain", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.checkDomain(fake.checkDomain.options);
 
-    expect(error).toBe("Failed to check domain.");
+    expect(error).toStrictEqual({ message: "Failed to check domain.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -470,7 +470,7 @@ describe("createDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.createDkimKey("example.com", { selector: "a".repeat(64) });
 
-    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -481,7 +481,7 @@ describe("createDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.createDkimKey("example.com", { selector: "" });
 
-    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -494,7 +494,7 @@ describe("createDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -507,7 +507,7 @@ describe("createDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.createDkimKey("example.com", fake.createDkimKey.options);
 
-    expect(error).toBe("Failed to create DKIM key.");
+    expect(error).toStrictEqual({ message: "Failed to create DKIM key.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -549,7 +549,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { selector: "a".repeat(64) });
 
-    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -560,7 +560,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { limit: 101 });
 
-    expect(error).toBe("The limit value must be between 1 and 100.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 100.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -571,7 +571,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com", { offset: -10 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -584,7 +584,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com");
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -597,7 +597,7 @@ describe("getDkimKeys", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.getDkimKeys("example.com");
 
-    expect(error).toBe("Failed to fetch DKIM keys.");
+    expect(error).toStrictEqual({ message: "Failed to fetch DKIM keys.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -650,7 +650,7 @@ describe("updateDkimKey", () => {
     });
 
     expect(success).toBe(false);
-    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
     expect(mockClient.patch).not.toHaveBeenCalled();
   });
 
@@ -665,7 +665,7 @@ describe("updateDkimKey", () => {
       status: "retired"
     });
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.patch).toHaveBeenCalled();
   });
@@ -681,7 +681,7 @@ describe("updateDkimKey", () => {
       status: "retired"
     });
 
-    expect(error).toBe("Failed to update DKIM key.");
+    expect(error).toStrictEqual({ message: "Failed to update DKIM key.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.patch).toHaveBeenCalled();
   });
@@ -708,7 +708,7 @@ describe("rotateDkimKey", () => {
     const { data, error } = await emails.rotateDkimKey("example.com", "a".repeat(64), fake.rotateDkimKey.options);
 
     expect(data).toBeNull();
-    expect(error).toBe("Selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "Selector must be between 1 and 63 characters.", statusCode: null });
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -723,7 +723,7 @@ describe("rotateDkimKey", () => {
     });
 
     expect(data).toBeNull();
-    expect(error).toBe("New key selector must be between 1 and 63 characters.");
+    expect(error).toStrictEqual({ message: "New key selector must be between 1 and 63 characters.", statusCode: null });
     expect(mockClient.post).not.toHaveBeenCalled();
   });
 
@@ -751,7 +751,7 @@ describe("rotateDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -764,7 +764,7 @@ describe("rotateDkimKey", () => {
     const emails = new Emails(mockClient);
     const { data, error } = await emails.rotateDkimKey("example.com", "mailchannels_test", fake.rotateDkimKey.options);
 
-    expect(error).toBe("Failed to rotate DKIM key.");
+    expect(error).toStrictEqual({ message: "Failed to rotate DKIM key.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });

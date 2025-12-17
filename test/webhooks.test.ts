@@ -78,7 +78,7 @@ describe("enroll", () => {
     // @ts-expect-error Testing missing endpoint error
     const { success, error } = await webhooks.enroll();
 
-    expect(error).toBe("No endpoint provided.");
+    expect(error).toStrictEqual({ message: "No endpoint provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -91,7 +91,7 @@ describe("enroll", () => {
 
     const { success, error } = await webhooks.enroll(longEndpoint);
 
-    expect(error).toBe("The endpoint exceeds the maximum length of 8000 characters.");
+    expect(error).toStrictEqual({ message: "The endpoint exceeds the maximum length of 8000 characters.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -119,7 +119,7 @@ describe("enroll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -132,7 +132,7 @@ describe("enroll", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.enroll(fake.enroll.endpoint);
 
-    expect(error).toBe("Failed to enroll webhook.");
+    expect(error).toStrictEqual({ message: "Failed to enroll webhook.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -176,7 +176,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.list();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -189,7 +189,7 @@ describe("list", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.list();
 
-    expect(error).toBe("Failed to fetch webhooks.");
+    expect(error).toStrictEqual({ message: "Failed to fetch webhooks.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -234,7 +234,7 @@ describe("delete", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.delete();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -247,7 +247,7 @@ describe("delete", () => {
     const webhooks = new Webhooks(mockClient);
     const { success, error } = await webhooks.delete();
 
-    expect(error).toBe("Failed to delete webhooks.");
+    expect(error).toStrictEqual({ message: "Failed to delete webhooks.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -291,7 +291,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -304,7 +304,7 @@ describe("getSigningKey", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.getSigningKey(fake.signingKey.id);
 
-    expect(error).toBe("Failed to get signing key.");
+    expect(error).toStrictEqual({ message: "Failed to get signing key.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -348,7 +348,7 @@ describe("validate", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.validate("this-request-id-is-way-too-long");
 
-    expect(error).toBe("The request id should not exceed 28 characters.");
+    expect(error).toStrictEqual({ message: "The request id should not exceed 28 characters.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -361,7 +361,7 @@ describe("validate", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.validate();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -374,7 +374,7 @@ describe("validate", () => {
     const webhooks = new Webhooks(mockClient);
     const { data, error } = await webhooks.validate();
 
-    expect(error).toBe("Failed to validate webhooks.");
+    expect(error).toStrictEqual({ message: "Failed to validate webhooks.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
