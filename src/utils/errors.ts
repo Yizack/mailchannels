@@ -40,7 +40,7 @@ export const getStatusError = (
     details = payload.errors.join(", ");
   }
 
-  return createError(details ? `${statusText} ${details}` : statusText, response.status);
+  return createError(details ? `${statusText} ${details}` : statusText, response.status ?? null);
 };
 
 export const getResultError = (result: { error: ErrorResponse | null }, error: unknown, fallback: string) => {
