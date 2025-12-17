@@ -31,6 +31,7 @@ export default defineConfig([
       "import/no-self-import": "error",
       "import/order": "error",
       "import/newline-after-import": ["error", { count: 1 }],
+      "no-unused-vars": "off",
       "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
       "@stylistic/linebreak-style": ["error", process.platform === "win32" ? "windows" : "unix"],
       "@stylistic/quotes": ["error", "double"],
@@ -62,7 +63,16 @@ export default defineConfig([
       "@stylistic/arrow-parens": ["error", "as-needed", { requireForBlockBody: true }],
       "@stylistic/function-call-spacing": ["error", "never"],
       "@typescript-eslint/no-explicit-any": "error",
-      "@typescript-eslint/consistent-type-imports": "error"
+      "@typescript-eslint/consistent-type-imports": "error",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-import-type-side-effects": "error",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        args: "after-used",
+        argsIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+        vars: "all",
+        varsIgnorePattern: "^_"
+      }]
     }
   }
 ]) as FlatConfig[];
