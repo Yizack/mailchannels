@@ -51,7 +51,9 @@ const { data, error } = await mailchannels.lists.addListEntry({
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List Entries <Badge type="info">method</Badge>
 
@@ -88,7 +90,9 @@ const { data, error } = await mailchannels.lists.listEntries('safelist')
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete List Entry <Badge type="info">method</Badge>
 
@@ -130,7 +134,9 @@ const { success, error } = await mailchannels.lists.deleteListEntry({
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Type declarations
 

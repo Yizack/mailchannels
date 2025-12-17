@@ -63,7 +63,9 @@ const { data, error } = await mailchannels.metrics.engagement()
   - `open` `number` <Badge>guaranteed</Badge>
   - `openTrackingDelivered` `number` <Badge>guaranteed</Badge>
   - `startTime` `string` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Performance <Badge type="info">method</Badge>
 
@@ -116,7 +118,9 @@ const { data, error } = await mailchannels.metrics.performance()
   - `endTime` `string` <Badge>guaranteed</Badge>: The end of the time range for retrieving message performance metrics (exclusive).
   - `processed` `number` <Badge>guaranteed</Badge>: Count of messages processed during the specified time range.
   - `startTime` `string` <Badge>guaranteed</Badge>: The beginning of the time range for retrieving message performance metrics (inclusive).
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Recipient Behaviour <Badge type="info">method</Badge>
 
@@ -165,7 +169,9 @@ const { data, error } = await mailchannels.metrics.recipientBehaviour()
   - `startTime` `string` <Badge>guaranteed</Badge>: The beginning of the time range for retrieving recipient behaviour metrics (inclusive).
   - `unsubscribeDelivered` `number` <Badge>guaranteed</Badge>: Count of recipients of delivered messages that include at least one of the unsubscribe link or unsubscribe headers. Since the unsubscribe feature requires exactly one recipient per message, this count also represents the total number of delivered messages.
   - `unsubscribed` `number` <Badge>guaranteed</Badge>: Count of unsubscribed events by recipients.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Volume <Badge type="info">method</Badge>
 
@@ -218,7 +224,9 @@ const { data, error } = await mailchannels.metrics.volume()
   - `endTime` `string` <Badge>guaranteed</Badge>: The end of the time range for retrieving message volume metrics (exclusive).
   - `processed` `number` <Badge>guaranteed</Badge>: Count of messages processed during the specified time range.
   - `startTime` `string` <Badge>guaranteed</Badge>: The beginning of the time range for retrieving message volume metrics (inclusive).
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Usage <Badge type="info">method</Badge>
 
@@ -251,7 +259,9 @@ const { data, error } = await mailchannels.metrics.usage()
   - `endDate` `string` <Badge>guaranteed</Badge>: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge>guaranteed</Badge>: The start date of the current billing period (ISO 8601 format).
   - `total` `number` <Badge>guaranteed</Badge>: The total usage for the current billing period.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Senders <Badge type="info">method</Badge>
 
@@ -302,7 +312,9 @@ const { data, error } = await mailchannels.metrics.senders("campaigns")
     - `processed` `number` <Badge>guaranteed</Badge>
   - `startTime` `string` <Badge>guaranteed</Badge>
   - `total` `number` <Badge>guaranteed</Badge>: The total number of senders in this category that sent messages in the given time range.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Type declarations
 

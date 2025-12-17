@@ -49,7 +49,9 @@ const { data, error } = await mailchannels.subAccounts.create('My Company', 'val
   - `companyName` `string` <Badge>guaranteed</Badge>: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge>guaranteed</Badge>: If the sub-account is enabled.
   - `handle` `string` <Badge>guaranteed</Badge>: The handle for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List <Badge type="info">method</Badge>
 
@@ -90,7 +92,9 @@ const { data, error } = await mailchannels.subAccounts.list()
   - `companyName` `string` <Badge>guaranteed</Badge>: The name of the company associated with the sub-account.
   - `enabled` `boolean` <Badge>guaranteed</Badge>: If the sub-account is enabled.
   - `handle` `string` <Badge>guaranteed</Badge>: The handle for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete <Badge type="info">method</Badge>
 
@@ -124,7 +128,9 @@ const { success, error } = await mailchannels.subAccounts.delete('validhandle123
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Suspend <Badge type="info">method</Badge>
 
@@ -158,7 +164,9 @@ const { success, error } = await mailchannels.subAccounts.suspend('validhandle12
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Activate <Badge type="info">method</Badge>
 
@@ -192,7 +200,9 @@ const { success, error } = await mailchannels.subAccounts.activate('validhandle1
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Create API Key <Badge type="info">method</Badge>
 
@@ -228,7 +238,9 @@ const { data, error } = await mailchannels.subAccounts.createApiKey('validhandle
 - `data` `SubAccountsApiKey | null` <Badge type="warning">nullable</Badge>
   - `id` `number` <Badge>guaranteed</Badge>: The API key ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: API key for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List API Keys <Badge type="info">method</Badge>
 
@@ -269,7 +281,9 @@ const { data, error } = await mailchannels.subAccounts.listApiKeys('validhandle1
 - `data` `SubAccountsApiKey[] | null` <Badge type="warning">nullable</Badge>
   - `id` `number` <Badge>guaranteed</Badge>: The API key ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: API key for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete API Key <Badge type="info">method</Badge>
 
@@ -304,7 +318,9 @@ const { success, error } = await mailchannels.subAccounts.deleteApiKey('validhan
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Create SMTP Password <Badge type="info">method</Badge>
 
@@ -341,7 +357,9 @@ const { data, error } = await mailchannels.subAccounts.createSmtpPassword('valid
   - `enabled` `boolean` <Badge>guaranteed</Badge>: Whether the SMTP password is enabled.
   - `id` `number` <Badge>guaranteed</Badge>: The SMTP password ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: SMTP password for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List SMTP Passwords <Badge type="info">method</Badge>
 
@@ -378,7 +396,9 @@ const { data, error } = await mailchannels.subAccounts.listSmtpPasswords('validh
   - `enabled` `boolean` <Badge>guaranteed</Badge>: Whether the SMTP password is enabled.
   - `id` `number` <Badge>guaranteed</Badge>: The SMTP password ID for the sub-account.
   - `value` `string` <Badge>guaranteed</Badge>: SMTP password for the sub-account.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete SMTP Password <Badge type="info">method</Badge>
 
@@ -413,7 +433,9 @@ const { success, error } = await mailchannels.subAccounts.deleteSmtpPassword('va
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Get Limit <Badge type="info">method</Badge>
 
@@ -451,7 +473,9 @@ const { data, error } = await mailchannels.subAccounts.getLimit('validhandle123'
 
 - `data` `SubAccountsLimit | null` <Badge type="warning">nullable</Badge>
   - `sends` `number` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Set Limit <Badge type="info">method</Badge>
 
@@ -489,7 +513,9 @@ const { success, error } = await mailchannels.subAccounts.setLimit('validhandle1
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete Limit <Badge type="info">method</Badge>
 
@@ -523,7 +549,9 @@ const { success, error } = await mailchannels.subAccounts.deleteLimit('validhand
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Get Usage <Badge type="info">method</Badge>
 
@@ -560,7 +588,9 @@ const { data, error } = await mailchannels.subAccounts.getUsage('validhandle123'
   - `endDate` `string` <Badge type="info">optional</Badge>: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge type="info">optional</Badge>: The start date of the current billing period (ISO 8601 format).
   - `total` `number` <Badge>guaranteed</Badge>: The total usage for the current billing period.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Type declarations
 

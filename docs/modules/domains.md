@@ -80,7 +80,9 @@ const { data, error } = await mailchannels.domains.provision({
     - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
   - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
   - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Bulk Provision <Badge type="info">method</Badge>
 
@@ -181,7 +183,9 @@ const { data, error } = await mailchannels.domains.bulkProvision({
         - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
       - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
       - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List <Badge type="info">method</Badge>
 
@@ -236,7 +240,9 @@ const { data, error } = await mailchannels.domains.list()
     - `aliases` `string[] | null` <Badge type="warning">nullable</Badge>: A list of aliases for the domain. Mail is accepted for these domains and routed to the `downstreamAddresses` defined for the domain.
     - `subscriptionHandle` `string` <Badge>guaranteed</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
   - `total` `number` <Badge>guaranteed</Badge>: The total number of domains that are accessible with the given API key that match the list of domains in the 'domains' parameter. If there is no 'domains' parameter, this field is the total number of domains that are accessible with with this API key. A domain is accessible with a given API key if it is associated with that API key, or if it is not associated with any API key.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete <Badge type="info">method</Badge>
 
@@ -270,7 +276,9 @@ const { success, error } = await mailchannels.domains.delete('example.com')
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Add List Entry <Badge type="info">method</Badge>
 
@@ -316,7 +324,9 @@ const { data, error } = await mailchannels.domains.addListEntry('example.com', {
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List Entries <Badge type="info">method</Badge>
 
@@ -354,7 +364,9 @@ const { data, error } = await mailchannels.domains.listEntries('example.com', 's
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Delete List Entry <Badge type="info">method</Badge>
 
@@ -397,7 +409,9 @@ const { success, error } = await mailchannels.domains.deleteListEntry('example.c
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Create Login Link <Badge type="info">method</Badge>
 
@@ -432,7 +446,9 @@ const { data, error } = await mailchannels.domains.createLoginLink("example.com"
 
 - `data` `object | null` <Badge type="warning">nullable</Badge>
   - `link` `string` <Badge>guaranteed</Badge>: If a user browses to this URL, they will be automatically logged in as a domain admin.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Set Downstream Address <Badge type="info">method</Badge>
 
@@ -490,7 +506,9 @@ const { success, error } = await mailchannels.domains.setDownstreamAddress('exam
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## List Downstream Addresses <Badge type="info">method</Badge>
 
@@ -533,7 +551,9 @@ const { data, error } = await mailchannels.domains.listDownstreamAddresses('exam
   - `priority` `number` <Badge>guaranteed</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
   - `target` `string` <Badge>guaranteed</Badge>: The canonical hostname of the host providing the service, ending in a dot.
   - `weight` `number` <Badge>guaranteed</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Update API Key <Badge type="info">method</Badge>
 
@@ -568,7 +588,9 @@ const { success, error } = await mailchannels.domains.updateApiKey('example.com'
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Bulk Create Login Links <Badge type="info">method</Badge>
 
@@ -617,7 +639,9 @@ const { data, error } = await mailchannels.domains.bulkCreateLoginLinks([
     - `domain` `string` <Badge>guaranteed</Badge>: The domain the request was for.
     - `code` `400 | 401 | 403 | 404 | 500` <Badge>guaranteed</Badge>
     - `comment` `string` <Badge type="info">optional</Badge>
-- `error` `string | null` <Badge type="warning">nullable</Badge>
+- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
+  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
 
 ## Type declarations
 
