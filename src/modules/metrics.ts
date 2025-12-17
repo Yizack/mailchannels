@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, mapBuckets, validateLimit, validateOffset } from "../utils/helpers";
 import type { ErrorResponse } from "../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";

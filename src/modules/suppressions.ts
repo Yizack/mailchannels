@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
