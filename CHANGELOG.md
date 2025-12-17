@@ -1,6 +1,39 @@
 # Changelog
 
 
+## v0.7.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.1...v0.7.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Include `statusCode` in error responses ([#47](https://github.com/Yizack/mailchannels/pull/47))
+
+### 🩹 Fixes
+
+- **types:** Improve type safety discriminated union in `DataResponse` ([80a411e](https://github.com/Yizack/mailchannels/commit/80a411e))
+
+### 💅 Refactors
+
+- Error handling in modules for consistency ([#48](https://github.com/Yizack/mailchannels/pull/48))
+
+### 📖 Documentation
+
+- **modules:** Add error response type declaration ([e377d15](https://github.com/Yizack/mailchannels/commit/e377d15))
+
+### 🏡 Chore
+
+- Update eslint config ([1bb32c5](https://github.com/Yizack/mailchannels/commit/1bb32c5))
+- **docs:** Lint ([e65fba8](https://github.com/Yizack/mailchannels/commit/e65fba8))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Include `statusCode` in error responses ([#47](https://github.com/Yizack/mailchannels/pull/47))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.6.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.0...v0.6.1)
