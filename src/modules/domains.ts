@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
@@ -79,12 +79,12 @@ export class Domains {
     const result: DomainsBulkProvisionResponse = { data: null, error: null };
 
     if (!domains || !domains.length) {
-      result.error = "No domains provided.";
+      result.error = createError("No domains provided.");
       return result;
     }
 
     if (domains.length > 1000) {
-      result.error = "The maximum number of domains to be provisioned is 1000.";
+      result.error = createError("The maximum number of domains to be provisioned is 1000.");
       return result;
     }
 
@@ -163,7 +163,7 @@ export class Domains {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
@@ -205,12 +205,12 @@ export class Domains {
     const result: ListEntryResponse = { data: null, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -251,12 +251,12 @@ export class Domains {
     const result: ListEntriesResponse = { data: null, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -301,12 +301,12 @@ export class Domains {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
     if (!listName) {
-      result.error = "No list name provided.";
+      result.error = createError("No list name provided.");
       return result;
     }
 
@@ -343,7 +343,7 @@ export class Domains {
     const result: DomainsCreateLoginLinkResponse = { data: null, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
@@ -389,12 +389,12 @@ export class Domains {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
     if (records.length > 10) {
-      result.error = "The maximum of records to be set is 10.";
+      result.error = createError("The maximum of records to be set is 10.");
       return result;
     }
 
@@ -432,7 +432,7 @@ export class Domains {
     const result: DomainsListDownstreamAddressesResponse = { data: null, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
@@ -474,12 +474,12 @@ export class Domains {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!domain) {
-      result.error = "No domain provided.";
+      result.error = createError("No domain provided.");
       return result;
     }
 
     if (!key) {
-      result.error = "No API key provided.";
+      result.error = createError("No API key provided.");
       return result;
     }
 
@@ -516,12 +516,12 @@ export class Domains {
     const result: DomainsBulkCreateLoginLinksResponse = { data: null, error: null };
 
     if (!domains || !domains.length) {
-      result.error = "No domains provided.";
+      result.error = createError("No domains provided.");
       return result;
     }
 
     if (domains.length > 1000) {
-      result.error = "The maximum number of domains to create login links for is 1000.";
+      result.error = createError("The maximum number of domains to create login links for is 1000.");
       return result;
     }
 

@@ -1,12 +1,17 @@
+export interface ErrorResponse {
+  message: string;
+  statusCode: number | null;
+}
+
 export interface SuccessResponse {
   /**
    * Whether the operation was successful.
    */
   success: boolean;
   /**
-   * Error message if the operation failed.
+   * Error information if the operation failed.
    */
-  error: string | null;
+  error: ErrorResponse | null;
 }
 
 export interface DataResponse<T> {
@@ -15,7 +20,7 @@ export interface DataResponse<T> {
    */
   data: T | null;
   /**
-   * Error message if the operation failed.
+   * Error information if the operation failed.
    */
-  error: string | null;
+  error: ErrorResponse | null;
 }

@@ -45,7 +45,7 @@ describe("addListEntry", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await lists.addListEntry({});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -74,7 +74,7 @@ describe("addListEntry", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.addListEntry(fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -87,7 +87,7 @@ describe("addListEntry", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.addListEntry(fake.addListEntry.options);
 
-    expect(error).toBe("Failed to add list entry.");
+    expect(error).toStrictEqual({ message: "Failed to add list entry.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -120,7 +120,7 @@ describe("listEntries", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await lists.listEntries("");
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -149,7 +149,7 @@ describe("listEntries", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -162,7 +162,7 @@ describe("listEntries", () => {
     const lists = new Lists(mockClient);
     const { data, error } = await lists.listEntries(fake.addListEntry.options.listName);
 
-    expect(error).toBe("Failed to fetch list entries.");
+    expect(error).toStrictEqual({ message: "Failed to fetch list entries.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -193,7 +193,7 @@ describe("deleteListEntry", () => {
     // @ts-expect-error listName is not provided
     const { success, error } = await lists.deleteListEntry({});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -221,7 +221,7 @@ describe("deleteListEntry", () => {
     const lists = new Lists(mockClient);
     const { success, error } = await lists.deleteListEntry(fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -234,7 +234,7 @@ describe("deleteListEntry", () => {
     const lists = new Lists(mockClient);
     const { success, error } = await lists.deleteListEntry(fake.addListEntry.options);
 
-    expect(error).toBe("Failed to delete list entry.");
+    expect(error).toStrictEqual({ message: "Failed to delete list entry.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

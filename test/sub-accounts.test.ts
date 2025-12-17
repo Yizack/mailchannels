@@ -130,7 +130,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.invalidCompanyName, fake.create.validHandle);
 
-    expect(error).toBe("Invalid company name. Company name must be between 3 and 128 characters.");
+    expect(error).toStrictEqual({ message: "Invalid company name. Company name must be between 3 and 128 characters.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -143,7 +143,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.validCompanyName, fake.create.invalidHandle);
 
-    expect(error).toBe("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
+    expect(error).toStrictEqual({ message: "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -185,7 +185,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -198,7 +198,7 @@ describe("create", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.create(fake.create.validHandle);
 
-    expect(error).toBe("Failed to create sub-account.");
+    expect(error).toStrictEqual({ message: "Failed to create sub-account.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -239,7 +239,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list({ limit: 1001 });
 
-    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -252,7 +252,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list({ offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -281,7 +281,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -294,7 +294,7 @@ describe("list", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.list();
 
-    expect(error).toBe("Failed to fetch sub-accounts.");
+    expect(error).toStrictEqual({ message: "Failed to fetch sub-accounts.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -324,7 +324,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -352,7 +352,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -365,7 +365,7 @@ describe("delete", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.delete(fake.create.validHandle);
 
-    expect(error).toBe("Failed to delete sub-account.");
+    expect(error).toStrictEqual({ message: "Failed to delete sub-account.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -395,7 +395,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -423,7 +423,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -436,7 +436,7 @@ describe("suspend", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.suspend(fake.create.validHandle);
 
-    expect(error).toBe("Failed to suspend sub-account.");
+    expect(error).toStrictEqual({ message: "Failed to suspend sub-account.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -466,7 +466,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -494,7 +494,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -507,7 +507,7 @@ describe("activate", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.activate(fake.create.validHandle);
 
-    expect(error).toBe("Failed to activate sub-account.");
+    expect(error).toStrictEqual({ message: "Failed to activate sub-account.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -534,7 +534,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -563,7 +563,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -576,7 +576,7 @@ describe("createApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createApiKey(fake.create.validHandle);
 
-    expect(error).toBe("Failed to create sub-account API key.");
+    expect(error).toStrictEqual({ message: "Failed to create sub-account API key.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -603,7 +603,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -616,7 +616,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle, { limit: 1001 });
 
-    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -629,7 +629,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle, { offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -658,7 +658,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -671,7 +671,7 @@ describe("listApiKeys", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listApiKeys(fake.create.validHandle);
 
-    expect(error).toBe("Failed to fetch sub-account API keys.");
+    expect(error).toStrictEqual({ message: "Failed to fetch sub-account API keys.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -701,7 +701,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey("", 1);
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -729,7 +729,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -742,7 +742,7 @@ describe("deleteApiKey", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteApiKey(fake.create.validHandle, 1);
 
-    expect(error).toBe("Failed to delete sub-account API key.");
+    expect(error).toStrictEqual({ message: "Failed to delete sub-account API key.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -769,7 +769,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -798,7 +798,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -811,7 +811,7 @@ describe("createSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.createSmtpPassword(fake.create.validHandle);
 
-    expect(error).toBe("Failed to create sub-account SMTP password.");
+    expect(error).toStrictEqual({ message: "Failed to create sub-account SMTP password.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -838,7 +838,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listSmtpPasswords("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -867,7 +867,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -880,7 +880,7 @@ describe("listSmtpPasswords", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.listSmtpPasswords(fake.create.validHandle);
 
-    expect(error).toBe("Failed to fetch sub-account SMTP passwords.");
+    expect(error).toStrictEqual({ message: "Failed to fetch sub-account SMTP passwords.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -910,7 +910,7 @@ describe("deleteSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteSmtpPassword("", 1);
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -938,7 +938,7 @@ describe("deleteSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -951,7 +951,7 @@ describe("deleteSmtpPassword", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteSmtpPassword(fake.create.validHandle, 1);
 
-    expect(error).toBe("Failed to delete sub-account SMTP password.");
+    expect(error).toStrictEqual({ message: "Failed to delete sub-account SMTP password.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -979,7 +979,7 @@ describe("getLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getLimit("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -1006,7 +1006,7 @@ describe("getLimit", () => {
 
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -1018,7 +1018,7 @@ describe("getLimit", () => {
 
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getLimit(fake.create.validHandle);
-    expect(error).toBe("Failed to fetch sub-account limit.");
+    expect(error).toStrictEqual({ message: "Failed to fetch sub-account limit.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -1048,7 +1048,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit("", { sends: 1 });
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).not.toHaveBeenCalled();
   });
@@ -1076,7 +1076,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -1089,7 +1089,7 @@ describe("setLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.setLimit(fake.create.validHandle, { sends: 1 });
 
-    expect(error).toBe("Failed to set sub-account limit.");
+    expect(error).toStrictEqual({ message: "Failed to set sub-account limit.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -1119,7 +1119,7 @@ describe("deleteLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteLimit("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -1147,7 +1147,7 @@ describe("deleteLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -1160,7 +1160,7 @@ describe("deleteLimit", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { success, error } = await subAccounts.deleteLimit(fake.create.validHandle);
 
-    expect(error).toBe("Failed to delete sub-account limit.");
+    expect(error).toStrictEqual({ message: "Failed to delete sub-account limit.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -1188,7 +1188,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage("");
 
-    expect(error).toBe("No handle provided.");
+    expect(error).toStrictEqual({ message: "No handle provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -1217,7 +1217,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -1230,7 +1230,7 @@ describe("getUsage", () => {
     const subAccounts = new SubAccounts(mockClient);
     const { data, error } = await subAccounts.getUsage(fake.create.validHandle);
 
-    expect(error).toBe("Failed to fetch sub-account usage.");
+    expect(error).toStrictEqual({ message: "Failed to fetch sub-account usage.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });

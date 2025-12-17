@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
@@ -30,14 +30,14 @@ export class SubAccounts {
 
     const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
     if (!isValidCompany) {
-      result.error = "Invalid company name. Company name must be between 3 and 128 characters.";
+      result.error = createError("Invalid company name. Company name must be between 3 and 128 characters.");
       return result;
     }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        result.error = "Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.";
+        result.error = createError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
         return result;
       }
     }
@@ -120,7 +120,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -153,7 +153,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -188,7 +188,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -224,7 +224,7 @@ export class SubAccounts {
     const result: SubAccountsCreateApiKeyResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -265,7 +265,7 @@ export class SubAccounts {
     const result: SubAccountsListApiKeyResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -310,7 +310,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -345,7 +345,7 @@ export class SubAccounts {
     const result: SubAccountsCreateSmtpPasswordResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -386,7 +386,7 @@ export class SubAccounts {
     const result: SubAccountsListSmtpPasswordResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -426,7 +426,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -461,7 +461,7 @@ export class SubAccounts {
     const result: SubAccountsLimitResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -496,7 +496,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -533,7 +533,7 @@ export class SubAccounts {
     const result: SuccessResponse = { success: false, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 
@@ -568,7 +568,7 @@ export class SubAccounts {
     const result: SubAccountsUsageResponse = { data: null, error: null };
 
     if (!handle) {
-      result.error = "No handle provided.";
+      result.error = createError("No handle provided.");
       return result;
     }
 

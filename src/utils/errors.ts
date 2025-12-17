@@ -1,4 +1,5 @@
 import type { FetchResponse } from "ofetch";
+import type { ErrorResponse } from "../types/responses";
 
 export const enum ErrorCode {
   BadRequest = 400,
@@ -11,6 +12,13 @@ export const enum ErrorCode {
 }
 
 type MailChannelsErrorResponse = { message?: string, errors?: string[] } | string;
+
+export const createError = (message: string, statusCode: number | null = null): ErrorResponse => {
+  return {
+    message,
+    statusCode
+  };
+};
 
 export const getStatusError = (
   response: FetchResponse<MailChannelsErrorResponse>,
@@ -32,10 +40,10 @@ export const getStatusError = (
     details = payload.errors.join(", ");
   }
 
-  return details ? `${statusText} ${details}` : statusText;
+  return createError(details ? `${statusText} ${details}` : statusText, response.status ?? null);
 };
 
-export function getResultError (result: { error: string | null }, error: unknown, fallback: string) {
+export const getResultError = (result: { error: ErrorResponse | null }, error: unknown, fallback: string) => {
   if (result.error) return result.error;
-  return error instanceof Error ? error.message : fallback;
-}
+  return createError(error instanceof Error ? error.message : fallback);
+};

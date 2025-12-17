@@ -68,7 +68,7 @@ describe("create", () => {
     const { data, error } = await users.create("");
 
     expect(data).toBeNull();
-    expect(error).toBe("No email address provided.");
+    expect(error).toStrictEqual({ message: "No email address provided.", statusCode: null });
     expect(mockClient.put).not.toHaveBeenCalled();
   });
 
@@ -96,7 +96,7 @@ describe("create", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.create(fake.create.email);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -109,7 +109,7 @@ describe("create", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.create(fake.create.email);
 
-    expect(error).toBe("Failed to create user.");
+    expect(error).toStrictEqual({ message: "Failed to create user.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.put).toHaveBeenCalled();
   });
@@ -141,7 +141,7 @@ describe("addListEntry", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.addListEntry("", fake.addListEntry.options);
 
-    expect(error).toBe("No email provided.");
+    expect(error).toStrictEqual({ message: "No email provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -155,7 +155,7 @@ describe("addListEntry", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await users.addListEntry(fake.create.email, {});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).not.toHaveBeenCalled();
   });
@@ -184,7 +184,7 @@ describe("addListEntry", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -197,7 +197,7 @@ describe("addListEntry", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.addListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBe("Failed to add user list entry.");
+    expect(error).toStrictEqual({ message: "Failed to add user list entry.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -229,7 +229,7 @@ describe("listEntries", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.listEntries("", fake.addListEntry.options.listName);
 
-    expect(error).toBe("No email provided.");
+    expect(error).toStrictEqual({ message: "No email provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -243,7 +243,7 @@ describe("listEntries", () => {
     // @ts-expect-error listName is not provided
     const { data, error } = await users.listEntries(fake.create.email, "");
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -272,7 +272,7 @@ describe("listEntries", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -285,7 +285,7 @@ describe("listEntries", () => {
     const users = new Users(mockClient);
     const { data, error } = await users.listEntries(fake.create.email, fake.addListEntry.options.listName);
 
-    expect(error).toBe("Failed to fetch user list entries.");
+    expect(error).toStrictEqual({ message: "Failed to fetch user list entries.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -315,7 +315,7 @@ describe("deleteListEntry", () => {
     const users = new Users(mockClient);
     const { success, error } = await users.deleteListEntry("", fake.addListEntry.options);
 
-    expect(error).toBe("No email provided.");
+    expect(error).toStrictEqual({ message: "No email provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -329,7 +329,7 @@ describe("deleteListEntry", () => {
     // @ts-expect-error listName is not provided
     const { success, error } = await users.deleteListEntry(fake.create.email, {});
 
-    expect(error).toBe("No list name provided.");
+    expect(error).toStrictEqual({ message: "No list name provided.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).not.toHaveBeenCalled();
   });
@@ -357,7 +357,7 @@ describe("deleteListEntry", () => {
     const users = new Users(mockClient);
     const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -370,7 +370,7 @@ describe("deleteListEntry", () => {
     const users = new Users(mockClient);
     const { success, error } = await users.deleteListEntry(fake.create.email, fake.addListEntry.options);
 
-    expect(error).toBe("Failed to delete user list entry.");
+    expect(error).toStrictEqual({ message: "Failed to delete user list entry.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });

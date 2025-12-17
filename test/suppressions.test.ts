@@ -96,7 +96,7 @@ describe("create", () => {
     const suppressions = new Suppressions(mockClient);
     const { success, error } = await suppressions.create(fake.create.options);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -109,7 +109,7 @@ describe("create", () => {
     const suppressions = new Suppressions(mockClient);
     const { success, error } = await suppressions.create(fake.create.options);
 
-    expect(error).toBe("Failed to create suppression entries.");
+    expect(error).toStrictEqual({ message: "Failed to create suppression entries.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.post).toHaveBeenCalled();
   });
@@ -154,7 +154,7 @@ describe("delete", () => {
     const suppressions = new Suppressions(mockClient);
     const { success, error } = await suppressions.delete(fake.delete.recipient, fake.delete.source);
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -167,7 +167,7 @@ describe("delete", () => {
     const suppressions = new Suppressions(mockClient);
     const { success, error } = await suppressions.delete(fake.delete.recipient, fake.delete.source);
 
-    expect(error).toBe("Failed to delete suppression entry.");
+    expect(error).toStrictEqual({ message: "Failed to delete suppression entry.", statusCode: null });
     expect(success).toBe(false);
     expect(mockClient.delete).toHaveBeenCalled();
   });
@@ -195,7 +195,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list({ ...fake.list.options, limit: 0 });
 
-    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -208,7 +208,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list({ ...fake.list.options, limit: 1001 });
 
-    expect(error).toBe("The limit value must be between 1 and 1000.");
+    expect(error).toStrictEqual({ message: "The limit value must be between 1 and 1000.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -221,7 +221,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list({ ...fake.list.options, offset: -1 });
 
-    expect(error).toBe("Offset must be greater than or equal to 0.");
+    expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });
@@ -250,7 +250,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list();
 
-    expect(error).toBe("failure");
+    expect(error).toStrictEqual({ message: "failure", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
@@ -263,7 +263,7 @@ describe("list", () => {
     const suppressions = new Suppressions(mockClient);
     const { data, error } = await suppressions.list();
 
-    expect(error).toBe("Failed to fetch suppression entries.");
+    expect(error).toStrictEqual({ message: "Failed to fetch suppression entries.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).toHaveBeenCalled();
   });
