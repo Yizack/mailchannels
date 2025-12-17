@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
-import type { SuccessResponse } from "../types/responses";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
 import type { SubAccountsListOptions, SubAccountsListResponse } from "../types/sub-accounts/list";
@@ -26,19 +26,19 @@ export class SubAccounts {
    * ```
    */
   async create (companyName: string, handle?: string): Promise<SubAccountsCreateResponse> {
-    const result: SubAccountsCreateResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const isValidCompany = SubAccounts.COMPANY_PATTERN.test(companyName);
     if (!isValidCompany) {
-      result.error = createError("Invalid company name. Company name must be between 3 and 128 characters.");
-      return result;
+      error = createError("Invalid company name. Company name must be between 3 and 128 characters.");
+      return { data: null, error };
     }
 
     if (handle) {
       const isValidHandle = SubAccounts.HANDLE_PATTERN.test(handle);
       if (!isValidHandle) {
-        result.error = createError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
-        return result;
+        error = createError("Invalid handle. Sub-account handle must be between 3 and 128 characters and contain only lowercase letters and numbers.");
+        return { data: null, error };
       }
     }
 
@@ -48,25 +48,25 @@ export class SubAccounts {
         handle
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to create sub-accounts.",
           [ErrorCode.Conflict]: `Sub-account with handle '${handle}' already exists.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to create sub-account.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create sub-account.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       companyName: response.company_name,
       enabled: response.enabled,
       handle: response.handle
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -79,33 +79,33 @@ export class SubAccounts {
    * ```
    */
   async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
-    const result: SubAccountsListResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
-    result.error =
+    error =
       validateLimit(options?.limit, 1000) ||
       validateOffset(options?.offset);
 
-    if (result.error) return result;
+    if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<SubAccountsListApiResponse>("/tx/v1/sub-account", {
       query: options,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch sub-accounts.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch sub-accounts.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.map(account => ({
+    const data = clean(response.map(account => ({
       companyName: account.company_name,
       enabled: account.enabled,
       handle: account.handle
     })));
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -117,27 +117,22 @@ export class SubAccounts {
    * ```
    */
   async delete (handle: string): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (!response.ok) {
-          result.error = getStatusError(response);
-          return;
-        }
-        result.success = true;
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete sub-account.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete sub-account.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -150,29 +145,24 @@ export class SubAccounts {
    * ```
    */
   async suspend (handle: string): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to suspend sub-account.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to suspend sub-account.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -185,30 +175,25 @@ export class SubAccounts {
    * ```
    */
   async activate (handle: string): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The parent account does not have permission to activate the sub-account.",
           [ErrorCode.NotFound]: `The specified sub-account '${handle}' does not exist.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to activate sub-account.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to activate sub-account.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -221,34 +206,34 @@ export class SubAccounts {
    * ```
    */
   async createApiKey (handle: string): Promise<SubAccountsCreateApiKeyResponse> {
-    const result: SubAccountsCreateApiKeyResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<{ id: number, key: string }>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create API keys for this sub-account.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of API keys you can create for this sub-account."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to create sub-account API key.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create sub-account API key.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       id: response.id,
       value: response.key
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -262,38 +247,38 @@ export class SubAccounts {
    * ```
    */
   async listApiKeys (handle: string, options?: SubAccountsListApiKeyOptions): Promise<SubAccountsListApiKeyResponse> {
-    const result: SubAccountsListApiKeyResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
-    result.error =
+    error =
       validateLimit(options?.limit, 1000) ||
       validateOffset(options?.offset);
 
-    if (result.error) return result;
+    if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch sub-account API keys.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch sub-account API keys.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.map(key => ({
+    const data = clean(response.map(key => ({
       id: key.id,
       value: key.key
     })));
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -307,29 +292,24 @@ export class SubAccounts {
    * ```
    */
   async deleteApiKey (handle: string, id: number): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid API key ID."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete sub-account API key.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete sub-account API key.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -342,35 +322,35 @@ export class SubAccounts {
    * ```
    */
   async createSmtpPassword (handle: string): Promise<SubAccountsCreateSmtpPasswordResponse> {
-    const result: SubAccountsCreateSmtpPasswordResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<SubAccountsCreateSmtpPasswordApiResponse>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "You can't create SMTP passwords for this sub-account.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`,
           [ErrorCode.UnprocessableEntity]: "You have reached the limit of SMTP passwords you can create for this sub-account."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to create sub-account SMTP password.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create sub-account SMTP password.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       enabled: response.enabled,
       id: response.id,
       value: response.smtp_password
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -383,33 +363,33 @@ export class SubAccounts {
    * ```
    */
   async listSmtpPasswords (handle: string): Promise<SubAccountsListSmtpPasswordResponse> {
-    const result: SubAccountsListSmtpPasswordResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<SubAccountsCreateSmtpPasswordApiResponse[]>(`/tx/v1/sub-account/${handle}/smtp-password`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch sub-account SMTP passwords.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch sub-account SMTP passwords.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.map(password => ({
+    const data = clean(response.map(password => ({
       enabled: password.enabled,
       id: password.id,
       value: password.smtp_password
     })));
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -423,29 +403,24 @@ export class SubAccounts {
    * ```
    */
   async deleteSmtpPassword (handle: string, id: number): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Missing or invalid SMTP password ID."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete sub-account SMTP password.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete sub-account SMTP password.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -458,28 +433,29 @@ export class SubAccounts {
    * ```
    */
   async getLimit (handle: string): Promise<SubAccountsLimitResponse> {
-    const result: SubAccountsLimitResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<SubAccountsLimit>(`/tx/v1/sub-account/${handle}/limit`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch sub-account limit.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch sub-account limit.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response);
-    return result;
+    const data = clean(response);
+
+    return { data, error: null };
   }
 
   /**
@@ -493,31 +469,26 @@ export class SubAccounts {
    * ```
    */
   async setLimit (handle: string, limit: SubAccountsLimit): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${handle}/limit`, {
       body: limit,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to set sub-account limit.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to set sub-account limit.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -530,29 +501,24 @@ export class SubAccounts {
    * ```
    */
   async deleteLimit (handle: string): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/limit`, {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete sub-account limit.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete sub-account limit.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -565,32 +531,32 @@ export class SubAccounts {
    * ```
    */
   async getUsage (handle: string): Promise<SubAccountsUsageResponse> {
-    const result: SubAccountsUsageResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!handle) {
-      result.error = createError("No handle provided.");
-      return result;
+      error = createError("No handle provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<SubAccountsUsageApiResponse>(`/tx/v1/sub-account/${handle}/usage`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: `Sub-account with handle '${handle}' not found.`
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch sub-account usage.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch sub-account usage.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
     });
 
-    return result;
+    return { data, error: null };
   }
 }

@@ -299,7 +299,7 @@ describe("list", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: 500 } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -342,9 +342,7 @@ describe("list", () => {
 describe("delete", () => {
   it("should successfully delete a provisioned domain", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
@@ -370,8 +368,8 @@ describe("delete", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
@@ -589,9 +587,7 @@ describe("listEntries", () => {
 describe("deleteListEntry", () => {
   it("should successfully delete a list entry", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
@@ -631,8 +627,8 @@ describe("deleteListEntry", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.Forbidden } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
@@ -744,9 +740,7 @@ describe("createLoginLink", () => {
 describe("setDownstreamAddress", () => {
   it("should successfully set downstream address", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      put: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
@@ -787,8 +781,8 @@ describe("setDownstreamAddress", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      put: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
@@ -883,7 +877,7 @@ describe("listDownstreamAddresses", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -926,9 +920,7 @@ describe("listDownstreamAddresses", () => {
 describe("updateApiKey", () => {
   it("should successfully update an api key", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      put: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const domains = new Domains(mockClient);
@@ -967,8 +959,8 @@ describe("updateApiKey", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false, status: ErrorCode.Forbidden } });
+      put: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 

@@ -39,7 +39,7 @@ const fake = {
 describe("create", () => {
   it("should create a recipient user", async () => {
     const mockClient = {
-      put: vi.fn().mockResolvedValue(fake.create.apiResponse)
+      put: vi.fn().mockResolvedValueOnce(fake.create.apiResponse)
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
@@ -294,9 +294,7 @@ describe("listEntries", () => {
 describe("deleteListEntry", () => {
   it("should successfully delete a list entry", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const users = new Users(mockClient);
@@ -336,8 +334,8 @@ describe("deleteListEntry", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.Forbidden } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 

@@ -59,9 +59,7 @@ const fake = {
 describe("enroll", () => {
   it("should successfully enroll a webhook endpoint", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
@@ -98,8 +96,8 @@ describe("enroll", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.Conflict } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Conflict } });
       })
     } as unknown as MailChannelsClient;
 
@@ -141,7 +139,7 @@ describe("enroll", () => {
 describe("list", () => {
   it("should successfully list all webhook endpoints", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.list.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.list.apiResponse)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
@@ -198,9 +196,7 @@ describe("list", () => {
 describe("delete", () => {
   it("should successfully delete all webhook endpoints", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
@@ -213,8 +209,8 @@ describe("delete", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: 500 } });
       })
     } as unknown as MailChannelsClient;
 
@@ -256,7 +252,7 @@ describe("delete", () => {
 describe("getSigningKey", () => {
   it("should successfully retrieve a signing key", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.signingKey.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.signingKey.apiResponse)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
@@ -313,7 +309,7 @@ describe("getSigningKey", () => {
 describe("validate", () => {
   it("should successfully validate webhook endpoints", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.validateResponse.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.validateResponse.apiResponse)
     } as unknown as MailChannelsClient;
 
     const webhooks = new Webhooks(mockClient);
@@ -327,7 +323,7 @@ describe("validate", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;

@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
-import type { SuccessResponse } from "../types/responses";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 
@@ -21,33 +21,34 @@ export class Lists {
    * ```
    */
   async addListEntry (options: ListEntryOptions): Promise<ListEntryResponse> {
+    let error: ErrorResponse | null = null;
+
     const { listName, item } = options;
 
-    const result: ListEntryResponse = { data: null, error: null };
-
     if (!listName) {
-      result.error = createError("No list name provided.");
-      return result;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to add list entry.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to add list entry.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
     });
-    return result;
+
+    return { data, error: null };
   }
 
   /**
@@ -60,30 +61,31 @@ export class Lists {
    * ```
    */
   async listEntries (listName: ListNames): Promise<ListEntriesResponse> {
-    const result: ListEntriesResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!listName) {
-      result.error = createError("No list name provided.");
-      return result;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/lists/${listName}`, {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch list entries.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch list entries.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.map(({ action, item, item_type }) => ({
+    const data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
     })));
-    return result;
+
+    return { data, error: null };
   }
 
   /**
@@ -101,27 +103,22 @@ export class Lists {
   async deleteListEntry (options: ListEntryOptions): Promise<SuccessResponse> {
     const { listName, item } = options;
 
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!listName) {
-      result.error = createError("No list name provided.");
-      return result;
+      error = createError("No list name provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete(`/inbound/v1/lists/${listName}`, {
       query: { item },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete list entry.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete list entry.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 }
