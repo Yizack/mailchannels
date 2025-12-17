@@ -2,7 +2,7 @@ import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
-import type { SuccessResponse } from "../types/responses";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
@@ -30,25 +30,25 @@ export class Emails {
    * ```
    */
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
-    const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
+    let error: ErrorResponse | null = null;
 
-    const result: EmailsSendResponse = { success: false, data: null, error: null };
+    const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
 
     const parsedFrom = parseRecipient(from);
     if (!parsedFrom || !parsedFrom.email) {
-      result.error = createError("No sender provided. Use the `from` option to specify a sender");
-      return result;
+      error = createError("No sender provided. Use the `from` option to specify a sender");
+      return { success: false, data: null, error };
     }
 
     const parsedTo = parseArrayRecipients(to);
     if (!parsedTo || !parsedTo.length) {
-      result.error = createError("No recipients provided. Use the `to` option to specify at least one recipient");
-      return result;
+      error = createError("No recipients provided. Use the `to` option to specify at least one recipient");
+      return { success: false, data: null, error };
     }
 
     if (!text && !html) {
-      result.error = createError("No email content provided");
-      return result;
+      error = createError("No email content provided");
+      return { success: false, data: null, error };
     }
 
     const content: EmailsSendContent[] = [];
@@ -85,25 +85,21 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsSendApiResponse>("/tx/v1/send", {
       query: { "dry-run": dryRun },
       body: payload,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature.",
           [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to send email.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to send email.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { success: false, data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       rendered: response.data,
       requestId: response.request_id,
       results: response.results?.map(result => ({
@@ -114,7 +110,7 @@ export class Emails {
       }))
     });
 
-    return result;
+    return { success: !!data, data, error: null };
   }
 
   /**
@@ -135,10 +131,10 @@ export class Emails {
    * ```
    */
   async checkDomain (options: EmailsCheckDomainOptions): Promise<EmailsCheckDomainResponse> {
+    let error: ErrorResponse | null = null;
+
     const { dkim, domain, senderId } = options;
     const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
-
-    const result: EmailsCheckDomainResponse = { data: null, error: null };
 
     const payload: EmailsCheckDomainPayload = {
       dkim_settings: dkimOptions?.map(({ domain, privateKey, selector }) => ({
@@ -153,19 +149,19 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to check domain.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to check domain.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       dkim: response.check_results.dkim.map(dkimResults => ({
         domain: dkimResults.dkim_domain,
         keyStatus: dkimResults.dkim_key_status,
@@ -178,7 +174,8 @@ export class Emails {
       spf: response.check_results.spf,
       references: response.references
     });
-    return result;
+
+    return { data, error: null };
   }
 
   /**
@@ -194,13 +191,12 @@ export class Emails {
    * ```
    */
   async createDkimKey (domain: string, options: EmailsCreateDkimKeyOptions): Promise<EmailsCreateDkimKeyResponse> {
-    const result: EmailsCreateDkimKeyResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!options.selector || options.selector.length > 63) {
-      result.error = createError("Selector must be between 1 and 63 characters.");
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
-
-    if (result.error) return result;
 
     const payload: EmailsCreateDkimKeyPayload = {
       algorithm: options.algorithm,
@@ -211,19 +207,19 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCreateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys`, {
       body: payload,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to create DKIM key.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create DKIM key.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       algorithm: response.algorithm,
       createdAt: response.created_at,
       dnsRecords: response.dkim_dns_records,
@@ -237,7 +233,7 @@ export class Emails {
       statusModifiedAt: response.status_modified_at
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -253,18 +249,18 @@ export class Emails {
    * ```
    */
   async getDkimKeys (domain: string, options?: EmailsGetDkimKeysOptions): Promise<EmailsGetDkimKeysResponse> {
-    const result: EmailsGetDkimKeysResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (options?.selector && options.selector.length > 63) {
-      result.error = createError("Selector must be between 1 and 63 characters.");
-      return result;
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
 
-    result.error =
+    error =
       validateLimit(options?.limit, 100) ||
       validateOffset(options?.offset);
 
-    if (result.error) return result;
+    if (error) return { data: null, error };
 
     const payload: EmailsGetDkimKeysPayload = {
       selector: options?.selector,
@@ -277,18 +273,18 @@ export class Emails {
     const response = await this.mailchannels.get<{ keys: EmailsCreateDkimKeyApiResponse[] }>(`/tx/v1/domains/${domain}/dkim-keys`, {
       query: payload,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch DKIM keys.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch DKIM keys.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.keys.map(key => ({
+    const data = clean(response.keys.map(key => ({
       algorithm: key.algorithm,
       createdAt: key.created_at,
       dnsRecords: key.dkim_dns_records,
@@ -302,7 +298,7 @@ export class Emails {
       statusModifiedAt: key.status_modified_at
     })));
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -318,11 +314,11 @@ export class Emails {
    * })
    */
   async updateDkimKey (domain: string, options: EmailsUpdateDkimKeyOptions): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!options.selector || options.selector.length > 63) {
-      result.error = createError("Selector must be between 1 and 63 characters.");
-      return result;
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { success: false, error };
     }
 
     const payload = {
@@ -331,22 +327,17 @@ export class Emails {
 
     await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
       body: payload,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to update DKIM key.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to update DKIM key.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -366,16 +357,16 @@ export class Emails {
    * ```
    */
   async rotateDkimKey (domain: string, selector: string, options: EmailsRotateDkimKeyOptions): Promise<EmailsRotateDkimKeyResponse> {
-    const result: EmailsRotateDkimKeyResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!selector || selector.length > 63) {
-      result.error = createError("Selector must be between 1 and 63 characters.");
-      return result;
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
 
     if (!options.newKey.selector || options.newKey.selector.length > 63) {
-      result.error = createError("New key selector must be between 1 and 63 characters.");
-      return result;
+      error = createError("New key selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
 
     const payload = {
@@ -387,20 +378,20 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsRotateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${selector}/rotate`, {
       body: payload,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "Specified key pair not found.",
           [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to rotate DKIM key.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to rotate DKIM key.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       new: {
         algorithm: response.new_key.algorithm,
         createdAt: response.new_key.created_at,
@@ -429,6 +420,6 @@ export class Emails {
       }
     });
 
-    return result;
+    return { data, error: null };
   }
 }

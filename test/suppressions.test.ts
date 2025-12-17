@@ -60,9 +60,7 @@ const fake = {
 describe("create", () => {
   it("should successfully create suppression entries", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
@@ -75,8 +73,8 @@ describe("create", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false, status: ErrorCode.BadRequest } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
@@ -118,9 +116,7 @@ describe("create", () => {
 describe("delete", () => {
   it("should successfully delete suppression entry", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const suppressions = new Suppressions(mockClient);
@@ -133,8 +129,8 @@ describe("delete", () => {
 
   it("should handle API error response on delete", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false, status: 400 } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 

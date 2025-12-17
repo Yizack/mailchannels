@@ -111,7 +111,7 @@ const fake = {
 describe("create", () => {
   it("should successfully create a sub-account with a valid company name and handle", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.create.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.create.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -150,7 +150,7 @@ describe("create", () => {
 
   it("should create a sub-account without a handle (random handle)", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.create.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.create.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -207,7 +207,7 @@ describe("create", () => {
 describe("list", () => {
   it("should retrieve a list of sub-accounts with default options", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.list.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.list.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -220,7 +220,7 @@ describe("list", () => {
 
   it("should retrieve a list of sub-accounts with custom options", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.list.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.list.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -303,9 +303,7 @@ describe("list", () => {
 describe("delete", () => {
   it("should successfully delete a sub-account with a valid handle", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -331,8 +329,8 @@ describe("delete", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: 500 } });
       })
     } as unknown as MailChannelsClient;
 
@@ -374,9 +372,7 @@ describe("delete", () => {
 describe("suspend", () => {
   it("should successfully suspend a sub-account with a valid handle", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -402,8 +398,8 @@ describe("suspend", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.NotFound } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
       })
     } as unknown as MailChannelsClient;
 
@@ -445,9 +441,7 @@ describe("suspend", () => {
 describe("activate", () => {
   it("should successfully activate a sub-account with a valid handle", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -473,8 +467,8 @@ describe("activate", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.Forbidden } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
@@ -516,7 +510,7 @@ describe("activate", () => {
 describe("createApiKey", () => {
   it("should successfully create an API key for a valid sub-account handle", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.createApiKey.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.createApiKey.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -585,7 +579,7 @@ describe("createApiKey", () => {
 describe("listApiKeys", () => {
   it("should retrieve a list of api keys for a handle", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.listApiKeys.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.listApiKeys.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -680,9 +674,7 @@ describe("listApiKeys", () => {
 describe("deleteApiKey", () => {
   it("should successfully delete an API key for a valid sub-account handle", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -708,8 +700,8 @@ describe("deleteApiKey", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.BadRequest } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
@@ -751,7 +743,7 @@ describe("deleteApiKey", () => {
 describe("createSmtpPassword", () => {
   it("should successfully create an SMTP password for a valid sub-account handle", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.createSmtpPassword.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.createSmtpPassword.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -820,7 +812,7 @@ describe("createSmtpPassword", () => {
 describe("listSmtpPasswords", () => {
   it("should retrieve a list of SMTP passwords for a handle", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.listSmtpPasswords.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.listSmtpPasswords.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -889,9 +881,7 @@ describe("listSmtpPasswords", () => {
 describe("deleteSmtpPassword", () => {
   it("should successfully delete an SMTP password for a valid sub-account handle", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -917,8 +907,8 @@ describe("deleteSmtpPassword", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.BadRequest } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
@@ -960,7 +950,7 @@ describe("deleteSmtpPassword", () => {
 describe("getLimit", () => {
   it("should successfully retrieve the limit of a sub-account with a valid handle", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.getLimit.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.getLimit.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -1027,9 +1017,7 @@ describe("getLimit", () => {
 describe("setLimit", () => {
   it("should successfully set the limit of a sub-account with a valid handle", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      put: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -1055,8 +1043,8 @@ describe("setLimit", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      put: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.BadRequest } });
+      put: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
@@ -1098,9 +1086,7 @@ describe("setLimit", () => {
 describe("deleteLimit", () => {
   it("should successfully delete the limit of a sub-account with a valid handle", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);
@@ -1126,8 +1112,8 @@ describe("deleteLimit", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { status: ErrorCode.BadRequest } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
       })
     } as unknown as MailChannelsClient;
 
@@ -1169,7 +1155,7 @@ describe("deleteLimit", () => {
 describe("getUsage", () => {
   it("should successfully retrieve the usage of a sub-account with a valid handle", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.getUsage.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.getUsage.apiResponse)
     } as unknown as MailChannelsClient;
 
     const subAccounts = new SubAccounts(mockClient);

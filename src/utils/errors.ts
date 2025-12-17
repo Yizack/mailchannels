@@ -43,7 +43,6 @@ export const getStatusError = (
   return createError(details ? `${statusText} ${details}` : statusText, response.status ?? null);
 };
 
-export const getResultError = (result: { error: ErrorResponse | null }, error: unknown, fallback: string) => {
-  if (result.error) return result.error;
-  return createError(error instanceof Error ? error.message : fallback);
+export const getResultError = (e: unknown, fallback: string) => {
+  return createError(e instanceof Error ? e.message : fallback);
 };

@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean, mapBuckets, validateLimit, validateOffset } from "../utils/helpers";
+import type { ErrorResponse } from "../types/responses";
 import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
@@ -23,7 +24,7 @@ export class Metrics {
    * ```
    */
   async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
-    const result: MetricsEngagementResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
       query: {
@@ -33,18 +34,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch engagement metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch engagement metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       buckets: {
         click: mapBuckets(response.buckets.click),
         clickTrackingDelivered: mapBuckets(response.buckets.click_tracking_delivered),
@@ -59,7 +60,7 @@ export class Metrics {
       startTime: response.start_time
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -72,7 +73,7 @@ export class Metrics {
    * ```
    */
   async performance (options?: MetricsOptions): Promise<MetricsPerformanceResponse> {
-    const result: MetricsPerformanceResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
       query: {
@@ -82,18 +83,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch performance metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch performance metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       bounced: response.bounced,
       buckets: {
         bounced: mapBuckets(response.buckets.bounced),
@@ -106,7 +107,7 @@ export class Metrics {
       startTime: response.start_time
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -119,7 +120,7 @@ export class Metrics {
    * ```
    */
   async recipientBehaviour (options?: MetricsOptions): Promise<MetricsRecipientBehaviourResponse> {
-    const result: MetricsRecipientBehaviourResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
       query: {
@@ -129,18 +130,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch recipient behaviour metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch recipient behaviour metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       buckets: {
         unsubscribeDelivered: mapBuckets(response.buckets.unsubscribe_delivered),
         unsubscribed: mapBuckets(response.buckets.unsubscribed)
@@ -151,7 +152,7 @@ export class Metrics {
       unsubscribed: response.unsubscribed
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -164,7 +165,7 @@ export class Metrics {
    * ```
    */
   async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
-    const result: MetricsVolumeResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
       query: {
@@ -174,18 +175,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch volume metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch volume metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       buckets: {
         delivered: mapBuckets(response.buckets.delivered),
         dropped: mapBuckets(response.buckets.dropped),
@@ -198,7 +199,7 @@ export class Metrics {
       startTime: response.start_time
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -210,26 +211,26 @@ export class Metrics {
    * ```
    */
   async usage (): Promise<MetricsUsageResponse> {
-    const result: MetricsUsageResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsUsageApiResponse>("/tx/v1/usage", {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch usage metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch usage metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
     });
 
-    return result;
+    return { data, error: null };
   }
 
   /**
@@ -243,13 +244,13 @@ export class Metrics {
    * ```
    */
   async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
-    const result: MetricsSendersResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
-    result.error =
+    error =
       validateLimit(options?.limit, 1000) ||
       validateOffset(options?.offset);
 
-    if (result.error) return result;
+    if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
       query: {
@@ -260,18 +261,18 @@ export class Metrics {
         sort_order: options?.sortOrder
       },
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch senders metrics.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch senders metrics.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean({
+    const data = clean({
       endTime: response.end_time,
       limit: response.limit,
       offset: response.offset,
@@ -280,6 +281,6 @@ export class Metrics {
       total: response.total
     });
 
-    return result;
+    return { data, error: null };
   }
 }

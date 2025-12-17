@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean, validateLimit, validateOffset } from "../utils/helpers";
-import type { SuccessResponse } from "../types/responses";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
 
@@ -19,7 +19,7 @@ export class Suppressions {
    * });
    */
   async create (options: SuppressionsCreateOptions): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     const { addToSubAccounts, entries } = options;
 
@@ -35,23 +35,18 @@ export class Suppressions {
 
     await this.mailchannels.post("/tx/v1/suppression-list", {
       body: payload,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Conflict. One or more suppression entries in the request already exist and cannot be created again.",
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to create suppression entries.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create suppression entries.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -65,27 +60,22 @@ export class Suppressions {
    * ```
    */
   async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${recipient}`, {
       query: {
         source
       },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to delete suppression entry.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete suppression entry.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -98,13 +88,13 @@ export class Suppressions {
    * @param options - Options to filter and customize the suppression entries retrieval.
    */
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
-    const result: SuppressionsListResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
-    result.error =
+    error =
       validateLimit(options?.limit, 1000) ||
       validateOffset(options?.offset);
 
-    if (result.error) return result;
+    if (error) return { data: null, error };
 
     const payload: SuppressionsListPayload = {
       recipient: options?.recipient,
@@ -118,18 +108,18 @@ export class Suppressions {
     const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
       query: payload,
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch suppression entries.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch suppression entries.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response.suppression_list.map(entry => ({
+    const data = clean(response.suppression_list.map(entry => ({
       createdAt: entry.created_at,
       notes: entry.notes,
       recipient: entry.recipient,
@@ -138,6 +128,6 @@ export class Suppressions {
       types: entry.suppression_types
     })));
 
-    return result;
+    return { data, error: null };
   }
 }

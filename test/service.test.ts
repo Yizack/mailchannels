@@ -20,9 +20,7 @@ const fake = {
 describe("status", () => {
   it("should successfully retrieve the service status", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      get: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
@@ -35,8 +33,8 @@ describe("status", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      get: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: 500 } });
       })
     } as unknown as MailChannelsClient;
 
@@ -78,7 +76,7 @@ describe("status", () => {
 describe("subscriptions", () => {
   it("should successfully retrieve a list of subscriptions", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue(fake.subscriptions.apiResponse)
+      get: vi.fn().mockResolvedValueOnce(fake.subscriptions.apiResponse)
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
@@ -135,9 +133,7 @@ describe("subscriptions", () => {
 describe("report", () => {
   it("should successfully submit a report", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      post: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const service = new Service(mockClient);
@@ -150,8 +146,8 @@ describe("report", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: 500 } });
       })
     } as unknown as MailChannelsClient;
 

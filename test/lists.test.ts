@@ -53,7 +53,7 @@ describe("addListEntry", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: 500 } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -128,7 +128,7 @@ describe("listEntries", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: 500 } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -171,9 +171,7 @@ describe("listEntries", () => {
 describe("deleteListEntry", () => {
   it("should successfully delete a list entry", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      delete: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const lists = new Lists(mockClient);
@@ -200,8 +198,8 @@ describe("deleteListEntry", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      delete: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      delete: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: 500 } });
       })
     } as unknown as MailChannelsClient;
 

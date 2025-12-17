@@ -196,10 +196,7 @@ const fake = {
 describe("send", () => {
   it("should successfully send an email", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-        return fake.send.apiResponse;
-      })
+      post: vi.fn().mockResolvedValueOnce(fake.send.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -213,10 +210,7 @@ describe("send", () => {
 
   it("should successfully send an email with only text content", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-        return fake.send.apiResponse;
-      })
+      post: vi.fn().mockResolvedValueOnce(fake.send.apiResponse)
     } as unknown as MailChannelsClient;
 
     // @ts-expect-error testing without html content
@@ -278,8 +272,8 @@ describe("send", () => {
 
   it("should return success false when an error occurs", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
       })
     } as unknown as MailChannelsClient;
 
@@ -293,8 +287,8 @@ describe("send", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementationOnce(async (url, { onResponse }) => new Promise((_, reject) => {
-        onResponse({ response: { ok: false } });
+      post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.Forbidden } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -309,10 +303,7 @@ describe("send", () => {
 
   it("should successfully send an email with trackings disabled", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-        return fake.send.apiResponse;
-      })
+      post: vi.fn().mockResolvedValueOnce(fake.send.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -332,10 +323,7 @@ describe("send", () => {
 
   it("should successfully send an email with no tracking", async () => {
     const mockClient = {
-      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-        return fake.send.apiResponse;
-      })
+      post: vi.fn().mockResolvedValueOnce(fake.send.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -380,7 +368,7 @@ describe("send", () => {
 describe("checkDomain", () => {
   it("should successfully check a domain", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.checkDomain.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.checkDomain.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -394,7 +382,7 @@ describe("checkDomain", () => {
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
-        onResponseError({ response: { ok: false } });
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
         reject();
       }))
     } as unknown as MailChannelsClient;
@@ -437,7 +425,7 @@ describe("checkDomain", () => {
 describe("createDkimKey", () => {
   it("should successfully create a DKIM key", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.createDkimKey.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.createDkimKey.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -516,7 +504,7 @@ describe("createDkimKey", () => {
 describe("getDkimKeys", () => {
   it("should successfully get DKIM keys", async () => {
     const mockClient = {
-      get: vi.fn().mockResolvedValue({ keys: [fake.createDkimKey.apiResponse] })
+      get: vi.fn().mockResolvedValueOnce({ keys: [fake.createDkimKey.apiResponse] })
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -606,9 +594,7 @@ describe("getDkimKeys", () => {
 describe("updateDkimKey", () => {
   it("should successfully update a DKIM key", async () => {
     const mockClient = {
-      patch: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: true } });
-      })
+      patch: vi.fn().mockResolvedValueOnce(void 0)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
@@ -624,8 +610,8 @@ describe("updateDkimKey", () => {
 
   it("should contain error on api response error", async () => {
     const mockClient = {
-      patch: vi.fn().mockImplementationOnce(async (url, { onResponse }) => {
-        onResponse({ response: { ok: false } });
+      patch: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {
+        onResponseError({ response: { status: ErrorCode.NotFound } });
       })
     } as unknown as MailChannelsClient;
 
@@ -690,7 +676,7 @@ describe("updateDkimKey", () => {
 describe("rotateDkimKey", () => {
   it("should successfully rotate a DKIM key", async () => {
     const mockClient = {
-      post: vi.fn().mockResolvedValue(fake.rotateDkimKey.apiResponse)
+      post: vi.fn().mockResolvedValueOnce(fake.rotateDkimKey.apiResponse)
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);

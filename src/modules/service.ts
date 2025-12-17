@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
-import type { SuccessResponse } from "../types/responses";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
 import type { ServiceReportOptions } from "../types/service/report";
 
@@ -17,22 +17,17 @@ export class Service {
    * ```
    */
   async status (): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     await this.mailchannels.get<void>("/inbound/v1/status", {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch service status.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch service status.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 
   /**
@@ -44,23 +39,24 @@ export class Service {
    * ```
    */
   async subscriptions (): Promise<ServiceSubscriptionsResponse> {
-    const result: ServiceSubscriptionsResponse = { data: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<ServiceSubscriptionsResponse["data"]>("/inbound/v1/subscriptions", {
       onResponseError: async ({ response }) => {
-        result.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to fetch subscriptions.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch subscriptions.");
       return null;
     });
 
-    if (!response) return result;
+    if (!response) return { data: null, error: error! };
 
-    result.data = clean(response);
-    return result;
+    const data = clean(response);
+
+    return { data, error: null };
   }
 
   /**
@@ -75,7 +71,7 @@ export class Service {
    * ```
    */
   async report (options: ServiceReportOptions): Promise<SuccessResponse> {
-    const result: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     const { type, ...payload } = options;
 
@@ -84,18 +80,13 @@ export class Service {
         report_type: type
       },
       body: payload,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          result.success = true;
-          return;
-        }
-        result.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
-    }).catch((error) => {
-      result.error = getResultError(result, error, "Failed to submit report.");
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to submit report.");
     });
 
-    return result;
+    return { success: !error, error };
   }
 }
