@@ -444,8 +444,9 @@ const { data, error } = await mailchannels.emails.rotateDkimKey('example.com', '
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 

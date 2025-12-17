@@ -569,8 +569,9 @@ const { data, error } = await mailchannels.subAccounts.getUsage('validhandle123'
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 

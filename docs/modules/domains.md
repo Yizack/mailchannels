@@ -626,8 +626,9 @@ const { data, error } = await mailchannels.domains.bulkCreateLoginLinks([
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 

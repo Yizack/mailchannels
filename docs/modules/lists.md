@@ -139,8 +139,9 @@ const { success, error } = await mailchannels.lists.deleteListEntry({
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
 
   **List Entry type declarations**

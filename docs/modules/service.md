@@ -131,8 +131,9 @@ const { success, error } = await mailchannels.service.report({
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 

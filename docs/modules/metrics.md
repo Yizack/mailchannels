@@ -311,8 +311,9 @@ const { data, error } = await mailchannels.metrics.senders("campaigns")
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
 
   **Shared metrics type declarations**

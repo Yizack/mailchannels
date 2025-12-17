@@ -190,8 +190,9 @@ const { data, error } = await mailchannels.webhooks.validate('optional-request-i
 <details>
   <summary>All type declarations</summary>
 
-  **Responses**
+  **Response type declarations**
 
+  <<< @/snippets/error-response.ts
   <<< @/snippets/data-response.ts
   <<< @/snippets/success-response.ts
 
