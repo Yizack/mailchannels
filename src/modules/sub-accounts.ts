@@ -121,7 +121,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}`, {
@@ -149,7 +149,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/suspend`, {
@@ -179,7 +179,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.post<void>(`/tx/v1/sub-account/${handle}/activate`, {
@@ -296,7 +296,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/api-key/${id}`, {
@@ -407,7 +407,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/smtp-password/${id}`, {
@@ -473,7 +473,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.put<{ limit: SubAccountsLimit }>(`/tx/v1/sub-account/${handle}/limit`, {
@@ -505,7 +505,7 @@ export class SubAccounts {
 
     if (!handle) {
       error = createError("No handle provided.");
-      return { success: !error, error };
+      return { success: false, error };
     }
 
     await this.mailchannels.delete<void>(`/tx/v1/sub-account/${handle}/limit`, {
