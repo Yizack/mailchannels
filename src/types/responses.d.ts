@@ -14,13 +14,22 @@ export interface SuccessResponse {
   error: ErrorResponse | null;
 }
 
-export interface DataResponse<T> {
+export type DataResponse<T> = {
   /**
    * The response data.
    */
-  data: T | null;
+  data: T;
   /**
    * Error information if the operation failed.
    */
-  error: ErrorResponse | null;
-}
+  error: null;
+} | {
+  /**
+   * The response data.
+   */
+  data: null;
+  /**
+   * Error information if the operation failed.
+   */
+  error: ErrorResponse;
+};
