@@ -104,7 +104,7 @@ const { data, error } = await mailchannels.emails.send({
 
 // handle the error as needed
 if (error) {
-  throw new Error(`Error ${error.statusCode}: ${error.message}`)
+  throw new Error(error.message)
 }
 
 // data is guaranteed to be non-null here
