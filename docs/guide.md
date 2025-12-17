@@ -46,10 +46,10 @@ import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels('your-api-key')
 
 const { data, error } = await mailchannels.emails.send({
-  from: "Name <from@example.com>",
-  to: "to@example.com",
-  subject: "Test email",
-  html: "<p>Hello World</p>"
+  from: 'Name <from@example.com>',
+  to: 'to@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>'
 })
 ```
 
@@ -66,10 +66,10 @@ const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
 const { data, error } = await emails.send({
-  from: "Name <from@example.com>",
-  to: "to@example.com",
-  subject: "Test email",
-  html: "<p>Hello World</p>"
+  from: 'Name <from@example.com>',
+  to: 'to@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>'
 })
 ```
 
@@ -77,10 +77,36 @@ This approach is tree-shakable and is useful when you only need to use specific 
 
 ### Error handling
 
-All methods in this SDK return an object containing an `error` property besides the actual response data to avoid throwing exceptions. If the request was successful, the `error` property will be `null`. If there was an error, the `error` property will contain a `string` with the error message.
+All methods in this SDK return an object with both `data` and `error` properties to avoid throwing exceptions, making error handling more predictable and easier to manage.
 
-```ts{1}
-const { error } = await emails.send({
-  // ...
+**Success case:**
+- `data`: Contains the response data
+- `error`: Will be `null`
+
+**Error case:**
+- `data`: Will be `null`
+- `error`: Contains an `ErrorResponse` object with the following properties:
+  - `message`: A human-readable description of the error
+  - `statusCode`: The HTTP status code from the API (e.g., `400`, `404`), or `null` if the error occurred before making an HTTP request
+
+
+```ts{5,13-15,18}
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { data, error } = await mailchannels.emails.send({
+  from: 'sender@example.com',
+  to: 'recipient@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>'
 })
+
+// handle the error as needed
+if (error) {
+  throw new Error(`Error ${error.statusCode}: ${error.message}`)
+}
+
+// data is guaranteed to be non-null here
+console.log({ data })
 ```
