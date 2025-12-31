@@ -67,7 +67,8 @@ export default defineConfig({
     nav: navbarConfig,
     sidebar: sidebarConfig,
     socialLinks: [
-      { icon: "github", link: "https://github.com/Yizack/mailchannels" }
+      { icon: "github", link: "https://github.com/Yizack/mailchannels" },
+      { icon: "npm", link: "https://www.npmjs.com/package/mailchannels-sdk" }
     ],
     editLink: {
       pattern: "https://github.com/Yizack/mailchannels/edit/main/docs/:path",
