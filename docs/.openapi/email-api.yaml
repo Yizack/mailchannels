@@ -1309,7 +1309,7 @@ info:
 
     '
   title: Email API
-  version: 0.15.0
+  version: 0.16.0
 openapi: 3.0.0
 paths:
   /check-domain:
