@@ -158,7 +158,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { results } = await mailchannels.emails.checkDomain({
+   * const { data, error } = await mailchannels.emails.checkDomain({
    *   dkim: [{
    *     domain: 'example.com',
    *     privateKey: 'your-private-key',
