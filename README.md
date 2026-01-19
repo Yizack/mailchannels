@@ -77,7 +77,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
 
 - 📧 Emails
   - ✅ [Send an Email](https://docs.mailchannels.net/email-api/api-reference/send-an-email)
-  - 🚧 [Send an Email Asynchronously](https://docs.mailchannels.net/email-api/api-reference/send-an-email-asynchronously)
+  - ✅ [Send an Email Asynchronously](https://docs.mailchannels.net/email-api/api-reference/send-an-email-asynchronously)
   - ✅ [DKIM, SPF & Domain Lockdown Check](https://docs.mailchannels.net/email-api/api-reference/dkim-spf-domain-lockdown-check)
   - ✅ [Create DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/create-dkim-key-pair)
   - ✅ [Retrieve DKIM Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-dkim-keys)
