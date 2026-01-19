@@ -54,8 +54,8 @@ export interface EmailsSendApiResponse {
 }
 
 export interface EmailsSendAsyncApiResponse {
-  queued_at?: string;
-  request_id?: string;
+  queued_at: string;
+  request_id: string;
 }
 
 export interface EmailsCheckDomainPayload {

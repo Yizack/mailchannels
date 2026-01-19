@@ -87,7 +87,7 @@ export class Emails {
     if (!response) return { success: false, data: null, error: error! };
 
     if (flags.async) {
-      const asyncResponse: EmailsSendAsyncApiResponse = response;
+      const asyncResponse = response as EmailsSendAsyncApiResponse;
       const data = clean({
         queuedAt: asyncResponse.queued_at,
         requestId: asyncResponse.request_id
@@ -96,7 +96,7 @@ export class Emails {
       return { data, error: null };
     }
 
-    const syncResponse: EmailsSendApiResponse = response;
+    const syncResponse = response as EmailsSendApiResponse;
     const data = clean({
       rendered: syncResponse.data,
       requestId: syncResponse.request_id,
