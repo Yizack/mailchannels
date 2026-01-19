@@ -9,11 +9,15 @@
   --vp-badge-tip-bg: var(--vp-c-green-soft);
   --vp-custom-block-tip-bg: var(--vp-c-green-soft);
   --vp-custom-block-tip-code-bg: var(--vp-c-green-soft);
+  --docsearch-search-button-background: var(--vp-c-bg-alt);
+  --docsearch-search-button-text-color: var(--vp-c-text-2);
 }
 
 html.dark {
   --vp-c-brand-1: #50c463;
   --vp-c-brand-2: #50c463;
+  --docsearch-search-button-background: var(--vp-c-bg-alt);
+  --docsearch-search-button-text-color: var(--vp-c-text-2);
 }
 
 @media (min-width: 640px) {
