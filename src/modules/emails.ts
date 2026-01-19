@@ -3,8 +3,9 @@ import { ErrorCode, createError, getResultError, getStatusError } from "../utils
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
-import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsSendAsyncResponse } from "../types/emails/send-async";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse } from "../types/emails/create-dkim-key";
 import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../types/emails/get-dkim-keys";
@@ -14,22 +15,7 @@ import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "..
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
 
-  /**
-   * Send an email using MailChannels Email API.
-   * @param options - The email options to send.
-   * @param dryRun - When set to `true`, the message will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response. The default value is `false`.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { success, data } = await mailchannels.emails.send({
-   *   to: 'to@example.com',
-   *   from: 'from@example.com',
-   *   subject: 'Test',
-   *   html: 'Test'
-   * })
-   * ```
-   */
-  async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
+  private async _sendEmail (options: EmailsSendOptions, flags: { async?: boolean, dryRun?: boolean }): Promise<EmailsSendResponse | EmailsSendAsyncResponse> {
     let error: ErrorResponse | null = null;
 
     const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
@@ -82,8 +68,9 @@ export class Emails {
       transactional: options.transactional
     };
 
-    const response = await this.mailchannels.post<EmailsSendApiResponse>("/tx/v1/send", {
-      query: { "dry-run": dryRun },
+    const endpoint = flags.async ? "/tx/v1/send-async" : "/tx/v1/send";
+    const response = await this.mailchannels.post<EmailsSendApiResponse | EmailsSendAsyncApiResponse>(endpoint, {
+      query: { "dry-run": flags.dryRun },
       body: payload,
       onResponseError: async ({ response }) => {
         error = getStatusError(response, {
@@ -93,16 +80,27 @@ export class Emails {
         });
       }
     }).catch((e) => {
-      error ||= getResultError(e, "Failed to send email.");
+      error ||= getResultError(e, flags.async ? "Failed to queue email." : "Failed to send email.");
       return null;
     });
 
     if (!response) return { success: false, data: null, error: error! };
 
+    if (flags.async) {
+      const asyncResponse: EmailsSendAsyncApiResponse = response;
+      const data = clean({
+        queuedAt: asyncResponse.queued_at,
+        requestId: asyncResponse.request_id
+      });
+
+      return { data, error: null };
+    }
+
+    const syncResponse: EmailsSendApiResponse = response;
     const data = clean({
-      rendered: response.data,
-      requestId: response.request_id,
-      results: response.results?.map(result => ({
+      rendered: syncResponse.data,
+      requestId: syncResponse.request_id,
+      results: syncResponse.results?.map(result => ({
         index: result.index,
         messageId: result.message_id,
         reason: result.reason,
@@ -111,6 +109,47 @@ export class Emails {
     });
 
     return { success: !!data, data, error: null };
+  }
+
+  /**
+   * Sends an email message to one or more recipients.
+   * @param options - The email options to send.
+   * @param dryRun - When set to `true`, the message will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response. The default value is `false`.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, data } = await mailchannels.emails.send({
+   *   to: 'to@example.com',
+   *   from: 'from@example.com',
+   *   subject: 'Test',
+   *   html: 'Test'
+   * })
+   * ```
+   */
+  async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
+    return this._sendEmail(options, { dryRun }) as Promise<EmailsSendResponse>;
+  }
+
+  /**
+   * Queues an email message for asynchronous processing and returns immediately with a request ID.
+   *
+   * The email will be processed in the background, and you'll receive webhook events for all delivery status updates (e.g. `dropped`, `processed`, `delivered`, `hard-bounced`). These webhook events are identical to those sent for the synchronous /send endpoint.
+   *
+   * Use this endpoint when you need to send emails without waiting for processing to complete. This can improve your application's response time, especially when sending to multiple recipients.
+   * @param options - The email options to send.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data } = await mailchannels.emails.sendAsync({
+   *   to: 'to@example.com',
+   *   from: 'from@example.com',
+   *   subject: 'Test',
+   *   html: 'Test'
+   * })
+   * ```
+   */
+  async sendAsync (options: EmailsSendOptions): Promise<EmailsSendAsyncResponse> {
+    return this._sendEmail(options, { async: true }) as Promise<EmailsSendAsyncResponse>;
   }
 
   /**

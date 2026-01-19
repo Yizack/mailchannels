@@ -24,6 +24,7 @@ export default [
             link: "/modules/emails",
             items: [
               { text: "Send Email", link: "/modules/emails#send-method" },
+              { text: "Send Async Email", link: "/modules/emails#send-async-method" },
               { text: "Check Domain", link: "/modules/emails#check-domain-method" },
               { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key-method" },
               { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys-method" },

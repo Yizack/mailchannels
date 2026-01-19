@@ -53,6 +53,11 @@ export interface EmailsSendApiResponse {
   }[];
 }
 
+export interface EmailsSendAsyncApiResponse {
+  queued_at?: string;
+  request_id?: string;
+}
+
 export interface EmailsCheckDomainPayload {
   dkim_settings?: {
     dkim_domain?: string;
