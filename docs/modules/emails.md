@@ -21,7 +21,7 @@ import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 const mailchannels = new MailChannelsClient('your-api-key')
 const emails = new Emails(mailchannels)
 
-const { success, data } = await emails.send({
+const { success, data, error } = await emails.send({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -35,7 +35,7 @@ import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
 
-const { success, data } = await mailchannels.emails.send({
+const { success, data, error } = await mailchannels.emails.send({
   from: 'from@example.com',
   to: 'to@example.com',
   subject: 'Your subject',
@@ -199,7 +199,6 @@ const { data, error } = await mailchannels.emails.sendAsync({
 - `data` `object | null` <Badge type="warning">nullable</Badge>
   - `queuedAt` `string` <Badge>guaranteed</Badge>: ISO 8601 timestamp when the request was queued for processing.
   - `requestId` `string` <Badge>guaranteed</Badge>: Unique identifier for tracking this async request. Will be included in all webhook events for this request.
-  
 - `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the email failed to send.
   - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
   - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.

@@ -118,7 +118,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, data } = await mailchannels.emails.send({
+   * const { success, data, error } = await mailchannels.emails.send({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
@@ -140,7 +140,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { data } = await mailchannels.emails.sendAsync({
+   * const { data, error } = await mailchannels.emails.sendAsync({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
