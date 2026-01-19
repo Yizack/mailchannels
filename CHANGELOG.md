@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.7.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.0...v0.7.1)
+
+### 🚀 Enhancements
+
+- **emails:** Add `sendAsync` method ([#60](https://github.com/Yizack/mailchannels/pull/60))
+
+### 📖 Documentation
+
+- **modules:** Document `ErrorResponse` structure for error fields ([a31da99](https://github.com/Yizack/mailchannels/commit/a31da99))
+- Upgrade vitepress to recent alpha version ([147b422](https://github.com/Yizack/mailchannels/commit/147b422))
+- Add npm social link to vitepress config ([a586f6c](https://github.com/Yizack/mailchannels/commit/a586f6c))
+- Bump Email API version to 0.16.0 in docs ([#56](https://github.com/Yizack/mailchannels/pull/56))
+- Add 'Send an Email Asynchronously' to roadmap ([3a30261](https://github.com/Yizack/mailchannels/commit/3a30261))
+- Fix jsdoc indentation ([0a22f44](https://github.com/Yizack/mailchannels/commit/0a22f44))
+- **types:** Fix `checkDomain` example return values ([05a2790](https://github.com/Yizack/mailchannels/commit/05a2790))
+- **types:** Fix email send examples to include error property ([4f356aa](https://github.com/Yizack/mailchannels/commit/4f356aa))
+- Bump email api version to 0.17.0 ([aa2662c](https://github.com/Yizack/mailchannels/commit/aa2662c))
+- Fix dark mode search button text and background ([f52ac8a](https://github.com/Yizack/mailchannels/commit/f52ac8a))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.0
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.1...v0.7.0)
