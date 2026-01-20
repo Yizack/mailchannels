@@ -137,6 +137,11 @@ interface EmailsSendOptionsBase {
   to: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
   /**
    * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking.
+   *
+   * Only links (`<a>` tags) meeting all of the following conditions are processed for click tracking:
+   * - The URL is non-empty.
+   * - The URL starts with `http` or `https`.
+   * - The link does not have a `clicktracking` attribute set to `off`.
    */
   tracking?: EmailsSendTracking;
   /**
