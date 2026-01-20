@@ -9,6 +9,25 @@ components:
           description: API key for the sub-account.
           type: string
       type: object
+    AsyncSendResponse:
+      properties:
+        queued_at:
+          description: 'ISO 8601 timestamp when the request was queued for processing.
+
+            '
+          format: date-time
+          type: string
+        request_id:
+          description: 'Unique identifier for tracking this async request.
+
+            Will be included in all webhook events for this request.
+
+            '
+          type: string
+      required:
+      - request_id
+      - queued_at
+      type: object
     Attachment:
       properties:
         content:
@@ -1309,7 +1328,7 @@ info:
 
     '
   title: Email API
-  version: 0.16.0
+  version: 0.17.0
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -2122,10 +2141,22 @@ paths:
                 $ref: '#/components/schemas/SendResults'
           description: Success
         '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: Bad Request
         '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: User does not have access to this feature
         '413':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
           description: 'Payload too large - The total message size should not exceed
             30MB.
 
@@ -2146,6 +2177,66 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Bad Gateway
       summary: Send an Email
+  /send-async:
+    post:
+      description: "Queues an email message for asynchronous processing and returns\
+        \ immediately with a request ID.\n\nThe email will be processed in the background,\
+        \ and you'll receive webhook events \nfor all delivery status updates (e.g.\
+        \ dropped, processed, delivered, hard-bounced).\nThese webhook events are\
+        \ identical to those sent for the synchronous /send endpoint.\n\nUse this\
+        \ endpoint when you need to send emails without waiting for processing to\
+        \ complete.\nThis can improve your application's response time, especially\
+        \ when sending to multiple recipients.\n"
+      parameters:
+      - in: header
+        name: X-Customer-Handle
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MailSendBody'
+        required: true
+      responses:
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncSendResponse'
+          description: Request accepted and queued for processing
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: User does not have access to this feature
+        '413':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: 'Payload too large - The total message size should not exceed
+            30MB.
+
+            This includes the message itself, headers, and the combined size of any
+            attachments.
+
+            '
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal Server Error
+      summary: Send an Email Asynchronously
   /sub-account:
     get:
       description: 'Retrieves all sub-accounts associated with the parent account.
