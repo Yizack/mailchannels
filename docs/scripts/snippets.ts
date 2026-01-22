@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import {
   type Node,
   ScriptTarget,
+  SyntaxKind,
   createSourceFile,
   forEachChild,
   isClassDeclaration,
@@ -36,6 +37,9 @@ const extractClassWithSignatures = (code: string) => {
       // Process all class members
       node.members.forEach((member) => {
         if (isMethodDeclaration(member) || isConstructorDeclaration(member)) {
+          // Skip private methods
+          const isPrivate = member.modifiers?.some(modifier => modifier.kind === SyntaxKind.PrivateKeyword);
+          if (isPrivate) return;
           // Get method signature
           const methodText = code.substring(member.pos, member.body ? member.body.pos : member.end);
           // Fix parameter types with default values
