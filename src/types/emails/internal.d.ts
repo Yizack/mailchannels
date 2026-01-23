@@ -9,6 +9,7 @@ interface EmailsSendPersonalization {
   dkim_private_key?: string;
   dkim_selector?: string;
   dynamic_template_data?: Record<string, unknown>;
+  envelope_from?: EmailsSendRecipient;
   from?: EmailsSendRecipient;
   headers?: Record<string, string>;
   reply_to?: EmailsSendRecipient;
@@ -26,6 +27,10 @@ export interface EmailsSendPayload {
   attachments?: EmailsSendAttachment[];
   campaign_id?: string;
   content: EmailsSendContent[];
+  dkim_domain?: string;
+  dkim_private_key?: string;
+  dkim_selector?: string;
+  envelope_from?: EmailsSendRecipient;
   from: EmailsSendRecipient;
   headers?: Record<string, string>;
   personalizations: EmailsSendPersonalization[];
