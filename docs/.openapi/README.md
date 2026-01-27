@@ -10,3 +10,10 @@ Update the files whenever there are versions changes to the MailChannels APIs.
 | Inbound API   | `inbound-api.yaml` | [Download](https://docs.mailchannels.net/inbound-api.yaml) |
 
 Source: https://docs.mailchannels.net/
+
+## Workflows
+
+The following GitHub Actions workflows are used to monitor and update the API versions and automatically create pull requests when new versions are detected to prepare for implementation and documentation updates:
+
+- [`check-email-api-version`](https://github.com/Yizack/mailchannels/actions/workflows/check-email-api-version.yml) (Runs every 4 hours)
+- [`check-inbound-api-version`](https://github.com/Yizack/mailchannels/actions/workflows/check-inbound-api-version.yml) (Runs every day at midnight)
