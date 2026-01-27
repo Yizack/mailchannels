@@ -91,7 +91,6 @@ jobs:
           BRANCH_NAME="update-email-api-version"
           git checkout -B $BRANCH_NAME
 
-
           # Update branch from main
           git fetch origin main
           git merge --ff-only origin/main || {
@@ -99,10 +98,11 @@ jobs:
             exit 1;
           }
 
-          # Commit changes if any
+          # Commit changes only if different from remote branch
           git add docs/.openapi/email-api.yaml docs/modules.md
-          if git diff --cached --quiet; then
-            echo "No changes to commit. Skipping push and PR update."
+          git fetch origin $BRANCH_NAME || true
+          if git diff --cached --exit-code origin/$BRANCH_NAME -- docs/.openapi/email-api.yaml docs/modules.md; then
+            echo "No changes compared to remote branch. Skipping commit, push, and PR update."
             exit 0
           fi
           git commit -m "docs: bump Email API version to ${{ steps.versions.outputs.upstream_version }}"
