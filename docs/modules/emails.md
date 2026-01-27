@@ -59,6 +59,7 @@ const { success, data, error } = await mailchannels.emails.send({
     - `domain` `string` <Badge type="danger">required</Badge>: The domain to sign the email with.
     - `privateKey` `string` <Badge type="info">optional</Badge>: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
     - `selector` `string` <Badge type="danger">required</Badge>: The DKIM selector to use.
+  - `envelopeFrom` `EmailsSendRecipient | string` <Badge type="info">optional</Badge>: Optional envelope sender address. If not set, the envelope sender defaults to the `from.email` field. Can be overridden per-personalization. Only the email portion is used; the name field is ignored.
   - `from` `EmailsSendRecipient | string` <Badge type="danger">required</Badge>: The sender of the email.
   - `headers` `Record<string, string>` <Badge type="info">optional</Badge>: An object containing key-value pairs, where both keys (header names) and values must be strings. These pairs represent custom headers to be substituted.
     > [!IMPORTANT]
@@ -163,6 +164,7 @@ const { data, error } = await mailchannels.emails.sendAsync({
     - `domain` `string` <Badge type="danger">required</Badge>: The domain to sign the email with.
     - `privateKey` `string` <Badge type="info">optional</Badge>: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
     - `selector` `string` <Badge type="danger">required</Badge>: The DKIM selector to use.
+  - `envelopeFrom` `EmailsSendRecipient | string` <Badge type="info">optional</Badge>: Optional envelope sender address. If not set, the envelope sender defaults to the `from.email` field. Can be overridden per-personalization. Only the email portion is used; the name field is ignored.
   - `from` `EmailsSendRecipient | string` <Badge type="danger">required</Badge>: The sender of the email.
   - `headers` `Record<string, string>` <Badge type="info">optional</Badge>: An object containing key-value pairs, where both keys (header names) and values must be strings. These pairs represent custom headers to be substituted.
     > [!IMPORTANT]

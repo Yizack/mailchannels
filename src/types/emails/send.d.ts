@@ -6,7 +6,7 @@ export interface EmailsSendRecipient {
    */
   email: string;
   /**
-   * The name of the recipient.
+   * The name of the recipient. Display name in raw text, e.g. John Doe, 张三.
    */
   name?: string;
 }
@@ -99,6 +99,16 @@ interface EmailsSendOptionsBase {
      */
     selector: string;
   };
+  /**
+   * Optional envelope sender address. If not set, the envelope sender defaults to the `from.email` field. Can be overridden per-personalization. Only the email portion is used; the name field is ignored.
+   * @example
+   * { email: 'email@example.com', name: 'Example' }
+   * @example
+   * 'email@example.com'
+   * @example
+   * 'Name <email@example.com>'
+   */
+  envelopeFrom?: EmailsSendRecipient | string;
   /**
    * The sender of the email. Can be a string or an object with email and name properties.
    * @example

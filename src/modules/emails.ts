@@ -58,6 +58,7 @@ export class Emails {
       }],
       headers: options.headers,
       reply_to: parseRecipient(options.replyTo),
+      envelope_from: parseRecipient(options.envelopeFrom),
       from: parsedFrom,
       subject: options.subject,
       content,
