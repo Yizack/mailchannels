@@ -28,11 +28,11 @@ jobs:
         id: versions
         run: |
           # Extract version from upstream (JSON style only)
-          UPSTREAM_VERSION=$(grep -m 1 '"version"' upstream-inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",'\''']//g' | tr -d ' ')
+          UPSTREAM_VERSION=$(grep -m 1 '"version"' upstream-inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",]//g' | tr -d ' ')
           echo "upstream_version=$UPSTREAM_VERSION" >> $GITHUB_OUTPUT
 
           # Extract version from repository (JSON style only)
-          REPO_VERSION=$(grep -m 1 '"version"' docs/.openapi/inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",'\''']//g' | tr -d ' ')
+          REPO_VERSION=$(grep -m 1 '"version"' docs/.openapi/inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",]//g' | tr -d ' ')
           echo "repo_version=$REPO_VERSION" >> $GITHUB_OUTPUT
 
           echo "Upstream version: $UPSTREAM_VERSION"
