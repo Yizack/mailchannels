@@ -1,0 +1,135 @@
+name: check-inbound-api-version
+
+on:
+  schedule:
+    # Run every day at midnight
+    - cron: 0 0 * * *
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-inbound-api-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout target repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Download upstream Inbound API spec
+        run: |
+          curl -sSL https://docs.mailchannels.net/inbound-api.yaml -o upstream-inbound-api.yaml
+
+      - name: Extract versions
+        id: versions
+        run: |
+          # Extract version from upstream (JSON style only)
+          UPSTREAM_VERSION=$(grep -m 1 '"version"' upstream-inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",'\''']//g' | tr -d ' ')
+          echo "upstream_version=$UPSTREAM_VERSION" >> $GITHUB_OUTPUT
+
+          # Extract version from repository (JSON style only)
+          REPO_VERSION=$(grep -m 1 '"version"' docs/.openapi/inbound-api.yaml | sed 's/.*"version"[":]* *//; s/[",'\''']//g' | tr -d ' ')
+          echo "repo_version=$REPO_VERSION" >> $GITHUB_OUTPUT
+
+          echo "Upstream version: $UPSTREAM_VERSION"
+          echo "Repository version: $REPO_VERSION"
+
+      - name: Check if version changed
+        id: check
+        run: |
+          if [ "${{ steps.versions.outputs.upstream_version }}" != "${{ steps.versions.outputs.repo_version }}" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Version changed from ${{ steps.versions.outputs.repo_version }} to ${{ steps.versions.outputs.upstream_version }}"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No version change detected"
+          fi
+
+      - name: Update files
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          # Update the Inbound API spec
+          cp upstream-inbound-api.yaml docs/.openapi/inbound-api.yaml
+
+          # Update modules.md version
+          if [ -f docs/modules.md ]; then
+            sed -i'' -e "s/\(## Inbound API <Badge type=\"warning\">version \)[^<]*/\1${{ steps.versions.outputs.upstream_version }}/" docs/modules.md
+          fi
+
+      - name: Check for existing PR
+        if: steps.check.outputs.changed == 'true'
+        id: existing_pr
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --head "update-inbound-api-version" --json number --jq '.[0].number' || echo "")
+          if [ -n "$PR_NUMBER" ]; then
+            echo "pr_exists=true" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "Found existing PR #$PR_NUMBER"
+          else
+            echo "pr_exists=false" >> $GITHUB_OUTPUT
+            echo "No existing PR found"
+          fi
+
+      - name: Set up Git user
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "${{ secrets.USER_NAME }}"
+          git config user.email "${{ secrets.USER_EMAIL }}"
+
+      - name: Create or update pull request
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          # Create or switch to branch
+          BRANCH_NAME="update-inbound-api-version"
+          git checkout -B $BRANCH_NAME
+
+          # Update branch from main
+          git fetch origin main
+          git merge --ff-only origin/main || {
+            echo "Fast-forward merge from main failed. Please resolve conflicts manually.";
+            exit 1;
+          }
+
+          # Commit changes only if different from remote branch
+          git add docs/.openapi/inbound-api.yaml docs/modules.md
+          git fetch origin $BRANCH_NAME || true
+          if git diff --cached --exit-code origin/$BRANCH_NAME -- docs/.openapi/inbound-api.yaml docs/modules.md; then
+            echo "No changes compared to remote branch. Skipping commit, push, and PR update."
+            exit 0
+          fi
+          git commit -m "docs: bump Inbound API version to ${{ steps.versions.outputs.upstream_version }}"
+
+          # Push changes
+          git push -f origin $BRANCH_NAME
+
+          # Create or update PR
+          PR_TITLE="docs: bump Inbound API version to ${{ steps.versions.outputs.upstream_version }}"
+          PR_BODY=$(cat <<EOF
+          This PR updates the MailChannels API specification and modules.md to version \`${{ steps.versions.outputs.upstream_version }}\`.
+
+          ## Changes
+          - Updated \`docs/.openapi/inbound-api.yaml\` from version \`${{ steps.versions.outputs.repo_version }}\` to \`${{ steps.versions.outputs.upstream_version }}\`
+          - Updated \`docs/modules.md\` with the new version
+
+          ## Source
+          https://docs.mailchannels.net/inbound-api.yaml
+
+          _This PR was automatically generated by the [check-inbound-api-version](https://github.com/Yizack/mailchannels/actions/workflows/check-inbound-api-version.yml) workflow._
+          EOF
+          )
+
+          if [ "${{ steps.existing_pr.outputs.pr_exists }}" == "true" ]; then
+            echo "Updating existing PR #${{ steps.existing_pr.outputs.pr_number }}"
+            gh pr edit ${{ steps.existing_pr.outputs.pr_number }} --title "$PR_TITLE" --body "$PR_BODY"
+          else
+            echo "Creating new PR"
+            gh pr create --title "$PR_TITLE" --body "$PR_BODY" --base main --head $BRANCH_NAME --label documentation --assignee Yizack
+          fi
