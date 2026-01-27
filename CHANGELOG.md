@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.7.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.1...v0.7.2)
+
+### 🚀 Enhancements
+
+- **emails:** Add `envelopeFrom` option to email sending ([#63](https://github.com/Yizack/mailchannels/pull/63))
+
+### 📖 Documentation
+
+- **types:** Document send click tracking link conditions ([84fe123](https://github.com/Yizack/mailchannels/commit/84fe123))
+- **email-api:** Update open api tracking file ([c920657](https://github.com/Yizack/mailchannels/commit/c920657))
+- **snippets:** Skip private methods in class signature extraction ([ee2bb2e](https://github.com/Yizack/mailchannels/commit/ee2bb2e))
+- Bump Email API version to 0.18.0 ([#68](https://github.com/Yizack/mailchannels/pull/68))
+- Add section on GitHub Actions workflows to version tracking README ([8c36579](https://github.com/Yizack/mailchannels/commit/8c36579))
+
+### 🤖 CI
+
+- Add workflow to automatically check and update Email API version ([81bf8ef](https://github.com/Yizack/mailchannels/commit/81bf8ef))
+- Add workflow to automatically check and update Inbound API version ([409ba9f](https://github.com/Yizack/mailchannels/commit/409ba9f))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.1
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.0...v0.7.1)
