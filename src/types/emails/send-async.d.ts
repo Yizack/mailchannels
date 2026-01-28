@@ -1,3 +1,5 @@
+import type { DataResponse } from "../responses";
+
 export type EmailsSendAsyncResponse = DataResponse<{
   /**
    * ISO 8601 timestamp when the request was queued for processing.
