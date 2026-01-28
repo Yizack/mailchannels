@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v0.7.3
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.2...v0.7.3)
+
+### 🩹 Fixes
+
+- **types:** Correctly import `DataResponse` type in send-async ([c10fb92](https://github.com/Yizack/mailchannels/commit/c10fb92))
+- **types:** Fix `queuedAt` type in `EmailsSendAsyncResponse` ([5d4d93f](https://github.com/Yizack/mailchannels/commit/5d4d93f))
+
+### 💅 Refactors
+
+- **types:** Rename files from .d.ts to .ts to ensure typechecking ([5d68f39](https://github.com/Yizack/mailchannels/commit/5d68f39))
+
+### ✅ Tests
+
+- Replace fake data type assertions with 'satisfies' ([5506109](https://github.com/Yizack/mailchannels/commit/5506109))
+
+### 🤖 CI
+
+- Fix version extraction in check-inbound-api-version workflow ([d777367](https://github.com/Yizack/mailchannels/commit/d777367))
+- Udpate PR body text in API version workflows ([a85eaff](https://github.com/Yizack/mailchannels/commit/a85eaff))
+- Prefix API version update branches with 'docs/' ([d4f7891](https://github.com/Yizack/mailchannels/commit/d4f7891))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.2
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.1...v0.7.2)
