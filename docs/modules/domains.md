@@ -41,7 +41,7 @@ const { data, error } = await mailchannels.domains.provision({
 
 ### Params
 
-- `options` `DomainsProvisionOptions & DomainsData` <Badge type="danger">required</Badge>: The provision options and domain data.
+- `options` `DomainsProvisionOptions` <Badge type="danger">required</Badge>: The provision options and domain data.
   - `subscriptionHandle` `string` <Badge type="danger">required</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
     > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.

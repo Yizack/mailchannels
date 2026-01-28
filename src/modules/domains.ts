@@ -4,7 +4,7 @@ import { clean, validateLimit, validateOffset } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
-import type { DomainsAddListEntryApiResponse, DomainsBulkProvisionApiResponse } from "../types/domains/internal";
+import type { DomainsAddListEntryApiResponse } from "../types/domains/internal";
 import type { DomainsBulkProvisionOptions, DomainsBulkProvisionResponse, DomainsData, DomainsProvisionOptions, DomainsProvisionResponse } from "../types/domains/provision";
 import type { DomainsListOptions, DomainsListResponse } from "../types/domains/list";
 import type { DomainsCreateLoginLinkResponse } from "../types/domains/create-login-link";
@@ -26,12 +26,12 @@ export class Domains {
    * })
    * ```
    */
-  async provision (options: DomainsProvisionOptions & DomainsData): Promise<DomainsProvisionResponse> {
+  async provision (options: DomainsProvisionOptions): Promise<DomainsProvisionResponse> {
     let error: ErrorResponse | null = null;
 
     const { associateKey, overwrite, ...payload } = options;
 
-    const response = await this.mailchannels.post<DomainsBulkProvisionApiResponse>("/inbound/v1/domains", {
+    const response = await this.mailchannels.post<DomainsProvisionResponse["data"]>("/inbound/v1/domains", {
       query: {
         "associate-key": associateKey,
         "overwrite": overwrite

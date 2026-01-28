@@ -11,7 +11,7 @@ const fake = {
   provision: {
     domain: "example.com",
     subscriptionHandle: "subscription-handle"
-  } as DomainsProvisionOptions & DomainsData,
+  } as DomainsProvisionOptions,
   loginLink: "https://example.com/login",
   bulkProvisionResponse: {
     results: {
@@ -66,7 +66,7 @@ const fake = {
       },
       subscriptionHandle: "your-subscription-handle"
     }
-  ] as Partial<DomainsProvisionOptions>,
+  ] satisfies Partial<DomainsData>[],
   addListEntry: {
     options: {
       listName: "safelist",

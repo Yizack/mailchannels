@@ -61,7 +61,7 @@ export interface DomainsData {
   subscriptionHandle: string;
 }
 
-export interface DomainsProvisionOptions {
+export interface DomainsProvisionOptions extends DomainsData {
   /**
    * If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
    */
@@ -72,7 +72,7 @@ export interface DomainsProvisionOptions {
   overwrite?: boolean;
 }
 
-export type DomainsBulkProvisionOptions = DomainsProvisionOptions & Pick<DomainsData, "subscriptionHandle">;
+export type DomainsBulkProvisionOptions = Pick<DomainsProvisionOptions, "subscriptionHandle" | "associateKey" | "overwrite">;
 
 export type DomainsProvisionResponse = DataResponse<DomainsData>;
 
