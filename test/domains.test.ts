@@ -11,7 +11,7 @@ const fake = {
   provision: {
     domain: "example.com",
     subscriptionHandle: "subscription-handle"
-  } as DomainsProvisionOptions,
+  } satisfies DomainsProvisionOptions,
   loginLink: "https://example.com/login",
   bulkProvisionResponse: {
     results: {
@@ -71,12 +71,12 @@ const fake = {
     options: {
       listName: "safelist",
       item: "name@example.com"
-    } as ListEntryOptions,
+    } satisfies ListEntryOptions,
     apiResponse: {
       action: "safelist",
       item: "name@example.com",
       item_type: "email_address"
-    } as DomainsAddListEntryApiResponse
+    } satisfies DomainsAddListEntryApiResponse
   },
   listDownstreamAddresses: {
     records: [

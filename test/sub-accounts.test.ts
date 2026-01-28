@@ -22,7 +22,7 @@ const fake = {
     } satisfies SubAccountsCreateResponse
   },
   list: {
-    options: { limit: 10, offset: 0 } as SubAccountsListOptions,
+    options: { limit: 10, offset: 0 } satisfies SubAccountsListOptions,
     apiResponse: [
       { company_name: "My Company", enabled: true, handle: "sub-account-1" },
       { company_name: "Another Company", enabled: false, handle: "sub-account-2" }
@@ -43,7 +43,7 @@ const fake = {
     } satisfies SubAccountsCreateApiKeyResponse
   },
   listApiKeys: {
-    options: { limit: 10, offset: 0 } as SubAccountsListApiKeyOptions,
+    options: { limit: 10, offset: 0 } satisfies SubAccountsListApiKeyOptions,
     apiResponse: [
       { id: 1, key: "api-key-1" },
       { id: 2, key: "api-key-2" }

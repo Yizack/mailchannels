@@ -14,7 +14,7 @@ const fake = {
   report: {
     type: "false_positive",
     messageContent: "This is a test message"
-  } as ServiceReportOptions
+  } satisfies ServiceReportOptions
 };
 
 describe("status", () => {

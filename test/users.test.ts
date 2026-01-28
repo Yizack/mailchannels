@@ -20,19 +20,18 @@ const fake = {
         item_type: "email_address",
         action: "safelist"
       }]
-
-    } as UsersCreateApiResponse
+    } satisfies UsersCreateApiResponse
   },
   addListEntry: {
     options: {
       listName: "safelist",
       item: "name@example.com"
-    } as ListEntryOptions,
+    } satisfies ListEntryOptions,
     apiResponse: {
       action: "safelist",
       item: "name@example.com",
       item_type: "email_address"
-    } as ListEntryApiResponse
+    } satisfies ListEntryApiResponse
   }
 };
 
