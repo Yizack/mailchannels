@@ -113,7 +113,7 @@ jobs:
           # Create or update PR
           PR_TITLE="docs: bump Email API version to ${{ steps.versions.outputs.upstream_version }}"
           PR_BODY=$(cat <<EOF
-          This PR updates the MailChannels API specification and modules.md to version \`${{ steps.versions.outputs.upstream_version }}\`.
+          This PR updates the MailChannels Email API specification to version \`${{ steps.versions.outputs.upstream_version }}\`.
 
           ## Changes
           - Updated \`docs/.openapi/email-api.yaml\` from version \`${{ steps.versions.outputs.repo_version }}\` to \`${{ steps.versions.outputs.upstream_version }}\`
