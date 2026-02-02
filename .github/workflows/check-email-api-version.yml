@@ -2,8 +2,8 @@ name: check-email-api-version
 
 on:
   schedule:
-    # Run every hour
-    - cron: 0 */4 * * *
+    # Run every 4 hours, Monday to Friday
+    - cron: 0 */4 * * 1-5
   workflow_dispatch: # Allow manual trigger
 
 jobs:

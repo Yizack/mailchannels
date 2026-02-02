@@ -2,8 +2,8 @@ name: check-inbound-api-version
 
 on:
   schedule:
-    # Run every day at midnight
-    - cron: 0 0 * * *
+    # Run every day at midnight, Monday to Friday
+    - cron: 0 0 * * 1-5
   workflow_dispatch: # Allow manual trigger
 
 jobs:
