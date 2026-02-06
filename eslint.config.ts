@@ -21,7 +21,6 @@ export default defineConfig([
       parser: parserTs
     },
     rules: {
-      "camelcase": "off",
       "no-console": ["error", { allow: ["info", "warn", "error"] }],
       "sort-imports": ["error", { ignoreDeclarationSort: true }],
       "import/first": "error",
@@ -52,11 +51,9 @@ export default defineConfig([
       "@stylistic/comma-style": ["error", "last"],
       "@stylistic/key-spacing": ["error", { afterColon: true, beforeColon: false }],
       "@stylistic/keyword-spacing": ["error", { after: true, before: true }],
-      "@stylistic/object-curly-newline": "off",
+      "@stylistic/object-curly-newline": "error",
       "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/object-property-newline": ["error", { allowAllPropertiesOnSameLine: true }],
-      "@stylistic/one-component-per-file": "off",
-      "@stylistic/require-default-prop": "off",
       "@stylistic/space-in-parens": ["error", "never"],
       "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
@@ -64,7 +61,6 @@ export default defineConfig([
       "@stylistic/function-call-spacing": ["error", "never"],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/no-import-type-side-effects": "error",
       "@typescript-eslint/no-unused-vars": ["error", {
         args: "after-used",
