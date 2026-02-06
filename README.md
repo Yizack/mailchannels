@@ -159,7 +159,7 @@ pnpm install
 # Build the package
 pnpm build
 
-# Run ESLint
+# Run Oxlint
 pnpm lint
 
 # Run Vitest
