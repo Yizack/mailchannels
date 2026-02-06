@@ -26,15 +26,15 @@
   "exports": {
     ".": {
       "types": "./dist/mailchannels.d.mts",
-      "import": "./dist/mailchannels.mjs"
+      "default": "./dist/mailchannels.mjs"
     }
   },
-  "types": "./dist/mailchannels.d.ts",
+  "types": "./dist/mailchannels.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "obuild",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --release && git push --follow-tags",
     "lint": "eslint",
@@ -62,9 +62,9 @@
     "eslint": "^9.39.2",
     "eslint-plugin-import-x": "^4.16.1",
     "jiti": "^2.6.1",
+    "obuild": "^0.4.24",
     "scule": "^1.3.0",
     "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
     "vitepress": "^2.0.0-alpha.16",
     "vitepress-plugin-group-icons": "^1.7.1",
     "vitepress-plugin-llms": "^1.11.0",
