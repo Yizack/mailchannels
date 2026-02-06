@@ -3,13 +3,10 @@ import { defineConfig } from "oxlint";
 const { resolve } = import.meta;
 
 export default defineConfig({
-  plugins: ["import"],
+  plugins: ["import", "typescript"],
   jsPlugins: [
     resolve("@stylistic/eslint-plugin")
   ],
-  categories: {
-    correctness: "off"
-  },
   rules: {
     "no-console": ["error", { allow: ["info", "warn", "error"] }],
     "sort-imports": ["error", { ignoreDeclarationSort: true }],
@@ -46,6 +43,9 @@ export default defineConfig({
     "@stylistic/no-multiple-empty-lines": ["error", { max: 1 }],
     "@stylistic/quote-props": ["error", "consistent-as-needed"],
     "@stylistic/arrow-parens": ["error", "as-needed", { requireForBlockBody: true }],
-    "@stylistic/function-call-spacing": ["error", "never"]
+    "@stylistic/function-call-spacing": ["error", "never"],
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-import-type-side-effects": "error"
   }
 });
