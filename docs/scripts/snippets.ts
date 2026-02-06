@@ -45,7 +45,7 @@ const extractClassWithSignatures = (code: string) => {
           // Fix parameter types with default values
           const fixedMethodText = methodText
             .replace(/(\w+)\s*=\s*(true|false)(?=[,)])/g, "$1?: boolean") // boolean default values
-            .replace(/(\w+)\s*:\s*([\w\[\]]+)\s*=\s*\[\]/g, "$1?: $2"); // array default values
+            .replace(/(\w+)\s*:\s*([\w[\]]+)\s*=\s*\[\]/g, "$1?: $2"); // array default values
           result += `  ${fixedMethodText.trim()};\n`;
         }
       });
