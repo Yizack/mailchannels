@@ -141,7 +141,6 @@ const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
 
 ### Response
 
-- `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
 - `data` `object | null` <Badge type="warning">nullable</Badge>
   - `key` `string` <Badge>guaranteed</Badge>
 - `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
@@ -186,7 +185,7 @@ const { data, error } = await mailchannels.webhooks.validate('optional-request-i
   - `results` `object[]` <Badge>guaranteed</Badge>: Detailed results for each tested webhook, including whether it returned a 2xx status code, along with its response status code and body.
     - `result` `"passed" | "failed"` <Badge>guaranteed</Badge>: Indicates whether the webhook responded with a 2xx HTTP status code.
     - `webhook` `string` <Badge>guaranteed</Badge>: The webhook that was validated.
-    - `response` `object` <Badge>guaranteed</Badge>: The HTTP response returned by the webhook, including status code and response body. A null value indicates no response was received. Possible reasons include timeouts, connection failures, or other network-related issues.
+    - `response` `object | null` <Badge type="warning">nullable</Badge>: The HTTP response returned by the webhook, including status code and response body. A null value indicates no response was received. Possible reasons include timeouts, connection failures, or other network-related issues.
       - `body` `string` <Badge type="info">optional</Badge>: Response body from webhook. Returns an error if unprocessable or too large.
       - `status` `number` <Badge>guaranteed</Badge>: HTTP status code returned by the webhook.
 - `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
