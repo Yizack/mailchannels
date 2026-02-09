@@ -255,7 +255,7 @@ const { data, error } = await mailchannels.metrics.usage()
 
 ### Response
 
-- `usage` `object | null` <Badge type="warning">nullable</Badge>
+- `data` `MetricsUsageResponse | null` <Badge type="warning">nullable</Badge>
   - `endDate` `string` <Badge>guaranteed</Badge>: The end date of the current billing period (ISO 8601 format).
   - `startDate` `string` <Badge>guaranteed</Badge>: The start date of the current billing period (ISO 8601 format).
   - `total` `number` <Badge>guaranteed</Badge>: The total usage for the current billing period.

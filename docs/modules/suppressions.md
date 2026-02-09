@@ -149,9 +149,9 @@ const { data, error } = await mailchannels.suppressions.list()
 
 - `data` `SuppressionsListEntry[] | null` <Badge type="warning">nullable</Badge>
   - `createdAt` `string` <Badge>guaranteed</Badge>
-  - `notes` `string | null` <Badge type="info">optional</Badge>
+  - `notes` `string` <Badge type="info">optional</Badge>
   - `recipient` `string` <Badge>guaranteed</Badge>: The email address that is suppressed.
-  - `sender` `string | null` <Badge type="info">optional</Badge>
+  - `sender` `string` <Badge type="info">optional</Badge>
   - `source` `"api" | "unsubscribe_link" | "list_unsubscribe" | "hard_bounce" | "spam_complaint" | "all"` <Badge>guaranteed</Badge>
   - `types` `("transactional" | "non-transactional")[]` <Badge>guaranteed</Badge>
 - `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
