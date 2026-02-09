@@ -1,12 +1,12 @@
 import { defineConfig } from "oxlint";
 
-const resolve = (name: string) => import.meta.resolve(name);
+const resolveJsPlugins = (plugins: string[]) => plugins.map(import.meta.resolve);
 
 export default defineConfig({
   plugins: ["import", "typescript"],
-  jsPlugins: [
-    resolve("@stylistic/eslint-plugin")
-  ],
+  jsPlugins: resolveJsPlugins([
+    "@stylistic/eslint-plugin"
+  ]),
   rules: {
     "no-console": ["error", { allow: ["info", "warn", "error"] }],
     "sort-imports": ["error", { ignoreDeclarationSort: true }],
