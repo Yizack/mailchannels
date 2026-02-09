@@ -1,6 +1,6 @@
 import { defineConfig } from "oxlint";
 
-const { resolve } = import.meta;
+const resolve = (name: string) => import.meta.resolve(name);
 
 export default defineConfig({
   plugins: ["import", "typescript"],
