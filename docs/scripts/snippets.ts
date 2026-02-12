@@ -35,7 +35,7 @@ const extractClassWithSignatures = (code: string) => {
       result = `class ${className} {\n`;
 
       // Process all class members
-      node.members.forEach((member) => {
+      for (const member of node.members) {
         if (isMethodDeclaration(member) || isConstructorDeclaration(member)) {
           // Skip private methods
           const isPrivate = member.modifiers?.some(modifier => modifier.kind === SyntaxKind.PrivateKeyword);
@@ -48,7 +48,7 @@ const extractClassWithSignatures = (code: string) => {
             .replace(/(\w+)\s*:\s*([\w[\]]+)\s*=\s*\[\]/g, "$1?: $2"); // array default values
           result += `  ${fixedMethodText.trim()};\n`;
         }
-      });
+      }
 
       result += "}";
     }
