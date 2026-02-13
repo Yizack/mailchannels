@@ -764,6 +764,20 @@ describe("setDownstreamAddress", () => {
     expect(mockClient.put).not.toHaveBeenCalled();
   });
 
+  it("should contain error when records is not provided", async () => {
+    const mockClient = {
+      put: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const domains = new Domains(mockClient);
+    // @ts-expect-error records is not provided
+    const { success, error } = await domains.setDownstreamAddress(fake.provision.domain);
+
+    expect(error).toStrictEqual({ message: "No records provided.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.put).not.toHaveBeenCalled();
+  });
+
   it("should contain error when more than 10 records are provided", async () => {
     const mockClient = {
       put: vi.fn()

@@ -382,11 +382,16 @@ export class Domains {
    * ])
    * ```
    */
-  async setDownstreamAddress (domain: string, records: DomainsDownstreamAddress[] = []): Promise<SuccessResponse> {
+  async setDownstreamAddress (domain: string, records: DomainsDownstreamAddress[]): Promise<SuccessResponse> {
     let error: ErrorResponse | null = null;
 
     if (!domain) {
       error = createError("No domain provided.");
+      return { success: false, error };
+    }
+
+    if (!records) {
+      error = createError("No records provided.");
       return { success: false, error };
     }
 
