@@ -1,6 +1,43 @@
 # Changelog
 
 
+## v0.7.4
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.3...v0.7.4)
+
+### 💅 Refactors
+
+- **domains:** Validate records in `setDownstreamAddress` ([a926001](https://github.com/Yizack/mailchannels/commit/a926001))
+- **utils:** Simplify pagination error validation ([a008552](https://github.com/Yizack/mailchannels/commit/a008552))
+
+### 📖 Documentation
+
+- **webhooks:** Fix `getSigningKey` response docs ([a58a801](https://github.com/Yizack/mailchannels/commit/a58a801))
+- **metrics:** Fix `usage` response and add data type ([7f68e24](https://github.com/Yizack/mailchannels/commit/7f68e24))
+- **suppressions:** Fix `list` response data properties ([63ef090](https://github.com/Yizack/mailchannels/commit/63ef090))
+- **snippets:** Iterate class members with for of ([873e33f](https://github.com/Yizack/mailchannels/commit/873e33f))
+
+### 📦 Build
+
+- Switch to obuild (rolldown) ([4e83ecd](https://github.com/Yizack/mailchannels/commit/4e83ecd))
+
+### 🏡 Chore
+
+- **lint:** Clean up eslint rules ([43f0e77](https://github.com/Yizack/mailchannels/commit/43f0e77))
+- Switch linting from eslint to oxlint ([#73](https://github.com/Yizack/mailchannels/pull/73))
+
+### ✅ Tests
+
+- Cast module indexing key type ([58c0b2a](https://github.com/Yizack/mailchannels/commit/58c0b2a))
+
+### 🤖 CI
+
+- Limit check workflows to weekdays ([5c09f53](https://github.com/Yizack/mailchannels/commit/5c09f53))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.3
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.2...v0.7.3)
