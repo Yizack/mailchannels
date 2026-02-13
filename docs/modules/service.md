@@ -36,9 +36,8 @@ const { success, error } = await mailchannels.service.status()
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
+
 ## Subscriptions <Badge type="info">method</Badge>
 
 Get a list of your subscriptions to MailChannels Inbound.
@@ -76,9 +75,7 @@ const { data, error } = await mailchannels.service.subscriptions()
   - `plan` `object` <Badge>guaranteed</Badge>
     - `handle` `string` <Badge>guaranteed</Badge>
     - `name` `string` <Badge>guaranteed</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Report <Badge type="info">method</Badge>
 
@@ -126,9 +123,7 @@ const { success, error } = await mailchannels.service.report({
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Type declarations
 

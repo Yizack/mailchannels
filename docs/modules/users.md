@@ -64,9 +64,7 @@ const { data, error } = await mailchannels.users.create('name@example.com', {
     - `item` `string` <Badge>guaranteed</Badge>
     - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
     - `action` `"safelist" | "blocklist"` <Badge>guaranteed</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Add List Entry <Badge type="info">method</Badge>
 
@@ -112,9 +110,7 @@ const { data, error } = await mailchannels.users.addListEntry('name@example.com'
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## List Entries <Badge type="info">method</Badge>
 
@@ -152,9 +148,7 @@ const { data, error } = await mailchannels.users.listEntries('name@example.com',
   - `action` `"blocklist" | "safelist"` <Badge>guaranteed</Badge>
   - `item` `string` <Badge>guaranteed</Badge>
   - `type` `"domain" | "email_address" | "ip_address"` <Badge>guaranteed</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Delete List Entry <Badge type="info">method</Badge>
 
@@ -197,9 +191,7 @@ const { success, error } = await mailchannels.users.deleteListEntry('name@exampl
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Type declarations
 

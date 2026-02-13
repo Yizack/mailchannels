@@ -40,9 +40,7 @@ const { success, error } = await mailchannels.webhooks.enroll("https://example.c
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## List <Badge type="info">method</Badge>
 
@@ -72,9 +70,7 @@ const { data, error } = await mailchannels.webhooks.list()
 ### Response
 
 - `data` `string[] | null` <Badge type="warning">nullable</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Delete <Badge type="info">method</Badge>
 
@@ -104,9 +100,7 @@ const { success, error } = await mailchannels.webhooks.delete()
 ### Response
 
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Signing Key <Badge type="info">method</Badge>
 
@@ -143,9 +137,7 @@ const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
 
 - `data` `object | null` <Badge type="warning">nullable</Badge>
   - `key` `string` <Badge>guaranteed</Badge>
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Validate <Badge type="info">method</Badge>
 
@@ -188,9 +180,7 @@ const { data, error } = await mailchannels.webhooks.validate('optional-request-i
     - `response` `object | null` <Badge type="warning">nullable</Badge>: The HTTP response returned by the webhook, including status code and response body. A null value indicates no response was received. Possible reasons include timeouts, connection failures, or other network-related issues.
       - `body` `string` <Badge type="info">optional</Badge>: Response body from webhook. Returns an error if unprocessable or too large.
       - `status` `number` <Badge>guaranteed</Badge>: HTTP status code returned by the webhook.
-- `error` `ErrorResponse | null` <Badge type="warning">nullable</Badge>: Error information if the operation failed.
-  - `message` `string` <Badge>guaranteed</Badge>: A human-readable description of the error.
-  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>: The HTTP status code from the API, or `null` if the error is not related to an HTTP request.
+<!-- @include: _parts/error-response.md -->
 
 ## Type declarations
 

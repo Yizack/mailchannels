@@ -12,6 +12,7 @@ export default defineConfig({
   description: SITE.description,
   cleanUrls: true,
   lastUpdated: true,
+  srcExclude: ["**/_parts/**"],
   transformHead: ({ pageData }) => {
     const head: HeadConfig[] = [];
     const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
