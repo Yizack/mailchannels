@@ -46,3 +46,18 @@ export const getStatusError = (
 export const getResultError = (e: unknown, fallback: string) => {
   return createError(e instanceof Error ? e.message : fallback);
 };
+
+export const validatePagination = (pagination: Partial<{
+  limit: number;
+  max: number;
+  offset: number;
+}> = {}) => {
+  const { limit, offset, max } = pagination;
+  if (typeof limit === "number" && (limit < 1 || (max && limit > max))) {
+    return createError("The limit value " + (max ? `must be between 1 and ${max}.` : "is invalid. Only positive values are allowed."));
+  }
+  if (typeof offset === "number" && offset < 0) {
+    return createError("Offset must be greater than or equal to 0.");
+  }
+  return null;
+};

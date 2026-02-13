@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
-import { clean, stripPemHeaders, validateLimit, validateOffset } from "../utils/helpers";
+import { clean, stripPemHeaders } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
@@ -296,10 +296,7 @@ export class Emails {
       return { data: null, error };
     }
 
-    error =
-      validateLimit(options?.limit, 100) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination({ ...options, max: 100 });
     if (error) return { data: null, error };
 
     const payload: EmailsGetDkimKeysPayload = {

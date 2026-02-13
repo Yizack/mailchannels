@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
-import { clean, validateLimit, validateOffset } from "../utils/helpers";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
@@ -128,10 +128,7 @@ export class Domains {
   async list (options?: DomainsListOptions): Promise<DomainsListResponse> {
     let error: ErrorResponse | null = null;
 
-    error =
-      validateLimit(options?.limit, 5000) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination({ ...options, max: 5000 });
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<{ domains: DomainsData[], total: number }>("/inbound/v1/domains", {
@@ -433,10 +430,7 @@ export class Domains {
       return { data: null, error };
     }
 
-    error =
-      validateLimit(options?.limit) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination(options);
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<{ records: DomainsDownstreamAddress[] }>(`/inbound/v1/domains/${domain}/downstream-address`, {

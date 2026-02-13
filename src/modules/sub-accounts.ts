@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
-import { clean, validateLimit, validateOffset } from "../utils/helpers";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SubAccountsCreateApiResponse, SubAccountsCreateSmtpPasswordApiResponse, SubAccountsListApiResponse, SubAccountsUsageApiResponse } from "../types/sub-accounts/internal";
 import type { SubAccountsCreateResponse } from "../types/sub-accounts/create";
@@ -81,10 +81,7 @@ export class SubAccounts {
   async list (options?: SubAccountsListOptions): Promise<SubAccountsListResponse> {
     let error: ErrorResponse | null = null;
 
-    error =
-      validateLimit(options?.limit, 1000) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<SubAccountsListApiResponse>("/tx/v1/sub-account", {
@@ -254,10 +251,7 @@ export class SubAccounts {
       return { data: null, error };
     }
 
-    error =
-      validateLimit(options?.limit, 1000) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
     const response = await this.mailchannels.get<{ id: number, key: string }[]>(`/tx/v1/sub-account/${handle}/api-key`, {

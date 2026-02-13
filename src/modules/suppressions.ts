@@ -1,6 +1,6 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
-import { clean, validateLimit, validateOffset } from "../utils/helpers";
+import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
@@ -90,10 +90,7 @@ export class Suppressions {
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
     let error: ErrorResponse | null = null;
 
-    error =
-      validateLimit(options?.limit, 1000) ||
-      validateOffset(options?.offset);
-
+    error = validatePagination({ ...options, max: 1000 });
     if (error) return { data: null, error };
 
     const payload: SuppressionsListPayload = {
