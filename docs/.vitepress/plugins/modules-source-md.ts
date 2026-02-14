@@ -5,13 +5,12 @@ const URL = "https://github.com/Yizack/mailchannels/blob/main";
 export default (md: MarkdownIt) => {
   const render = md.render.bind(md);
   md.render = function (src, env = {}) {
-    if (env.relativePath && env.relativePath.startsWith("modules/")) {
-      const slug = env.relativePath.split("/").pop()?.replace(/\.md$/, "");
-
+    const [folder, module, slug] = env.relativePath.replace(/\.md$/, "").split("/");
+    if (folder === "modules") {
       const links = ([
-        ["Source", `${URL}/src/modules/${slug}.ts`],
-        ["Playground", `${URL}/playground/${slug}`],
-        ["Docs", `${URL}/docs/modules/${slug}.md`]
+        ["Source", `${URL}/src/modules/${module}.ts`],
+        ["Playground", `${URL}/playground/${module}` + (slug !== "index" ? `/${slug}.ts` : "")],
+        ["Docs", `${URL}/docs/modules/${module}/${slug}.md`]
       ]).filter(i => i)
         .map(i => `[${i![0]}](${i![1]})`)
         .join(" • ");

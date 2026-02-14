@@ -4,6 +4,7 @@ import llmstxt from "vitepress-plugin-llms";
 import sidebarConfig from "./sidebar";
 import navbarConfig from "./navbar";
 import modulesSourceMd from "./plugins/modules-source-md";
+import moduleMethodsMd from "./plugins/module-methods-md";
 import { SITE } from "./site";
 
 export default defineConfig({
@@ -48,9 +49,13 @@ export default defineConfig({
     ["link", { rel: "manifest", href: "/site.webmanifest" }]
   ],
   markdown: {
+    anchor: {
+      level: [2, 3]
+    },
     config (md) {
       md.use(groupIconMdPlugin);
       md.use(modulesSourceMd);
+      md.use(moduleMethodsMd);
     }
   },
   vite: {

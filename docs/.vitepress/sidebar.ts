@@ -23,13 +23,13 @@ export default [
             collapsed: true,
             link: "/modules/emails",
             items: [
-              { text: "Send Email", link: "/modules/emails#send-method" },
-              { text: "Send Async Email", link: "/modules/emails#send-async-method" },
-              { text: "Check Domain", link: "/modules/emails#check-domain-method" },
-              { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key-method" },
-              { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys-method" },
-              { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" },
-              { text: "Rotate DKIM Key", link: "/modules/emails#rotate-dkim-key-method" }
+              { text: "Send Email", link: "/modules/emails/send" },
+              { text: "Send Async Email", link: "/modules/emails/send-async" },
+              { text: "Check Domain", link: "/modules/emails/check-domain" },
+              { text: "Create DKIM Key", link: "/modules/emails/create-dkim-key" },
+              { text: "Get DKIM Keys", link: "/modules/emails/get-dkim-keys" },
+              { text: "Update DKIM Key", link: "/modules/emails/update-dkim-key" },
+              { text: "Rotate DKIM Key", link: "/modules/emails/rotate-dkim-key" }
             ]
           },
           {
@@ -98,18 +98,18 @@ export default [
             collapsed: true,
             link: "/modules/domains",
             items: [
-              { text: "Provision Domain", link: "/modules/domains#provision-method" },
-              { text: "Bulk Provision Domains", link: "/modules/domains#bulk-provision-method" },
-              { text: "List Domains", link: "/modules/domains#list-method" },
-              { text: "Delete Domain", link: "/modules/domains#delete-method" },
-              { text: "Add List Entry", link: "/modules/domains#add-list-entry-method" },
-              { text: "List Entries", link: "/modules/domains#list-entries-method" },
-              { text: "Delete List Entry", link: "/modules/domains#delete-list-entry-method" },
-              { text: "Create Login Link", link: "/modules/domains#create-login-link-method" },
-              { text: "Set Downstream Address", link: "/modules/domains#set-downstream-address-method" },
-              { text: "List Downstream Addresses", link: "/modules/domains#list-downstream-addresses-method" },
-              { text: "Update API Key", link: "/modules/domains#update-api-key-method" },
-              { text: "Bulk Create Login Links", link: "/modules/domains#bulk-create-login-links-method" }
+              { text: "Provision Domain", link: "/modules/domains/provision" },
+              { text: "Bulk Provision Domains", link: "/modules/domains/bulk-provision" },
+              { text: "List Domains", link: "/modules/domains/list" },
+              { text: "Delete Domain", link: "/modules/domains/delete" },
+              { text: "Add List Entry", link: "/modules/domains/add-list-entry" },
+              { text: "List Entries", link: "/modules/domains/list-entries" },
+              { text: "Delete List Entry", link: "/modules/domains/delete-list-entry" },
+              { text: "Create Login Link", link: "/modules/domains/create-login-link" },
+              { text: "Set Downstream Address", link: "/modules/domains/set-downstream-address" },
+              { text: "List Downstream Addresses", link: "/modules/domains/list-downstream-addresses" },
+              { text: "Update API Key", link: "/modules/domains/update-api-key" },
+              { text: "Bulk Create Login Links", link: "/modules/domains/bulk-create-login-links" }
             ]
           },
           {
@@ -117,9 +117,9 @@ export default [
             collapsed: true,
             link: "/modules/lists",
             items: [
-              { text: "Add List Entry", link: "/modules/lists#add-list-entry-method" },
-              { text: "List Entries", link: "/modules/lists#list-entries-method" },
-              { text: "Delete List Entry", link: "/modules/lists#delete-list-entry-method" }
+              { text: "Add List Entry", link: "/modules/lists/add-list-entry" },
+              { text: "List Entries", link: "/modules/lists/list-entries" },
+              { text: "Delete List Entry", link: "/modules/lists/delete-list-entry" }
             ]
           },
           {
