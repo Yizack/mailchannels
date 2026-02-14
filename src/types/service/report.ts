@@ -11,14 +11,14 @@ export interface ServiceReportOptions {
    * The SMTP envelope information.
    */
   smtpEnvelopeInformation?: {
-    ehlo: string;
-    mailFrom: string;
-    rcptTo: string;
+    ehlo?: string;
+    mailFrom?: string;
+    rcptTo?: string;
   };
   /**
    * The sending host information.
    */
   sendingHostInformation?: {
-    name: string;
+    name?: string;
   };
 }
