@@ -44,7 +44,6 @@ const { data, error } = await mailchannels.domains.createLoginLink("example.com"
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-
 **Create Login Link type declarations**
 
 <<< @/snippets/domains-create-login-link.ts

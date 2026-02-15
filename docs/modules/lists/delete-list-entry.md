@@ -1,4 +1,3 @@
-
 # Delete List Entry <Badge type="info">method</Badge> <Badge><a href="/modules/lists">📋 Lists</a></Badge>
 
 Delete item from account-level list.

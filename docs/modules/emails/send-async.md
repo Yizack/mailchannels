@@ -68,4 +68,4 @@ const { data, error } = await mailchannels.emails.sendAsync({
 <<< @/snippets/emails-send-attachment.ts
 <<< @/snippets/emails-send-recipient.ts
 <<< @/snippets/emails-send-tracking.ts
- <<< @/snippets/emails-send-async-response.ts
+<<< @/snippets/emails-send-async-response.ts
