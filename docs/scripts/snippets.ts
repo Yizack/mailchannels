@@ -1,6 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   type Node,
   ScriptTarget,
@@ -26,13 +26,14 @@ const cleanCode = (code: string) => code
 // Extract class declaration with method signatures only
 const extractClassWithSignatures = (code: string) => {
   const sourceFile = createSourceFile("temp.ts", code, ScriptTarget.Latest, true);
-  let result = "";
+  let classSignature = "";
+  let methodSignatures: { name: string, signature: string }[] = [];
 
   const visit = (node: Node) => {
     if (isClassDeclaration(node) && node.name) {
       // Start with class declaration
       const className = node.name.text;
-      result = `class ${className} {\n`;
+      classSignature = `class ${className} {\n`;
 
       // Process all class members
       for (const member of node.members) {
@@ -46,17 +47,23 @@ const extractClassWithSignatures = (code: string) => {
           const fixedMethodText = methodText
             .replace(/(\w+)\s*=\s*(true|false)(?=[,)])/g, "$1?: boolean") // boolean default values
             .replace(/(\w+)\s*:\s*([\w[\]]+)\s*=\s*\[\]/g, "$1?: $2"); // array default values
-          result += `  ${fixedMethodText.trim()};\n`;
+          const method = fixedMethodText.trim();
+          const methodName = member.name ? member.name.getText(sourceFile) : "constructor";
+          classSignature += `  ${method};\n`;
+          if (methodName !== "constructor") {
+            const methodWithFunctionKeyword = method.replace(/\basync\b\s*/, "async function ");
+            methodSignatures.push({ name: methodName, signature: methodWithFunctionKeyword });
+          }
         }
       }
 
-      result += "}";
+      classSignature += "}";
     }
     forEachChild(node, visit);
   };
 
   visit(sourceFile);
-  return result;
+  return { class: classSignature, methods: methodSignatures };
 };
 
 // Extract types, interfaces, and classes
@@ -75,7 +82,12 @@ const extract = (code: string) => {
     else if (isClassDeclaration(node) && node.name) {
       const name = kebabCase(node.name.text);
       const processedClass = extractClassWithSignatures(code);
-      types.push({ name, content: cleanCode(processedClass) });
+      types.push({ name, content: cleanCode(processedClass.class) });
+      // Add method signatures as separate snippets
+      for (const method of processedClass.methods) {
+        const methodName = kebabCase(method.name);
+        types.push({ name: `${name}-method-${methodName}`, content: cleanCode(method.signature) });
+      }
     }
     forEachChild(node, visit);
   };

@@ -16,31 +16,31 @@ Leverage the power, scale, and reputation of MailChannels to get your mission-cr
 
 ### 📧 Emails
 
-<!-- @include: modules/emails.md#description -->
+<!-- @include: modules/emails/index.md#description -->
 
 <VPButton href="/modules/emails" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 📢 Webhooks
 
-<!-- @include: modules/webhooks.md#description -->
+<!-- @include: modules/webhooks/index.md#description -->
 
 <VPButton href="/modules/webhooks" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 🪪 Sub-accounts
 
-<!-- @include: modules/sub-accounts.md#description -->
+<!-- @include: modules/sub-accounts/index.md#description -->
 
 <VPButton href="/modules/sub-accounts" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 📊 Metrics
 
-<!-- @include: modules/metrics.md#description -->
+<!-- @include: modules/metrics/index.md#description -->
 
 <VPButton href="/modules/metrics" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 🚫 Suppressions
 
-<!-- @include: modules/suppressions.md#description -->
+<!-- @include: modules/suppressions/index.md#description -->
 
 <VPButton href="/modules/suppressions" text="Read documentation" theme="alt" style="text-decoration:none" />
 
@@ -52,24 +52,24 @@ This API is limited to 100 queries per second, per customer. Queries that exceed
 
 ### 🌐 Domains
 
-<!-- @include: modules/domains.md#description -->
+<!-- @include: modules/domains/index.md#description -->
 
 <VPButton href="/modules/domains" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 📋 Lists
 
-<!-- @include: modules/lists.md#description -->
+<!-- @include: modules/lists/index.md#description -->
 
 <VPButton href="/modules/lists" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### 📥 Users
 
-<!-- @include: modules/users.md#description -->
+<!-- @include: modules/users/index.md#description -->
 
 <VPButton href="/modules/users" text="Read documentation" theme="alt" style="text-decoration:none" />
 
 ### ⚙️ Service
 
-<!-- @include: modules/service.md#description -->
+<!-- @include: modules/service/index.md#description -->
 
 <VPButton href="/modules/service" text="Read documentation" theme="alt" style="text-decoration:none" />
