@@ -34,7 +34,7 @@ const { data, error } = await mailchannels.domains.provision({
 - `options` `DomainsProvisionOptions` <Badge type="danger">required</Badge>: The provision options and domain data.
   - `subscriptionHandle` `string` <Badge type="danger">required</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
-    > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
+    > Subscription handles can be retrieved from the [`subscriptions`](/modules/service/subscriptions) service method.
   - `domain` `string` <Badge type="danger">required</Badge>: The domain name.
   - `settings` `object` <Badge type="info">optional</Badge>: The abuse policy settings for the domain. These settings determine how spam messages are handled.
     - `abusePolicy` `"block" | "flag" | "quarantine"` <Badge type="info">optional</Badge>: The abuse policy.

@@ -38,7 +38,7 @@ const { data, error } = await mailchannels.domains.bulkProvision({
 - `options` `DomainsBulkProvisionOptions` <Badge type="danger">required</Badge>: The options to provision the domains.
   - `subscriptionHandle` `string` <Badge type="danger">required</Badge>: The subscription `handle` that identifies the subscription that this domain should be provisioned against.
     > [!TIP]
-    > Subscription handles can be retrieved from the [`subscriptions`](/modules/service#subscriptions) service method.
+    > Subscription handles can be retrieved from the [`subscriptions`](/modules/service/subscriptions) service method.
   - `associateKey` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the domain will be associated with the api-key that created it. This means that this api-key must be used for inbound-api actions involving this domain (for example adding safe/block list entries, etc).
   - `overwrite` `boolean` <Badge type="info">optional</Badge>: If present and set to true, the settings (domain settings, downstream addresses, aliases and admins) for the domain will be overwritten with the ones in the request if the domain already exists, unless a section is not included in the request or there is problem updating a setting in which case the previous settings are carried forward.
 - `domains` `DomainsData[]` <Badge type="danger">required</Badge>: A list of domain data to provision.
