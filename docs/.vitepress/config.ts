@@ -3,8 +3,7 @@ import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-i
 import llmstxt from "vitepress-plugin-llms";
 import sidebarConfig from "./sidebar";
 import navbarConfig from "./navbar";
-import modulesSourceMd from "./plugins/modules-source-md";
-import moduleMethodsMd from "./plugins/module-methods-md";
+import modulesMd from "./plugins/modules-md";
 import { SITE } from "./site";
 
 export default defineConfig({
@@ -54,8 +53,7 @@ export default defineConfig({
     },
     config (md) {
       md.use(groupIconMdPlugin);
-      md.use(modulesSourceMd);
-      md.use(moduleMethodsMd);
+      md.use(modulesMd);
     }
   },
   vite: {
