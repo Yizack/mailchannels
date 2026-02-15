@@ -37,11 +37,11 @@ export default [
             collapsed: true,
             link: "/modules/webhooks",
             items: [
-              { text: "Enroll for Webhook", link: "/modules/webhooks#enroll-method" },
-              { text: "List Webhooks", link: "/modules/webhooks#list-method" },
-              { text: "Delete Webhooks", link: "/modules/webhooks#delete-method" },
-              { text: "Get Signing Key", link: "/modules/webhooks#signing-key-method" },
-              { text: "Validate Webhooks", link: "/modules/webhooks#validate-method" }
+              { text: "Enroll for Webhook", link: "/modules/webhooks/enroll" },
+              { text: "List Webhooks", link: "/modules/webhooks/list" },
+              { text: "Delete Webhooks", link: "/modules/webhooks/delete" },
+              { text: "Get Signing Key", link: "/modules/webhooks/signing-key" },
+              { text: "Validate Webhooks", link: "/modules/webhooks/validate" }
             ]
           },
           {
@@ -49,19 +49,19 @@ export default [
             collapsed: true,
             link: "/modules/sub-accounts",
             items: [
-              { text: "Create Sub-account", link: "/modules/sub-accounts#create-method" },
-              { text: "List Sub-accounts", link: "/modules/sub-accounts#list-method" },
-              { text: "Delete Sub-account", link: "/modules/sub-accounts#delete-method" },
-              { text: "Create API Key", link: "/modules/sub-accounts#create-api-key-method" },
-              { text: "Delete API Key", link: "/modules/sub-accounts#delete-api-key-method" },
-              { text: "List API Keys", link: "/modules/sub-accounts#list-api-keys-method" },
-              { text: "Create SMTP Password", link: "/modules/sub-accounts#create-smtp-password-method" },
-              { text: "List SMTP Passwords", link: "/modules/sub-accounts#list-smtp-passwords-method" },
-              { text: "Delete SMTP Password", link: "/modules/sub-accounts#delete-smtp-password-method" },
-              { text: "Get Limit", link: "/modules/sub-accounts#get-limit-method" },
-              { text: "Set Limit", link: "/modules/sub-accounts#set-limit-method" },
-              { text: "Delete Limit", link: "/modules/sub-accounts#delete-limit-method" },
-              { text: "Get Usage", link: "/modules/sub-accounts#get-usage-method" }
+              { text: "Create Sub-account", link: "/modules/sub-accounts/create" },
+              { text: "List Sub-accounts", link: "/modules/sub-accounts/list" },
+              { text: "Delete Sub-account", link: "/modules/sub-accounts/delete" },
+              { text: "Create API Key", link: "/modules/sub-accounts/create-api-key" },
+              { text: "Delete API Key", link: "/modules/sub-accounts/delete-api-key" },
+              { text: "List API Keys", link: "/modules/sub-accounts/list-api-keys" },
+              { text: "Create SMTP Password", link: "/modules/sub-accounts/create-smtp-password" },
+              { text: "List SMTP Passwords", link: "/modules/sub-accounts/list-smtp-passwords" },
+              { text: "Delete SMTP Password", link: "/modules/sub-accounts/delete-smtp-password" },
+              { text: "Get Limit", link: "/modules/sub-accounts/get-limit" },
+              { text: "Set Limit", link: "/modules/sub-accounts/set-limit" },
+              { text: "Delete Limit", link: "/modules/sub-accounts/delete-limit" },
+              { text: "Get Usage", link: "/modules/sub-accounts/get-usage" }
             ]
           },
           {
@@ -69,12 +69,12 @@ export default [
             collapsed: true,
             link: "/modules/metrics",
             items: [
-              { text: "Engagement", link: "/modules/metrics#engagement-method" },
-              { text: "Performance", link: "/modules/metrics#performance-method" },
-              { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour-method" },
-              { text: "Volume", link: "/modules/metrics#volume-method" },
-              { text: "Usage", link: "/modules/metrics#usage-method" },
-              { text: "Senders", link: "/modules/metrics#senders-method" }
+              { text: "Engagement", link: "/modules/metrics/engagement" },
+              { text: "Performance", link: "/modules/metrics/performance" },
+              { text: "Recipient Behaviour", link: "/modules/metrics/recipient-behaviour" },
+              { text: "Volume", link: "/modules/metrics/volume" },
+              { text: "Usage", link: "/modules/metrics/usage" },
+              { text: "Senders", link: "/modules/metrics/senders" }
             ]
           },
           {
@@ -82,9 +82,9 @@ export default [
             collapsed: true,
             link: "/modules/suppressions",
             items: [
-              { text: "Create Suppression", link: "/modules/suppressions#create-method" },
-              { text: "Delete Suppression", link: "/modules/suppressions#delete-method" },
-              { text: "List Suppressions", link: "/modules/suppressions#list-method" }
+              { text: "Create Suppression", link: "/modules/suppressions/create" },
+              { text: "Delete Suppression", link: "/modules/suppressions/delete" },
+              { text: "List Suppressions", link: "/modules/suppressions/list" }
             ]
           }
         ]
@@ -127,10 +127,10 @@ export default [
             collapsed: true,
             link: "/modules/users",
             items: [
-              { text: "Create User", link: "/modules/users#create-method" },
-              { text: "Add List Entry", link: "/modules/users#add-list-entry-method" },
-              { text: "List Entries", link: "/modules/users#list-entries-method" },
-              { text: "Delete List Entry", link: "/modules/users#delete-list-entry-method" }
+              { text: "Create User", link: "/modules/users/create" },
+              { text: "Add List Entry", link: "/modules/users/add-list-entry" },
+              { text: "List Entries", link: "/modules/users/list-entries" },
+              { text: "Delete List Entry", link: "/modules/users/delete-list-entry" }
             ]
           },
           {
@@ -138,9 +138,9 @@ export default [
             collapsed: true,
             link: "/modules/service",
             items: [
-              { text: "Status", link: "/modules/service#status-method" },
-              { text: "Subscriptions", link: "/modules/service#subscriptions-method" },
-              { text: "Report", link: "/modules/service#report-method" }
+              { text: "Status", link: "/modules/service/status" },
+              { text: "Subscriptions", link: "/modules/service/subscriptions" },
+              { text: "Report", link: "/modules/service/report" }
             ]
           }
         ]
