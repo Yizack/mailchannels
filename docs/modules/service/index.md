@@ -1,7 +1,3 @@
----
-outline: deep
----
-
 # ⚙️ Service <Badge>module</Badge> <Badge>Inbound API</Badge>
 
 <!-- #region description -->

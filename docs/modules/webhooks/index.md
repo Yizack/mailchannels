@@ -1,7 +1,3 @@
----
-outline: deep
----
-
 # 📢 Webhooks <Badge>module</Badge> <Badge>Email API</Badge>
 
 <!-- #region description -->
