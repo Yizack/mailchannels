@@ -4,7 +4,7 @@ const URL = "https://github.com/Yizack/mailchannels/blob/main";
 
 export default (md: MarkdownIt) => {
   const render = md.render.bind(md);
-  md.render = function (src, env = {}) {
+  md.render = (src, env = {}) => {
     const [folder, module, slug] = env.relativePath.replace(/\.md$/, "").split("/");
     if (folder === "modules") {
       const links = ([
