@@ -1,4 +1,4 @@
-# 📢 Webhooks <Badge>module</Badge> <Badge>Email API</Badge>
+# 📢 Webhooks<llm-exclude> <Badge>module</Badge> <Badge>Email API</Badge></llm-exclude>
 
 <!-- #region description -->
 Receive notifications of your email events via webhooks.

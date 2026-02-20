@@ -1,4 +1,4 @@
-# 🚫 Suppressions <Badge>module</Badge> <Badge>Email API</Badge>
+# 🚫 Suppressions<llm-exclude> <Badge>module</Badge> <Badge>Email API</Badge></llm-exclude>
 
 <!-- #region description -->
 Manage your MailChannels account suppressions list.

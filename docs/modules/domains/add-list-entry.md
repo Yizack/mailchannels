@@ -1,4 +1,4 @@
-# Add List Entry <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# Add List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Add an entry to a domain blocklist or safelist.
 

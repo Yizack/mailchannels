@@ -1,4 +1,4 @@
-# Update DKIM Key <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge>
+# Update DKIM Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Update fields of an existing DKIM key pair for the specified domain and selector, for the current customer. Currently, only the `status` field can be updated.
 

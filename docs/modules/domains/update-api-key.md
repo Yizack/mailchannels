@@ -1,4 +1,4 @@
-# Update API Key <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# Update API Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Update the API key that is associated with a domain.
 

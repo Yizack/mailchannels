@@ -1,4 +1,4 @@
-# Add List Entry <Badge type="info">method</Badge> <Badge><a href="/modules/users">📥 Users</a></Badge>
+# Add List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/users">📥 Users</a></Badge></llm-exclude>
 
 Add an entry to a recipient user blocklist or safelist.
 

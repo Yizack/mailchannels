@@ -1,4 +1,4 @@
-# 📊 Metrics <Badge>module</Badge> <Badge>Email API</Badge>
+# 📊 Metrics<llm-exclude> <Badge>module</Badge> <Badge>Email API</Badge></llm-exclude>
 
 <!-- #region description -->
 This module allows you to retrieve metrics for messages sent from your account.

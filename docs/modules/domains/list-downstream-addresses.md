@@ -1,4 +1,4 @@
-# List Downstream Addresses <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# List Downstream Addresses<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Retrieve stored downstream addresses for the domain.
 

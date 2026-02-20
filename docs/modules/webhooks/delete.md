@@ -1,4 +1,4 @@
-# Delete <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge>
+# Delete<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
 
 Deletes all registered webhook endpoints for the user.
 

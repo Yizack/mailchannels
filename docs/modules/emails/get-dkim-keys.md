@@ -1,4 +1,4 @@
-# Get DKIM Keys <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge>
+# Get DKIM Keys<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Search for DKIM keys by domain, with optional filters. If selector is provided, at most one key will be returned.
 

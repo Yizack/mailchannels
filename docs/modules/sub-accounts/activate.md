@@ -1,4 +1,4 @@
-# Activate <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge>
+# Activate<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Activates a suspended sub-account identified by its handle, restoring its ability to send emails.
 

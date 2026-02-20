@@ -1,4 +1,4 @@
-# Create SMTP Password <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge>
+# Create SMTP Password<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Creates a new API key for the specified sub-account.
 

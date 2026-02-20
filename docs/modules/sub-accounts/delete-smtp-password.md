@@ -1,4 +1,4 @@
-# Delete SMTP Password <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge>
+# Delete SMTP Password<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Deletes the SMTP password identified by its ID for the specified sub-account.
 

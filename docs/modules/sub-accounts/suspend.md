@@ -1,4 +1,4 @@
-# Suspend <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge>
+# Suspend<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Suspends the sub-account identified by its handle. This action disables the account, preventing it from sending any emails until it is reactivated.
 

@@ -1,4 +1,4 @@
-# List Entries <Badge type="info">method</Badge> <Badge><a href="/modules/users">📥 Users</a></Badge>
+# List Entries<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/users">📥 Users</a></Badge></llm-exclude>
 
 Get recipient list entries.
 

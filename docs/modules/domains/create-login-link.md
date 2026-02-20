@@ -1,4 +1,4 @@
-# Create Login Link <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# Create Login Link<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Generate a link that allows a user to log in as a domain administrator.
 

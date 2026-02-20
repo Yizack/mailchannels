@@ -1,4 +1,4 @@
-# List Entries <Badge type="info">method</Badge> <Badge><a href="/modules/lists">📋 Lists</a></Badge>
+# List Entries<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/lists">📋 Lists</a></Badge></llm-exclude>
 
 Get account-level list entries.
 

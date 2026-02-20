@@ -1,4 +1,4 @@
-# 📥 Users <Badge>module</Badge> <Badge>Inbound API</Badge>
+# 📥 Users<llm-exclude> <Badge>module</Badge> <Badge>Inbound API</Badge></llm-exclude>
 
 <!-- #region description -->
 Manage your MailChannels Inbound recipient users.

@@ -1,4 +1,4 @@
-# Create DKIM Key <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge>
+# Create DKIM Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Create a DKIM key pair for a specified domain and selector using the specified algorithm and key length, for the current customer.
 

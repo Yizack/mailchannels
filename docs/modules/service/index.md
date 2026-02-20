@@ -1,4 +1,4 @@
-# ⚙️ Service <Badge>module</Badge> <Badge>Inbound API</Badge>
+# ⚙️ Service<llm-exclude> <Badge>module</Badge> <Badge>Inbound API</Badge></llm-exclude>
 
 <!-- #region description -->
 Get information about the service.

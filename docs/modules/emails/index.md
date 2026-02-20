@@ -1,4 +1,4 @@
-# 📧 Emails <Badge>module</Badge> <Badge>Email API</Badge>
+# 📧 Emails<llm-exclude> <Badge>module</Badge> <Badge>Email API</Badge></llm-exclude>
 
 <!-- #region description -->
 This module allows you to send emails and check domain settings for secure email delivery.

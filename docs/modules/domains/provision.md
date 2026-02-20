@@ -1,4 +1,4 @@
-# Provision <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# Provision<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Provision a single domain to use MailChannels Inbound.
 

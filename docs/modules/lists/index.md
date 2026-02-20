@@ -1,4 +1,4 @@
-# 📋 Lists <Badge>module</Badge> <Badge>Inbound API</Badge>
+# 📋 Lists<llm-exclude> <Badge>module</Badge> <Badge>Inbound API</Badge></llm-exclude>
 
 <!-- #region description -->
 Manage account-level lists.

@@ -1,4 +1,4 @@
-# Bulk Provision <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge>
+# Bulk Provision<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Provision up to 1000 domains to use MailChannels Inbound.
 

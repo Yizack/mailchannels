@@ -1,4 +1,4 @@
-# List <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge>
+# List<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
 
 Lists all the webhook endpoints that are enrolled to receive event notifications.
 

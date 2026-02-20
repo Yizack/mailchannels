@@ -1,4 +1,4 @@
-# Status <Badge type="info">method</Badge> <Badge><a href="/modules/service">⚙️ Service</a></Badge>
+# Status<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/service">⚙️ Service</a></Badge></llm-exclude>
 
 Retrieve the condition of the service.
 
