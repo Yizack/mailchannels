@@ -52,6 +52,8 @@ export default [
               { text: "Create Sub-account", link: "/modules/sub-accounts/create" },
               { text: "List Sub-accounts", link: "/modules/sub-accounts/list" },
               { text: "Delete Sub-account", link: "/modules/sub-accounts/delete" },
+              { text: "Suspend Sub-account", link: "/modules/sub-accounts/suspend" },
+              { text: "Activate Sub-account", link: "/modules/sub-accounts/activate" },
               { text: "Create API Key", link: "/modules/sub-accounts/create-api-key" },
               { text: "Delete API Key", link: "/modules/sub-accounts/delete-api-key" },
               { text: "List API Keys", link: "/modules/sub-accounts/list-api-keys" },
