@@ -48,8 +48,8 @@ const { success, error } = await mailchannels.domains.setDownstreamAddress('exam
   - `priority` `number` <Badge type="danger">required</Badge>: The priority of the downstream address. Only addresses with the highest priority (the lowest numerical value) are selected.
   - `target` `string` <Badge type="danger">required</Badge>: The canonical hostname of the host providing the service, ending in a dot.
   - `weight` `number` <Badge type="danger">required</Badge>: Downstream addresses are selected in proportion to their weights. For example, if there are two downstream addresses, A with weight 40, and B with weight 10, then A is selected 80% of the time and B is selected 20% of the time.
-> [!IMPORTANT]
-> If the `records` parameter is an empty array, all downstream address records will be deleted.
+  > [!IMPORTANT]
+  > If the `records` parameter is an empty array, all downstream address records will be deleted.
 
 ## Response
 
