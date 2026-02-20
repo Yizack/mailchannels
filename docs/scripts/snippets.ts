@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -125,6 +125,8 @@ const generateSnippets = async (inputDir: string, outputDir: string, ignores?: s
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(currentDir, "../snippets");
+
+await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
 
 const inputDirs = [
