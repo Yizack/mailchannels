@@ -33,6 +33,7 @@ pnpm add mailchannels-sdk
 ## Quick Start
 
 This library can be used in two ways:
+
 - Importing the whole library
 - Importing the client and only the modules you need
 
@@ -80,10 +81,12 @@ This approach is tree-shakable and is useful when you only need to use specific 
 All methods in this SDK return an object with both `data` and `error` properties to avoid throwing exceptions, making error handling more predictable and easier to manage.
 
 **Success case:**
+
 - `data`: Contains the response data
 - `error`: Will be `null`
 
 **Error case:**
+
 - `data`: Will be `null`
 - `error`: Contains an `ErrorResponse` object with the following properties:
   - `message`: A human-readable description of the error
