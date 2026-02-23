@@ -127,7 +127,7 @@ export const getChangelog = (filePath: string): string => {
     .map(({ version, commits }) => {
       // Get the date of the first commit in this version
       const versionDate = commits[0]?.date || "";
-      const dateFormatted = versionDate ? ` <small style="opacity: 0.6;">on ${versionDate}</small>` : "";
+      const dateFormatted = versionDate ? ` <small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
       const versionHeader = `<Badge>${version}</Badge> ${dateFormatted}\n`;
       const commitsList = commits
         .map(({ hash, message }) => {
@@ -135,7 +135,7 @@ export const getChangelog = (filePath: string): string => {
             const prNumber = pr1 || pr2;
             return `([#${prNumber}](${REPO_URL}/pull/${prNumber}))`;
           });
-          return `- [\`${hash}\`](${REPO_URL}/commit/${hash}) — ${formattedMessage}`;
+          return `- [\`${hash}\`](${REPO_URL}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
         })
         .join("\n");
       return versionHeader + commitsList;
