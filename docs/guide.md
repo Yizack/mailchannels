@@ -28,6 +28,14 @@ yarn add mailchannels-sdk
 ```sh [pnpm]
 pnpm add mailchannels-sdk
 ```
+
+```sh [bun]
+bun add mailchannels-sdk
+```
+
+```sh [deno]
+deno add npm:mailchannels-sdk
+```
 :::
 
 ## Quick Start
