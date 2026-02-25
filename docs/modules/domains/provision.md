@@ -83,8 +83,11 @@ const { data, error } = await mailchannels.domains.provision({
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
-**Provision type declarations**
+**Domains data type declarations**
 
 <<< @/snippets/domains-data.ts
+
+**Provision type declarations**
+
 <<< @/snippets/domains-provision-options.ts
 <<< @/snippets/domains-provision-response.ts

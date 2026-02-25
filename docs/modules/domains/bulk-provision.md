@@ -110,6 +110,14 @@ const { data, error } = await mailchannels.domains.bulkProvision({
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
+**Domains data type declarations**
+
+<<< @/snippets/domains-data.ts
+
+**Provision type declarations**
+
+<<< @/snippets/domains-provision-options.ts
+
 **Bulk Provision type declarations**
 
 <<< @/snippets/domains-bulk-provision-options.ts

@@ -64,6 +64,10 @@ const { data, error } = await mailchannels.domains.list()
 <<< @/snippets/error-response.ts
 <<< @/snippets/data-response.ts
 
+**Domains data type declarations**
+
+<<< @/snippets/domains-data.ts
+
 **List type declarations**
 
 <<< @/snippets/domains-list-options.ts
