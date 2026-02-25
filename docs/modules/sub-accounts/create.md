@@ -1,3 +1,8 @@
+---
+title: Create
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # Create<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Creates a new sub-account under the parent account.

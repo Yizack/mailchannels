@@ -1,3 +1,8 @@
+---
+title: Delete
+titleTemplate: 🚫 Suppressions
+---
+
 # Delete<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/suppressions">🚫 Suppressions</a></Badge></llm-exclude>
 
 Deletes suppression entry associated with the account based on the specified recipient and source.

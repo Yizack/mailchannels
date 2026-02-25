@@ -1,3 +1,8 @@
+---
+title: Delete API Key
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # Delete API Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Deletes the API key identified by its ID for the specified sub-account.

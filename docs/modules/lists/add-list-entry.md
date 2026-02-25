@@ -1,3 +1,8 @@
+---
+title: Add List Entry
+titleTemplate: 📋 Lists
+---
+
 # Add List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/lists">📋 Lists</a></Badge></llm-exclude>
 
 Add an entry to an account-level blocklist or safelist.

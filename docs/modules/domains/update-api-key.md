@@ -1,3 +1,8 @@
+---
+title: Update API Key
+titleTemplate: 🌐 Domains
+---
+
 # Update API Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Update the API key that is associated with a domain.

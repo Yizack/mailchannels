@@ -1,3 +1,8 @@
+---
+title: Usage
+titleTemplate: 📊 Metrics
+---
+
 # Usage<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
 Retrieves usage statistics during the current billing period.

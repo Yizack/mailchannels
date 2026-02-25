@@ -1,4 +1,9 @@
-# Signing Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
+---
+title: Get Signing Key
+titleTemplate: 📢 Webhooks
+---
+
+# Get Signing Key<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
 
 Retrieves the public key used to verify signatures on incoming webhook payloads.
 

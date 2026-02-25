@@ -1,3 +1,8 @@
+---
+title: Check Domain
+titleTemplate: 📧 Emails
+---
+
 # Check Domain<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 *DKIM, SPF & Domain Lockdown Check*

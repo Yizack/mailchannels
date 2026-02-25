@@ -1,3 +1,8 @@
+---
+title: Bulk Create Login Links
+titleTemplate: 🌐 Domains
+---
+
 # Bulk Create Login Links<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Generate a batch of links that allow a user to log in as a domain administrator to their different domains.

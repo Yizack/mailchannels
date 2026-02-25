@@ -1,3 +1,8 @@
+---
+title: Set Downstream Address
+titleTemplate: 🌐 Domains
+---
+
 # Set Downstream Address<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Sets the list of downstream addresses for the domain.

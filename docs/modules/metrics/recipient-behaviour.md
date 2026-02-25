@@ -1,3 +1,8 @@
+---
+title: Recipient Behaviour
+titleTemplate: 📊 Metrics
+---
+
 # Recipient Behaviour<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
 Retrieve recipient behaviour metrics for messages sent from your account, including counts of unsubscribed events. Supports optional filters for time range, and campaign ID.

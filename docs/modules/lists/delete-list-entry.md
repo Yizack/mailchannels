@@ -1,3 +1,8 @@
+---
+title: Delete List Entry
+titleTemplate: 📋 Lists
+---
+
 # Delete List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/lists">📋 Lists</a></Badge></llm-exclude>
 
 Delete item from account-level list.

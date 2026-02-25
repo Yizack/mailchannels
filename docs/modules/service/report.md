@@ -1,3 +1,8 @@
+---
+title: Report
+titleTemplate: ⚙️ Service
+---
+
 # Report<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/service">⚙️ Service</a></Badge></llm-exclude>
 
 Submit a false negative or false positive report.

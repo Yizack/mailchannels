@@ -1,3 +1,7 @@
+---
+title: 🪪 Sub-Accounts
+---
+
 # 🪪 Sub-Accounts<llm-exclude> <Badge>module</Badge> <Badge>Email API</Badge></llm-exclude>
 
 <!-- #region description -->

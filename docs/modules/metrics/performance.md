@@ -1,3 +1,8 @@
+---
+title: Performance
+titleTemplate: 📊 Metrics
+---
+
 # Performance<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
 Retrieve performance metrics for messages sent from your account, including counts of processed, delivered, hard-bounced events. Supports optional filters for time range, and campaign ID.

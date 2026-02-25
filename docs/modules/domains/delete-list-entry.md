@@ -1,3 +1,8 @@
+---
+title: Delete List Entry
+titleTemplate: 🌐 Domains
+---
+
 # Delete List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Delete item from domain list.

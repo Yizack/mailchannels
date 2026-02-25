@@ -1,3 +1,8 @@
+---
+title: Subscriptions
+titleTemplate: ⚙️ Service
+---
+
 # Subscriptions<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/service">⚙️ Service</a></Badge></llm-exclude>
 
 Get a list of your subscriptions to MailChannels Inbound.

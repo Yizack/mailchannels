@@ -1,3 +1,8 @@
+---
+title: Volume
+titleTemplate: 📊 Metrics
+---
+
 # Volume<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
 Retrieve volume metrics for messages sent from your account, including counts of processed, delivered and dropped events. Supports optional filters for time range and campaign ID.

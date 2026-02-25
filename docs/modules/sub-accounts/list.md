@@ -1,3 +1,8 @@
+---
+title: List
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # List<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Retrieves all sub-accounts associated with the parent account.

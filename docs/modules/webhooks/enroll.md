@@ -1,3 +1,8 @@
+---
+title: Enroll
+titleTemplate: 📢 Webhooks
+---
+
 # Enroll<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/webhooks">📢 Webhooks</a></Badge></llm-exclude>
 
 Enrolls the user to receive event notifications via webhooks.

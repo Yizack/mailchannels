@@ -1,3 +1,8 @@
+---
+title: List Entries
+titleTemplate: 🌐 Domains
+---
+
 # List Entries<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Get domain list entries.

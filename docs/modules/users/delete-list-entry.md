@@ -1,3 +1,8 @@
+---
+title: Delete List Entry
+titleTemplate: 📥 Users
+---
+
 # Delete List Entry<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/users">📥 Users</a></Badge></llm-exclude>
 
 Delete item from recipient list.

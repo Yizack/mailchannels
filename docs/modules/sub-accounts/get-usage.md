@@ -1,3 +1,8 @@
+---
+title: Get Usage
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # Get Usage<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Retrieves usage statistics for the specified sub-account during the current billing period.

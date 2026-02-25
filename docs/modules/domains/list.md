@@ -1,3 +1,8 @@
+---
+title: List
+titleTemplate: 🌐 Domains
+---
+
 # List<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 Fetch a list of all domains associated with this API key.

@@ -1,3 +1,8 @@
+---
+title: Delete
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # Delete<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Deletes the sub-account identified by its handle.

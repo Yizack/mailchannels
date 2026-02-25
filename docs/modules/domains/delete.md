@@ -1,3 +1,8 @@
+---
+title: Delete
+titleTemplate: 🌐 Domains
+---
+
 # Delete<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/domains">🌐 Domains</a></Badge></llm-exclude>
 
 De-provision a domain to cease protecting it with MailChannels Inbound.

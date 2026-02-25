@@ -1,3 +1,8 @@
+---
+title: Engagement
+titleTemplate: 📊 Metrics
+---
+
 # Engagement<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/metrics">📊 Metrics</a></Badge></llm-exclude>
 
 Retrieve engagement metrics for messages sent from your account, including counts of open and click events. Supports optional filters for time range, and campaign ID.

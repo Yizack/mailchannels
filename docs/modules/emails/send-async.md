@@ -1,3 +1,8 @@
+---
+title: Send Async
+titleTemplate: 📧 Emails
+---
+
 # Send Async<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Queues an email message for asynchronous processing and returns immediately with a request ID.

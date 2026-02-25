@@ -1,3 +1,8 @@
+---
+title: List API Keys
+titleTemplate: 🪪 Sub-Accounts
+---
+
 # List API Keys<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/sub-accounts">🪪 Sub-Accounts</a></Badge></llm-exclude>
 
 Retrieves details of all API keys associated with the specified sub-account. For security reasons, the full API key is not returned; only the key ID and a partially redacted version are provided.

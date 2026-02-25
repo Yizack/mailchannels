@@ -13,11 +13,16 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   srcExclude: ["**/_parts/**"],
+  transformPageData: (pageData) => {
+    pageData.titleTemplate &&= `${pageData.titleTemplate} | ${SITE.name}`;
+    return pageData;
+  },
   transformHead: ({ pageData }) => {
     const head: HeadConfig[] = [];
     const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
     const path = relativePath === "index" ? "" : `/${relativePath}`;
-    const title = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
+    const baseTitle = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
+    const title = pageData.titleTemplate ? `${pageData.title} | ${pageData.titleTemplate}` : baseTitle;
     const url = `${SITE.host}` + path;
     const cover = `${SITE.host}/${SITE.cover}`;
     const tags: HeadConfig[] = [

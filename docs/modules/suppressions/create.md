@@ -1,3 +1,8 @@
+---
+title: Create
+titleTemplate: 🚫 Suppressions
+---
+
 # Create<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/suppressions">🚫 Suppressions</a></Badge></llm-exclude>
 
 Creates suppression entries for the specified account. Parent accounts can create suppression entries for all associated sub-accounts. If `types` is not provided, it defaults to `non-transactional`. The operation is atomic, meaning all entries are successfully added or none are added if an error occurs.

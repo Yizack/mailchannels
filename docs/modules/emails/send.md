@@ -1,3 +1,8 @@
+---
+title: Send
+titleTemplate: 📧 Emails
+---
+
 # Send<llm-exclude> <Badge type="info">method</Badge> <Badge><a href="/modules/emails">📧 Emails</a></Badge></llm-exclude>
 
 Sends an email message to one or more recipients.
