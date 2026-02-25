@@ -90,5 +90,8 @@ export default defineConfig({
       message: "Released under the MIT License.",
       copyright: "Library created by Yizack"
     }
+  },
+  rewrites: {
+    "modules/:slug/index.md": "modules/:slug.md"
   }
 });
