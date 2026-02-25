@@ -123,22 +123,23 @@ export const getChangelog = (filePath: string): string => {
 
   const groups = groupByVersion(commits);
 
-  return groups
+  const changelog = groups
     .map(({ version, commits }) => {
       // Get the date of the first commit in this version
       const versionDate = commits[0]?.date || "";
-      const dateFormatted = versionDate ? ` <small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
-      const versionHeader = `<Badge>${version}</Badge> ${dateFormatted}\n`;
+      const dateFormatted = versionDate ? `<small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
+      const versionHeader = `- <a href="${REPO_URL}/releases/tag/${version}" target="_blank"><Badge>${version}</Badge></a> ${dateFormatted}\n`;
       const commitsList = commits
         .map(({ hash, message }) => {
-          const formattedMessage = message.replace(/\(#(\d+)\)|#(\d+)/g, (match, pr1, pr2) => {
-            const prNumber = pr1 || pr2;
-            return `([#${prNumber}](${REPO_URL}/pull/${prNumber}))`;
+          const formattedMessage = message.replace(/#(\d+)/g, (match, prNumber) => {
+            return `[#${prNumber}](${REPO_URL}/pull/${prNumber})`;
           });
-          return `- [\`${hash}\`](${REPO_URL}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
+          return `   - [\`${hash}\`](${REPO_URL}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
         })
         .join("\n");
       return versionHeader + commitsList;
     })
     .join("\n\n");
+
+  return `<div class="changelog-list">\n\n${changelog}\n\n</div>`;
 };
