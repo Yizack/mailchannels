@@ -136,7 +136,8 @@ const inputDirs = [
 ];
 
 const ignoreNames = [
-  "internal.ts"
+  "internal.ts",
+  path.join("webhooks", "events.ts")
 ];
 
 for (const dir of inputDirs) {
