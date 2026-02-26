@@ -109,8 +109,8 @@ const readDirFiles = async (dir: string, callback: (filePath: string) => void) =
 // Process files and generate snippets
 const generateSnippets = async (inputDir: string, outputDir: string, ignores?: string[]) => {
   await readDirFiles(inputDir, async (filePath) => {
-    if (ignores?.includes(path.basename(filePath))) {
-      console.info(`Ignoring ${filePath}`);
+    if (ignores?.some(ignore => path.relative(inputDir, filePath).includes(ignore))) {
+      console.info(`Ignoring ${path.relative(workingDir, filePath)}`);
       return;
     }
     const data = await readFile(filePath, "utf8");
@@ -120,9 +120,10 @@ const generateSnippets = async (inputDir: string, outputDir: string, ignores?: s
       await writeFile(outputFilePath, content);
     }
   });
-  console.info(`Generated snippets for ${inputDir}`);
+  console.info(`Generated snippets for ${path.relative(workingDir, inputDir)}`);
 };
 
+const workingDir = process.cwd();
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(currentDir, "../snippets");
 
