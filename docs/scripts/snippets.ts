@@ -135,7 +135,7 @@ const inputDirs = [
 ];
 
 const ignoreNames = [
-  "internal.d.ts"
+  "internal.ts"
 ];
 
 for (const dir of inputDirs) {
