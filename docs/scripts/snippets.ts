@@ -110,7 +110,7 @@ const readDirFiles = async (dir: string, callback: (filePath: string) => void) =
 const generateSnippets = async (inputDir: string, outputDir: string, ignores?: string[]) => {
   await readDirFiles(inputDir, async (filePath) => {
     if (ignores?.some(ignore => path.relative(inputDir, filePath).includes(ignore))) {
-      console.info(`Ignoring ${path.relative(workingDir, filePath)}`);
+      console.info(`Ignoring ${path.relative(projectDir, filePath)}`);
       return;
     }
     const data = await readFile(filePath, "utf8");
@@ -120,10 +120,10 @@ const generateSnippets = async (inputDir: string, outputDir: string, ignores?: s
       await writeFile(outputFilePath, content);
     }
   });
-  console.info(`Generated snippets for ${path.relative(workingDir, inputDir)}`);
+  console.info(`Generated snippets for ${path.relative(projectDir, inputDir)}`);
 };
 
-const workingDir = process.cwd();
+const projectDir = process.cwd();
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.join(currentDir, "../snippets");
 
@@ -131,8 +131,8 @@ await rm(outputDir, { recursive: true, force: true });
 await mkdir(outputDir, { recursive: true });
 
 const inputDirs = [
-  "../../src/types",
-  "../../src/modules"
+  "src/types",
+  "src/modules"
 ];
 
 const ignoreNames = [
@@ -141,5 +141,5 @@ const ignoreNames = [
 ];
 
 for (const dir of inputDirs) {
-  await generateSnippets(path.join(currentDir, dir), outputDir, ignoreNames);
+  await generateSnippets(path.join(projectDir, dir), outputDir, ignoreNames);
 }

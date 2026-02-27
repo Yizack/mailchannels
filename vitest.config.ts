@@ -8,6 +8,9 @@ export default defineConfig({
     coverage: {
       include: ["src"],
       exclude: ["src/types"]
+    },
+    alias: {
+      "~": fileURLToPath(new URL("./src", import.meta.url))
     }
   }
 });

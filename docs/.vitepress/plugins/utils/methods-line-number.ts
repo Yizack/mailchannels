@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { type Node, ScriptTarget, SyntaxKind, createSourceFile, forEachChild, isClassDeclaration, isMethodDeclaration } from "typescript";
 
 const methodLineCache = new Map<string, Map<string, number>>();
@@ -13,8 +12,8 @@ export const getMethodLineNumber = (moduleName: string, methodName: string) => {
   }
 
   try {
-    const dir = path.dirname(fileURLToPath(import.meta.url));
-    const sourceFilePath = path.join(dir, `../../../../src/modules/${moduleName}.ts`);
+    const projectDir = process.cwd();
+    const sourceFilePath = path.join(projectDir, `src/modules/${moduleName}.ts`);
     const code = readFileSync(sourceFilePath, "utf8");
     const sourceFile = createSourceFile(sourceFilePath, code, ScriptTarget.Latest, true);
 
