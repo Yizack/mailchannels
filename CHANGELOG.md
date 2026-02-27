@@ -1,6 +1,53 @@
 # Changelog
 
 
+## v0.7.5
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.4...v0.7.5)
+
+### 🚀 Enhancements
+
+- **webhooks:** Add strongly-typed webhook event definitions ([#87](https://github.com/Yizack/mailchannels/pull/87))
+- **webhooks:** Add `verify` static and non-static method for message verification ([#88](https://github.com/Yizack/mailchannels/pull/88))
+
+### 🩹 Fixes
+
+- **types:** Mark smtp and host report fields optional ([6b9f966](https://github.com/Yizack/mailchannels/commit/6b9f966))
+
+### 📖 Documentation
+
+- Add reusable documentation partials ([a4467ed](https://github.com/Yizack/mailchannels/commit/a4467ed))
+- Fix class signatures with private members ([1f0b7c2](https://github.com/Yizack/mailchannels/commit/1f0b7c2))
+- Split module docs into per-method pages ([#77](https://github.com/Yizack/mailchannels/pull/77))
+- Remove deep outline setting ([9be1eaa](https://github.com/Yizack/mailchannels/commit/9be1eaa))
+- Refactor md plugins + add modules changelog ([2b053d1](https://github.com/Yizack/mailchannels/commit/2b053d1))
+- Add missing sub-account links in sidebar ([d4280f6](https://github.com/Yizack/mailchannels/commit/d4280f6))
+- **llms:** Exclude heading badges from `llms.txt` ([b10b3c4](https://github.com/Yizack/mailchannels/commit/b10b3c4))
+- **domains:** Lint ([ccea999](https://github.com/Yizack/mailchannels/commit/ccea999))
+- **snippets:** Clean output dir before generation ([53f9b38](https://github.com/Yizack/mailchannels/commit/53f9b38))
+- **guide:** Lint missing blank lines ([bababde](https://github.com/Yizack/mailchannels/commit/bababde))
+- **guide:** Add bun and deno install commands ([178c38f](https://github.com/Yizack/mailchannels/commit/178c38f))
+- **changelog:** Use secondary color for date and separator ([942682c](https://github.com/Yizack/mailchannels/commit/942682c))
+- Add module changelog release links and improve styling ([52fb3ae](https://github.com/Yizack/mailchannels/commit/52fb3ae))
+- **domains:** Add missing data type snippets ([69d0c2f](https://github.com/Yizack/mailchannels/commit/69d0c2f))
+- **modules:** Add front-matter titles to pages for SEO ([1543ee8](https://github.com/Yizack/mailchannels/commit/1543ee8))
+- **sub-accounts:** Fix smtp descriptions ([88faca4](https://github.com/Yizack/mailchannels/commit/88faca4))
+- **config:** Add modules path rewrites to avoid index trailing slash ([0b68d57](https://github.com/Yizack/mailchannels/commit/0b68d57))
+- **snippets:** Fix ignore internal types ([3e0075d](https://github.com/Yizack/mailchannels/commit/3e0075d))
+- **snippets:** Refine ignore checks ([d4d6c01](https://github.com/Yizack/mailchannels/commit/d4d6c01))
+- **theme:** Refactor changelog-list styles ([d675242](https://github.com/Yizack/mailchannels/commit/d675242))
+- **sub-accounts:** Add missing `@example` jsdoc tag ([8d6feab](https://github.com/Yizack/mailchannels/commit/8d6feab))
+- **suppressions:** Reorder jsdoc `@param` tag ([a4bb996](https://github.com/Yizack/mailchannels/commit/a4bb996))
+
+### 🏡 Chore
+
+- **lint:** No need to resolve js plugins anymore ([656bb23](https://github.com/Yizack/mailchannels/commit/656bb23))
+- **webhooks:** Return signing key id in `getSigningKey` ([79e3954](https://github.com/Yizack/mailchannels/commit/79e3954))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.4
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.3...v0.7.4)
