@@ -48,7 +48,7 @@ const extractInputValues = (header: string) => {
   };
 };
 
-export async function verifySignature (options: WebhooksVerifyOptions) {
+export async function isValidWebhook (options: WebhooksVerifyOptions) {
   const { payload, headers } = options;
 
   const contentDigest = headers[HEADER_CONTENT_DIGEST];

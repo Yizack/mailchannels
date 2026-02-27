@@ -1,7 +1,7 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
-import { verifySignature } from "../utils/webhooks-validator";
+import { isValidWebhook } from "../utils/webhooks-validator";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
@@ -184,7 +184,7 @@ export class Webhooks {
    * ```
    */
   static async verify (options: WebhooksVerifyOptions): Promise<boolean> {
-    return verifySignature(options).catch(() => false);
+    return isValidWebhook(options).catch(() => false);
   }
 
   /**
