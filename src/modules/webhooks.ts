@@ -128,7 +128,10 @@ export class Webhooks {
 
     if (!response) return { data: null, error: error! };
 
-    const data = clean({ key: response.key });
+    const data = clean({
+      id: response.id,
+      key: response.key
+    });
 
     return { data, error: null };
   }

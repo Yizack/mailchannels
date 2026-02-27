@@ -25,7 +25,7 @@ const fake = {
     id: "key-id",
     apiResponse: { id: "key-id", key: "public-key" },
     expectedResponse: {
-      data: { key: "public-key" },
+      data: { id: "key-id", key: "public-key" },
       error: null
     } satisfies WebhooksSigningKeyResponse
   },

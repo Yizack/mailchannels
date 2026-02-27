@@ -30,14 +30,15 @@ const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
 
 ## Params
 
-- `keyId` `string` <Badge type="danger">required</Badge>: The ID name of the signing key.
+- `id` `string` <Badge type="danger">required</Badge>: The ID of the key.
   > [!TIP]
-  > The `keyId` can be found in the `signature-input` request header of the webhook notification.
+  > The `id` can be found in the `signature-input` request header of the webhook notification as `keyid`.
 
 ## Response
 
-- `data` `object | null` <Badge type="warning">nullable</Badge>
-  - `key` `string` <Badge>guaranteed</Badge>
+- `data` `WebhooksSigningKeyResponse | null` <Badge type="warning">nullable</Badge>
+  - `id` `string` <Badge>guaranteed</Badge>: The ID of the key.
+  - `key` `string` <Badge>guaranteed</Badge>: The public key used to verify webhook signatures.
 <!-- @include: ../_parts/error-response.md -->
 
 ## Type declarations
