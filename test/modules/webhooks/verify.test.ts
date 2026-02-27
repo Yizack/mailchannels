@@ -2,10 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import { $fetch } from "ofetch";
 import { generateKeyPairSync, subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
-import type { MailChannelsClient } from "../src/client";
-import { Webhooks } from "../src/modules/webhooks";
-import { stripPemHeaders } from "../src/utils/helpers";
-import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "../src/utils/webhooks-validator";
+import type { MailChannelsClient } from "~/client";
+import { Webhooks } from "~/modules/webhooks";
+import { stripPemHeaders } from "~/utils/helpers";
+import { DEFAULT_TOLERANCE, ED25519, HMAC_SHA256, encoder } from "~/utils/webhooks-validator";
 
 const generateTestingKeys = () => {
   const ed25519Keys = generateKeyPairSync("ed25519", {
@@ -51,7 +51,7 @@ vi.mock("ofetch", () => ({
   $fetch: vi.fn()
 }));
 
-describe("WebhooksValidator", () => {
+describe("verify", () => {
   it("should return true for valid webhook request", async () => {
     const mockClient = {} as MailChannelsClient;
 
