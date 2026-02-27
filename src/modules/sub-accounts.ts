@@ -108,6 +108,7 @@ export class SubAccounts {
   /**
    * Deletes the sub-account identified by its handle.
    * @param handle - Handle of sub-account to be deleted.
+   * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { success, error } = await mailchannels.subAccounts.delete('validhandle123')
