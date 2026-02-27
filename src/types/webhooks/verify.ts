@@ -12,7 +12,7 @@ export interface WebhooksVerifyOptions {
     "signature-input": string;
   };
   /**
-   * The public key used to verify the webhook signature. If not provided, the default public key associated with the webhook will be used.
+   * The public key used to verify the webhook signature. If not provided, the SDK will attempt to retrieve the appropriate public key based on the `keyId` specified in the `signature-input` header.
    */
   publicKey?: string;
 }
