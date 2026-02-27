@@ -183,7 +183,7 @@ export class Webhooks {
    * const isValid = await Webhooks.verify({ payload: rawBody, headers })
    * ```
    */
-  static async verify (options: WebhooksVerifyOptions) {
+  static async verify (options: WebhooksVerifyOptions): Promise<boolean> {
     return verifySignature(options).catch(() => false);
   }
 
@@ -196,7 +196,7 @@ export class Webhooks {
    * const isValid = await mailchannels.webhooks.verify({ payload: rawBody, headers })
    * ```
    */
-  async verify (options: WebhooksVerifyOptions) {
+  async verify (options: WebhooksVerifyOptions): Promise<boolean> {
     return Webhooks.verify(options);
   }
 }
