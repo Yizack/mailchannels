@@ -36,4 +36,8 @@ Receive notifications of your email events via webhooks.
   **Validate type declarations**
 
   <<< @/snippets/webhooks-validate-response.ts
+
+  **Verify type declarations**
+
+  <<< @/snippets/webhooks-verify-options.ts
 </details>
