@@ -1,10 +1,12 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
 import { clean } from "../utils/helpers";
+import { verifySignature } from "../utils/webhooks-validator";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
+import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
 import type { WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
@@ -171,5 +173,30 @@ export class Webhooks {
     });
 
     return { data, error: null };
+  }
+
+  /**
+   * Verifies the authenticity of incoming webhook requests by validating their signatures using the provided options.
+   * @param options - The options for verifying the webhook.
+   * @example
+   * ```ts
+   * const isValid = await Webhooks.verify({ payload: rawBody, headers })
+   * ```
+   */
+  static async verify (options: WebhooksVerifyOptions) {
+    return verifySignature(options).catch(() => false);
+  }
+
+  /**
+   * Verifies the authenticity of incoming webhook requests by validating their signatures using the provided options.
+   * @param options - The options for verifying the webhook.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const isValid = await mailchannels.webhooks.verify({ payload: rawBody, headers })
+   * ```
+   */
+  async verify (options: WebhooksVerifyOptions) {
+    return Webhooks.verify(options);
   }
 }
