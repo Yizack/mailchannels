@@ -80,12 +80,12 @@ export class Suppressions {
 
   /**
    * Retrieve suppression entries associated with the specified account. Supports filtering by recipient, source and creation date range. The response is paginated, with a default limit of `1000` entries per page and an offset of `0`.
+   * @param options - Options to filter and customize the suppression entries retrieval.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
    * const { data, error } = await mailchannels.suppressions.list();
    * ```
-   * @param options - Options to filter and customize the suppression entries retrieval.
    */
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
     let error: ErrorResponse | null = null;
