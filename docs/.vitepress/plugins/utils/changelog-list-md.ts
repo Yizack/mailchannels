@@ -17,7 +17,7 @@ interface VersionGroup {
 
 // Cache for git history to avoid running git commands repeatedly
 const historyCache = new Map<string, GitCommit[]>();
-const versionCache = new Map<string, string>();
+const versionCache = new Map<string, string | undefined>();
 
 // Get the version (tag) for a specific commit
 const getVersionForCommit = (commitHash: string): string | undefined => {
@@ -26,16 +26,23 @@ const getVersionForCommit = (commitHash: string): string | undefined => {
   }
 
   try {
-    // Find the tag that contains this commit
-    const tag = execSync(`git describe --tags --abbrev=0 ${commitHash}`, {
+    // Find all tags that contain this commit
+    const tagsOutput = execSync(`git tag --contains ${commitHash}`, {
       encoding: "utf8",
       cwd: process.cwd()
     }).trim();
-
+    if (!tagsOutput) {
+      versionCache.set(commitHash, undefined);
+      return undefined;
+    }
+    // Choose the earliest tag (sorted by version, ascending)
+    const tags = tagsOutput.split("\n").sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    const tag = tags[0];
     versionCache.set(commitHash, tag);
     return tag;
   }
   catch {
+    versionCache.set(commitHash, undefined);
     return undefined;
   }
 };
