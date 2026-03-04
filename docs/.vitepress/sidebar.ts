@@ -10,6 +10,10 @@ export default [
     link: "/contributors"
   },
   {
+    text: "SDK & API Mapping",
+    link: "/sdk-api-mapping"
+  },
+  {
     text: "Modules",
     collapsed: false,
     link: "/modules",
