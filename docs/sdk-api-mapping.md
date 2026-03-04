@@ -1,6 +1,6 @@
 # SDK & API Mapping
 
-This section provides a mapping between the SDK methods and the MailChannels API endpoints. It serves as a quick reference to understand which SDK method corresponds to which API endpoint and where to find their documentation.
+This page provides a mapping between the SDK methods and the corresponding API endpoints. It serves as a quick reference to understand which SDK method corresponds to which API endpoint and where to find their documentation.
 
 ## Email API
 
