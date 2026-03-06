@@ -52,6 +52,56 @@ describe("checkDomain", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should successfully check a domain with dkim as array", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain({
+      ...fake.options,
+      dkim: [fake.options.dkim]
+    });
+
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully check a domain without dkim settings", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const options = { ...fake.options };
+    // @ts-expect-error testing without dkim settings
+    delete options.dkim;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain(options);
+
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully check a domain with dkim without private key", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const options = { ...fake.options };
+    // @ts-expect-error testing dkim without private key
+    delete options.dkim.privateKey;
+
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain(options);
+
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {

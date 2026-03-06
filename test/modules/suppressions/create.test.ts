@@ -30,6 +30,23 @@ describe("create", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should default suppression type to non-transactional when types is not provided", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(void 0)
+    } as unknown as MailChannelsClient;
+
+    const options = { ...fake.options };
+    // @ts-expect-error testing without types
+    delete options.entries[0].types;
+
+    const suppressions = new Suppressions(mockClient);
+    const { success, error } = await suppressions.create(options);
+
+    expect(success).toBe(true);
+    expect(error).toBeNull();
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => {

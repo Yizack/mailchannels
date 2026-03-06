@@ -56,11 +56,12 @@ describe("send", () => {
       post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
     } as unknown as MailChannelsClient;
 
+    const options = { ...fake.options };
     // @ts-expect-error testing without html content
-    delete fake.options.html;
+    delete options.html;
 
     const emails = new Emails(mockClient);
-    const { success, data, error } = await emails.send(fake.options);
+    const { success, data, error } = await emails.send(options);
 
     expect(error).toBeNull();
     expect(success).toBe(true);
@@ -178,6 +179,38 @@ describe("send", () => {
     expect(error).toBeNull();
     expect(success).toBe(true);
     expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with mustaches template", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      mustaches: { name: "World" }
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with dkim private key", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      dkim: { domain: "example.com", privateKey: "private-key", selector: "mailchannels" }
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
     expect(mockClient.post).toHaveBeenCalled();
   });
 
