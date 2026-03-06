@@ -24,11 +24,18 @@ This library provides a simple way to interact with the [MailChannels API](https
 
 - 🚀 [Features](#features)
 - 📏 [Requirements](#requirements)
-- 🏃 [Quick setup](#quick-setup)
+- 📦 [Installation](#installation)
+- 📚 [Usage](#usage)
+- 📐 [Naming Conventions](#naming-conventions)
 - ⚖️ [License](#license)
 - 💻 [Development](#development)
 
 ## <a name="features">🚀 Features</a>
+
+<!-- #region features -->
+This SDK fully supports all features and operations available in the [MailChannels API](https://docs.mailchannels.net/). It is actively maintained to ensure compatibility and to quickly add support for new API features as they are released.
+
+Some of the things you can do with the SDK:
 
 - Send transactional emails
 - Check DKIM, SPF & Domain Lockdown
@@ -40,12 +47,16 @@ This library provides a simple way to interact with the [MailChannels API](https
 - Configure inbound domains
 - Manage account and recipient lists
 
+> [!TIP]
+> For a detailed reference mapping each SDK method to its corresponding MailChannels API endpoint, see the [SDK-API Mapping](https://mailchannels.yizack.com/sdk-api-mapping)
+<!-- #endregion features -->
+
 ## <a name="requirements">📏 Requirements</a>
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
 - [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)
 
-## <a name="quick-setup">🏃 Quick setup</a>
+## <a name="installation">📦 Installation</a>
 
 1. Add `mailchannels-sdk` dependency to your project
 
@@ -59,6 +70,39 @@ yarn add mailchannels-sdk
 # pnpm
 pnpm add mailchannels-sdk
 ```
+
+## <a name="usage">📚 Usage</a>
+
+To authenticate, you'll need an API key. You can create and manage API keys in **Dashboard** > **Account Settings** > **API Keys**.
+
+Pass your API key while initializing a new MailChannels client.
+
+```ts
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+```
+
+Send an email:
+
+```ts
+const { data, error } = await mailchannels.emails.send({
+  from: 'Name <from@example.com>',
+  to: 'to@example.com',
+  subject: 'Test email',
+  html: '<p>Hello World</p>'
+})
+```
+
+## <a name="naming-conventions">📐 Naming Conventions</a>
+
+<!-- #region naming-conventions -->
+Most properties in the MailChannels API use `snake_case`. To follow JavaScript conventions, the SDK adopts `camelCase` for all properties. This means:
+
+- Most options and responses match the API docs, but field names are `camelCase` rather than `snake_case`.
+- Some fields are grouped into nested objects or renamed for simplicity and better developer experience.
+- While most fields match the API docs (just with `camelCase`), a few may be simplified or reorganized to feel more natural for JavaScript developers.
+<!-- #endregion naming-conventions -->
 
 ## <a name="license">⚖️ License</a>
 

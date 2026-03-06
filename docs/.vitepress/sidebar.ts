@@ -6,7 +6,7 @@ export default [
     link: "/guide"
   },
   {
-    text: "SDK & API Mapping",
+    text: "SDK-API Mapping",
     link: "/sdk-api-mapping"
   },
   {

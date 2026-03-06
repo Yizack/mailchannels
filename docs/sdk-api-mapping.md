@@ -1,10 +1,10 @@
-# SDK & API Mapping
+# SDK-API Mapping
 
-This page provides a mapping between the MailChannels SDK methods and the corresponding API endpoints. It serves as a quick reference to understand which SDK method corresponds to which API endpoint and where to find their documentation.
+This page provides a mapping between the MailChannels SDK methods and the corresponding API documentation reference.
 
 ## Email API
 
-- 📧 Emails
+### 📧 Emails
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -16,7 +16,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Emails.updateDkimKey()`](/modules/emails/update-dkim-key) | [Update DKIM Key Status](https://docs.mailchannels.net/email-api/api-reference/update-dkim-key-status) |
   | [`Emails.rotateDkimKey()`](/modules/emails/rotate-dkim-key) | [Rotate DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/rotate-dkim-key-pair) |
 
-- 📢 Webhooks
+### 📢 Webhooks
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -25,9 +25,9 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Webhooks.delete()`](/modules/webhooks/delete) | [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks) |
   | [`Webhooks.getSigningKey()`](/modules/webhooks/get-signing-key) | [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key) |
   | [`Webhooks.validate()`](/modules/webhooks/validate) | [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook) |
-  | [`Webhooks.verify()`](/modules/webhooks/verify) | N/A |
+  | [`Webhooks.verify()`](/modules/webhooks/verify) | SDK only |
 
-- 🪪 Sub-accounts
+### 🪪 Sub-accounts
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -47,7 +47,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`SubAccounts.deleteLimit()`](/modules/sub-accounts/delete-limit) | [Delete Sub-account Limit](https://docs.mailchannels.net/email-api/api-reference/delete-sub-account-limit) |
   | [`SubAccounts.getUsage()`](/modules/sub-accounts/get-usage) | [Retrieve Sub-account Usage Stats](https://docs.mailchannels.net/email-api/api-reference/retrieve-sub-account-usage-stats) |
 
-- 📊 Metrics
+### 📊 Metrics
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -58,7 +58,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Metrics.volume()`](/modules/metrics/volume) | [Retrieve Volume Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-volume-metrics) |
   | [`Metrics.senders()`](/modules/metrics/senders) | [Retrieve Sender Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-sender-metrics) |
 
-- 🚫 Suppressions
+### 🚫 Suppressions
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -68,7 +68,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
 
 ## Inbound API
 
-- 🌐 Domains
+### 🌐 Domains
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -85,7 +85,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Domains.listDownstreamAddresses()`](/modules/domains/list-downstream-addresses) | [Fetch downstream addresses](https://docs.mailchannels.net/inbound-api/API-reference/fetch-downstream-addresses) |
   | [`Domains.updateApiKey()`](/modules/domains/update-api-key) | [Update API key](https://docs.mailchannels.net/inbound-api/API-reference/update-api-key) |
 
-- 📋 Lists
+### 📋 Lists
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -93,7 +93,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Lists.deleteListEntry()`](/modules/lists/delete-list-entry) | [Delete item from customer list](https://docs.mailchannels.net/inbound-api/API-reference/delete-item-from-customer-list) |
   | [`Lists.listEntries()`](/modules/lists/list-entries) | [Get customer list entries](https://docs.mailchannels.net/inbound-api/API-reference/get-customer-list-entries) |
 
-- 📥 Users
+### 📥 Users
 
   | SDK Method | API Reference |
   | --- | --- |
@@ -102,7 +102,7 @@ This page provides a mapping between the MailChannels SDK methods and the corres
   | [`Users.listEntries()`](/modules/users/list-entries) | [Get recipient list entries](https://docs.mailchannels.net/inbound-api/API-reference/get-recipient-list-entries) |
   | [`Users.deleteListEntry()`](/modules/users/delete-list-entry) | [Delete item from recipient list](https://docs.mailchannels.net/inbound-api/API-reference/delete-item-from-recipient-list) |
 
-- ⚙️ Service
+### ⚙️ Service
 
   | SDK Method | API Reference |
   | --- | --- |
