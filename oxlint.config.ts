@@ -8,12 +8,12 @@ export default defineConfig({
   rules: {
     "no-console": ["error", { allow: ["info", "warn", "error"] }],
     "sort-imports": ["error", { ignoreDeclarationSort: true }],
+    "no-unused-vars": "error",
     "import/first": "error",
     "import/no-duplicates": "error",
     "import/no-mutable-exports": "error",
     "import/no-named-default": "error",
     "import/no-self-import": "error",
-    "no-unused-vars": "error",
     "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
     "@stylistic/linebreak-style": ["error", process.platform === "win32" ? "windows" : "unix"],
     "@stylistic/quotes": ["error", "double"],

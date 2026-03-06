@@ -52,5 +52,4 @@ features:
     link: /modules/users
 ---
 
-<!-- @include: ../README.md#note -->
-<!-- @include: ../README.md#roadmap -->
+<!-- @include: ../README.md#disclaimer -->

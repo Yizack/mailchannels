@@ -6,6 +6,10 @@ export default [
     link: "/guide"
   },
   {
+    text: "SDK-API Mapping",
+    link: "/sdk-api-mapping"
+  },
+  {
     text: "Contributors",
     link: "/contributors"
   },

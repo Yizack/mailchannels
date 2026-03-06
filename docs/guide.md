@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # Getting Started
 
 Getting started with `mailchannels-sdk`
@@ -5,7 +9,11 @@ Getting started with `mailchannels-sdk`
 ## Overview
 
 <!-- @include: ../README.md#overview -->
-<!-- @include: ../README.md#note -->
+<!-- @include: ../README.md#disclaimer -->
+
+## Features
+
+<!-- @include: ../README.md#features -->
 
 ## Requirements
 
@@ -49,7 +57,7 @@ This library can be used in two ways:
 
 In this example, we import the whole library and use the `MailChannels` class to send an email.
 
-```ts{1}
+```ts {1}
 import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
@@ -68,7 +76,7 @@ This approach is useful when building an application on top of MailChannels and 
 
 In this example, we import the `MailChannelsClient` and the `Emails` module to send an email.
 
-```ts{1}
+```ts {1}
 import { MailChannelsClient, Emails } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannelsClient('your-api-key')
@@ -100,7 +108,7 @@ All methods in this SDK return an object with both `data` and `error` properties
   - `message`: A human-readable description of the error
   - `statusCode`: The HTTP status code from the API (e.g., `400`, `404`), or `null` if the error is not related to an HTTP request
 
-```ts{5,13-15,18}
+```ts {5,13-15,18}
 import { MailChannels } from 'mailchannels-sdk'
 
 const mailchannels = new MailChannels('your-api-key')
@@ -120,3 +128,7 @@ if (error) {
 // data is guaranteed to be non-null here
 console.log({ data })
 ```
+
+## Naming Conventions
+
+<!-- @include: ../README.md#naming-conventions -->
