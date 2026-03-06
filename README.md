@@ -58,7 +58,7 @@ Some of the things you can do with the SDK:
 
 ## <a name="installation">📦 Installation</a>
 
-1. Add `mailchannels-sdk` dependency to your project
+Add `mailchannels-sdk` dependency to your project
 
 ```sh
 # npm
