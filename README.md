@@ -48,7 +48,7 @@ Some of the things you can do with the SDK:
 - Manage account and recipient lists
 
 > [!TIP]
-> For a detailed reference mapping each SDK method to its corresponding MailChannels API endpoint, see the [SDK-API Mapping](https://mailchannels.yizack.com/sdk-api-mapping)
+> For a detailed reference mapping each SDK method to its corresponding MailChannels API endpoint reference, see the [SDK-API Mapping](https://mailchannels.yizack.com/sdk-api-mapping)
 <!-- #endregion features -->
 
 ## <a name="requirements">📏 Requirements</a>
