@@ -51,9 +51,9 @@
     "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^5.9.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^25.3.3",
+    "@types/node": "^25.3.5",
     "@vitest/coverage-v8": "^4.0.18",
     "changelogen": "^0.6.2",
     "jiti": "^2.6.1",
