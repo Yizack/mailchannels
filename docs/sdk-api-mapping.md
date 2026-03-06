@@ -1,6 +1,6 @@
 # SDK-API Mapping
 
-This page provides a mapping between the MailChannels SDK methods and the corresponding API documentation reference.
+This page provides a mapping between the MailChannels SDK module methods and the corresponding API documentation reference.
 
 ## Email API
 
