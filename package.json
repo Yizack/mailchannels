@@ -61,7 +61,7 @@
     "oxlint": "^1.56.0",
     "scule": "^1.3.0",
     "typescript": "^5.9.3",
-    "vitepress": "^2.0.0-alpha.16",
+    "vitepress": "^2.0.0-alpha.17",
     "vitepress-plugin-group-icons": "^1.7.1",
     "vitepress-plugin-llms": "^1.11.1",
     "vitest": "^4.1.0"
