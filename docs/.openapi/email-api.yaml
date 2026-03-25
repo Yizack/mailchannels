@@ -1346,7 +1346,7 @@ info:
 
     '
   title: Email API
-  version: 0.18.0
+  version: 0.18.1
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -2019,7 +2019,7 @@ paths:
           description: Invalid request
         '500':
           description: Internal server error
-      summary: Retrieve sender metrics
+      summary: Retrieve Sender Metrics
   /metrics/volume:
     get:
       description: 'Retrieve volume metrics for messages sent from your account,
@@ -2207,7 +2207,7 @@ paths:
         \ when sending to multiple recipients.\n"
       parameters:
       - in: header
-        name: X-Customer-Handle
+        name: X-Api-Key
         required: true
         schema:
           type: string
