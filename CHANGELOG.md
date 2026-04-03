@@ -1,6 +1,34 @@
 # Changelog
 
 
+## v0.7.6
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.5...v0.7.6)
+
+### 🚀 Enhancements
+
+- **webhooks:** Add `batches` method ([#112](https://github.com/Yizack/mailchannels/pull/112))
+
+### 📖 Documentation
+
+- **changelog-list-md:** Fix commits group by versions ([9f9bd0e](https://github.com/Yizack/mailchannels/commit/9f9bd0e))
+- **modules-source:** Add tests link to module source links ([f0a0cb0](https://github.com/Yizack/mailchannels/commit/f0a0cb0))
+- **webhooks:** Add missing verify type declarations ([faa0132](https://github.com/Yizack/mailchannels/commit/faa0132))
+- Improve documentation information and readme ([#93](https://github.com/Yizack/mailchannels/pull/93))
+- **readme:** Remove list number in installation ([b501783](https://github.com/Yizack/mailchannels/commit/b501783))
+- Revert f52ac8a ([c3e7981](https://github.com/Yizack/mailchannels/commit/c3e7981))
+- Bump Email API version to 0.18.1 ([#105](https://github.com/Yizack/mailchannels/pull/105))
+- Bump Email API version to 0.19.0 ([#111](https://github.com/Yizack/mailchannels/pull/111))
+
+### ✅ Tests
+
+- Reorganize module files in test suite into modular structure ([#89](https://github.com/Yizack/mailchannels/pull/89))
+- Add edge case for emails and suppressions for branch coverage ([1d68c36](https://github.com/Yizack/mailchannels/commit/1d68c36))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.5
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.4...v0.7.5)
