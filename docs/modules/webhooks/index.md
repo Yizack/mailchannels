@@ -40,4 +40,12 @@ Receive notifications of your email events via webhooks.
   **Verify type declarations**
 
   <<< @/snippets/webhooks-verify-options.ts
+
+  **Batches type declarations**
+
+  <<< @/snippets/webhooks-batch-status.ts
+  <<< @/snippets/webhooks-batches-options.ts
+  <<< @/snippets/webhooks-batch-response-status.ts
+  <<< @/snippets/webhooks-batch.ts
+  <<< @/snippets/webhooks-batches-response.ts
 </details>
