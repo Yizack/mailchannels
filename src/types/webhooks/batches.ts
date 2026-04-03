@@ -1,7 +1,7 @@
 import type { DataResponse } from "../responses";
 
-type WebhooksBatchStatus = "1xx" | "2xx" | "3xx" | "4xx" | "5xx" | "no_response";
-type WebhooksBatchResponseStatus = "1xx_response" | "2xx_response" | "3xx_response" | "4xx_response" | "5xx_response" | "no_response";
+export type WebhooksBatchStatus = "1xx" | "2xx" | "3xx" | "4xx" | "5xx" | "no_response";
+export type WebhooksBatchResponseStatus = "1xx_response" | "2xx_response" | "3xx_response" | "4xx_response" | "5xx_response" | "no_response";
 
 export interface WebhooksBatchesOptions {
   /**
