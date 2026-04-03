@@ -1,5 +1,5 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { clean } from "../utils/helpers";
 import { isValidWebhook } from "../utils/webhooks-validator";
 import type { ErrorResponse, SuccessResponse } from "../types/responses";
@@ -7,7 +7,8 @@ import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
 import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
-import type { WebhooksValidateApiResponse } from "../types/webhooks/internal";
+import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
+import type { WebhooksBatchesApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -201,5 +202,55 @@ export class Webhooks {
    */
   async verify (options: WebhooksVerifyOptions): Promise<boolean> {
     return Webhooks.verify(options);
+  }
+
+  /**
+   * Retrieves paged webhook batches associated with the customer. The time range specified by `createdAfter` and `createdBefore` must not exceed 31 days. If neither is specified, the default time range is the last 3 days.
+   * @param options - The options for listing webhook batches.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.webhooks.batches()
+   * ```
+   */
+  async batches (options?: WebhooksBatchesOptions): Promise<WebhooksBatchesResponse> {
+    let error: ErrorResponse | null = null;
+
+    error = validatePagination({ ...options, max: 500 });
+    if (error) return { data: null, error };
+
+    const response = await this.mailchannels.get<WebhooksBatchesApiResponse>("/tx/v1/webhook-batch", {
+      query: {
+        created_after: options?.createdAfter,
+        created_before: options?.createdBefore,
+        statuses: options?.statuses,
+        webhook: options?.webhook,
+        limit: options?.limit,
+        offset: options?.offset
+      },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch webhook batches.");
+      return null;
+    });
+
+    if (!response) return { data: null, error: error! };
+
+    const data = clean(response.webhook_batches.map(batch => ({
+      batchId: batch.batch_id,
+      createdAt: batch.created_at,
+      customerHandle: batch.customer_handle,
+      duration: batch.duration,
+      eventCount: batch.event_count,
+      status: batch.status,
+      statusCode: batch.status_code,
+      webhook: batch.webhook
+    })));
+
+    return { data, error: null };
   }
 }
