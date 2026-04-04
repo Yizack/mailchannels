@@ -1,9 +1,10 @@
 import type { MailChannelsClient } from "../client";
 import type { SuccessResponse } from "../types/success-response";
+import type { WebhooksListBatchesOptions, WebhooksListBatchesResponse } from "../types/webhooks/batches";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
-import type { WebhooksValidateApiResponse } from "../types/webhooks/internal";
+import type { WebhooksListBatchesApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Webhooks {
@@ -163,6 +164,65 @@ export class Webhooks {
       data.allPassed = response.all_passed;
       data.results = response.results;
     }
+
+    return data;
+  }
+
+  /**
+   * Retrieve paged webhook batch delivery attempts for this customer.
+   * @param options - Filters for webhook batches.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { batches } = await mailchannels.webhooks.listBatches()
+   * ```
+   */
+  async listBatches (options?: WebhooksListBatchesOptions): Promise<WebhooksListBatchesResponse> {
+    const data: WebhooksListBatchesResponse = { batches: [], error: null };
+
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 500)) {
+      data.error = "The limit value is invalid. Possible limit values are 1 to 500.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<WebhooksListBatchesApiResponse>("/tx/v1/webhook-batch", {
+      query: {
+        created_after: options?.createdAfter,
+        created_before: options?.createdBefore,
+        statuses: options?.statuses,
+        webhook: options?.webhook,
+        limit: options?.limit,
+        offset: options?.offset
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch webhook batches.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
+
+    data.batches = response.webhook_batches.map(batch => ({
+      batchId: batch.batch_id,
+      createdAt: batch.created_at,
+      customerHandle: batch.customer_handle,
+      duration: batch.duration,
+      eventCount: batch.event_count,
+      status: batch.status,
+      statusCode: batch.status_code,
+      webhook: batch.webhook
+    }));
 
     return data;
   }

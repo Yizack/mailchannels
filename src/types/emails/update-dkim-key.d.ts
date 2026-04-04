@@ -9,6 +9,7 @@ export interface EmailsUpdateDkimKeyOptions {
    * New status of the DKIM key pair.
    * - `revoked`: Indicates that the key is compromised and should not be used.
    * - `retired`: Indicates that the key has been rotated and is no longer in use.
+   * - `rotated`: Indicates that the key is in the rotation grace period.
    */
   status: Exclude<EmailsDkimKey["status"], "active">;
 }

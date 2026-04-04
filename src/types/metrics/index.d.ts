@@ -1,6 +1,7 @@
 export * from "./engagement";
 export * from "./performance";
 export * from "./recipient-behaviour";
+export * from "./sender";
 export * from "./volume";
 export * from "./usage";
 

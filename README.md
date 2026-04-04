@@ -32,11 +32,13 @@ This library provides a simple way to interact with the [MailChannels API](https
 ## <a name="features">🚀 Features</a>
 
 - Send transactional emails
+- Queue emails asynchronously
 - Check DKIM, SPF & Domain Lockdown
 - Configure DKIM keys
 - Webhook notifications
 - Manage sub-accounts
 - Retrieve metrics
+- Inspect webhook delivery batches
 - Handle suppressions
 - Configure inbound domains
 - Manage account and recipient lists
@@ -76,15 +78,18 @@ Already implemented features are marked with a checkmark. Please open an issue i
 ### [Email API](https://docs.mailchannels.net/email-api/api-reference/email-api)
 
 - 📧 Emails
+  - ✅ [Send an Email Asynchronously](https://docs.mailchannels.net/email-api/api-reference/send-an-email-asynchronously)
   - ✅ [Send an Email](https://docs.mailchannels.net/email-api/api-reference/send-an-email)
   - ✅ [DKIM, SPF & Domain Lockdown Check](https://docs.mailchannels.net/email-api/api-reference/dkim-spf-domain-lockdown-check)
   - ✅ [Create DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/create-dkim-key-pair)
   - ✅ [Retrieve DKIM Keys](https://docs.mailchannels.net/email-api/api-reference/retrieve-dkim-keys)
+  - ✅ [Rotate DKIM Key Pair](https://docs.mailchannels.net/email-api/api-reference/rotate-dkim-key-pair)
   - ✅ [Update DKIM Key Status](https://docs.mailchannels.net/email-api/api-reference/update-dkim-key-status)
 - 📢 Webhooks
   - ✅ [Enroll for Webhook Notifications](https://docs.mailchannels.net/email-api/api-reference/enroll-for-webhook-notifications)
   - ✅ [Retrieve Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/retrieve-customer-webhooks)
   - ✅ [Delete Customer Webhooks](https://docs.mailchannels.net/email-api/api-reference/delete-customer-webhooks)
+  - ✅ [Retrieve Webhook Batches](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-batches)
   - ✅ [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key)
   - ✅ [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook)
 - 🪪 Sub-accounts
@@ -107,6 +112,7 @@ Already implemented features are marked with a checkmark. Please open an issue i
   - ✅ [Retrieve Engagement Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-engagement-metrics)
   - ✅ [Retrieve Performance Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-performance-metrics)
   - ✅ [Retrieve Recipient Behaviour Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-recipient-behaviour-metrics)
+  - ✅ [Retrieve Sender Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-sender-metrics)
   - ✅ [Retrieve Usage Stats](https://docs.mailchannels.net/email-api/api-reference/retrieve-usage-stats)
   - ✅ [Retrieve Volume Metrics](https://docs.mailchannels.net/email-api/api-reference/retrieve-volume-metrics)
 - 🚫 Suppressions

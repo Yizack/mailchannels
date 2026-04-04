@@ -3,8 +3,9 @@ import type { MailChannelsClient } from "../src/client";
 import { Metrics } from "../src/modules/metrics";
 import { ErrorCode } from "../src/utils/errors";
 import type { MetricsEngagementResponse, MetricsOptions, MetricsPerformanceResponse } from "../src/types/metrics";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSenderApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../src/types/metrics/internal";
 import type { MetricsRecipientBehaviourResponse } from "../src/types/metrics/recipient-behaviour";
+import type { MetricsSenderOptions, MetricsSenderResponse } from "../src/types/metrics/sender";
 import type { MetricsVolumeResponse } from "../src/types/metrics/volume";
 import type { MetricsUsageResponse } from "../src/types/metrics/usage";
 
@@ -15,6 +16,13 @@ const fake = {
     campaignId: "campaign123",
     interval: "day"
   } satisfies MetricsOptions,
+  senderOptions: {
+    startTime: "2024-07-01T00:00:00Z",
+    endTime: "2024-07-31T23:59:59Z",
+    limit: 5,
+    offset: 10,
+    sortOrder: "asc"
+  } satisfies MetricsSenderOptions,
   engagement: {
     apiResponse: {
       buckets: {
@@ -101,6 +109,37 @@ const fake = {
       },
       error: null
     } satisfies MetricsRecipientBehaviourResponse
+  },
+  senderMetrics: {
+    apiResponse: {
+      end_time: "2024-07-31T23:59:59Z",
+      limit: 5,
+      offset: 10,
+      senders: [{
+        bounced: 2,
+        delivered: 80,
+        dropped: 3,
+        name: "campaign-123",
+        processed: 83
+      }],
+      start_time: "2024-07-01T00:00:00Z",
+      total: 20
+    } satisfies MetricsSenderApiResponse,
+    expectedResponse: {
+      endTime: "2024-07-31T23:59:59Z",
+      error: null,
+      limit: 5,
+      offset: 10,
+      senders: [{
+        bounced: 2,
+        delivered: 80,
+        dropped: 3,
+        name: "campaign-123",
+        processed: 83
+      }],
+      startTime: "2024-07-01T00:00:00Z",
+      total: 20
+    } satisfies MetricsSenderResponse
   },
   volume: {
     apiResponse: {
@@ -237,6 +276,66 @@ describe("recipientBehaviour", () => {
 
     expect(error).toBeTruthy();
     expect(behaviour).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+});
+
+describe("senderMetrics", () => {
+  it("should successfully retrieve sender metrics", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.senderMetrics.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const result = await metrics.senderMetrics("campaigns", fake.senderOptions);
+
+    expect(result).toEqual(fake.senderMetrics.expectedResponse);
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/metrics/senders/campaigns", expect.objectContaining({
+      query: {
+        start_time: "2024-07-01T00:00:00Z",
+        end_time: "2024-07-31T23:59:59Z",
+        limit: 5,
+        offset: 10,
+        sort_order: "asc"
+      }
+    }));
+  });
+
+  it("should contain error for invalid limit", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const metrics = new Metrics(mockClient);
+
+    const result = await metrics.senderMetrics("sub-accounts", { limit: 1001 });
+
+    expect(result.error).toBe("The limit value is invalid. Possible limit values are 1 to 1000.");
+    expect(result.senders).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid offset", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const metrics = new Metrics(mockClient);
+
+    const result = await metrics.senderMetrics("sub-accounts", { offset: -1 });
+
+    expect(result.error).toBe("Offset must be greater than or equal to 0.");
+    expect(result.senders).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error on api response error", async () => {
+    const mockClient = {
+      get: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
+        onResponseError({ response: { status: ErrorCode.BadRequest } });
+        reject();
+      }))
+    } as unknown as MailChannelsClient;
+
+    const metrics = new Metrics(mockClient);
+    const result = await metrics.senderMetrics("campaigns");
+
+    expect(result.error).toBeTruthy();
+    expect(result.senders).toEqual([]);
     expect(mockClient.get).toHaveBeenCalled();
   });
 });

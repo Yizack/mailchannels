@@ -3,12 +3,76 @@ import { ErrorCode, getStatusError } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { stripPemHeaders } from "../utils/helpers";
 import type { SuccessResponse } from "../types/success-response";
-import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsSendApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
+import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsSendAsyncResponse } from "../types/emails/send-async";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
-import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse } from "../types/emails/create-dkim-key";
+import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse, EmailsDkimKey } from "../types/emails/create-dkim-key";
 import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../types/emails/get-dkim-keys";
+import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "../types/emails/rotate-dkim-key";
 import type { EmailsUpdateDkimKeyOptions } from "../types/emails/update-dkim-key";
+
+const mapDkimKey = (key: EmailsCreateDkimKeyApiResponse): EmailsDkimKey => ({
+  algorithm: key.algorithm,
+  createdAt: key.created_at,
+  dnsRecords: key.dkim_dns_records,
+  domain: key.domain,
+  gracePeriodExpiresAt: key.gracePeriodExpiresAt ?? null,
+  length: key.key_length,
+  publicKey: key.public_key,
+  retiresAt: key.retiresAt ?? null,
+  selector: key.selector,
+  status: key.status,
+  statusModifiedAt: key.status_modified_at
+});
+
+const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | string => {
+  const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
+
+  const parsedFrom = parseRecipient(from);
+  if (!parsedFrom || !parsedFrom.email) {
+    return "No sender provided. Use the `from` option to specify a sender";
+  }
+
+  const parsedTo = parseArrayRecipients(to);
+  if (!parsedTo || !parsedTo.length) {
+    return "No recipients provided. Use the `to` option to specify at least one recipient";
+  }
+
+  if (!text && !html) {
+    return "No email content provided";
+  }
+
+  const content: EmailsSendContent[] = [];
+  const template_type = mustaches ? "mustache" : undefined;
+
+  if (text) content.push({ type: "text/plain", value: text, template_type });
+  if (html) content.push({ type: "text/html", value: html, template_type });
+
+  return {
+    attachments: options.attachments,
+    campaign_id: options.campaignId,
+    personalizations: [{
+      bcc: parseArrayRecipients(bcc),
+      cc: parseArrayRecipients(cc),
+      to: parsedTo,
+      dkim_domain: dkim?.domain || undefined,
+      dkim_private_key: dkim?.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
+      dkim_selector: dkim?.selector || undefined,
+      dynamic_template_data: options.mustaches
+    }],
+    headers: options.headers,
+    reply_to: parseRecipient(options.replyTo),
+    from: parsedFrom,
+    subject: options.subject,
+    content,
+    tracking_settings: options.tracking ? {
+      click_tracking: typeof options.tracking.click === "boolean" ? { enable: options.tracking.click } : undefined,
+      open_tracking: typeof options.tracking.open === "boolean" ? { enable: options.tracking.open } : undefined
+    } : undefined,
+    transactional: options.transactional
+  };
+};
 
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -29,57 +93,12 @@ export class Emails {
    * ```
    */
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
-    const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
-
     const data: EmailsSendResponse = { success: false, data: null, error: null };
-
-    const parsedFrom = parseRecipient(from);
-    if (!parsedFrom || !parsedFrom.email) {
-      data.error = "No sender provided. Use the `from` option to specify a sender";
+    const payload = buildSendPayload(options);
+    if (typeof payload === "string") {
+      data.error = payload;
       return data;
     }
-
-    const parsedTo = parseArrayRecipients(to);
-    if (!parsedTo || !parsedTo.length) {
-      data.error = "No recipients provided. Use the `to` option to specify at least one recipient";
-      return data;
-    }
-
-    if (!text && !html) {
-      data.error = "No email content provided";
-      return data;
-    }
-
-    const content: EmailsSendContent[] = [];
-    const template_type = mustaches ? "mustache" : undefined;
-
-    // Plain text must come first if provided
-    if (text) content.push({ type: "text/plain", value: text, template_type });
-    if (html) content.push({ type: "text/html", value: html, template_type });
-
-    const payload: EmailsSendPayload = {
-      attachments: options.attachments,
-      campaign_id: options.campaignId,
-      personalizations: [{
-        bcc: parseArrayRecipients(bcc),
-        cc: parseArrayRecipients(cc),
-        to: parsedTo,
-        dkim_domain: dkim?.domain || undefined,
-        dkim_private_key: dkim?.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
-        dkim_selector: dkim?.selector || undefined,
-        dynamic_template_data: options.mustaches
-      }],
-      headers: options.headers,
-      reply_to: parseRecipient(options.replyTo),
-      from: parsedFrom,
-      subject: options.subject,
-      content,
-      tracking_settings: options.tracking ? {
-        click_tracking: options.tracking.click ? { enable: options.tracking.click } : undefined,
-        open_tracking: options.tracking.open ? { enable: options.tracking.open } : undefined
-      } : undefined,
-      transactional: options.transactional
-    };
 
     const response = await this.mailchannels.post<EmailsSendApiResponse>("/tx/v1/send", {
       query: { "dry-run": dryRun },
@@ -108,6 +127,53 @@ export class Emails {
         reason: result.reason,
         status: result.status
       }))
+    };
+
+    return data;
+  }
+
+  /**
+   * Queue an email for asynchronous delivery processing.
+   * @param options - The email options to queue.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { success, data } = await mailchannels.emails.sendAsync({
+   *   to: 'to@example.com',
+   *   from: 'from@example.com',
+   *   subject: 'Queued email',
+   *   html: 'Test'
+   * })
+   * ```
+   */
+  async sendAsync (options: EmailsSendOptions): Promise<EmailsSendAsyncResponse> {
+    const data: EmailsSendAsyncResponse = { success: false, data: null, error: null };
+    const payload = buildSendPayload(options);
+    if (typeof payload === "string") {
+      data.error = payload;
+      return data;
+    }
+
+    const response = await this.mailchannels.post<EmailsSendAsyncApiResponse>("/tx/v1/send-async", {
+      body: payload,
+      onResponse: async ({ response }) => {
+        if (response.ok) {
+          data.success = true;
+          return;
+        }
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Forbidden]: "User does not have access to this feature.",
+          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.data = {
+      queuedAt: response.queued_at,
+      requestId: response.request_id
     };
 
     return data;
@@ -213,17 +279,7 @@ export class Emails {
 
     if (!response) return data;
 
-    data.key = {
-      algorithm: response.algorithm,
-      createdAt: response.created_at,
-      dnsRecords: response.dkim_dns_records,
-      domain: response.domain,
-      length: response.key_length,
-      publicKey: response.public_key,
-      selector: response.selector,
-      status: response.status,
-      statusModifiedAt: response.status_modified_at
-    };
+    data.key = mapDkimKey(response);
 
     return data;
   }
@@ -275,17 +331,56 @@ export class Emails {
 
     if (!response) return data;
 
-    data.keys = response.keys.map(key => ({
-      algorithm: key.algorithm,
-      createdAt: key.created_at,
-      dnsRecords: key.dkim_dns_records,
-      domain: key.domain,
-      length: key.key_length,
-      publicKey: key.public_key,
-      selector: key.selector,
-      status: key.status,
-      statusModifiedAt: key.status_modified_at
-    }));
+    data.keys = response.keys.map(mapDkimKey);
+
+    return data;
+  }
+
+  /**
+   * Rotate an active DKIM key pair by creating a replacement key with a new selector.
+   * @param domain - The domain the DKIM key belongs to.
+   * @param options - The rotation options.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { newKey, rotatedKey } = await mailchannels.emails.rotateDkimKey('example.com', {
+   *   selector: 'mailchannels',
+   *   newSelector: 'mailchannels-next'
+   * })
+   * ```
+   */
+  async rotateDkimKey (domain: string, options: EmailsRotateDkimKeyOptions): Promise<EmailsRotateDkimKeyResponse> {
+    const data: EmailsRotateDkimKeyResponse = { newKey: null, rotatedKey: null, error: null };
+
+    if (!options.selector || options.selector.length > 63) {
+      data.error = "Selector must be between 1 and 63 characters.";
+      return data;
+    }
+
+    if (!options.newSelector || options.newSelector.length > 63) {
+      data.error = "New selector must be between 1 and 63 characters.";
+      return data;
+    }
+
+    const response = await this.mailchannels.post<EmailsRotateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}/rotate`, {
+      body: {
+        new_key: {
+          selector: options.newSelector
+        }
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found.",
+          [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
+        });
+      }
+    }).catch(() => null);
+
+    if (!response) return data;
+
+    data.newKey = mapDkimKey(response.new_key);
+    data.rotatedKey = mapDkimKey(response.rotated_key);
 
     return data;
   }

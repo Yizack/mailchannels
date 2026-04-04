@@ -37,10 +37,18 @@ export interface EmailsDkimKey {
    */
   domain: string;
   /**
+   * UTC timestamp after which a rotated key can no longer sign messages.
+   */
+  gracePeriodExpiresAt?: string | null;
+  /**
    * Key length in bits.
    */
   length: 1024 | 2048 | 3072 | 4096;
   publicKey: string;
+  /**
+   * UTC timestamp when a rotated key is retired.
+   */
+  retiresAt?: string | null;
   /**
    * Selector assigned to the key pair.
    */
@@ -48,7 +56,7 @@ export interface EmailsDkimKey {
   /**
    * Status of the key.
    */
-  status: "active" | "revoked" | "retired";
+  status: "active" | "revoked" | "retired" | "rotated";
   /**
    * Timestamp when the key was last modified.
    */

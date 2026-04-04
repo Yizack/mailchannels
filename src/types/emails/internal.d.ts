@@ -53,6 +53,11 @@ export interface EmailsSendApiResponse {
   }[];
 }
 
+export interface EmailsSendAsyncApiResponse {
+  queued_at: string;
+  request_id: string;
+}
+
 export interface EmailsCheckDomainPayload {
   dkim_settings?: {
     dkim_domain?: string;
@@ -110,17 +115,24 @@ export interface EmailsCreateDkimKeyApiResponse {
     value: string;
   }[];
   domain: string;
+  gracePeriodExpiresAt?: string | null;
   key_length: 1024 | 2048 | 4096 | 3072 | 4096;
   public_key: string;
+  retiresAt?: string | null;
   selector: string;
-  status: "active" | "retired" | "revoked";
+  status: "active" | "retired" | "revoked" | "rotated";
   status_modified_at: string;
 }
 
 export interface EmailsGetDkimKeysPayload {
   selector?: string;
-  status?: "active" | "retired" | "revoked";
+  status?: "active" | "retired" | "revoked" | "rotated";
   offset?: number;
   limit?: number;
   include_dns_record?: boolean;
+}
+
+export interface EmailsRotateDkimKeyApiResponse {
+  new_key: EmailsCreateDkimKeyApiResponse;
+  rotated_key: EmailsCreateDkimKeyApiResponse;
 }

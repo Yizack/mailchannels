@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
 import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSenderApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
+import type { MetricsSenderOptions, MetricsSenderResponse, MetricsSenderType } from "../types/metrics/sender";
 import type { MetricsVolumeResponse } from "../types/metrics/volume";
 import type { MetricsUsageResponse } from "../types/metrics/usage";
 
@@ -158,6 +159,61 @@ export class Metrics {
       unsubscribeDelivered: response.unsubscribe_delivered,
       unsubscribed: response.unsubscribed
     };
+
+    return data;
+  }
+
+  /**
+   * Retrieve sender metrics for campaigns or sub-accounts.
+   * @param senderType - Sender category to query.
+   * @param options - Options to filter and page sender metrics.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { senders } = await mailchannels.metrics.senderMetrics('campaigns')
+   * ```
+   */
+  async senderMetrics (senderType: MetricsSenderType, options?: MetricsSenderOptions): Promise<MetricsSenderResponse> {
+    const data: MetricsSenderResponse = { senders: [], total: 0, limit: 10, offset: 0, error: null };
+
+    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
+      data.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
+      return data;
+    }
+
+    if (typeof options?.offset === "number" && options.offset < 0) {
+      data.error = "Offset must be greater than or equal to 0.";
+      return data;
+    }
+
+    const response = await this.mailchannels.get<MetricsSenderApiResponse>(`/tx/v1/metrics/senders/${senderType}`, {
+      query: {
+        start_time: options?.startTime,
+        end_time: options?.endTime,
+        limit: options?.limit,
+        offset: options?.offset,
+        sort_order: options?.sortOrder
+      },
+      onResponseError: async ({ response }) => {
+        data.error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Invalid request."
+        });
+      }
+    }).catch((error: unknown) => {
+      if (!data.error) {
+        data.error = error instanceof Error ? error.message : "Failed to fetch sender metrics.";
+      }
+      return null;
+    });
+
+    if (!response) return data;
+
+    data.endTime = response.end_time;
+    data.limit = response.limit;
+    data.offset = response.offset;
+    data.senders = response.senders;
+    data.startTime = response.start_time;
+    data.total = response.total;
 
     return data;
   }

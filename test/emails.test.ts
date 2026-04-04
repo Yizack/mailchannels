@@ -2,10 +2,39 @@ import { describe, expect, it, vi } from "vitest";
 import type { MailChannelsClient } from "../src/client";
 import { Emails } from "../src/modules/emails";
 import type { EmailsSendOptions, EmailsSendResponse } from "../src/types/emails/send";
-import { ErrorCode } from "../src/utils/errors";
-import type { EmailsCreateDkimKeyApiResponse, EmailsSendApiResponse } from "../src/types/emails/internal";
-import type { EmailsCreateDkimKeyResponse } from "../src/types/emails/create-dkim-key";
+import type { EmailsSendAsyncResponse } from "../src/types/emails/send-async";
 import type { EmailsCheckDomainResponse } from "../src/types/emails/check-domain";
+import type { EmailsCreateDkimKeyResponse } from "../src/types/emails/create-dkim-key";
+import type { EmailsRotateDkimKeyResponse } from "../src/types/emails/rotate-dkim-key";
+import type { EmailsCreateDkimKeyApiResponse, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse } from "../src/types/emails/internal";
+import { ErrorCode } from "../src/utils/errors";
+
+const sendPayload = {
+  attachments: undefined,
+  campaign_id: undefined,
+  content: [
+    { type: "text/plain", value: "Test content", template_type: undefined },
+    { type: "text/html", value: "<p>Test content</p>", template_type: undefined }
+  ],
+  from: { email: "sender@example.com" },
+  headers: undefined,
+  personalizations: [{
+    bcc: undefined,
+    cc: undefined,
+    dkim_domain: undefined,
+    dkim_private_key: undefined,
+    dkim_selector: undefined,
+    dynamic_template_data: undefined,
+    to: [{ email: "recipient@example.com" }]
+  }],
+  reply_to: undefined,
+  subject: "Test Subject",
+  tracking_settings: {
+    click_tracking: { enable: true },
+    open_tracking: { enable: true }
+  },
+  transactional: undefined
+};
 
 const fake = {
   send: {
@@ -18,6 +47,7 @@ const fake = {
       tracking: { click: true, open: true }
     } satisfies EmailsSendOptions,
     query: { "dry-run": false },
+    payload: sendPayload,
     apiResponse: {
       request_id: "test-request-id",
       results: [{
@@ -36,6 +66,20 @@ const fake = {
       },
       error: null
     } satisfies EmailsSendResponse
+  },
+  sendAsync: {
+    apiResponse: {
+      queued_at: "2026-04-04T12:00:00.000Z",
+      request_id: "queued-request-id"
+    } satisfies EmailsSendAsyncApiResponse,
+    expectedResponse: {
+      success: true,
+      data: {
+        queuedAt: "2026-04-04T12:00:00.000Z",
+        requestId: "queued-request-id"
+      },
+      error: null
+    } satisfies EmailsSendAsyncResponse
   },
   checkDomain: {
     apiResponse: {
@@ -99,14 +143,93 @@ const fake = {
           value: "string"
         }],
         domain: "example.com",
+        gracePeriodExpiresAt: null,
         length: 2048,
         publicKey: "string",
+        retiresAt: null,
         selector: "mailchannels_test",
         status: "active",
         statusModifiedAt: "2024-07-29T15:51:28.071Z"
       },
       error: null
     } as EmailsCreateDkimKeyResponse
+  },
+  rotateDkimKey: {
+    options: {
+      selector: "mailchannels_test",
+      newSelector: "mailchannels_next"
+    },
+    apiResponse: {
+      new_key: {
+        algorithm: "rsa",
+        created_at: "2026-04-04T12:00:00.000Z",
+        dkim_dns_records: [{
+          name: "mailchannels_next._domainkey.example.com",
+          type: "TXT",
+          value: "new-value"
+        }],
+        domain: "example.com",
+        key_length: 2048,
+        public_key: "new-public-key",
+        selector: "mailchannels_next",
+        status: "active",
+        status_modified_at: "2026-04-04T12:00:00.000Z"
+      },
+      rotated_key: {
+        algorithm: "rsa",
+        created_at: "2024-07-29T15:51:28.071Z",
+        dkim_dns_records: [{
+          name: "mailchannels_test._domainkey.example.com",
+          type: "TXT",
+          value: "old-value"
+        }],
+        domain: "example.com",
+        gracePeriodExpiresAt: "2026-04-07T12:00:00.000Z",
+        key_length: 2048,
+        public_key: "old-public-key",
+        retiresAt: "2026-04-18T12:00:00.000Z",
+        selector: "mailchannels_test",
+        status: "rotated",
+        status_modified_at: "2026-04-04T12:00:00.000Z"
+      }
+    } satisfies EmailsRotateDkimKeyApiResponse,
+    expectedResponse: {
+      newKey: {
+        algorithm: "rsa",
+        createdAt: "2026-04-04T12:00:00.000Z",
+        dnsRecords: [{
+          name: "mailchannels_next._domainkey.example.com",
+          type: "TXT",
+          value: "new-value"
+        }],
+        domain: "example.com",
+        gracePeriodExpiresAt: null,
+        length: 2048,
+        publicKey: "new-public-key",
+        retiresAt: null,
+        selector: "mailchannels_next",
+        status: "active",
+        statusModifiedAt: "2026-04-04T12:00:00.000Z"
+      },
+      rotatedKey: {
+        algorithm: "rsa",
+        createdAt: "2024-07-29T15:51:28.071Z",
+        dnsRecords: [{
+          name: "mailchannels_test._domainkey.example.com",
+          type: "TXT",
+          value: "old-value"
+        }],
+        domain: "example.com",
+        gracePeriodExpiresAt: "2026-04-07T12:00:00.000Z",
+        length: 2048,
+        publicKey: "old-public-key",
+        retiresAt: "2026-04-18T12:00:00.000Z",
+        selector: "mailchannels_test",
+        status: "rotated",
+        statusModifiedAt: "2026-04-04T12:00:00.000Z"
+      },
+      error: null
+    } satisfies EmailsRotateDkimKeyResponse
   }
 };
 
@@ -125,7 +248,11 @@ describe("send", () => {
     expect(error).toBeNull();
     expect(success).toBe(true);
     expect(data).toEqual(fake.send.expectedResponse.data);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send", expect.objectContaining({
+      query: fake.send.query,
+      body: fake.send.payload,
+      onResponse: expect.any(Function)
+    }));
   });
 
   it("should contain error when from field is missing", async () => {
@@ -204,7 +331,7 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
-  it("should successfully send an email with trackings disabled", async () => {
+  it("should include disabled tracking values in the payload", async () => {
     const mockClient = {
       post: vi.fn().mockImplementation(async (url, { onResponse }) => {
         onResponse({ response: { ok: true } });
@@ -213,7 +340,7 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { success, data, error } = await emails.send({
+    await emails.send({
       ...fake.send.options,
       tracking: {
         click: false,
@@ -221,13 +348,17 @@ describe("send", () => {
       }
     });
 
-    expect(error).toBeNull();
-    expect(success).toBe(true);
-    expect(data).toEqual(fake.send.expectedResponse.data);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send", expect.objectContaining({
+      body: expect.objectContaining({
+        tracking_settings: {
+          click_tracking: { enable: false },
+          open_tracking: { enable: false }
+        }
+      })
+    }));
   });
 
-  it("should successfully send an email with no tracking", async () => {
+  it("should omit tracking settings when tracking is not provided", async () => {
     const mockClient = {
       post: vi.fn().mockImplementation(async (url, { onResponse }) => {
         onResponse({ response: { ok: true } });
@@ -236,15 +367,51 @@ describe("send", () => {
     } as unknown as MailChannelsClient;
 
     const emails = new Emails(mockClient);
-    const { success, data, error } = await emails.send({
+    await emails.send({
       ...fake.send.options,
       tracking: undefined
     });
 
-    expect(error).toBeNull();
-    expect(success).toBe(true);
-    expect(data).toEqual(fake.send.expectedResponse.data);
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send", expect.objectContaining({
+      body: expect.objectContaining({
+        tracking_settings: undefined
+      })
+    }));
+  });
+});
+
+describe("sendAsync", () => {
+  it("should successfully queue an email", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.sendAsync.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const result = await emails.sendAsync(fake.send.options);
+
+    expect(result).toEqual(fake.sendAsync.expectedResponse);
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send-async", expect.objectContaining({
+      body: fake.send.payload,
+      onResponse: expect.any(Function)
+    }));
+  });
+
+  it("should return validation errors before calling the api", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.sendAsync({
+      ...fake.send.options,
+      text: "",
+      html: ""
+    });
+
+    expect(result.error).toBe("No email content provided");
+    expect(result.success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 });
 
@@ -259,7 +426,9 @@ describe("checkDomain", () => {
 
     expect(results).toEqual(fake.checkDomain.expectedResponse.results);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/check-domain", expect.objectContaining({
+      body: fake.checkDomain.payload
+    }));
   });
 
   it("should contain error on api response error", async () => {
@@ -290,7 +459,13 @@ describe("createDkimKey", () => {
 
     expect(key).toEqual(fake.createDkimKey.expectedResponse.key);
     expect(error).toBeNull();
-    expect(mockClient.post).toHaveBeenCalled();
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys", expect.objectContaining({
+      body: {
+        algorithm: undefined,
+        key_length: undefined,
+        selector: "mailchannels_test"
+      }
+    }));
   });
 
   it("should contain error on api response error", async () => {
@@ -332,7 +507,15 @@ describe("getDkimKeys", () => {
 
     expect(keys).toEqual([fake.createDkimKey.expectedResponse.key]);
     expect(error).toBeNull();
-    expect(mockClient.get).toHaveBeenCalled();
+    expect(mockClient.get).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys", expect.objectContaining({
+      query: {
+        selector: undefined,
+        status: undefined,
+        offset: undefined,
+        limit: undefined,
+        include_dns_record: true
+      }
+    }));
   });
 
   it("should contain error on api response error", async () => {
@@ -385,6 +568,52 @@ describe("getDkimKeys", () => {
   });
 });
 
+describe("rotateDkimKey", () => {
+  it("should successfully rotate a DKIM key", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValue(fake.rotateDkimKey.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    const result = await emails.rotateDkimKey("example.com", fake.rotateDkimKey.options);
+
+    expect(result).toEqual(fake.rotateDkimKey.expectedResponse);
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels_test/rotate", expect.objectContaining({
+      body: {
+        new_key: {
+          selector: "mailchannels_next"
+        }
+      }
+    }));
+  });
+
+  it("should return error if selector is too long", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.rotateDkimKey("example.com", {
+      selector: "a".repeat(64),
+      newSelector: "mailchannels-next"
+    });
+
+    expect(result.error).toBe("Selector must be between 1 and 63 characters.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error if new selector is too long", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.rotateDkimKey("example.com", {
+      selector: "mailchannels",
+      newSelector: "a".repeat(64)
+    });
+
+    expect(result.error).toBe("New selector must be between 1 and 63 characters.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+});
+
 describe("updateDkimKey", () => {
   it("should successfully update a DKIM key", async () => {
     const mockClient = {
@@ -396,12 +625,16 @@ describe("updateDkimKey", () => {
     const emails = new Emails(mockClient);
     const { success, error } = await emails.updateDkimKey("example.com", {
       selector: "mailchannels_test",
-      status: "retired"
+      status: "rotated"
     });
 
     expect(success).toBe(true);
     expect(error).toBeNull();
-    expect(mockClient.patch).toHaveBeenCalled();
+    expect(mockClient.patch).toHaveBeenCalledWith("/tx/v1/domains/example.com/dkim-keys/mailchannels_test", expect.objectContaining({
+      body: {
+        status: "rotated"
+      }
+    }));
   });
 
   it("should contain error on api response error", async () => {
