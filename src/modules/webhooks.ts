@@ -180,6 +180,16 @@ export class Webhooks {
   async listBatches (options?: WebhooksListBatchesOptions): Promise<WebhooksListBatchesResponse> {
     const data: WebhooksListBatchesResponse = { batches: [], error: null };
 
+    if (options?.statuses && options.statuses.length > 6) {
+      data.error = "A maximum of 6 status filters can be provided.";
+      return data;
+    }
+
+    if (options?.statuses && new Set(options.statuses).size !== options.statuses.length) {
+      data.error = "Status filters must be unique.";
+      return data;
+    }
+
     if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 500)) {
       data.error = "The limit value is invalid. Possible limit values are 1 to 500.";
       return data;
@@ -188,6 +198,32 @@ export class Webhooks {
     if (typeof options?.offset === "number" && options.offset < 0) {
       data.error = "Offset must be greater than or equal to 0.";
       return data;
+    }
+
+    if (options?.createdAfter && Number.isNaN(Date.parse(options.createdAfter))) {
+      data.error = "createdAfter must be a valid date string.";
+      return data;
+    }
+
+    if (options?.createdBefore && Number.isNaN(Date.parse(options.createdBefore))) {
+      data.error = "createdBefore must be a valid date string.";
+      return data;
+    }
+
+    if (options?.createdAfter && options?.createdBefore) {
+      const createdAfter = Date.parse(options.createdAfter);
+      const createdBefore = Date.parse(options.createdBefore);
+      const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
+
+      if (createdBefore <= createdAfter) {
+        data.error = "createdBefore must be later than createdAfter.";
+        return data;
+      }
+
+      if ((createdBefore - createdAfter) > maxRangeMs) {
+        data.error = "The time range between createdAfter and createdBefore must not exceed 31 days.";
+        return data;
+      }
     }
 
     const response = await this.mailchannels.get<WebhooksListBatchesApiResponse>("/tx/v1/webhook-batch", {

@@ -32,6 +32,7 @@ This library provides a simple way to interact with the [MailChannels API](https
 ## <a name="features">🚀 Features</a>
 
 - Send transactional emails
+- Support explicit MailChannels personalizations and envelope sender overrides
 - Queue emails asynchronously
 - Check DKIM, SPF & Domain Lockdown
 - Configure DKIM keys

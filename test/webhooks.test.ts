@@ -3,7 +3,7 @@ import type { MailChannelsClient } from "../src/client";
 import { Webhooks } from "../src/modules/webhooks";
 import { ErrorCode } from "../src/utils/errors";
 import type { WebhooksListBatchesApiResponse, WebhooksValidateApiResponse } from "../src/types/webhooks/internal";
-import type { WebhooksListBatchesResponse } from "../src/types/webhooks/batches";
+import type { WebhooksListBatchesOptions, WebhooksListBatchesResponse } from "../src/types/webhooks/batches";
 import type { WebhooksValidateResponse } from "../src/types/webhooks/validate";
 
 const fake = {
@@ -28,7 +28,7 @@ const fake = {
       webhook: "https://example.com/webhook",
       limit: 100,
       offset: 10
-    } as const,
+    } satisfies WebhooksListBatchesOptions,
     apiResponse: {
       webhook_batches: [{
         batch_id: 123,
@@ -219,6 +219,67 @@ describe("listBatches", () => {
     const result = await webhooks.listBatches({ offset: -1 });
 
     expect(result.error).toBe("Offset must be greater than or equal to 0.");
+    expect(result.batches).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for duplicate statuses", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const webhooks = new Webhooks(mockClient);
+
+    const result = await webhooks.listBatches({ statuses: ["4xx", "4xx"] });
+
+    expect(result.error).toBe("Status filters must be unique.");
+    expect(result.batches).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when more than 6 statuses are provided", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const webhooks = new Webhooks(mockClient);
+
+    const result = await webhooks.listBatches({ statuses: ["1xx", "2xx", "3xx", "4xx", "5xx", "no_response", "4xx"] });
+
+    expect(result.error).toBe("A maximum of 6 status filters can be provided.");
+    expect(result.batches).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid date strings", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const webhooks = new Webhooks(mockClient);
+
+    const result = await webhooks.listBatches({ createdAfter: "not-a-date" });
+
+    expect(result.error).toBe("createdAfter must be a valid date string.");
+    expect(result.batches).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when createdBefore is not later than createdAfter", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const webhooks = new Webhooks(mockClient);
+
+    const result = await webhooks.listBatches({
+      createdAfter: "2026-04-04T00:00:00Z",
+      createdBefore: "2026-04-04T00:00:00Z"
+    });
+
+    expect(result.error).toBe("createdBefore must be later than createdAfter.");
+    expect(result.batches).toEqual([]);
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when the date range exceeds 31 days", async () => {
+    const mockClient = { get: vi.fn() } as unknown as MailChannelsClient;
+    const webhooks = new Webhooks(mockClient);
+
+    const result = await webhooks.listBatches({
+      createdAfter: "2026-03-01T00:00:00Z",
+      createdBefore: "2026-04-04T00:00:00Z"
+    });
+
+    expect(result.error).toBe("The time range between createdAfter and createdBefore must not exceed 31 days.");
     expect(result.batches).toEqual([]);
     expect(mockClient.get).not.toHaveBeenCalled();
   });

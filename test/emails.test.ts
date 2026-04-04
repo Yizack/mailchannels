@@ -16,6 +16,10 @@ const sendPayload = {
     { type: "text/plain", value: "Test content", template_type: undefined },
     { type: "text/html", value: "<p>Test content</p>", template_type: undefined }
   ],
+  dkim_domain: undefined,
+  dkim_private_key: undefined,
+  dkim_selector: undefined,
+  envelope_from: undefined,
   from: { email: "sender@example.com" },
   headers: undefined,
   personalizations: [{
@@ -25,6 +29,11 @@ const sendPayload = {
     dkim_private_key: undefined,
     dkim_selector: undefined,
     dynamic_template_data: undefined,
+    envelope_from: undefined,
+    from: undefined,
+    headers: undefined,
+    reply_to: undefined,
+    subject: undefined,
     to: [{ email: "recipient@example.com" }]
   }],
   reply_to: undefined,
@@ -48,6 +57,61 @@ const fake = {
     } satisfies EmailsSendOptions,
     query: { "dry-run": false },
     payload: sendPayload,
+    personalizedOptions: {
+      from: "sender@example.com",
+      subject: "Root Subject",
+      html: "<p>Hello {{name}}</p>",
+      dkim: {
+        selector: "root-selector",
+        privateKey: "-----BEGIN PRIVATE KEY-----abc-----END PRIVATE KEY-----"
+      },
+      envelopeFrom: "bounce@example.com",
+      personalizations: [{
+        to: "recipient@example.com",
+        mustaches: { name: "Alice" },
+        subject: "Override Subject",
+        replyTo: "reply@example.com",
+        headers: { "X-Test": "yes" },
+        dkim: {
+          domain: "example.com",
+          selector: "per-selector",
+          privateKey: "-----BEGIN PRIVATE KEY-----def-----END PRIVATE KEY-----"
+        },
+        envelopeFrom: "per-bounce@example.com",
+        from: "per-from@example.com"
+      }]
+    } satisfies EmailsSendOptions,
+    personalizedPayload: {
+      attachments: undefined,
+      campaign_id: undefined,
+      content: [
+        { type: "text/html", value: "<p>Hello {{name}}</p>", template_type: "mustache" }
+      ],
+      dkim_domain: undefined,
+      dkim_private_key: "abc",
+      dkim_selector: "root-selector",
+      envelope_from: { email: "bounce@example.com" },
+      from: { email: "sender@example.com" },
+      headers: undefined,
+      personalizations: [{
+        bcc: undefined,
+        cc: undefined,
+        dkim_domain: "example.com",
+        dkim_private_key: "def",
+        dkim_selector: "per-selector",
+        dynamic_template_data: { name: "Alice" },
+        envelope_from: { email: "per-bounce@example.com" },
+        from: { email: "per-from@example.com" },
+        headers: { "X-Test": "yes" },
+        reply_to: { email: "reply@example.com" },
+        subject: "Override Subject",
+        to: [{ email: "recipient@example.com" }]
+      }],
+      reply_to: undefined,
+      subject: "Root Subject",
+      tracking_settings: undefined,
+      transactional: undefined
+    },
     apiResponse: {
       request_id: "test-request-id",
       results: [{
@@ -378,6 +442,54 @@ describe("send", () => {
       })
     }));
   });
+
+  it("should support explicit personalizations and root level send fields", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.send.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    await emails.send(fake.send.personalizedOptions);
+
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send", expect.objectContaining({
+      body: fake.send.personalizedPayload
+    }));
+  });
+
+  it("should return error when personalizations is empty", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      from: "sender@example.com",
+      subject: "Test Subject",
+      html: "<p>Test</p>",
+      personalizations: []
+    });
+
+    expect(result.error).toBe("At least one personalization must be provided.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when a personalization has no recipients", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      from: "sender@example.com",
+      subject: "Test Subject",
+      html: "<p>Test</p>",
+      personalizations: [
+        { to: [] }
+      ]
+    });
+
+    expect(result.error).toBe("Personalization at index 0 must include at least one recipient in the `to` field.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
 });
 
 describe("sendAsync", () => {
@@ -412,6 +524,22 @@ describe("sendAsync", () => {
     expect(result.error).toBe("No email content provided");
     expect(result.success).toBe(false);
     expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should support explicit personalizations for async sends", async () => {
+    const mockClient = {
+      post: vi.fn().mockImplementation(async (url, { onResponse }) => {
+        onResponse({ response: { ok: true } });
+        return fake.sendAsync.apiResponse;
+      })
+    } as unknown as MailChannelsClient;
+
+    const emails = new Emails(mockClient);
+    await emails.sendAsync(fake.send.personalizedOptions);
+
+    expect(mockClient.post).toHaveBeenCalledWith("/tx/v1/send-async", expect.objectContaining({
+      body: fake.send.personalizedPayload
+    }));
   });
 });
 

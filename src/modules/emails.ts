@@ -4,7 +4,7 @@ import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
 import { stripPemHeaders } from "../utils/helpers";
 import type { SuccessResponse } from "../types/success-response";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
-import type { EmailsSendOptions, EmailsSendResponse } from "../types/emails/send";
+import type { EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsSendAsyncResponse } from "../types/emails/send-async";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse, EmailsDkimKey } from "../types/emails/create-dkim-key";
@@ -26,25 +26,76 @@ const mapDkimKey = (key: EmailsCreateDkimKeyApiResponse): EmailsDkimKey => ({
   statusModifiedAt: key.status_modified_at
 });
 
+const mapDkim = (dkim?: EmailsSendDkim) => ({
+  dkim_domain: dkim?.domain,
+  dkim_private_key: dkim?.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
+  dkim_selector: dkim?.selector
+});
+
+const mapPersonalization = (personalization: EmailsSendPersonalization, index: number) => {
+  const to = parseArrayRecipients(personalization.to);
+  if (!to || !to.length) {
+    return `Personalization at index ${index} must include at least one recipient in the \`to\` field.`;
+  }
+
+  return {
+    bcc: parseArrayRecipients(personalization.bcc),
+    cc: parseArrayRecipients(personalization.cc),
+    ...mapDkim(personalization.dkim),
+    dynamic_template_data: personalization.mustaches,
+    envelope_from: parseRecipient(personalization.envelopeFrom),
+    from: parseRecipient(personalization.from),
+    headers: personalization.headers,
+    reply_to: parseRecipient(personalization.replyTo),
+    subject: personalization.subject,
+    to
+  };
+};
+
 const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | string => {
-  const { cc, bcc, from, to, html, text, mustaches, dkim } = options;
+  const { from, html, text } = options;
 
   const parsedFrom = parseRecipient(from);
   if (!parsedFrom || !parsedFrom.email) {
     return "No sender provided. Use the `from` option to specify a sender";
   }
 
-  const parsedTo = parseArrayRecipients(to);
-  if (!parsedTo || !parsedTo.length) {
-    return "No recipients provided. Use the `to` option to specify at least one recipient";
-  }
-
   if (!text && !html) {
     return "No email content provided";
   }
 
+  let personalizations: EmailsSendPayload["personalizations"];
+  if (options.personalizations) {
+    if (!options.personalizations.length) {
+      return "At least one personalization must be provided.";
+    }
+
+    if (options.personalizations.length > 1000) {
+      return "The maximum number of personalizations is 1000.";
+    }
+
+    const mapped = options.personalizations.map(mapPersonalization);
+    const error = mapped.find((item): item is string => typeof item === "string");
+    if (error) return error;
+    personalizations = mapped as EmailsSendPayload["personalizations"];
+  }
+  else {
+    const parsedTo = parseArrayRecipients(options.to);
+    if (!parsedTo || !parsedTo.length) {
+      return "No recipients provided. Use the `to` option to specify at least one recipient";
+    }
+
+    personalizations = [{
+      bcc: parseArrayRecipients(options.bcc),
+      cc: parseArrayRecipients(options.cc),
+      dynamic_template_data: options.mustaches,
+      to: parsedTo
+    }];
+  }
+
   const content: EmailsSendContent[] = [];
-  const template_type = mustaches ? "mustache" : undefined;
+  const hasTemplates = Boolean(options.mustaches) || Boolean(options.personalizations?.some(personalization => personalization.mustaches));
+  const template_type = hasTemplates ? "mustache" : undefined;
 
   if (text) content.push({ type: "text/plain", value: text, template_type });
   if (html) content.push({ type: "text/html", value: html, template_type });
@@ -52,15 +103,9 @@ const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | strin
   return {
     attachments: options.attachments,
     campaign_id: options.campaignId,
-    personalizations: [{
-      bcc: parseArrayRecipients(bcc),
-      cc: parseArrayRecipients(cc),
-      to: parsedTo,
-      dkim_domain: dkim?.domain || undefined,
-      dkim_private_key: dkim?.privateKey ? stripPemHeaders(dkim.privateKey) : undefined,
-      dkim_selector: dkim?.selector || undefined,
-      dynamic_template_data: options.mustaches
-    }],
+    ...mapDkim(options.dkim),
+    envelope_from: parseRecipient(options.envelopeFrom),
+    personalizations,
     headers: options.headers,
     reply_to: parseRecipient(options.replyTo),
     from: parsedFrom,
