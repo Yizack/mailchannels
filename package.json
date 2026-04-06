@@ -35,6 +35,7 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "parity:fixtures": "node scripts/generate-parity-fixtures.mjs",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --release && git push --follow-tags",
     "lint": "eslint",

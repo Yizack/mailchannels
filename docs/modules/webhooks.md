@@ -103,6 +103,62 @@ const { success } = await mailchannels.webhooks.delete()
 - `success` `boolean` <Badge>guaranteed</Badge>: Whether the operation was successful.
 - `error` `string | null` <Badge type="warning">nullable</Badge>
 
+## List Batches <Badge type="info">method</Badge>
+
+Retrieves paged webhook delivery batches associated with the customer.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient, Webhooks } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const webhooks = new Webhooks(mailchannels)
+
+const { batches } = await webhooks.listBatches({
+  limit: 100,
+  statuses: ['4xx', '5xx']
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { batches } = await mailchannels.webhooks.listBatches({
+  limit: 100,
+  statuses: ['4xx', '5xx']
+})
+```
+:::
+
+### Params
+
+- `options` `WebhooksListBatchesOptions` <Badge type="info">optional</Badge>: Optional filters for webhook batches.
+  - `createdAfter` `string` <Badge type="info">optional</Badge>: Inclusive lower bound for filtering by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+  - `createdBefore` `string` <Badge type="info">optional</Badge>: Exclusive upper bound for filtering by creation time. Formats: `YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`.
+  - `statuses` `("1xx" | "2xx" | "3xx" | "4xx" | "5xx" | "no_response")[]` <Badge type="info">optional</Badge>: Unique status category filters. Maximum of `6`.
+  - `webhook` `string` <Badge type="info">optional</Badge>: Filter batches by the webhook endpoint URL.
+  - `limit` `number` <Badge type="info">optional</Badge>: Maximum number of webhook batches to return. Range: `1` to `500`.
+  - `offset` `number` <Badge type="info">optional</Badge>: Number of webhook batches to skip. Minimum: `0`.
+
+### Response
+
+- `batches` `WebhooksBatch[]` <Badge>guaranteed</Badge>
+  - `batchId` `number` <Badge>guaranteed</Badge>
+  - `createdAt` `string` <Badge>guaranteed</Badge>
+  - `customerHandle` `string` <Badge>guaranteed</Badge>
+  - `duration` `object` <Badge type="info">optional</Badge>
+    - `unit` `"milliseconds"` <Badge>guaranteed</Badge>
+    - `value` `number` <Badge>guaranteed</Badge>
+  - `eventCount` `number` <Badge>guaranteed</Badge>
+  - `status` `"1xx_response" | "2xx_response" | "3xx_response" | "4xx_response" | "5xx_response" | "no_response"` <Badge>guaranteed</Badge>
+  - `statusCode` `number | null` <Badge type="warning">nullable</Badge>
+  - `webhook` `string` <Badge>guaranteed</Badge>
+- `error` `string | null` <Badge type="warning">nullable</Badge>
+
 ## Signing Key <Badge type="info">method</Badge>
 
 Retrieves the public key used to verify signatures on incoming webhook payloads.
@@ -197,6 +253,14 @@ const { allPassed, results } = await mailchannels.webhooks.validate('optional-re
   **List type declarations**
 
   <<< @/snippets/webhooks-list-response.ts
+
+  **Webhook batch type declarations**
+
+  <<< @/snippets/webhooks-batch-status-filter.ts
+  <<< @/snippets/webhooks-batch-status.ts
+  <<< @/snippets/webhooks-list-batches-options.ts
+  <<< @/snippets/webhooks-batch.ts
+  <<< @/snippets/webhooks-list-batches-response.ts
 
   **Signing Key type declarations**
 

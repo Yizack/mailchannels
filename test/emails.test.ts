@@ -62,6 +62,7 @@ const fake = {
       subject: "Root Subject",
       html: "<p>Hello {{name}}</p>",
       dkim: {
+        domain: "example.com",
         selector: "root-selector",
         privateKey: "-----BEGIN PRIVATE KEY-----abc-----END PRIVATE KEY-----"
       },
@@ -87,7 +88,7 @@ const fake = {
       content: [
         { type: "text/html", value: "<p>Hello {{name}}</p>", template_type: "mustache" }
       ],
-      dkim_domain: undefined,
+      dkim_domain: "example.com",
       dkim_private_key: "abc",
       dkim_selector: "root-selector",
       envelope_from: { email: "bounce@example.com" },
@@ -490,6 +491,140 @@ describe("send", () => {
     expect(result.error).toBe("Personalization at index 0 must include at least one recipient in the `to` field.");
     expect(mockClient.post).not.toHaveBeenCalled();
   });
+
+  it("should return error when campaignId exceeds the documented format", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      campaignId: "campaign id with spaces"
+    });
+
+    expect(result.error).toBe("campaignId must be 48 characters or fewer and must not contain spaces.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when there are too many attachments", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      attachments: Array.from({ length: 1001 }, (_, index) => ({
+        content: `content-${index}`,
+        filename: `file-${index}.txt`,
+        type: "text/plain"
+      }))
+    });
+
+    expect(result.error).toBe("The maximum number of attachments is 1000.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when root headers contain reserved values", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      headers: {
+        Subject: "override"
+      }
+    });
+
+    expect(result.error).toBe("Root headers cannot include the reserved header 'Subject'.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when personalization headers contain reserved values", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      from: "sender@example.com",
+      subject: "Test Subject",
+      html: "<p>Test</p>",
+      personalizations: [{
+        to: "recipient@example.com",
+        headers: {
+          To: "override@example.com"
+        }
+      }]
+    });
+
+    expect(result.error).toBe("Personalization at index 0 headers cannot include the reserved header 'To'.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when root DKIM privateKey is missing required fields", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      dkim: {
+        privateKey: "private-key",
+        selector: "selector"
+      }
+    });
+
+    expect(result.error).toBe("Root DKIM privateKey requires both a domain and selector.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when personalization DKIM domain is missing a selector", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      from: "sender@example.com",
+      subject: "Test Subject",
+      html: "<p>Test</p>",
+      personalizations: [{
+        to: "recipient@example.com",
+        dkim: {
+          domain: "example.com"
+        }
+      }]
+    });
+
+    expect(result.error).toBe("Personalization at index 0 DKIM domain requires a selector.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when a non-transactional message is not DKIM signed", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      transactional: false
+    });
+
+    expect(result.error).toBe("Non-transactional messages must be DKIM signed.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when a non-transactional message has multiple recipients", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.send({
+      ...fake.send.options,
+      dkim: {
+        selector: "selector"
+      },
+      to: [
+        "recipient@example.com",
+        "recipient2@example.com"
+      ],
+      transactional: false
+    });
+
+    expect(result.error).toBe("Non-transactional messages must have exactly one recipient per personalization.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
 });
 
 describe("sendAsync", () => {
@@ -573,6 +708,34 @@ describe("checkDomain", () => {
     expect(error).toBeTruthy();
     expect(results).toBeNull();
     expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should return error when more than 10 DKIM settings are provided", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.checkDomain({
+      domain: "example.com",
+      dkim: Array.from({ length: 11 }, () => ({ domain: "example.com" }))
+    });
+
+    expect(result.error).toBe("A maximum of 10 DKIM settings can be provided.");
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should return error when a DKIM setting includes privateKey without selector", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+
+    const result = await emails.checkDomain({
+      domain: "example.com",
+      dkim: {
+        privateKey: "private-key"
+      }
+    });
+
+    expect(result.error).toBe("DKIM settings with a privateKey must also include a selector.");
+    expect(mockClient.post).not.toHaveBeenCalled();
   });
 });
 

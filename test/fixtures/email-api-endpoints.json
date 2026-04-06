@@ -1,42 +1,228 @@
 {
   "version": "0.19.0",
   "endpoints": [
-    { "module": "emails", "method": "send", "httpMethod": "POST", "path": "/send" },
-    { "module": "emails", "method": "sendAsync", "httpMethod": "POST", "path": "/send-async" },
-    { "module": "emails", "method": "checkDomain", "httpMethod": "POST", "path": "/check-domain" },
-    { "module": "emails", "method": "createDkimKey", "httpMethod": "POST", "path": "/domains/{domain}/dkim-keys" },
-    { "module": "emails", "method": "getDkimKeys", "httpMethod": "GET", "path": "/domains/{domain}/dkim-keys" },
-    { "module": "emails", "method": "rotateDkimKey", "httpMethod": "POST", "path": "/domains/{domain}/dkim-keys/{selector}/rotate" },
-    { "module": "emails", "method": "updateDkimKey", "httpMethod": "PATCH", "path": "/domains/{domain}/dkim-keys/{selector}" },
-    { "module": "webhooks", "method": "enroll", "httpMethod": "POST", "path": "/webhook" },
-    { "module": "webhooks", "method": "list", "httpMethod": "GET", "path": "/webhook" },
-    { "module": "webhooks", "method": "delete", "httpMethod": "DELETE", "path": "/webhook" },
-    { "module": "webhooks", "method": "listBatches", "httpMethod": "GET", "path": "/webhook-batch" },
-    { "module": "webhooks", "method": "getSigningKey", "httpMethod": "GET", "path": "/webhook/public-key" },
-    { "module": "webhooks", "method": "validate", "httpMethod": "POST", "path": "/webhook/validate" },
-    { "module": "subAccounts", "method": "create", "httpMethod": "POST", "path": "/sub-account" },
-    { "module": "subAccounts", "method": "list", "httpMethod": "GET", "path": "/sub-account" },
-    { "module": "subAccounts", "method": "delete", "httpMethod": "DELETE", "path": "/sub-account/{handle}" },
-    { "module": "subAccounts", "method": "suspend", "httpMethod": "POST", "path": "/sub-account/{handle}/suspend" },
-    { "module": "subAccounts", "method": "activate", "httpMethod": "POST", "path": "/sub-account/{handle}/activate" },
-    { "module": "subAccounts", "method": "createApiKey", "httpMethod": "POST", "path": "/sub-account/{handle}/api-key" },
-    { "module": "subAccounts", "method": "listApiKeys", "httpMethod": "GET", "path": "/sub-account/{handle}/api-key" },
-    { "module": "subAccounts", "method": "deleteApiKey", "httpMethod": "DELETE", "path": "/sub-account/{handle}/api-key/{id}" },
-    { "module": "subAccounts", "method": "createSmtpPassword", "httpMethod": "POST", "path": "/sub-account/{handle}/smtp-password" },
-    { "module": "subAccounts", "method": "listSmtpPasswords", "httpMethod": "GET", "path": "/sub-account/{handle}/smtp-password" },
-    { "module": "subAccounts", "method": "deleteSmtpPassword", "httpMethod": "DELETE", "path": "/sub-account/{handle}/smtp-password/{id}" },
-    { "module": "subAccounts", "method": "getLimit", "httpMethod": "GET", "path": "/sub-account/{handle}/limit" },
-    { "module": "subAccounts", "method": "setLimit", "httpMethod": "PUT", "path": "/sub-account/{handle}/limit" },
-    { "module": "subAccounts", "method": "deleteLimit", "httpMethod": "DELETE", "path": "/sub-account/{handle}/limit" },
-    { "module": "subAccounts", "method": "getUsage", "httpMethod": "GET", "path": "/sub-account/{handle}/usage" },
-    { "module": "metrics", "method": "engagement", "httpMethod": "GET", "path": "/metrics/engagement" },
-    { "module": "metrics", "method": "performance", "httpMethod": "GET", "path": "/metrics/performance" },
-    { "module": "metrics", "method": "recipientBehaviour", "httpMethod": "GET", "path": "/metrics/recipient-behaviour" },
-    { "module": "metrics", "method": "senderMetrics", "httpMethod": "GET", "path": "/metrics/senders/{sender_type}" },
-    { "module": "metrics", "method": "volume", "httpMethod": "GET", "path": "/metrics/volume" },
-    { "module": "metrics", "method": "usage", "httpMethod": "GET", "path": "/usage" },
-    { "module": "suppressions", "method": "create", "httpMethod": "POST", "path": "/suppression-list" },
-    { "module": "suppressions", "method": "list", "httpMethod": "GET", "path": "/suppression-list" },
-    { "module": "suppressions", "method": "delete", "httpMethod": "DELETE", "path": "/suppression-list/{email}" }
-  ]
+    {
+      "module": "emails",
+      "method": "checkDomain",
+      "httpMethod": "POST",
+      "path": "/check-domain"
+    },
+    {
+      "module": "emails",
+      "method": "getDkimKeys",
+      "httpMethod": "GET",
+      "path": "/domains/{domain}/dkim-keys"
+    },
+    {
+      "module": "emails",
+      "method": "createDkimKey",
+      "httpMethod": "POST",
+      "path": "/domains/{domain}/dkim-keys"
+    },
+    {
+      "module": "emails",
+      "method": "updateDkimKey",
+      "httpMethod": "PATCH",
+      "path": "/domains/{domain}/dkim-keys/{selector}"
+    },
+    {
+      "module": "emails",
+      "method": "rotateDkimKey",
+      "httpMethod": "POST",
+      "path": "/domains/{domain}/dkim-keys/{selector}/rotate"
+    },
+    {
+      "module": "metrics",
+      "method": "engagement",
+      "httpMethod": "GET",
+      "path": "/metrics/engagement"
+    },
+    {
+      "module": "metrics",
+      "method": "performance",
+      "httpMethod": "GET",
+      "path": "/metrics/performance"
+    },
+    {
+      "module": "metrics",
+      "method": "recipientBehaviour",
+      "httpMethod": "GET",
+      "path": "/metrics/recipient-behaviour"
+    },
+    {
+      "module": "metrics",
+      "method": "senderMetrics",
+      "httpMethod": "GET",
+      "path": "/metrics/senders/{sender_type}"
+    },
+    {
+      "module": "metrics",
+      "method": "volume",
+      "httpMethod": "GET",
+      "path": "/metrics/volume"
+    },
+    {
+      "module": "emails",
+      "method": "send",
+      "httpMethod": "POST",
+      "path": "/send"
+    },
+    {
+      "module": "emails",
+      "method": "sendAsync",
+      "httpMethod": "POST",
+      "path": "/send-async"
+    },
+    {
+      "module": "subAccounts",
+      "method": "list",
+      "httpMethod": "GET",
+      "path": "/sub-account"
+    },
+    {
+      "module": "subAccounts",
+      "method": "create",
+      "httpMethod": "POST",
+      "path": "/sub-account"
+    },
+    {
+      "module": "subAccounts",
+      "method": "delete",
+      "httpMethod": "DELETE",
+      "path": "/sub-account/{handle}"
+    },
+    {
+      "module": "subAccounts",
+      "method": "activate",
+      "httpMethod": "POST",
+      "path": "/sub-account/{handle}/activate"
+    },
+    {
+      "module": "subAccounts",
+      "method": "listApiKeys",
+      "httpMethod": "GET",
+      "path": "/sub-account/{handle}/api-key"
+    },
+    {
+      "module": "subAccounts",
+      "method": "createApiKey",
+      "httpMethod": "POST",
+      "path": "/sub-account/{handle}/api-key"
+    },
+    {
+      "module": "subAccounts",
+      "method": "deleteApiKey",
+      "httpMethod": "DELETE",
+      "path": "/sub-account/{handle}/api-key/{id}"
+    },
+    {
+      "module": "subAccounts",
+      "method": "deleteLimit",
+      "httpMethod": "DELETE",
+      "path": "/sub-account/{handle}/limit"
+    },
+    {
+      "module": "subAccounts",
+      "method": "getLimit",
+      "httpMethod": "GET",
+      "path": "/sub-account/{handle}/limit"
+    },
+    {
+      "module": "subAccounts",
+      "method": "setLimit",
+      "httpMethod": "PUT",
+      "path": "/sub-account/{handle}/limit"
+    },
+    {
+      "module": "subAccounts",
+      "method": "listSmtpPasswords",
+      "httpMethod": "GET",
+      "path": "/sub-account/{handle}/smtp-password"
+    },
+    {
+      "module": "subAccounts",
+      "method": "createSmtpPassword",
+      "httpMethod": "POST",
+      "path": "/sub-account/{handle}/smtp-password"
+    },
+    {
+      "module": "subAccounts",
+      "method": "deleteSmtpPassword",
+      "httpMethod": "DELETE",
+      "path": "/sub-account/{handle}/smtp-password/{id}"
+    },
+    {
+      "module": "subAccounts",
+      "method": "suspend",
+      "httpMethod": "POST",
+      "path": "/sub-account/{handle}/suspend"
+    },
+    {
+      "module": "subAccounts",
+      "method": "getUsage",
+      "httpMethod": "GET",
+      "path": "/sub-account/{handle}/usage"
+    },
+    {
+      "module": "suppressions",
+      "method": "list",
+      "httpMethod": "GET",
+      "path": "/suppression-list"
+    },
+    {
+      "module": "suppressions",
+      "method": "create",
+      "httpMethod": "POST",
+      "path": "/suppression-list"
+    },
+    {
+      "module": "suppressions",
+      "method": "delete",
+      "httpMethod": "DELETE",
+      "path": "/suppression-list/recipients/{recipient}"
+    },
+    {
+      "module": "metrics",
+      "method": "usage",
+      "httpMethod": "GET",
+      "path": "/usage"
+    },
+    {
+      "module": "webhooks",
+      "method": "delete",
+      "httpMethod": "DELETE",
+      "path": "/webhook"
+    },
+    {
+      "module": "webhooks",
+      "method": "list",
+      "httpMethod": "GET",
+      "path": "/webhook"
+    },
+    {
+      "module": "webhooks",
+      "method": "enroll",
+      "httpMethod": "POST",
+      "path": "/webhook"
+    },
+    {
+      "module": "webhooks",
+      "method": "listBatches",
+      "httpMethod": "GET",
+      "path": "/webhook-batch"
+    },
+    {
+      "module": "webhooks",
+      "method": "getSigningKey",
+      "httpMethod": "GET",
+      "path": "/webhook/public-key"
+    },
+    {
+      "module": "webhooks",
+      "method": "validate",
+      "httpMethod": "POST",
+      "path": "/webhook/validate"
+    }
+  ],
+  "unmapped": []
 }

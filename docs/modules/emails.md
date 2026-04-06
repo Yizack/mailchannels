@@ -56,9 +56,10 @@ const { success, data } = await mailchannels.emails.send({
   - `bcc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info">optional</Badge>: The BCC recipients of the email.
   - `cc` `EmailsSendRecipient[] | EmailsSendRecipient | string[] | string` <Badge type="info">optional</Badge>: The CC recipients of the email.
   - `dkim` `object` <Badge type="info">optional</Badge>: The DKIM settings for the email.
-    - `domain` `string` <Badge type="danger">required</Badge>: The domain to sign the email with.
-    - `privateKey` `string` <Badge type="info">optional</Badge>: The private key to sign the email with. Can be undefined if the domain has an active DKIM key.
-    - `selector` `string` <Badge type="danger">required</Badge>: The DKIM selector to use.
+    - `domain` `string` <Badge type="info">optional</Badge>: The domain to sign the email with. If omitted, the domain is inferred from the sender address when possible.
+    - `privateKey` `string` <Badge type="info">optional</Badge>: The private key to sign the email with. If set, both `domain` and `selector` must also be provided.
+    - `selector` `string` <Badge type="info">optional</Badge>: The DKIM selector to use.
+  - `envelopeFrom` `EmailsSendRecipient | string` <Badge type="info">optional</Badge>: Optional envelope sender override for the email.
   - `from` `EmailsSendRecipient | string` <Badge type="danger">required</Badge>: The sender of the email.
   - `headers` `Record<string, string>` <Badge type="info">optional</Badge>: An object containing key-value pairs, where both keys (header names) and values must be strings. These pairs represent custom headers to be substituted.
     > [!IMPORTANT]
@@ -87,6 +88,7 @@ const { success, data } = await mailchannels.emails.send({
     >
     > You can use the [`html-to-text`](https://www.npmjs.com/package/html-to-text) package to convert your HTML content to plain text.
   - `mustaches` `Record<string, unknown>` <Badge type="info">optional</Badge>: Data to be used if the email is a mustache template, key-value pairs of variables to set for template rendering.
+  - `personalizations` `EmailsSendPersonalization[]` <Badge type="info">optional</Badge>: Explicit MailChannels personalization objects. Maximum of `1000`. Use this when you need per-personalization `to`, `cc`, `bcc`, `headers`, `replyTo`, `subject`, `mustaches`, `dkim`, `from`, or `envelopeFrom` overrides.
   - `transactional` `boolean` <Badge type="info">optional</Badge>: Mark these messages as transactional or non-transactional. In order for a message to be marked as non-transactional, it must have exactly one recipient per personalization, and it must be DKIM signed. 400 Bad Request will be returned if there are more than one recipient in any personalization for non-transactional messages. If a message is marked as non-transactional, it changes the sending process as follows:
     List-Unsubscribe headers will be added.
 - `dryRun` `boolean` <Badge type="info">optional</Badge>: When set to `true`, the email will not be sent. Instead, the fully rendered message will be returned in the `data.rendered` property of the response.
@@ -105,6 +107,53 @@ const { success, data } = await mailchannels.emails.send({
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of the status.
     - `status` `"sent" | "failed"` <Badge>guaranteed</Badge>: The status of the message. Note that 'sent' is a temporary status; the final status will be provided through webhooks, if configured.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+
+## Send Async <Badge type="info">method</Badge>
+
+Queues an email for asynchronous delivery processing.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Emails(mailchannels)
+
+const { success, data } = await emails.sendAsync({
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'Queued message',
+  html: '<p>Your email content</p>'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { success, data } = await mailchannels.emails.sendAsync({
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'Queued message',
+  html: '<p>Your email content</p>'
+})
+```
+:::
+
+### Params
+
+- `options` `EmailsSendOptions` <Badge type="danger">required</Badge>: The same send payload supported by [`send`](#send-method), including explicit personalizations and DKIM overrides.
+
+### Response
+
+- `success` `boolean` <Badge>guaranteed</Badge>: Indicates if the async request was successfully queued.
+- `data` `object | null` <Badge type="warning">nullable</Badge>
+  - `queuedAt` `string` <Badge>guaranteed</Badge>: ISO 8601 timestamp when the request was queued for processing.
+  - `requestId` `string` <Badge>guaranteed</Badge>: Unique identifier used to track the async request and related webhooks.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Check Domain <Badge type="info">method</Badge>
 
@@ -174,7 +223,7 @@ const { success } = await mailchannels.emails.checkDomain({
 - `results` `object | null` <Badge type="warning">nullable</Badge>: The results of the domain checks.
   - `dkim` `object[]` <Badge>guaranteed</Badge>
     - `domain` `string` <Badge>guaranteed</Badge>
-    - `keyStatus` `"active" | "revoked" | "retired" | "provided"` <Badge>guaranteed</Badge>: The human readable status of the DKIM key used for verification.
+    - `keyStatus` `"active" | "revoked" | "retired" | "rotated" | "provided"` <Badge>guaranteed</Badge>: The human readable status of the DKIM key used for verification.
     - `selector` `string` <Badge>guaranteed</Badge>
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of DKIM check.
     - `verdict` `"passed" | "failed"` <Badge>guaranteed</Badge>
@@ -244,10 +293,12 @@ const { key } = await mailchannels.emails.createDkimKey('example.com', {
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
   - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
+  - `gracePeriodExpiresAt` `string | null` <Badge type="warning">nullable</Badge>: UTC timestamp after which a rotated key can no longer sign messages.
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
+  - `retiresAt` `string | null` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
-  - `status` `"active" | "revoked" | "retired"` <Badge>guaranteed</Badge>: Status of the key.
+  - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
   - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
 
@@ -302,12 +353,58 @@ const { keys } = await mailchannels.emails.getDkimKeys('example.com', {
     - `type` `string` <Badge>guaranteed</Badge>
     - `value` `string` <Badge>guaranteed</Badge>
   - `domain` `string` <Badge>guaranteed</Badge>: Domain associated with the key pair.
+  - `gracePeriodExpiresAt` `string | null` <Badge type="warning">nullable</Badge>: UTC timestamp after which a rotated key can no longer sign messages.
   - `length` `1024 | 2048 | 3072 | 4096` <Badge>guaranteed</Badge>: Key length in bits.
   - `publicKey` `string` <Badge>guaranteed</Badge>
+  - `retiresAt` `string | null` <Badge type="warning">nullable</Badge>: UTC timestamp when a rotated key is retired.
   - `selector` `string` <Badge>guaranteed</Badge>: Selector assigned to the key pair.
-  - `status` `"active" | "revoked" | "retired"` <Badge>guaranteed</Badge>: Status of the key.
+  - `status` `"active" | "revoked" | "retired" | "rotated"` <Badge>guaranteed</Badge>: Status of the key.
   - `statusModifiedAt` `string` <Badge>guaranteed</Badge>: Timestamp when the key was last modified.
 - `error` `string | null` <Badge type="warning">nullable</Badge>: An error message if the email failed to send.
+
+## Rotate DKIM Key <Badge type="info">method</Badge>
+
+Rotates an active DKIM key pair by creating a replacement key with a new selector.
+
+### Usage
+
+::: code-group
+```ts [modular.ts]
+import { MailChannelsClient, Emails } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannelsClient('your-api-key')
+const emails = new Emails(mailchannels)
+
+const { newKey, rotatedKey } = await emails.rotateDkimKey('example.com', {
+  selector: 'mailchannels',
+  newSelector: 'mailchannels-next'
+})
+```
+
+```ts [full.ts]
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('your-api-key')
+
+const { newKey, rotatedKey } = await mailchannels.emails.rotateDkimKey('example.com', {
+  selector: 'mailchannels',
+  newSelector: 'mailchannels-next'
+})
+```
+:::
+
+### Params
+
+- `domain` `string` <Badge type="danger">required</Badge>: The DKIM domain to rotate.
+- `options` `EmailsRotateDkimKeyOptions` <Badge type="danger">required</Badge>: Rotate DKIM key options.
+  - `selector` `string` <Badge type="danger">required</Badge>: Selector of the existing active key. Must be between `1` and `63` characters.
+  - `newSelector` `string` <Badge type="danger">required</Badge>: Selector for the replacement key. Must be between `1` and `63` characters.
+
+### Response
+
+- `newKey` `EmailsDkimKey | null` <Badge type="warning">nullable</Badge>: The newly created replacement key.
+- `rotatedKey` `EmailsDkimKey | null` <Badge type="warning">nullable</Badge>: The original key after being marked as `rotated`.
+- `error` `string | null` <Badge type="warning">nullable</Badge>
 
 ## Update DKIM Key <Badge type="info">method</Badge>
 
@@ -345,11 +442,12 @@ const { success } = await mailchannels.emails.updateDkimKey('example.com', {
 - `domain` `string` <Badge type="danger">required</Badge>: The domain of the DKIM key to update.
 - `options` `EmailsUpdateDkimKeyOptions` <Badge type="danger">required</Badge>: Update DKIM key options.
   - `selector` `string` <Badge type="danger">required</Badge>: Selector of the DKIM key to update. Must be a maximum of 63 characters.
-  - `status` `"revoked" | "retired"` <Badge type="danger">required</Badge>: New status of the DKIM key pair.
+  - `status` `"revoked" | "retired" | "rotated"` <Badge type="danger">required</Badge>: New status of the DKIM key pair.
     > [!TIP]
-    > Possible values: `revoked`, `retired`.
+    > Possible values: `revoked`, `retired`, `rotated`.
     > - `revoked`: Indicates that the key is compromised and should not be used.
     > - `retired`: Indicates that the key has been rotated and is no longer in use.
+    > - `rotated`: Indicates that the key is in the rotation grace period.
 
 ### Response
 
@@ -375,6 +473,7 @@ const { success } = await mailchannels.emails.updateDkimKey('example.com', {
   <<< @/snippets/emails-send-recipient.ts
   <<< @/snippets/emails-send-tracking.ts
   <<< @/snippets/emails-send-response.ts
+  <<< @/snippets/emails-send-async-response.ts
 
   **Check Domain type declarations**
 
@@ -393,6 +492,11 @@ const { success } = await mailchannels.emails.updateDkimKey('example.com', {
 
   <<< @/snippets/emails-get-dkim-keys-options.ts
   <<< @/snippets/emails-get-dkim-keys-response.ts
+
+  **Rotate DKIM Key type declarations**
+
+  <<< @/snippets/emails-rotate-dkim-key-options.ts
+  <<< @/snippets/emails-rotate-dkim-key-response.ts
 
   **Update DKIM Key type declarations**
 

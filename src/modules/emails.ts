@@ -12,6 +12,61 @@ import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../typ
 import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "../types/emails/rotate-dkim-key";
 import type { EmailsUpdateDkimKeyOptions } from "../types/emails/update-dkim-key";
 
+const RESERVED_HEADER_NAMES = new Set([
+  "authentication-results",
+  "bcc",
+  "cc",
+  "content-transfer-encoding",
+  "content-type",
+  "dkim-signature",
+  "from",
+  "message-id",
+  "received",
+  "reply-to",
+  "subject",
+  "to"
+]);
+
+const getRecipientCount = (recipients?: EmailsSendPayload["personalizations"][number]["to"]) => recipients?.length || 0;
+
+const validateHeaderMap = (headers: Record<string, string> | undefined, label: string) => {
+  if (!headers) return null;
+
+  const seenHeaders = new Set<string>();
+  for (const [headerName, headerValue] of Object.entries(headers)) {
+    if (typeof headerValue !== "string") {
+      return `${label} header '${headerName}' must have a string value.`;
+    }
+
+    const normalizedHeaderName = headerName.toLowerCase();
+    if (seenHeaders.has(normalizedHeaderName)) {
+      return `${label} headers must be unique when compared case-insensitively.`;
+    }
+
+    if (RESERVED_HEADER_NAMES.has(normalizedHeaderName)) {
+      return `${label} headers cannot include the reserved header '${headerName}'.`;
+    }
+
+    seenHeaders.add(normalizedHeaderName);
+  }
+
+  return null;
+};
+
+const validateSendDkim = (dkim: EmailsSendDkim | undefined, label: string) => {
+  if (!dkim) return null;
+
+  if (dkim.domain && !dkim.selector) {
+    return `${label} DKIM domain requires a selector.`;
+  }
+
+  if (dkim.privateKey && (!dkim.domain || !dkim.selector)) {
+    return `${label} DKIM privateKey requires both a domain and selector.`;
+  }
+
+  return null;
+};
+
 const mapDkimKey = (key: EmailsCreateDkimKeyApiResponse): EmailsDkimKey => ({
   algorithm: key.algorithm,
   createdAt: key.created_at,
@@ -38,9 +93,33 @@ const mapPersonalization = (personalization: EmailsSendPersonalization, index: n
     return `Personalization at index ${index} must include at least one recipient in the \`to\` field.`;
   }
 
+  if (to.length > 1000) {
+    return `Personalization at index ${index} cannot include more than 1000 \`to\` recipients.`;
+  }
+
+  const cc = parseArrayRecipients(personalization.cc);
+  if (cc && cc.length > 1000) {
+    return `Personalization at index ${index} cannot include more than 1000 \`cc\` recipients.`;
+  }
+
+  const bcc = parseArrayRecipients(personalization.bcc);
+  if (bcc && bcc.length > 1000) {
+    return `Personalization at index ${index} cannot include more than 1000 \`bcc\` recipients.`;
+  }
+
+  const headerError = validateHeaderMap(personalization.headers, `Personalization at index ${index}`);
+  if (headerError) {
+    return headerError;
+  }
+
+  const dkimError = validateSendDkim(personalization.dkim, `Personalization at index ${index}`);
+  if (dkimError) {
+    return dkimError;
+  }
+
   return {
-    bcc: parseArrayRecipients(personalization.bcc),
-    cc: parseArrayRecipients(personalization.cc),
+    bcc,
+    cc,
     ...mapDkim(personalization.dkim),
     dynamic_template_data: personalization.mustaches,
     envelope_from: parseRecipient(personalization.envelopeFrom),
@@ -64,6 +143,24 @@ const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | strin
     return "No email content provided";
   }
 
+  if (options.attachments && options.attachments.length > 1000) {
+    return "The maximum number of attachments is 1000.";
+  }
+
+  if (options.campaignId && (options.campaignId.length > 48 || /\s/.test(options.campaignId))) {
+    return "campaignId must be 48 characters or fewer and must not contain spaces.";
+  }
+
+  const rootHeaderError = validateHeaderMap(options.headers, "Root");
+  if (rootHeaderError) {
+    return rootHeaderError;
+  }
+
+  const rootDkimError = validateSendDkim(options.dkim, "Root");
+  if (rootDkimError) {
+    return rootDkimError;
+  }
+
   let personalizations: EmailsSendPayload["personalizations"];
   if (options.personalizations) {
     if (!options.personalizations.length) {
@@ -85,12 +182,47 @@ const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | strin
       return "No recipients provided. Use the `to` option to specify at least one recipient";
     }
 
+    if (parsedTo.length > 1000) {
+      return "The maximum number of `to` recipients is 1000.";
+    }
+
+    const parsedCc = parseArrayRecipients(options.cc);
+    if (parsedCc && parsedCc.length > 1000) {
+      return "The maximum number of `cc` recipients is 1000.";
+    }
+
+    const parsedBcc = parseArrayRecipients(options.bcc);
+    if (parsedBcc && parsedBcc.length > 1000) {
+      return "The maximum number of `bcc` recipients is 1000.";
+    }
+
     personalizations = [{
-      bcc: parseArrayRecipients(options.bcc),
-      cc: parseArrayRecipients(options.cc),
+      bcc: parsedBcc,
+      cc: parsedCc,
       dynamic_template_data: options.mustaches,
       to: parsedTo
     }];
+  }
+
+  if (options.transactional === false) {
+    const isDkimSigned = personalizations.every((personalization) => {
+      const personalizationDkim = personalization.dkim_selector;
+      const rootDkim = options.dkim?.selector;
+      return Boolean(personalizationDkim || rootDkim);
+    });
+
+    if (!isDkimSigned) {
+      return "Non-transactional messages must be DKIM signed.";
+    }
+
+    const hasInvalidRecipientCount = personalizations.some((personalization) => {
+      const recipientCount = getRecipientCount(personalization.to) + getRecipientCount(personalization.cc) + getRecipientCount(personalization.bcc);
+      return recipientCount !== 1;
+    });
+
+    if (hasInvalidRecipientCount) {
+      return "Non-transactional messages must have exactly one recipient per personalization.";
+    }
   }
 
   const content: EmailsSendContent[] = [];
@@ -246,6 +378,17 @@ export class Emails {
     const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
 
     const data: EmailsCheckDomainResponse = { results: null, error: null };
+
+    if (dkimOptions && dkimOptions.length > 10) {
+      data.error = "A maximum of 10 DKIM settings can be provided.";
+      return data;
+    }
+
+    const invalidDkimSetting = dkimOptions?.find(({ privateKey, selector }) => privateKey && !selector);
+    if (invalidDkimSetting) {
+      data.error = "DKIM settings with a privateKey must also include a selector.";
+      return data;
+    }
 
     const payload: EmailsCheckDomainPayload = {
       dkim_settings: dkimOptions?.map(({ domain, privateKey, selector }) => ({

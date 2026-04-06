@@ -160,6 +160,12 @@ Already implemented features are marked with a checkmark. Please open an issue i
 # Install dependencies
 pnpm install
 
+# Refresh parity fixtures from the checked-in OpenAPI specs
+pnpm parity:fixtures
+
+# Refresh the checked-in OpenAPI specs from docs.mailchannels.net, then regenerate fixtures
+pnpm parity:fixtures -- --refresh-specs
+
 # Build the package
 pnpm build
 

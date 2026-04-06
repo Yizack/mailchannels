@@ -24,9 +24,11 @@ export default [
             link: "/modules/emails",
             items: [
               { text: "Send Email", link: "/modules/emails#send-method" },
+              { text: "Send Email Async", link: "/modules/emails#send-async-method" },
               { text: "Check Domain", link: "/modules/emails#check-domain-method" },
               { text: "Create DKIM Key", link: "/modules/emails#create-dkim-key-method" },
               { text: "Get DKIM Keys", link: "/modules/emails#get-dkim-keys-method" },
+              { text: "Rotate DKIM Key", link: "/modules/emails#rotate-dkim-key-method" },
               { text: "Update DKIM Key", link: "/modules/emails#update-dkim-key-method" }
             ]
           },
@@ -38,6 +40,7 @@ export default [
               { text: "Enroll for Webhook", link: "/modules/webhooks#enroll-method" },
               { text: "List Webhooks", link: "/modules/webhooks#list-method" },
               { text: "Delete Webhooks", link: "/modules/webhooks#delete-method" },
+              { text: "List Webhook Batches", link: "/modules/webhooks#list-batches-method" },
               { text: "Get Signing Key", link: "/modules/webhooks#signing-key-method" },
               { text: "Validate Webhooks", link: "/modules/webhooks#validate-method" }
             ]
@@ -70,6 +73,7 @@ export default [
               { text: "Engagement", link: "/modules/metrics#engagement-method" },
               { text: "Performance", link: "/modules/metrics#performance-method" },
               { text: "Recipient Behaviour", link: "/modules/metrics#recipient-behaviour-method" },
+              { text: "Sender Metrics", link: "/modules/metrics#sender-metrics-method" },
               { text: "Volume", link: "/modules/metrics#volume-method" },
               { text: "Usage", link: "/modules/metrics#usage-method" }
             ]
