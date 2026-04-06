@@ -259,9 +259,10 @@ export class Emails {
     const payload = buildSendPayload(options);
     if (typeof payload === "string") {
       error = createError(payload);
-      return flags.async
-        ? { data: null, error }
-        : { success: false, data: null, error };
+      if (flags.async) {
+        return { data: null, error };
+      }
+      return { success: false, data: null, error };
     }
 
     const endpoint = flags.async ? "/tx/v1/send-async" : "/tx/v1/send";
