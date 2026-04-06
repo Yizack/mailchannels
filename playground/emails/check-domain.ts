@@ -15,7 +15,7 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { results, error } = await mailchannels.emails.checkDomain({
+const { data, error } = await mailchannels.emails.checkDomain({
   domain: dkimDomain,
   dkim: {
     domain: dkimDomain,
@@ -25,4 +25,4 @@ const { results, error } = await mailchannels.emails.checkDomain({
   senderId: senderId
 });
 
-console.info(JSON.stringify({ results, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

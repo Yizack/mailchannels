@@ -1,8 +1,9 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import { ErrorCode, getResultError, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ServiceSubscriptionsResponse } from "../types/service/subscriptions";
 import type { ServiceReportOptions } from "../types/service/report";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Service {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -12,24 +13,21 @@ export class Service {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.service.status()
+   * const { success, error } = await mailchannels.service.status()
    * ```
    */
   async status (): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     await this.mailchannels.get<void>("/inbound/v1/status", {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch service status.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 
   /**
@@ -37,29 +35,28 @@ export class Service {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { subscriptions } = await mailchannels.service.subscriptions()
+   * const { data, error } = await mailchannels.service.subscriptions()
    * ```
    */
   async subscriptions (): Promise<ServiceSubscriptionsResponse> {
-    const data: ServiceSubscriptionsResponse = { subscriptions: [], error: null };
+    let error: ErrorResponse | null = null;
 
-    const response = await this.mailchannels.get<ServiceSubscriptionsResponse["subscriptions"]>("/inbound/v1/subscriptions", {
+    const response = await this.mailchannels.get<ServiceSubscriptionsResponse["data"]>("/inbound/v1/subscriptions", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.NotFound]: "We could not find a customer that matched the customerHandle."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch subscriptions.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch subscriptions.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.subscriptions = response;
-    return data;
+    const data = clean(response);
+
+    return { data, error: null };
   }
 
   /**
@@ -74,7 +71,7 @@ export class Service {
    * ```
    */
   async report (options: ServiceReportOptions): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     const { type, ...payload } = options;
 
@@ -83,15 +80,13 @@ export class Service {
         report_type: type
       },
       body: payload,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to submit report.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 }

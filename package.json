@@ -1,6 +1,6 @@
 {
   "name": "mailchannels-sdk",
-  "version": "0.5.0",
+  "version": "0.7.6",
   "description": "Node.js SDK to integrate MailChannels API into your JavaScript or TypeScript server-side applications.",
   "type": "module",
   "license": "MIT",
@@ -26,26 +26,26 @@
   "exports": {
     ".": {
       "types": "./dist/mailchannels.d.mts",
-      "import": "./dist/mailchannels.mjs"
+      "default": "./dist/mailchannels.mjs"
     }
   },
-  "types": "./dist/mailchannels.d.ts",
+  "types": "./dist/mailchannels.d.mts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
+    "build": "obuild",
     "parity:fixtures": "node scripts/generate-parity-fixtures.mjs",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --release && git push --follow-tags",
     "simulate:email-api": "node scripts/email-api-simulator.js",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "test": "vitest run --reporter=verbose --coverage",
     "test:types": "tsc --noEmit -p tsconfig.types.json",
     "test:watch": "vitest watch",
     "docs:dev": "vitepress dev docs",
-    "docs:build": "(git fetch --unshallow || git fetch --all) && vitepress build docs",
+    "docs:build": "(git fetch --unshallow -q || git fetch --all -q) && vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:snippets": "jiti docs/scripts/snippets"
   },
@@ -53,24 +53,20 @@
     "ofetch": "^2.0.0-alpha.3"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.0",
-    "@stylistic/eslint-plugin": "^5.6.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.47.0",
-    "@typescript-eslint/parser": "^8.47.0",
-    "@vitest/coverage-v8": "^4.0.10",
+    "@types/node": "^25.5.2",
+    "@vitest/coverage-v8": "^4.1.2",
     "changelogen": "^0.6.2",
-    "eslint": "^9.39.1",
-    "eslint-plugin-import-x": "^4.16.1",
     "jiti": "^2.6.1",
+    "obuild": "^0.4.33",
+    "oxlint": "^1.58.0",
     "scule": "^1.3.0",
-    "typescript": "^5.9.3",
-    "unbuild": "^3.6.1",
-    "vitepress": "^1.6.4",
-    "vitepress-plugin-group-icons": "^1.6.5",
-    "vitepress-plugin-llms": "^1.9.3",
-    "vitest": "^4.0.10"
+    "typescript": "^6.0.2",
+    "vitepress": "^2.0.0-alpha.17",
+    "vitepress-plugin-group-icons": "^1.7.3",
+    "vitepress-plugin-llms": "^1.12.0",
+    "vitest": "^4.1.2"
   },
-  "packageManager": "pnpm@10.22.0"
+  "packageManager": "pnpm@10.33.0"
 }

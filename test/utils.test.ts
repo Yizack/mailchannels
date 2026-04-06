@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
 import { parseArrayRecipients, parseRecipient } from "../src/utils/recipients";
 import { getStatusError } from "../src/utils/errors";
+import { clean } from "../src/utils/helpers";
 
 const fake = {
   pair: "Example <name@example.com>",
@@ -11,25 +12,64 @@ const fake = {
 describe("parseRecipient", () => {
   it("should parse recipient name-address pairs", () => {
     const recipient = parseRecipient(fake.pair);
-    expect(recipient).toEqual(fake.object);
+    expect(recipient).toStrictEqual(fake.object);
+  });
+
+  it("should parse recipient name-address pairs with spaces in name", () => {
+    const recipient = parseRecipient("Example Name <name@example.com>");
+    expect(recipient).toStrictEqual({ name: "Example Name", email: "name@example.com" });
   });
 
   it("should return exact recipient object", () => {
     const recipient = parseRecipient(fake.object);
-    expect(recipient).toEqual(fake.object);
+    expect(recipient).toStrictEqual(fake.object);
   });
 
+  it("should parse email without name", () => {
+    const recipient = parseRecipient(fake.object.email);
+    expect(recipient).toStrictEqual({ email: fake.object.email });
+  });
+
+  it("should return undefined on no email string", () => {
+    const recipient = parseRecipient(fake.object.name);
+    expect(recipient).toBeUndefined();
+  });
+
+  it("should return undefined on empty email in name-address pair", () => {
+    const recipient = parseRecipient("Name <>");
+    expect(recipient).toBeUndefined();
+  });
+
+  it("should return undefined on malformed name-address pair", () => {
+    const recipient = parseRecipient("Name <name@test.com> extra");
+    expect(recipient).toBeUndefined();
+  });
+
+  it("should return undefined on incomplete name-address pair", () => {
+    const recipient = parseRecipient("Name <name@test.com");
+    expect(recipient).toBeUndefined();
+  });
+
+  it("should return undefined if email is not provided", () => {
+    const recipient = parseRecipient({ email: "", name: fake.object.name });
+    expect(recipient).toBeUndefined();
+  });
 });
 
 describe("parseArrayRecipients", () => {
   it("should parse single recipient object to array", () => {
     const recipient = parseArrayRecipients(fake.object);
-    expect(recipient).toEqual([fake.object]);
+    expect(recipient).toStrictEqual([fake.object]);
   });
 
   it("should parse array of recipients", () => {
     const recipient = parseArrayRecipients([fake.pair, fake.pair]);
-    expect(recipient).toEqual([fake.object, fake.object]);
+    expect(recipient).toStrictEqual([fake.object, fake.object]);
+  });
+
+  it("should return undefined if array is empty", () => {
+    const recipient = parseArrayRecipients([]);
+    expect(recipient).toBeUndefined();
   });
 });
 
@@ -38,8 +78,7 @@ describe("getStatusError", () => {
   it("should return default error message", () => {
     const response = { status: 500 };
     const error = getStatusError(response as ErrorResponse);
-
-    expect(error).toEqual("Unknown error.");
+    expect(error).toStrictEqual({ message: "Unknown error.", statusCode: 500 });
   });
 
   it("should return custom error message", () => {
@@ -47,27 +86,88 @@ describe("getStatusError", () => {
     const error = getStatusError(response as ErrorResponse, {
       404: "Custom not found error."
     });
-
-    expect(error).toEqual("Custom not found error.");
+    expect(error).toStrictEqual({ message: "Custom not found error.", statusCode: 404 });
   });
 
   it("should return error message from response string", () => {
     const response = { _data: "Server is down" };
     const error = getStatusError(response as ErrorResponse);
-
-    expect(error).toEqual("Unknown error. Server is down");
+    expect(error).toStrictEqual({ message: "Unknown error. Server is down", statusCode: null });
   });
 
   it("should return error message from response object", () => {
     const response = { _data: { message: "Invalid request" } };
     const error = getStatusError(response as ErrorResponse);
-
-    expect(error).toEqual("Unknown error. Invalid request");
+    expect(error).toStrictEqual({ message: "Unknown error. Invalid request", statusCode: null });
   });
 
   it("should return error message from response array", () => {
     const response = { _data: { errors: ["Invalid email", "Name is required"] } };
     const error = getStatusError(response as ErrorResponse);
-    expect(error).toEqual("Unknown error. Invalid email, Name is required");
+    expect(error).toStrictEqual({ message: "Unknown error. Invalid email, Name is required", statusCode: null });
+  });
+});
+
+describe("clean", () => {
+  it("should remove undefined values from object", () => {
+    const input = { a: "Example", b: null, c: undefined, d: true, e: 0 };
+    const output = { a: "Example", b: null, d: true, e: 0 };
+    expect(clean(input)).toStrictEqual(output);
+  });
+
+  it("should remove undefined values from array", () => {
+    const input = ["value1", null, "value2", undefined, "value3"];
+    const output = ["value1", null, "value2", "value3"];
+    expect(clean(input)).toStrictEqual(output);
+  });
+
+  it("should return primitive values unchanged", () => {
+    expect(clean("string")).toBe("string");
+    expect(clean(123)).toBe(123);
+    expect(clean(true)).toBe(true);
+    expect(clean(null)).toBe(null);
+    expect(clean(undefined)).toBe(undefined);
+  });
+
+  it("should handle empty objects and arrays", () => {
+    expect(clean({})).toStrictEqual({});
+    expect(clean([])).toStrictEqual([]);
+  });
+
+  it("should remove undefined values from nested objects", () => {
+    const input = { a: { b: undefined, c: "value" } };
+    const output = { a: { c: "value" } };
+    expect(clean(input)).toStrictEqual(output);
+  });
+
+  it("should remove undefined values from arrays containing objects", () => {
+    const input = [{ a: "value", b: undefined }];
+    const output = [{ a: "value" }];
+    expect(clean(input)).toStrictEqual(output);
+  });
+
+  it("should remove undefined values from deeply nested structures", () => {
+    const input = {
+      level1: {
+        level2: {
+          array: [
+            { key: "value", remove: undefined },
+            undefined,
+            { nested: { data: "test", skip: undefined } }
+          ],
+          optional: undefined,
+          keep: "this"
+        }
+      }
+    };
+    const output = {
+      level1: {
+        level2: {
+          array: [{ key: "value" }, { nested: { data: "test" } }],
+          keep: "this"
+        }
+      }
+    };
+    expect(clean(input)).toStrictEqual(output);
   });
 });

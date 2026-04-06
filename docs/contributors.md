@@ -13,13 +13,22 @@ const members = [
   {
     avatar: 'https://www.github.com/yizack.png',
     name: 'Yizack Rangel',
-    title: 'Creator',
+    title: 'Author',
     links: [
       { icon: 'github', link: 'https://github.com/yizack' },
       { icon: 'linkedin', link: 'https://linkedin.com/in/yizack' },
       { icon: 'bluesky', link: 'https://bsky.app/profile/yizack.com' }
     ]
   },
+  {
+    avatar: 'https://www.github.com/ttulttul.png',
+    name: 'Ken Simpson',
+    title: 'Contributor',
+    links: [
+      { icon: 'github', link: 'https://github.com/ttulttul' },
+      { icon: 'linkedin', link: 'https://www.linkedin.com/in/ksimpson' }
+    ]
+  }
 ]
 </script>
 

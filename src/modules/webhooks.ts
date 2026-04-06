@@ -1,11 +1,14 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
-import type { WebhooksListBatchesOptions, WebhooksListBatchesResponse } from "../types/webhooks/batches";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import { isValidWebhook } from "../utils/webhooks-validator";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { WebhooksListResponse } from "../types/webhooks/list";
 import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
-import type { WebhooksListBatchesApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
+import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
+import type { WebhooksBatchesApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -16,39 +19,36 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
+   * const { success, error } = mailchannels.webhooks.enroll('https://example.com/api/webhooks/mailchannels')
    * ```
    */
   async enroll (endpoint: string): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!endpoint) {
-      data.error = "No endpoint provided.";
-      return data;
+      error = createError("No endpoint provided.");
+      return { success: false, error };
     }
 
     if (endpoint.length > 8000) {
-      data.error = "The endpoint exceeds the maximum length of 8000 characters.";
-      return data;
+      error = createError("The endpoint exceeds the maximum length of 8000 characters.");
+      return { success: false, error };
     }
 
     await this.mailchannels.post<void>("/tx/v1/webhook", {
       query: {
         endpoint
       },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.Conflict]: `Endpoint '${endpoint}' is already enrolled to receive notifications.`
         });
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to enroll webhook.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 
   /**
@@ -56,27 +56,26 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { webhooks } = await mailchannels.webhooks.list()
+   * const { data, error } = await mailchannels.webhooks.list()
    * ```
    */
   async list (): Promise<WebhooksListResponse> {
-    const data: WebhooksListResponse = { webhooks: [], error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<{ webhook: string }[]>("/tx/v1/webhook", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch webhooks.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch webhooks.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.webhooks = response.map(({ webhook }) => webhook);
-    return data;
+    const data = clean(response.map(({ webhook }) => webhook));
+
+    return { data, error: null };
   }
 
   /**
@@ -84,24 +83,21 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.webhooks.delete()
+   * const { success, error } = await mailchannels.webhooks.delete()
    * ```
    */
   async delete (): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     await this.mailchannels.delete<void>("/tx/v1/webhook", {
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (!response.ok) {
-          data.error = getStatusError(response);
-          return;
-        }
-        data.success = true;
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete webhooks.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 
   /**
@@ -110,25 +106,35 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { key } = await mailchannels.webhooks.getSigningKey('key-id')
+   * const { data, error } = await mailchannels.webhooks.getSigningKey('key-id')
    * ```
    */
   async getSigningKey (id: string): Promise<WebhooksSigningKeyResponse> {
-    const data: WebhooksSigningKeyResponse = { key: null, error: null };
+    let error: ErrorResponse | null = null;
+
     const response = await this.mailchannels.get<{ id: string, key: string }>("/tx/v1/webhook/public-key", {
       query: {
         id
       },
-      onResponseError: ({ response }) => {
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: `The key '${id}' is not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to get signing key.");
+      return null;
+    });
 
-    data.key = response?.key || null;
-    return data;
+    if (!response) return { data: null, error: error! };
+
+    const data = clean({
+      id: response.id,
+      key: response.key
+    });
+
+    return { data, error: null };
   }
 
   /**
@@ -137,77 +143,96 @@ export class Webhooks {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { allPassed, results } = await mailchannels.webhooks.validate('optional-request-id')
+   * const { data, error } = await mailchannels.webhooks.validate('optional-request-id')
    * ```
    */
   async validate (requestId?: string): Promise<WebhooksValidateResponse> {
-    const data: WebhooksValidateResponse = { allPassed: false, results: [], error: null };
+    let error: ErrorResponse | null = null;
 
     if (requestId && requestId.length > 28) {
-      data.error = "The request id should not exceed 28 characters.";
-      return data;
+      error = createError("The request id should not exceed 28 characters.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<WebhooksValidateApiResponse>("/tx/v1/webhook/validate", {
       body: {
         request_id: requestId
       },
-      onResponseError: ({ response }) => {
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.NotFound]: "No webhooks found for the account."
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to validate webhooks.");
+      return null;
+    });
 
-    if (response) {
-      data.allPassed = response.all_passed;
-      data.results = response.results;
-    }
+    if (!response) return { data: null, error: error! };
 
-    return data;
+    const data = clean({
+      allPassed: response.all_passed,
+      results: response.results
+    });
+
+    return { data, error: null };
   }
 
   /**
-   * Retrieve paged webhook batch delivery attempts for this customer.
-   * @param options - Filters for webhook batches.
+   * Verifies the authenticity of incoming webhook requests by validating their signatures using the provided options.
+   * @param options - The options for verifying the webhook.
+   * @example
+   * ```ts
+   * const isValid = await Webhooks.verify({ payload: rawBody, headers })
+   * ```
+   */
+  static async verify (options: WebhooksVerifyOptions): Promise<boolean> {
+    return isValidWebhook(options).catch(() => false);
+  }
+
+  /**
+   * Verifies the authenticity of incoming webhook requests by validating their signatures using the provided options.
+   * @param options - The options for verifying the webhook.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { batches } = await mailchannels.webhooks.listBatches()
+   * const isValid = await mailchannels.webhooks.verify({ payload: rawBody, headers })
    * ```
    */
-  async listBatches (options?: WebhooksListBatchesOptions): Promise<WebhooksListBatchesResponse> {
-    const data: WebhooksListBatchesResponse = { batches: [], error: null };
+  async verify (options: WebhooksVerifyOptions): Promise<boolean> {
+    return Webhooks.verify(options);
+  }
+
+  /**
+   * Retrieves paged webhook batches associated with the customer. The time range specified by `createdAfter` and `createdBefore` must not exceed 31 days. If neither is specified, the default time range is the last 3 days.
+   * @param options - The options for listing webhook batches.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.webhooks.batches()
+   * ```
+   */
+  async batches (options?: WebhooksBatchesOptions): Promise<WebhooksBatchesResponse> {
+    let error: ErrorResponse | null = null;
+
+    error = validatePagination({ ...options, max: 500 });
+    if (error) return { data: null, error };
 
     if (options?.statuses && options.statuses.length > 6) {
-      data.error = "A maximum of 6 status filters can be provided.";
-      return data;
+      return { data: null, error: createError("A maximum of 6 status filters can be provided.") };
     }
 
     if (options?.statuses && new Set(options.statuses).size !== options.statuses.length) {
-      data.error = "Status filters must be unique.";
-      return data;
-    }
-
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 500)) {
-      data.error = "The limit value is invalid. Possible limit values are 1 to 500.";
-      return data;
-    }
-
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
+      return { data: null, error: createError("Status filters must be unique.") };
     }
 
     if (options?.createdAfter && Number.isNaN(Date.parse(options.createdAfter))) {
-      data.error = "createdAfter must be a valid date string.";
-      return data;
+      return { data: null, error: createError("createdAfter must be a valid date string.") };
     }
 
     if (options?.createdBefore && Number.isNaN(Date.parse(options.createdBefore))) {
-      data.error = "createdBefore must be a valid date string.";
-      return data;
+      return { data: null, error: createError("createdBefore must be a valid date string.") };
     }
 
     if (options?.createdAfter && options?.createdBefore) {
@@ -216,17 +241,15 @@ export class Webhooks {
       const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
 
       if (createdBefore <= createdAfter) {
-        data.error = "createdBefore must be later than createdAfter.";
-        return data;
+        return { data: null, error: createError("createdBefore must be later than createdAfter.") };
       }
 
       if ((createdBefore - createdAfter) > maxRangeMs) {
-        data.error = "The time range between createdAfter and createdBefore must not exceed 31 days.";
-        return data;
+        return { data: null, error: createError("The time range between createdAfter and createdBefore must not exceed 31 days.") };
       }
     }
 
-    const response = await this.mailchannels.get<WebhooksListBatchesApiResponse>("/tx/v1/webhook-batch", {
+    const response = await this.mailchannels.get<WebhooksBatchesApiResponse>("/tx/v1/webhook-batch", {
       query: {
         created_after: options?.createdAfter,
         created_before: options?.createdBefore,
@@ -236,20 +259,18 @@ export class Webhooks {
         offset: options?.offset
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch webhook batches.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch webhook batches.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.batches = response.webhook_batches.map(batch => ({
+    const data = clean(response.webhook_batches.map(batch => ({
       batchId: batch.batch_id,
       createdAt: batch.created_at,
       customerHandle: batch.customer_handle,
@@ -258,8 +279,8 @@ export class Webhooks {
       status: batch.status,
       statusCode: batch.status_code,
       webhook: batch.webhook
-    }));
+    })));
 
-    return data;
+    return { data, error: null };
   }
 }

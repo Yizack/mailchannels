@@ -22,7 +22,7 @@ const emailMethodMap = {
   "GET /metrics/engagement": { module: "metrics", method: "engagement" },
   "GET /metrics/performance": { module: "metrics", method: "performance" },
   "GET /metrics/recipient-behaviour": { module: "metrics", method: "recipientBehaviour" },
-  "GET /metrics/senders/{sender_type}": { module: "metrics", method: "senderMetrics" },
+  "GET /metrics/senders/{sender_type}": { module: "metrics", method: "senders" },
   "GET /metrics/volume": { module: "metrics", method: "volume" },
   "POST /send": { module: "emails", method: "send" },
   "POST /send-async": { module: "emails", method: "sendAsync" },
@@ -48,7 +48,7 @@ const emailMethodMap = {
   "DELETE /webhook": { module: "webhooks", method: "delete" },
   "GET /webhook": { module: "webhooks", method: "list" },
   "POST /webhook": { module: "webhooks", method: "enroll" },
-  "GET /webhook-batch": { module: "webhooks", method: "listBatches" },
+  "GET /webhook-batch": { module: "webhooks", method: "batches" },
   "GET /webhook/public-key": { module: "webhooks", method: "getSigningKey" },
   "POST /webhook/validate": { module: "webhooks", method: "validate" }
 };

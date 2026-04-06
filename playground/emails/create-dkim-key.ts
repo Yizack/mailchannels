@@ -12,8 +12,8 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { key, error } = await mailchannels.emails.createDkimKey(dkimDomain, {
+const { data, error } = await mailchannels.emails.createDkimKey(dkimDomain, {
   selector: "mailchannels_test"
 });
 
-console.info(JSON.stringify({ key, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

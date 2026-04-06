@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { webhooks, error } = await mailchannels.webhooks.list();
+const { data, error } = await mailchannels.webhooks.list();
 
-console.info(JSON.stringify({ webhooks, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

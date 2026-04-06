@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { limit, error } = await mailchannels.subAccounts.getLimit("validhandle1234");
+const { data, error } = await mailchannels.subAccounts.getLimit("validhandle1234");
 
-console.info(JSON.stringify({ limit, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

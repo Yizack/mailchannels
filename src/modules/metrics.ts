@@ -1,17 +1,15 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
-import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSenderApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
+import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean, mapBuckets } from "../utils/helpers";
+import type { ErrorResponse } from "../types/responses";
+import type { MetricsEngagementApiResponse, MetricsPerformanceApiResponse, MetricsRecipientBehaviourApiResponse, MetricsSendersApiResponse, MetricsUsageApiResponse, MetricsVolumeApiResponse } from "../types/metrics/internal";
 import type { MetricsOptions } from "../types/metrics";
 import type { MetricsEngagementResponse } from "../types/metrics/engagement";
 import type { MetricsPerformanceResponse } from "../types/metrics/performance";
 import type { MetricsRecipientBehaviourResponse } from "../types/metrics/recipient-behaviour";
-import type { MetricsSenderOptions, MetricsSenderResponse, MetricsSenderType } from "../types/metrics/sender";
 import type { MetricsVolumeResponse } from "../types/metrics/volume";
 import type { MetricsUsageResponse } from "../types/metrics/usage";
-
-const mapBuckets = (arr: { count: number, period_start: string }[]) => {
-  return arr.map(({ count, period_start }) => ({ count, periodStart: period_start }));
-};
+import type { MetricsSendersOptions, MetricsSendersResponse, MetricsSendersType } from "../types/metrics/senders";
 
 export class Metrics {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -22,11 +20,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { engagement } = await mailchannels.metrics.engagement()
+   * const { data, error } = await mailchannels.metrics.engagement()
    * ```
    */
   async engagement (options?: MetricsOptions): Promise<MetricsEngagementResponse> {
-    const data: MetricsEngagementResponse = { engagement: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsEngagementApiResponse>("/tx/v1/metrics/engagement", {
       query: {
@@ -36,20 +34,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch engagement metrics.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch engagement metrics.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.engagement = {
+    const data = clean({
       buckets: {
         click: mapBuckets(response.buckets.click),
         clickTrackingDelivered: mapBuckets(response.buckets.click_tracking_delivered),
@@ -62,9 +58,9 @@ export class Metrics {
       open: response.open,
       openTrackingDelivered: response.open_tracking_delivered,
       startTime: response.start_time
-    };
+    });
 
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -73,11 +69,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { performance } = await mailchannels.metrics.performance()
+   * const { data, error } = await mailchannels.metrics.performance()
    * ```
    */
   async performance (options?: MetricsOptions): Promise<MetricsPerformanceResponse> {
-    const data: MetricsPerformanceResponse = { performance: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsPerformanceApiResponse>("/tx/v1/metrics/performance", {
       query: {
@@ -87,20 +83,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch performance metrics.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch performance metrics.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.performance = {
+    const data = clean({
       bounced: response.bounced,
       buckets: {
         bounced: mapBuckets(response.buckets.bounced),
@@ -111,9 +105,9 @@ export class Metrics {
       endTime: response.end_time,
       processed: response.processed,
       startTime: response.start_time
-    };
+    });
 
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -122,11 +116,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { behaviour } = await mailchannels.metrics.recipientBehaviour()
+   * const { data, error } = await mailchannels.metrics.recipientBehaviour()
    * ```
    */
   async recipientBehaviour (options?: MetricsOptions): Promise<MetricsRecipientBehaviourResponse> {
-    const data: MetricsRecipientBehaviourResponse = { behaviour: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsRecipientBehaviourApiResponse>("/tx/v1/metrics/recipient-behaviour", {
       query: {
@@ -136,20 +130,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch recipient behaviour metrics.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch recipient behaviour metrics.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.behaviour = {
+    const data = clean({
       buckets: {
         unsubscribeDelivered: mapBuckets(response.buckets.unsubscribe_delivered),
         unsubscribed: mapBuckets(response.buckets.unsubscribed)
@@ -158,64 +150,9 @@ export class Metrics {
       startTime: response.start_time,
       unsubscribeDelivered: response.unsubscribe_delivered,
       unsubscribed: response.unsubscribed
-    };
-
-    return data;
-  }
-
-  /**
-   * Retrieve sender metrics for campaigns or sub-accounts.
-   * @param senderType - Sender category to query.
-   * @param options - Options to filter and page sender metrics.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { senders } = await mailchannels.metrics.senderMetrics('campaigns')
-   * ```
-   */
-  async senderMetrics (senderType: MetricsSenderType, options?: MetricsSenderOptions): Promise<MetricsSenderResponse> {
-    const data: MetricsSenderResponse = { senders: [], total: 0, limit: 10, offset: 0, error: null };
-
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      data.error = "The limit value is invalid. Possible limit values are 1 to 1000.";
-      return data;
-    }
-
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
-    }
-
-    const response = await this.mailchannels.get<MetricsSenderApiResponse>(`/tx/v1/metrics/senders/${senderType}`, {
-      query: {
-        start_time: options?.startTime,
-        end_time: options?.endTime,
-        limit: options?.limit,
-        offset: options?.offset,
-        sort_order: options?.sortOrder
-      },
-      onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Invalid request."
-        });
-      }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch sender metrics.";
-      }
-      return null;
     });
 
-    if (!response) return data;
-
-    data.endTime = response.end_time;
-    data.limit = response.limit;
-    data.offset = response.offset;
-    data.senders = response.senders;
-    data.startTime = response.start_time;
-    data.total = response.total;
-
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -224,11 +161,11 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { volume } = await mailchannels.metrics.volume()
+   * const { data, error } = await mailchannels.metrics.volume()
    * ```
    */
   async volume (options?: MetricsOptions): Promise<MetricsVolumeResponse> {
-    const data: MetricsVolumeResponse = { volume: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsVolumeApiResponse>("/tx/v1/metrics/volume", {
       query: {
@@ -238,20 +175,18 @@ export class Metrics {
         interval: options?.interval
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch volume metrics.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch volume metrics.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.volume = {
+    const data = clean({
       buckets: {
         delivered: mapBuckets(response.buckets.delivered),
         dropped: mapBuckets(response.buckets.dropped),
@@ -262,9 +197,9 @@ export class Metrics {
       endTime: response.end_time,
       processed: response.processed,
       startTime: response.start_time
-    };
+    });
 
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -272,31 +207,77 @@ export class Metrics {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { usage } = await mailchannels.metrics.usage()
+   * const { data, error } = await mailchannels.metrics.usage()
    * ```
    */
   async usage (): Promise<MetricsUsageResponse> {
-    const data: MetricsUsageResponse = { usage: null, error: null };
+    let error: ErrorResponse | null = null;
 
     const response = await this.mailchannels.get<MetricsUsageApiResponse>("/tx/v1/usage", {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch((error: unknown) => {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to fetch usage metrics.";
-      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch usage metrics.");
       return null;
     });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.usage = {
+    const data = clean({
       endDate: response.period_end_date,
       startDate: response.period_start_date,
       total: response.total_usage
-    };
+    });
 
-    return data;
+    return { data, error: null };
+  }
+
+  /**
+   * Retrieves a list of senders, either sub-accounts or campaigns, with their associated message metrics. Sorted by total # of sent messages (processed + dropped). Supports optional filter for time range, and optional settings for limit, offset, and sort order. Note: senders without any messages in the given time range will not be included in the results. The default time range is from one month ago to now, and the default sort order is descending.
+   * @param type - The type of senders to retrieve metrics for. Can be either `sub-accounts` or `campaigns`.
+   * @param options - Optional filter options for time range, limit, offset, and sort order.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.metrics.senders('campaigns')
+   * ```
+   */
+  async senders (type: MetricsSendersType, options?: MetricsSendersOptions): Promise<MetricsSendersResponse> {
+    let error: ErrorResponse | null = null;
+
+    error = validatePagination({ ...options, max: 1000 });
+    if (error) return { data: null, error };
+
+    const response = await this.mailchannels.get<MetricsSendersApiResponse>(`/tx/v1/metrics/senders/${type}`, {
+      query: {
+        start_time: options?.startTime,
+        end_time: options?.endTime,
+        limit: options?.limit,
+        offset: options?.offset,
+        sort_order: options?.sortOrder
+      },
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch senders metrics.");
+      return null;
+    });
+
+    if (!response) return { data: null, error: error! };
+
+    const data = clean({
+      endTime: response.end_time,
+      limit: response.limit,
+      offset: response.offset,
+      senders: response.senders,
+      startTime: response.start_time,
+      total: response.total
+    });
+
+    return { data, error: null };
   }
 }

@@ -3,7 +3,7 @@ import { groupIconMdPlugin, groupIconVitePlugin } from "vitepress-plugin-group-i
 import llmstxt from "vitepress-plugin-llms";
 import sidebarConfig from "./sidebar";
 import navbarConfig from "./navbar";
-import modulesSourceMd from "./plugins/modules-source-md";
+import modulesMd from "./plugins/modules-md";
 import { SITE } from "./site";
 
 export default defineConfig({
@@ -12,11 +12,17 @@ export default defineConfig({
   description: SITE.description,
   cleanUrls: true,
   lastUpdated: true,
+  srcExclude: ["**/_parts/**"],
+  transformPageData: (pageData) => {
+    pageData.titleTemplate &&= `${pageData.titleTemplate} | ${SITE.name}`;
+    return pageData;
+  },
   transformHead: ({ pageData }) => {
     const head: HeadConfig[] = [];
     const relativePath = pageData.relativePath.replace(/\.md$/, "").replace(/index$/, "");
     const path = relativePath === "index" ? "" : `/${relativePath}`;
-    const title = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
+    const baseTitle = pageData.title ? `${pageData.title} | ${SITE.name}` : SITE.name;
+    const title = pageData.titleTemplate ? `${pageData.title} | ${pageData.titleTemplate}` : baseTitle;
     const url = `${SITE.host}` + path;
     const cover = `${SITE.host}/${SITE.cover}`;
     const tags: HeadConfig[] = [
@@ -47,16 +53,17 @@ export default defineConfig({
     ["link", { rel: "manifest", href: "/site.webmanifest" }]
   ],
   markdown: {
+    anchor: {
+      level: [2, 3]
+    },
     config (md) {
       md.use(groupIconMdPlugin);
-      md.use(modulesSourceMd);
+      md.use(modulesMd);
     }
   },
   vite: {
     plugins: [
-      // @ts-expect-error vite plugin types
       groupIconVitePlugin(),
-      // @ts-expect-error vite plugin types
       llmstxt({
         ignoreFiles: ["contributors.md"]
       })
@@ -69,7 +76,8 @@ export default defineConfig({
     nav: navbarConfig,
     sidebar: sidebarConfig,
     socialLinks: [
-      { icon: "github", link: "https://github.com/Yizack/mailchannels" }
+      { icon: "github", link: "https://github.com/Yizack/mailchannels" },
+      { icon: "npm", link: "https://www.npmjs.com/package/mailchannels-sdk" }
     ],
     editLink: {
       pattern: "https://github.com/Yizack/mailchannels/edit/main/docs/:path",
@@ -82,5 +90,8 @@ export default defineConfig({
       message: "Released under the MIT License.",
       copyright: "Library created by Yizack"
     }
+  },
+  rewrites: {
+    "modules/:slug/index.md": "modules/:slug.md"
   }
 });

@@ -14,8 +14,8 @@ describe("MailChannels", () => {
   for (const [name, Module] of Object.entries(modules)) {
     it(`should initialize ${name} module`, () => {
       const mailChannels = new MailChannels(apiKey);
-      // @ts-expect-error dynamically accessing modules
-      expect(mailChannels[camelCase(name)]).toBeInstanceOf(Module);
+      const module = mailChannels[camelCase(name) as keyof InstanceType<typeof MailChannels>];
+      expect(module).toBeInstanceOf(Module);
     });
   }
 

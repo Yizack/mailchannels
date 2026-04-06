@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { key, error } = await mailchannels.subAccounts.createApiKey("validhandle1234");
+const { data, error } = await mailchannels.subAccounts.createApiKey("validhandle1234");
 
-console.info(JSON.stringify({ key, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

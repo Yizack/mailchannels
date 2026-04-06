@@ -1,10 +1,11 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import { ErrorCode, createError, getResultError, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
 import type { UsersCreateApiResponse } from "../types/users/internal";
 import type { UsersCreateOptions, UsersCreateResponse } from "../types/users/create";
-import { ErrorCode, getStatusError } from "../utils/errors";
 
 export class Users {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -16,7 +17,7 @@ export class Users {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { user } = await mailchannels.users.create("name@example.com", {
+   * const { data, error } = await mailchannels.users.create("name@example.com", {
    *   admin: true
    * })
    * ```
@@ -24,11 +25,11 @@ export class Users {
   async create (email: string, options?: UsersCreateOptions): Promise<UsersCreateResponse> {
     const { admin, filter, listEntries } = options || {};
 
-    const data: UsersCreateResponse = { user: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!email) {
-      data.error = "No email address provided.";
-      return data;
+      error = createError("No email address provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.put<UsersCreateApiResponse>("/inbound/v1/users", {
@@ -41,15 +42,18 @@ export class Users {
         list_entries: listEntries
       },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: `The email address '${email}' is invalid.`
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create user.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.user = {
+    const data = clean({
       email: response.recipient.email_address,
       roles: response.recipient.roles,
       filter: response.recipient.filter,
@@ -58,9 +62,9 @@ export class Users {
         type: item_type,
         action
       }))
-    };
+    });
 
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -70,7 +74,7 @@ export class Users {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entry } = await mailchannels.users.addListEntry('name@example.com', {
+   * const { data, error } = await mailchannels.users.addListEntry('name@example.com', {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -79,36 +83,40 @@ export class Users {
   async addListEntry (email: string, options: ListEntryOptions): Promise<ListEntryResponse> {
     const { listName, item } = options;
 
-    const data: ListEntryResponse = { entry: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!email) {
-      data.error = "No email provided.";
-      return data;
+      error = createError("No email provided.");
+      return { data: null, error };
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/users/${email}/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to add user list entry.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.entry = {
+    const data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
-    };
-    return data;
+    });
+
+    return { data, error: null };
   }
 
   /**
@@ -118,39 +126,43 @@ export class Users {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entries } = await mailchannels.users.listEntries('name@example.com', 'safelist')
+   * const { data, error } = await mailchannels.users.listEntries('name@example.com', 'safelist')
    * ```
    */
   async listEntries (email: string, listName: ListNames): Promise<ListEntriesResponse> {
-    const data: ListEntriesResponse = { entries: [], error: null };
+    let error: ErrorResponse | null = null;
 
     if (!email) {
-      data.error = "No email provided.";
-      return data;
+      error = createError("No email provided.");
+      return { data: null, error };
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/users/${email}/lists/${listName}`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch user list entries.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.entries = response.map(({ action, item, item_type }) => ({
+    const data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
-    }));
-    return data;
+    })));
+
+    return { data, error: null };
   }
 
   /**
@@ -160,7 +172,7 @@ export class Users {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.users.deleteListEntry('name@example.com', {
+   * const { success, error } = await mailchannels.users.deleteListEntry('name@example.com', {
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -169,33 +181,30 @@ export class Users {
   async deleteListEntry (email: string, options: ListEntryOptions): Promise<SuccessResponse> {
     const { listName, item } = options;
 
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!email) {
-      data.error = "No email provided.";
-      return data;
+      error = createError("No email provided.");
+      return { success: false, error };
     }
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete(`/inbound/v1/users/${email}/lists/${listName}`, {
       query: { item },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.Forbidden]: "The domain is associated with an api key that is different than the one in the request, the domain is associated with a different customer, or the domain in the request is an alias domain.",
           [ErrorCode.NotFound]: `The recipient '${email}' was not found.`
         });
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete user list entry.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 }

@@ -1,6 +1,7 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
-import type { SuccessResponse } from "../types/success-response";
+import { ErrorCode, getResultError, getStatusError, validatePagination } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { SuppressionsCreateOptions, SuppressionsListOptions, SuppressionsListResponse, SuppressionsSource } from "../types/suppressions";
 import type { SuppressionsCreatePayload, SuppressionsListApiResponse, SuppressionsListPayload } from "../types/suppressions/internal";
 
@@ -13,12 +14,12 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.suppressions.create({
+   * const { success, error } = await mailchannels.suppressions.create({
    * // ...
    * });
    */
   async create (options: SuppressionsCreateOptions): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     const { addToSubAccounts, entries } = options;
 
@@ -34,21 +35,18 @@ export class Suppressions {
 
     await this.mailchannels.post("/tx/v1/suppression-list", {
       body: payload,
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Conflict]: "Conflict. One or more suppression entries in the request already exist and cannot be created again.",
           [ErrorCode.PayloadTooLarge]: "Payload too large. The request exceeds the maximum allowed total of 1000 suppression entries for the parent account and/or its sub-accounts."
         });
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create suppression entries.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 
   /**
@@ -58,52 +56,42 @@ export class Suppressions {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.suppressions.delete('name@example.com', 'api');
+   * const { success, error } = await mailchannels.suppressions.delete('name@example.com', 'api');
    * ```
    */
   async delete (recipient: string, source?: SuppressionsSource): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     await this.mailchannels.delete(`/tx/v1/suppression-list/recipients/${recipient}`, {
       query: {
         source
       },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete suppression entry.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 
   /**
    * Retrieve suppression entries associated with the specified account. Supports filtering by recipient, source and creation date range. The response is paginated, with a default limit of `1000` entries per page and an offset of `0`.
+   * @param options - Options to filter and customize the suppression entries retrieval.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { list }= await mailchannels.suppressions.list();
+   * const { data, error } = await mailchannels.suppressions.list();
    * ```
-   * @param options - Options to filter and customize the suppression entries retrieval.
    */
   async list (options?: SuppressionsListOptions): Promise<SuppressionsListResponse> {
-    const data: SuppressionsListResponse = { list: [], error: null };
+    let error: ErrorResponse | null = null;
 
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 1000)) {
-      data.error = "The limit must be between 1 and 1000.";
-      return data;
-    }
-
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset must be greater than or equal to 0.";
-      return data;
-    }
+    error = validatePagination({ ...options, max: 1000 });
+    if (error) return { data: null, error };
 
     const payload: SuppressionsListPayload = {
       recipient: options?.recipient,
@@ -117,23 +105,26 @@ export class Suppressions {
     const response = await this.mailchannels.get<SuppressionsListApiResponse>("/tx/v1/suppression-list", {
       query: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch suppression entries.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.list = response.suppression_list.map(entry => ({
+    const data = clean(response.suppression_list.map(entry => ({
       createdAt: entry.created_at,
       notes: entry.notes,
       recipient: entry.recipient,
       sender: entry.sender,
       source: entry.source,
       types: entry.suppression_types
-    }));
+    })));
 
-    return data;
+    return { data, error: null };
   }
 }

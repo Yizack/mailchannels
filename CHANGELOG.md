@@ -1,12 +1,304 @@
 # Changelog
 
 
-## Unreleased
+## v0.7.6
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.5...v0.7.6)
+
+### 🚀 Enhancements
+
+- **webhooks:** Add `batches` method ([#112](https://github.com/Yizack/mailchannels/pull/112))
+
+### 📖 Documentation
+
+- **changelog-list-md:** Fix commits group by versions ([9f9bd0e](https://github.com/Yizack/mailchannels/commit/9f9bd0e))
+- **modules-source:** Add tests link to module source links ([f0a0cb0](https://github.com/Yizack/mailchannels/commit/f0a0cb0))
+- **webhooks:** Add missing verify type declarations ([faa0132](https://github.com/Yizack/mailchannels/commit/faa0132))
+- Improve documentation information and readme ([#93](https://github.com/Yizack/mailchannels/pull/93))
+- **readme:** Remove list number in installation ([b501783](https://github.com/Yizack/mailchannels/commit/b501783))
+- Revert f52ac8a ([c3e7981](https://github.com/Yizack/mailchannels/commit/c3e7981))
+- Bump Email API version to 0.18.1 ([#105](https://github.com/Yizack/mailchannels/pull/105))
+- Bump Email API version to 0.19.0 ([#111](https://github.com/Yizack/mailchannels/pull/111))
+
+### ✅ Tests
+
+- Reorganize module files in test suite into modular structure ([#89](https://github.com/Yizack/mailchannels/pull/89))
+- Add edge case for emails and suppressions for branch coverage ([1d68c36](https://github.com/Yizack/mailchannels/commit/1d68c36))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.5
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.4...v0.7.5)
+
+### 🚀 Enhancements
+
+- **webhooks:** Add strongly-typed webhook event definitions ([#87](https://github.com/Yizack/mailchannels/pull/87))
+- **webhooks:** Add `verify` static and non-static method for message verification ([#88](https://github.com/Yizack/mailchannels/pull/88))
 
 ### 🩹 Fixes
 
-- Default suppression types to `non-transactional` and surface fetch failures instead of returning empty data for webhooks, service, sub-accounts, domains, metrics, and DKIM updates
-- Make status error parsing resilient to non-ofetch responses and wrap DKIM updates in structured error handling
+- **types:** Mark smtp and host report fields optional ([6b9f966](https://github.com/Yizack/mailchannels/commit/6b9f966))
+
+### 📖 Documentation
+
+- Add reusable documentation partials ([a4467ed](https://github.com/Yizack/mailchannels/commit/a4467ed))
+- Fix class signatures with private members ([1f0b7c2](https://github.com/Yizack/mailchannels/commit/1f0b7c2))
+- Split module docs into per-method pages ([#77](https://github.com/Yizack/mailchannels/pull/77))
+- Remove deep outline setting ([9be1eaa](https://github.com/Yizack/mailchannels/commit/9be1eaa))
+- Refactor md plugins + add modules changelog ([2b053d1](https://github.com/Yizack/mailchannels/commit/2b053d1))
+- Add missing sub-account links in sidebar ([d4280f6](https://github.com/Yizack/mailchannels/commit/d4280f6))
+- **llms:** Exclude heading badges from `llms.txt` ([b10b3c4](https://github.com/Yizack/mailchannels/commit/b10b3c4))
+- **domains:** Lint ([ccea999](https://github.com/Yizack/mailchannels/commit/ccea999))
+- **snippets:** Clean output dir before generation ([53f9b38](https://github.com/Yizack/mailchannels/commit/53f9b38))
+- **guide:** Lint missing blank lines ([bababde](https://github.com/Yizack/mailchannels/commit/bababde))
+- **guide:** Add bun and deno install commands ([178c38f](https://github.com/Yizack/mailchannels/commit/178c38f))
+- **changelog:** Use secondary color for date and separator ([942682c](https://github.com/Yizack/mailchannels/commit/942682c))
+- Add module changelog release links and improve styling ([52fb3ae](https://github.com/Yizack/mailchannels/commit/52fb3ae))
+- **domains:** Add missing data type snippets ([69d0c2f](https://github.com/Yizack/mailchannels/commit/69d0c2f))
+- **modules:** Add front-matter titles to pages for SEO ([1543ee8](https://github.com/Yizack/mailchannels/commit/1543ee8))
+- **sub-accounts:** Fix smtp descriptions ([88faca4](https://github.com/Yizack/mailchannels/commit/88faca4))
+- **config:** Add modules path rewrites to avoid index trailing slash ([0b68d57](https://github.com/Yizack/mailchannels/commit/0b68d57))
+- **snippets:** Fix ignore internal types ([3e0075d](https://github.com/Yizack/mailchannels/commit/3e0075d))
+- **snippets:** Refine ignore checks ([d4d6c01](https://github.com/Yizack/mailchannels/commit/d4d6c01))
+- **theme:** Refactor changelog-list styles ([d675242](https://github.com/Yizack/mailchannels/commit/d675242))
+- **sub-accounts:** Add missing `@example` jsdoc tag ([8d6feab](https://github.com/Yizack/mailchannels/commit/8d6feab))
+- **suppressions:** Reorder jsdoc `@param` tag ([a4bb996](https://github.com/Yizack/mailchannels/commit/a4bb996))
+
+### 🏡 Chore
+
+- **lint:** No need to resolve js plugins anymore ([656bb23](https://github.com/Yizack/mailchannels/commit/656bb23))
+- **webhooks:** Return signing key id in `getSigningKey` ([79e3954](https://github.com/Yizack/mailchannels/commit/79e3954))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.4
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.3...v0.7.4)
+
+### 💅 Refactors
+
+- **domains:** Validate records in `setDownstreamAddress` ([a926001](https://github.com/Yizack/mailchannels/commit/a926001))
+- **utils:** Simplify pagination error validation ([a008552](https://github.com/Yizack/mailchannels/commit/a008552))
+
+### 📖 Documentation
+
+- **webhooks:** Fix `getSigningKey` response docs ([a58a801](https://github.com/Yizack/mailchannels/commit/a58a801))
+- **metrics:** Fix `usage` response and add data type ([7f68e24](https://github.com/Yizack/mailchannels/commit/7f68e24))
+- **suppressions:** Fix `list` response data properties ([63ef090](https://github.com/Yizack/mailchannels/commit/63ef090))
+- **snippets:** Iterate class members with for of ([873e33f](https://github.com/Yizack/mailchannels/commit/873e33f))
+
+### 📦 Build
+
+- Switch to obuild (rolldown) ([4e83ecd](https://github.com/Yizack/mailchannels/commit/4e83ecd))
+
+### 🏡 Chore
+
+- **lint:** Clean up eslint rules ([43f0e77](https://github.com/Yizack/mailchannels/commit/43f0e77))
+- Switch linting from eslint to oxlint ([#73](https://github.com/Yizack/mailchannels/pull/73))
+
+### ✅ Tests
+
+- Cast module indexing key type ([58c0b2a](https://github.com/Yizack/mailchannels/commit/58c0b2a))
+
+### 🤖 CI
+
+- Limit check workflows to weekdays ([5c09f53](https://github.com/Yizack/mailchannels/commit/5c09f53))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.3
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.2...v0.7.3)
+
+### 🩹 Fixes
+
+- **types:** Correctly import `DataResponse` type in send-async ([c10fb92](https://github.com/Yizack/mailchannels/commit/c10fb92))
+- **types:** Fix `queuedAt` type in `EmailsSendAsyncResponse` ([5d4d93f](https://github.com/Yizack/mailchannels/commit/5d4d93f))
+
+### 💅 Refactors
+
+- **types:** Rename files from .d.ts to .ts to ensure typechecking ([5d68f39](https://github.com/Yizack/mailchannels/commit/5d68f39))
+
+### ✅ Tests
+
+- Replace fake data type assertions with 'satisfies' ([5506109](https://github.com/Yizack/mailchannels/commit/5506109))
+
+### 🤖 CI
+
+- Fix version extraction in check-inbound-api-version workflow ([d777367](https://github.com/Yizack/mailchannels/commit/d777367))
+- Udpate PR body text in API version workflows ([a85eaff](https://github.com/Yizack/mailchannels/commit/a85eaff))
+- Prefix API version update branches with 'docs/' ([d4f7891](https://github.com/Yizack/mailchannels/commit/d4f7891))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.2
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.1...v0.7.2)
+
+### 🚀 Enhancements
+
+- **emails:** Add `envelopeFrom` option to email sending ([#63](https://github.com/Yizack/mailchannels/pull/63))
+
+### 📖 Documentation
+
+- **types:** Document send click tracking link conditions ([84fe123](https://github.com/Yizack/mailchannels/commit/84fe123))
+- **email-api:** Update open api tracking file ([c920657](https://github.com/Yizack/mailchannels/commit/c920657))
+- **snippets:** Skip private methods in class signature extraction ([ee2bb2e](https://github.com/Yizack/mailchannels/commit/ee2bb2e))
+- Bump Email API version to 0.18.0 ([#68](https://github.com/Yizack/mailchannels/pull/68))
+- Add section on GitHub Actions workflows to version tracking README ([8c36579](https://github.com/Yizack/mailchannels/commit/8c36579))
+
+### 🤖 CI
+
+- Add workflow to automatically check and update Email API version ([81bf8ef](https://github.com/Yizack/mailchannels/commit/81bf8ef))
+- Add workflow to automatically check and update Inbound API version ([409ba9f](https://github.com/Yizack/mailchannels/commit/409ba9f))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.0...v0.7.1)
+
+### 🚀 Enhancements
+
+- **emails:** Add `sendAsync` method ([#60](https://github.com/Yizack/mailchannels/pull/60))
+
+### 📖 Documentation
+
+- **modules:** Document `ErrorResponse` structure for error fields ([a31da99](https://github.com/Yizack/mailchannels/commit/a31da99))
+- Upgrade vitepress to recent alpha version ([147b422](https://github.com/Yizack/mailchannels/commit/147b422))
+- Add npm social link to vitepress config ([a586f6c](https://github.com/Yizack/mailchannels/commit/a586f6c))
+- Bump Email API version to 0.16.0 in docs ([#56](https://github.com/Yizack/mailchannels/pull/56))
+- Add 'Send an Email Asynchronously' to roadmap ([3a30261](https://github.com/Yizack/mailchannels/commit/3a30261))
+- Fix jsdoc indentation ([0a22f44](https://github.com/Yizack/mailchannels/commit/0a22f44))
+- **types:** Fix `checkDomain` example return values ([05a2790](https://github.com/Yizack/mailchannels/commit/05a2790))
+- **types:** Fix email send examples to include error property ([4f356aa](https://github.com/Yizack/mailchannels/commit/4f356aa))
+- Bump email api version to 0.17.0 ([aa2662c](https://github.com/Yizack/mailchannels/commit/aa2662c))
+- Fix dark mode search button text and background ([f52ac8a](https://github.com/Yizack/mailchannels/commit/f52ac8a))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.7.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.1...v0.7.0)
+
+### 🚀 Enhancements
+
+- ⚠️  Include `statusCode` in error responses ([#47](https://github.com/Yizack/mailchannels/pull/47))
+
+### 🩹 Fixes
+
+- **types:** Improve type safety discriminated union in `DataResponse` ([80a411e](https://github.com/Yizack/mailchannels/commit/80a411e))
+
+### 💅 Refactors
+
+- Error handling in modules for consistency ([#48](https://github.com/Yizack/mailchannels/pull/48))
+
+### 📖 Documentation
+
+- **modules:** Add error response type declaration ([e377d15](https://github.com/Yizack/mailchannels/commit/e377d15))
+
+### 🏡 Chore
+
+- Update eslint config ([1bb32c5](https://github.com/Yizack/mailchannels/commit/1bb32c5))
+- **docs:** Lint ([e65fba8](https://github.com/Yizack/mailchannels/commit/e65fba8))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Include `statusCode` in error responses ([#47](https://github.com/Yizack/mailchannels/pull/47))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.6.1
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.6.0...v0.6.1)
+
+### 🩹 Fixes
+
+- **metrics:** Add validation for limit and offset in `senders` method ([406dcc2](https://github.com/Yizack/mailchannels/commit/406dcc2))
+- Status error parsing resilient beyond ofetch-specific internals (#34 follow-up) ([#44](https://github.com/Yizack/mailchannels/pull/44), [#34](https://github.com/Yizack/mailchannels/issues/34))
+- **utils:** Improve recipient parsing and add edge case tests ([d7cf593](https://github.com/Yizack/mailchannels/commit/d7cf593))
+
+### 💅 Refactors
+
+- Add limit and offset validation helpers ([7c3f4f0](https://github.com/Yizack/mailchannels/commit/7c3f4f0))
+
+### 📖 Documentation
+
+- Update requirements section and usage examples ([150e817](https://github.com/Yizack/mailchannels/commit/150e817))
+- Update contributors list ([92641f2](https://github.com/Yizack/mailchannels/commit/92641f2))
+- **types:** Add data and error description to responses ([5647662](https://github.com/Yizack/mailchannels/commit/5647662))
+
+### 🏡 Chore
+
+- Silence git fetch in docs:build script ([6a5169d](https://github.com/Yizack/mailchannels/commit/6a5169d))
+- Update vitest coverage and exclude types ([9be8fa6](https://github.com/Yizack/mailchannels/commit/9be8fa6))
+- **emails:** Update some validation messages ([f48786e](https://github.com/Yizack/mailchannels/commit/f48786e))
+- **metrics:** Move `mapBuckets` to helpers ([6e5ad75](https://github.com/Yizack/mailchannels/commit/6e5ad75))
+
+### ✅ Tests
+
+- **emails:** Add test for sending email with only text content ([452b99a](https://github.com/Yizack/mailchannels/commit/452b99a))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
+## v0.6.0
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.5.0...v0.6.0)
+
+### 🚀 Enhancements
+
+- Update Email API version to `0.15.0` ([#38](https://github.com/Yizack/mailchannels/pull/38))
+
+### 🩹 Fixes
+
+- Improve error handling and defaults ([#34](https://github.com/Yizack/mailchannels/pull/34))
+- Add `clean()` helper to recursively remove undefined in mapped responses ([#40](https://github.com/Yizack/mailchannels/pull/40))
+
+### 💅 Refactors
+
+- ⚠️  Standarize responses across entire SDK ([#39](https://github.com/Yizack/mailchannels/pull/39))
+
+### 📖 Documentation
+
+- Improve wording of usage explanations in guide ([4f7fe2d](https://github.com/Yizack/mailchannels/commit/4f7fe2d))
+- Update development section to use pnpm commands ([39bea1d](https://github.com/Yizack/mailchannels/commit/39bea1d))
+- Fix sidebar anchor links missing `method` suffix ([75ba491](https://github.com/Yizack/mailchannels/commit/75ba491))
+- Update readme with new endpoints in progress ([c6f27aa](https://github.com/Yizack/mailchannels/commit/c6f27aa))
+- Update README title and image alt text ([36f15b7](https://github.com/Yizack/mailchannels/commit/36f15b7))
+
+### 🏡 Chore
+
+- **utils:** Simplify error payload types ([4c8702d](https://github.com/Yizack/mailchannels/commit/4c8702d))
+
+### ✅ Tests
+
+- Add parse email without name test ([96a4357](https://github.com/Yizack/mailchannels/commit/96a4357))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Standarize responses across entire SDK ([#39](https://github.com/Yizack/mailchannels/pull/39))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+- Ken Simpson <ksimpson@ttul.org>
 
 ## v0.5.0
 

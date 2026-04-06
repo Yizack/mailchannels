@@ -51,7 +51,7 @@
     },
     {
       "module": "metrics",
-      "method": "senderMetrics",
+      "method": "senders",
       "httpMethod": "GET",
       "path": "/metrics/senders/{sender_type}"
     },
@@ -207,7 +207,7 @@
     },
     {
       "module": "webhooks",
-      "method": "listBatches",
+      "method": "batches",
       "httpMethod": "GET",
       "path": "/webhook-batch"
     },

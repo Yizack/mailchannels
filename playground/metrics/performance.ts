@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { performance, error } = await mailchannels.metrics.performance();
+const { data, error } = await mailchannels.metrics.performance();
 
-console.info(JSON.stringify({ performance, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

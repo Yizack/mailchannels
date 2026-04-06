@@ -15,7 +15,7 @@ if (!apiKey || !dkimDomain || !subscriptionHandle || !email || !secondDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { results, error } = await mailchannels.domains.bulkProvision({
+const { data, error } = await mailchannels.domains.bulkProvision({
   subscriptionHandle,
   overwrite: true
 }, [
@@ -31,4 +31,4 @@ const { results, error } = await mailchannels.domains.bulkProvision({
   }
 ]);
 
-console.info(JSON.stringify({ results, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

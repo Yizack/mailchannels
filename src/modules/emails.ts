@@ -1,16 +1,16 @@
 import type { MailChannelsClient } from "../client";
-import { ErrorCode, getStatusError } from "../utils/errors";
+import { ErrorCode, createError, getResultError, getStatusError, validatePagination } from "../utils/errors";
 import { parseArrayRecipients, parseRecipient } from "../utils/recipients";
-import { stripPemHeaders } from "../utils/helpers";
-import type { SuccessResponse } from "../types/success-response";
+import { clean, stripPemHeaders } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { EmailsCheckDomainApiResponse, EmailsCheckDomainPayload, EmailsCreateDkimKeyApiResponse, EmailsCreateDkimKeyPayload, EmailsGetDkimKeysPayload, EmailsRotateDkimKeyApiResponse, EmailsSendApiResponse, EmailsSendAsyncApiResponse, EmailsSendContent, EmailsSendPayload } from "../types/emails/internal";
 import type { EmailsSendDkim, EmailsSendOptions, EmailsSendPersonalization, EmailsSendResponse } from "../types/emails/send";
 import type { EmailsSendAsyncResponse } from "../types/emails/send-async";
 import type { EmailsCheckDomainOptions, EmailsCheckDomainResponse } from "../types/emails/check-domain";
 import type { EmailsCreateDkimKeyOptions, EmailsCreateDkimKeyResponse, EmailsDkimKey } from "../types/emails/create-dkim-key";
 import type { EmailsGetDkimKeysOptions, EmailsGetDkimKeysResponse } from "../types/emails/get-dkim-keys";
-import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "../types/emails/rotate-dkim-key";
 import type { EmailsUpdateDkimKeyOptions } from "../types/emails/update-dkim-key";
+import type { EmailsRotateDkimKeyOptions, EmailsRotateDkimKeyResponse } from "../types/emails/rotate-dkim-key";
 
 const RESERVED_HEADER_NAMES = new Set([
   "authentication-results",
@@ -72,10 +72,10 @@ const mapDkimKey = (key: EmailsCreateDkimKeyApiResponse): EmailsDkimKey => ({
   createdAt: key.created_at,
   dnsRecords: key.dkim_dns_records,
   domain: key.domain,
-  gracePeriodExpiresAt: key.gracePeriodExpiresAt ?? null,
+  gracePeriodExpiresAt: key.gracePeriodExpiresAt,
   length: key.key_length,
   publicKey: key.public_key,
-  retiresAt: key.retiresAt ?? null,
+  retiresAt: key.retiresAt,
   selector: key.selector,
   status: key.status,
   statusModifiedAt: key.status_modified_at
@@ -254,14 +254,67 @@ const buildSendPayload = (options: EmailsSendOptions): EmailsSendPayload | strin
 export class Emails {
   constructor (protected mailchannels: MailChannelsClient) {}
 
+  private async _sendEmail (options: EmailsSendOptions, flags: { async?: boolean, dryRun?: boolean }): Promise<EmailsSendResponse | EmailsSendAsyncResponse> {
+    let error: ErrorResponse | null = null;
+    const payload = buildSendPayload(options);
+    if (typeof payload === "string") {
+      error = createError(payload);
+      return flags.async
+        ? { data: null, error }
+        : { success: false, data: null, error };
+    }
+
+    const endpoint = flags.async ? "/tx/v1/send-async" : "/tx/v1/send";
+    const response = await this.mailchannels.post<EmailsSendApiResponse | EmailsSendAsyncApiResponse>(endpoint, {
+      query: { "dry-run": flags.dryRun },
+      body: payload,
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.Forbidden]: "User does not have access to this feature.",
+          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, flags.async ? "Failed to queue email." : "Failed to send email.");
+      return null;
+    });
+
+    if (!response) return { success: false, data: null, error: error! };
+
+    if (flags.async) {
+      const asyncResponse = response as EmailsSendAsyncApiResponse;
+      const data = clean({
+        queuedAt: asyncResponse.queued_at,
+        requestId: asyncResponse.request_id
+      });
+
+      return { data, error: null };
+    }
+
+    const syncResponse = response as EmailsSendApiResponse;
+    const data = clean({
+      rendered: syncResponse.data,
+      requestId: syncResponse.request_id,
+      results: syncResponse.results?.map(result => ({
+        index: result.index,
+        messageId: result.message_id,
+        reason: result.reason,
+        status: result.status
+      }))
+    });
+
+    return { success: !!data, data, error: null };
+  }
+
   /**
-   * Send an email using MailChannels Email API.
+   * Sends an email message to one or more recipients.
    * @param options - The email options to send.
    * @param dryRun - When set to `true`, the message will not be sent. Instead, the fully rendered message will be returned in the `data` property of the response. The default value is `false`.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, data } = await mailchannels.emails.send({
+   * const { success, data, error } = await mailchannels.emails.send({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
    *   subject: 'Test',
@@ -270,90 +323,29 @@ export class Emails {
    * ```
    */
   async send (options: EmailsSendOptions, dryRun = false): Promise<EmailsSendResponse> {
-    const data: EmailsSendResponse = { success: false, data: null, error: null };
-    const payload = buildSendPayload(options);
-    if (typeof payload === "string") {
-      data.error = payload;
-      return data;
-    }
-
-    const response = await this.mailchannels.post<EmailsSendApiResponse>("/tx/v1/send", {
-      query: { "dry-run": dryRun },
-      body: payload,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.Forbidden]: "User does not have access to this feature.",
-          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
-        });
-      }
-    }).catch(() => null);
-
-    if (!response) return data;
-
-    data.data = {
-      rendered: response.data,
-      requestId: response.request_id,
-      results: response.results?.map(result => ({
-        index: result.index,
-        messageId: result.message_id,
-        reason: result.reason,
-        status: result.status
-      }))
-    };
-
-    return data;
+    return this._sendEmail(options, { dryRun }) as Promise<EmailsSendResponse>;
   }
 
   /**
-   * Queue an email for asynchronous delivery processing.
-   * @param options - The email options to queue.
+   * Queues an email message for asynchronous processing and returns immediately with a request ID.
+   *
+   * The email will be processed in the background, and you'll receive webhook events for all delivery status updates (e.g. `dropped`, `processed`, `delivered`, `hard-bounced`). These webhook events are identical to those sent for the synchronous /send endpoint.
+   *
+   * Use this endpoint when you need to send emails without waiting for processing to complete. This can improve your application's response time, especially when sending to multiple recipients.
+   * @param options - The email options to send.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success, data } = await mailchannels.emails.sendAsync({
+   * const { data, error } = await mailchannels.emails.sendAsync({
    *   to: 'to@example.com',
    *   from: 'from@example.com',
-   *   subject: 'Queued email',
+   *   subject: 'Test',
    *   html: 'Test'
    * })
    * ```
    */
   async sendAsync (options: EmailsSendOptions): Promise<EmailsSendAsyncResponse> {
-    const data: EmailsSendAsyncResponse = { success: false, data: null, error: null };
-    const payload = buildSendPayload(options);
-    if (typeof payload === "string") {
-      data.error = payload;
-      return data;
-    }
-
-    const response = await this.mailchannels.post<EmailsSendAsyncApiResponse>("/tx/v1/send-async", {
-      body: payload,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.Forbidden]: "User does not have access to this feature.",
-          [ErrorCode.PayloadTooLarge]: "The total message size should not exceed 30MB. This includes the message itself, headers, and the combined size of any attachments."
-        });
-      }
-    }).catch(() => null);
-
-    if (!response) return data;
-
-    data.data = {
-      queuedAt: response.queued_at,
-      requestId: response.request_id
-    };
-
-    return data;
+    return this._sendEmail(options, { async: true }) as Promise<EmailsSendAsyncResponse>;
   }
 
   /**
@@ -362,7 +354,7 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { results } = await mailchannels.emails.checkDomain({
+   * const { data, error } = await mailchannels.emails.checkDomain({
    *   dkim: [{
    *     domain: 'example.com',
    *     privateKey: 'your-private-key',
@@ -374,20 +366,20 @@ export class Emails {
    * ```
    */
   async checkDomain (options: EmailsCheckDomainOptions): Promise<EmailsCheckDomainResponse> {
+    let error: ErrorResponse | null = null;
+
     const { dkim, domain, senderId } = options;
     const dkimOptions = dkim ? Array.isArray(dkim) ? dkim: [dkim]: undefined;
 
-    const data: EmailsCheckDomainResponse = { results: null, error: null };
-
     if (dkimOptions && dkimOptions.length > 10) {
-      data.error = "A maximum of 10 DKIM settings can be provided.";
-      return data;
+      error = createError("A maximum of 10 DKIM settings can be provided.");
+      return { data: null, error };
     }
 
     const invalidDkimSetting = dkimOptions?.find(({ privateKey, selector }) => privateKey && !selector);
     if (invalidDkimSetting) {
-      data.error = "DKIM settings with a privateKey must also include a selector.";
-      return data;
+      error = createError("DKIM settings with a privateKey must also include a selector.");
+      return { data: null, error };
     }
 
     const payload: EmailsCheckDomainPayload = {
@@ -403,16 +395,19 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCheckDomainApiResponse>("/tx/v1/check-domain", {
       body: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
           [ErrorCode.Forbidden]: "User does not have access to this feature."
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to check domain.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.results = {
+    const data = clean({
       dkim: response.check_results.dkim.map(dkimResults => ({
         domain: dkimResults.dkim_domain,
         keyStatus: dkimResults.dkim_key_status,
@@ -424,8 +419,9 @@ export class Emails {
       senderDomain: response.check_results.sender_domain,
       spf: response.check_results.spf,
       references: response.references
-    };
-    return data;
+    });
+
+    return { data, error: null };
   }
 
   /**
@@ -435,19 +431,18 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { key, error } = await mailchannels.emails.createDkimKey('example.com', {
+   * const { data, error } = await mailchannels.emails.createDkimKey('example.com', {
    *   selector: 'mailchannels'
    * })
    * ```
    */
   async createDkimKey (domain: string, options: EmailsCreateDkimKeyOptions): Promise<EmailsCreateDkimKeyResponse> {
-    const data: EmailsCreateDkimKeyResponse = { key: null, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!options.selector || options.selector.length > 63) {
-      data.error = "Selector must be between 1 and 63 characters.";
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
-
-    if (data.error) return data;
 
     const payload: EmailsCreateDkimKeyPayload = {
       algorithm: options.algorithm,
@@ -458,47 +453,45 @@ export class Emails {
     const response = await this.mailchannels.post<EmailsCreateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys`, {
       body: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.Conflict]: "Key pair already created for customer_handle, domain, and selector."
+          [ErrorCode.Conflict]: "Key pair already created for domain, and selector."
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to create DKIM key.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.key = mapDkimKey(response);
+    const data = clean(mapDkimKey(response));
 
-    return data;
+    return { data, error: null };
   }
 
   /**
-   * Search for DKIM keys by customer handle and domain, with optional filters. If selector is provided, at most one key will be returned.
+   * Search for DKIM keys by domain, with optional filters. If selector is provided, at most one key will be returned.
    * @param domain - The domain to search DKIM keys for.
    * @param options - The options to filter DKIM keys by.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { keys } = await mailchannels.getDkimKeys('example.com', {
+   * const { data, error } = await mailchannels.getDkimKeys('example.com', {
    *   includeDnsRecord: true
    * })
    * ```
    */
   async getDkimKeys (domain: string, options?: EmailsGetDkimKeysOptions): Promise<EmailsGetDkimKeysResponse> {
-    const data: EmailsGetDkimKeysResponse = { keys: [], error: null };
+    let error: ErrorResponse | null = null;
 
     if (options?.selector && options.selector.length > 63) {
-      data.error = "Selector must be a maximum of 63 characters.";
-      return data;
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
-    if (typeof options?.limit === "number" && (options.limit < 1 || options.limit > 100)) {
-      data.error = "Limit must be between 1 and 100.";
-      return data;
-    }
-    if (typeof options?.offset === "number" && options.offset < 0) {
-      data.error = "Offset value is invalid. Only positive values are allowed.";
-      return data;
-    }
+
+    error = validatePagination({ ...options, max: 100 });
+    if (error) return { data: null, error };
 
     const payload: EmailsGetDkimKeysPayload = {
       selector: options?.selector,
@@ -511,66 +504,20 @@ export class Emails {
     const response = await this.mailchannels.get<{ keys: EmailsCreateDkimKeyApiResponse[] }>(`/tx/v1/domains/${domain}/dkim-keys`, {
       query: payload,
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
+        error = getStatusError(response, {
           [ErrorCode.BadRequest]: "Bad Request."
         });
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch DKIM keys.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.keys = response.keys.map(mapDkimKey);
+    const data = clean(response.keys.map(mapDkimKey));
 
-    return data;
-  }
-
-  /**
-   * Rotate an active DKIM key pair by creating a replacement key with a new selector.
-   * @param domain - The domain the DKIM key belongs to.
-   * @param options - The rotation options.
-   * @example
-   * ```ts
-   * const mailchannels = new MailChannels('your-api-key')
-   * const { newKey, rotatedKey } = await mailchannels.emails.rotateDkimKey('example.com', {
-   *   selector: 'mailchannels',
-   *   newSelector: 'mailchannels-next'
-   * })
-   * ```
-   */
-  async rotateDkimKey (domain: string, options: EmailsRotateDkimKeyOptions): Promise<EmailsRotateDkimKeyResponse> {
-    const data: EmailsRotateDkimKeyResponse = { newKey: null, rotatedKey: null, error: null };
-
-    if (!options.selector || options.selector.length > 63) {
-      data.error = "Selector must be between 1 and 63 characters.";
-      return data;
-    }
-
-    if (!options.newSelector || options.newSelector.length > 63) {
-      data.error = "New selector must be between 1 and 63 characters.";
-      return data;
-    }
-
-    const response = await this.mailchannels.post<EmailsRotateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}/rotate`, {
-      body: {
-        new_key: {
-          selector: options.newSelector
-        }
-      },
-      onResponseError: async ({ response }) => {
-        data.error = getStatusError(response, {
-          [ErrorCode.BadRequest]: "Bad Request.",
-          [ErrorCode.NotFound]: "Specified key pair not found.",
-          [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
-        });
-      }
-    }).catch(() => null);
-
-    if (!response) return data;
-
-    data.newKey = mapDkimKey(response.new_key);
-    data.rotatedKey = mapDkimKey(response.rotated_key);
-
-    return data;
+    return { data, error: null };
   }
 
   /**
@@ -580,45 +527,94 @@ export class Emails {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.emails.updateDkimKey('example.com', {
+   * const { success, error } = await mailchannels.emails.updateDkimKey('example.com', {
    *   selector: 'mailchannels',
    *   status: 'retired'
    * })
    */
   async updateDkimKey (domain: string, options: EmailsUpdateDkimKeyOptions): Promise<SuccessResponse> {
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!options.selector || options.selector.length > 63) {
-      data.error = "Selector must be between 1 and 63 characters.";
-      return data;
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { success: false, error };
     }
 
     const payload = {
       status: options.status
     };
 
-    try {
-      await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
-        body: payload,
-        ignoreResponseError: true,
-        onResponse: async ({ response }) => {
-          if (response.ok) {
-            data.success = true;
-            return;
-          }
-          data.error = getStatusError(response, {
-            [ErrorCode.BadRequest]: "Bad Request.",
-            [ErrorCode.NotFound]: "Specified key pair not found, or the DKIM domain or selector path parameter is missing."
-          });
-        }
-      });
-    }
-    catch (error) {
-      if (!data.error) {
-        data.error = error instanceof Error ? error.message : "Failed to update DKIM key.";
+    await this.mailchannels.patch(`/tx/v1/domains/${domain}/dkim-keys/${options.selector}`, {
+      body: payload,
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found, or no active key for rotation. This may also occur if the DKIM domain or selector path parameter is missing."
+        });
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to update DKIM key.");
+    });
+
+    return { success: !error, error };
+  }
+
+  /**
+   * Rotate an active DKIM key pair. Mark the original key as `rotated`, and create a new key pair with the required new key selector, reusing the same algorithm and key length. The rotated key remains valid for signing for a 3-day grace period, and is automatically changed to `retired` 2 weeks after rotation. Publish the new key to its DNS TXT record before rotated key expires for signing as emails sent with an unpublished key will fail DKIM validation by receiving providers. After the grace period, only the new key is valid for signing if published.
+   * @param domain - The domain the DKIM key belongs to.
+   * @param selector - The selector of the DKIM key to rotate.
+   * @param options - The options to rotate the DKIM key.
+   * @param options.newKey.selector - The selector for the new key pair. Must be a maximum of 63 characters.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.emails.rotateDkimKey('example.com', 'mailchannels', {
+   *   newKey: {
+   *     selector: 'new-selector'
+   *   }
+   * })
+   * ```
+   */
+  async rotateDkimKey (domain: string, selector: string, options: EmailsRotateDkimKeyOptions): Promise<EmailsRotateDkimKeyResponse> {
+    let error: ErrorResponse | null = null;
+
+    if (!selector || selector.length > 63) {
+      error = createError("Selector must be between 1 and 63 characters.");
+      return { data: null, error };
     }
 
-    return data;
+    if (!options.newKey.selector || options.newKey.selector.length > 63) {
+      error = createError("New key selector must be between 1 and 63 characters.");
+      return { data: null, error };
+    }
+
+    const payload = {
+      new_key: {
+        selector: options.newKey.selector
+      }
+    };
+
+    const response = await this.mailchannels.post<EmailsRotateDkimKeyApiResponse>(`/tx/v1/domains/${domain}/dkim-keys/${selector}/rotate`, {
+      body: payload,
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request.",
+          [ErrorCode.NotFound]: "Specified key pair not found.",
+          [ErrorCode.Conflict]: "Key pair already created for domain, and provided new key selector."
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to rotate DKIM key.");
+      return null;
+    });
+
+    if (!response) return { data: null, error: error! };
+
+    const data = clean({
+      new: mapDkimKey(response.new_key),
+      rotated: mapDkimKey(response.rotated_key)
+    });
+
+    return { data, error: null };
   }
 }

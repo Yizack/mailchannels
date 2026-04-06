@@ -16,13 +16,17 @@
     "module": "Preserve",
     "noEmit": true,
     "moduleResolution": "Bundler",
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": [
     "src",
     "playground",
     "docs",
-    "docs/.vitepress/**/*"
+    "docs/.vitepress/**/*",
+    "test"
   ],
   "exclude": [
     "docs/snippets",

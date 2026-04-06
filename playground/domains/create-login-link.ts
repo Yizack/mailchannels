@@ -12,6 +12,6 @@ if (!apiKey || !dkimDomain) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { link, error } = await mailchannels.domains.createLoginLink(dkimDomain);
+const { data, error } = await mailchannels.domains.createLoginLink(dkimDomain);
 
-console.info(JSON.stringify({ link, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

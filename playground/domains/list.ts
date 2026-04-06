@@ -11,6 +11,6 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { domains, total, error } = await mailchannels.domains.list();
+const { data, error } = await mailchannels.domains.list();
 
-console.info(JSON.stringify({ domains, total, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

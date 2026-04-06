@@ -11,8 +11,8 @@ if (!apiKey) {
 }
 
 const mailchannels = new MailChannels(apiKey);
-const { user, error } = await mailchannels.users.create("test@example.com", {
+const { data, error } = await mailchannels.users.create("test@example.com", {
   admin: true
 });
 
-console.info(JSON.stringify({ user, error }, null, 2));
+console.info(JSON.stringify({ data, error }, null, 2));

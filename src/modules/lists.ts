@@ -1,8 +1,9 @@
 import type { MailChannelsClient } from "../client";
-import type { SuccessResponse } from "../types/success-response";
+import { createError, getResultError, getStatusError } from "../utils/errors";
+import { clean } from "../utils/helpers";
+import type { ErrorResponse, SuccessResponse } from "../types/responses";
 import type { ListEntriesResponse, ListEntryOptions, ListEntryResponse, ListNames } from "../types/lists/entry";
 import type { ListEntryApiResponse } from "../types/lists/internal";
-import { getStatusError } from "../utils/errors";
 
 export class Lists {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -13,37 +14,41 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entry } = await mailchannels.lists.addListEntry({
+   * const { data, error } = await mailchannels.lists.addListEntry({
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
    * ```
    */
   async addListEntry (options: ListEntryOptions): Promise<ListEntryResponse> {
+    let error: ErrorResponse | null = null;
+
     const { listName, item } = options;
 
-    const data: ListEntryResponse = { entry: null, error: null };
-
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.post<ListEntryApiResponse>(`/inbound/v1/lists/${listName}`, {
       body: { item },
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to add list entry.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.entry = {
+    const data = clean({
       action: response.action,
       item: response.item,
       type: response.item_type
-    };
-    return data;
+    });
+
+    return { data, error: null };
   }
 
   /**
@@ -52,31 +57,35 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { entries } = await mailchannels.lists.listEntries('safelist')
+   * const { data, error } = await mailchannels.lists.listEntries('safelist')
    * ```
    */
   async listEntries (listName: ListNames): Promise<ListEntriesResponse> {
-    const data: ListEntriesResponse = { entries: [], error: null };
+    let error: ErrorResponse | null = null;
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { data: null, error };
     }
 
     const response = await this.mailchannels.get<ListEntryApiResponse[]>(`/inbound/v1/lists/${listName}`, {
       onResponseError: async ({ response }) => {
-        data.error = getStatusError(response);
+        error = getStatusError(response);
       }
-    }).catch(() => null);
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to fetch list entries.");
+      return null;
+    });
 
-    if (!response) return data;
+    if (!response) return { data: null, error: error! };
 
-    data.entries = response.map(({ action, item, item_type }) => ({
+    const data = clean(response.map(({ action, item, item_type }) => ({
       action,
       item,
       type: item_type
-    }));
-    return data;
+    })));
+
+    return { data, error: null };
   }
 
   /**
@@ -85,7 +94,7 @@ export class Lists {
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')
-   * const { success } = await mailchannels.lists.deleteListEntry({
+   * const { success, error } = await mailchannels.lists.deleteListEntry({
    *   listName: 'safelist',
    *   item: 'name@domain.com'
    * })
@@ -94,25 +103,22 @@ export class Lists {
   async deleteListEntry (options: ListEntryOptions): Promise<SuccessResponse> {
     const { listName, item } = options;
 
-    const data: SuccessResponse = { success: false, error: null };
+    let error: ErrorResponse | null = null;
 
     if (!listName) {
-      data.error = "No list name provided.";
-      return data;
+      error = createError("No list name provided.");
+      return { success: false, error };
     }
 
     await this.mailchannels.delete(`/inbound/v1/lists/${listName}`, {
       query: { item },
-      ignoreResponseError: true,
-      onResponse: async ({ response }) => {
-        if (response.ok) {
-          data.success = true;
-          return;
-        }
-        data.error = getStatusError(response);
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response);
       }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to delete list entry.");
     });
 
-    return data;
+    return { success: !error, error };
   }
 }

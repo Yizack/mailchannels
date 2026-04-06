@@ -22,6 +22,13 @@ type ParityFixture = {
 
 const mailchannels = new MailChannels("test-api-key");
 
+const getPublicApiMethods = (value: object, excludedMethods: string[] = []) => {
+  const excluded = new Set(["constructor", ...excludedMethods]);
+  return Object.getOwnPropertyNames(Object.getPrototypeOf(value))
+    .filter(name => !excluded.has(name) && !name.startsWith("_"))
+    .sort();
+};
+
 const assertParityFixture = (
   fixtureName: string,
   fixture: ParityFixture,
@@ -55,16 +62,16 @@ const assertParityFixture = (
 };
 
 assertParityFixture("Email API", emailParityFixture, {
-  emails: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.emails)).filter(name => name !== "constructor").sort(),
-  webhooks: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.webhooks)).filter(name => name !== "constructor").sort(),
-  subAccounts: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.subAccounts)).filter(name => name !== "constructor").sort(),
-  metrics: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.metrics)).filter(name => name !== "constructor").sort(),
-  suppressions: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.suppressions)).filter(name => name !== "constructor").sort()
+  emails: getPublicApiMethods(mailchannels.emails),
+  webhooks: getPublicApiMethods(mailchannels.webhooks, ["verify"]),
+  subAccounts: getPublicApiMethods(mailchannels.subAccounts),
+  metrics: getPublicApiMethods(mailchannels.metrics),
+  suppressions: getPublicApiMethods(mailchannels.suppressions)
 } satisfies Record<EmailApiModuleName, string[]>);
 
 assertParityFixture("Inbound API", inboundParityFixture, {
-  domains: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.domains)).filter(name => name !== "constructor").sort(),
-  lists: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.lists)).filter(name => name !== "constructor").sort(),
-  users: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.users)).filter(name => name !== "constructor").sort(),
-  service: Object.getOwnPropertyNames(Object.getPrototypeOf(mailchannels.service)).filter(name => name !== "constructor").sort()
+  domains: getPublicApiMethods(mailchannels.domains),
+  lists: getPublicApiMethods(mailchannels.lists),
+  users: getPublicApiMethods(mailchannels.users),
+  service: getPublicApiMethods(mailchannels.service)
 } satisfies Record<InboundApiModuleName, string[]>);
