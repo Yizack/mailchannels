@@ -4,6 +4,8 @@ This directory contains the OpenAPI specifications of MailChannels. These files 
 
 Update the files whenever there are versions changes to the MailChannels APIs.
 
+Use `pnpm parity:fixtures -- --refresh-specs` to refresh these files from the official docs and regenerate the parity fixtures in `test/fixtures/`.
+
 | API           | File               | Download                                                   |
 | ------------- | -------------------|------------------------------------------------------------|
 | Email API     | `email-api.yaml`   | [Download](https://docs.mailchannels.net/email-api.yaml)   |

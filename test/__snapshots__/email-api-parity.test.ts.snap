@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Email API parity fixture > should preserve the documented unmapped endpoint list 1`] = `[]`;
+
+exports[`Inbound API parity fixture > should preserve the documented unmapped endpoint list 1`] = `
+[
+  {
+    "httpMethod": "POST",
+    "path": "/domains/{domain}/alias/{alias}",
+  },
+  {
+    "httpMethod": "DELETE",
+    "path": "/domains/{domain}/alias/{alias}",
+  },
+  {
+    "httpMethod": "PUT",
+    "path": "/domains/{domain}/settings",
+  },
+]
+`;

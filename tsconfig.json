@@ -17,6 +17,9 @@
     "noEmit": true,
     "moduleResolution": "Bundler",
     "declaration": true,
+    "types": [
+      "node"
+    ],
     "paths": {
       "~/*": ["./src/*"]
     }

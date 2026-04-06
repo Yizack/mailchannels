@@ -39,6 +39,66 @@ export interface EmailsSendTracking {
   open?: boolean;
 }
 
+export type EmailsSendRecipientInput = EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+
+export interface EmailsSendDkim {
+  /**
+   * Domain used for DKIM signing.
+   */
+  domain?: string;
+  /**
+   * DKIM private key encoded in Base64.
+   */
+  privateKey?: string;
+  /**
+   * DKIM selector in the domain DNS records.
+   */
+  selector?: string;
+}
+
+export interface EmailsSendPersonalization {
+  /**
+   * The BCC recipients for this personalization.
+   */
+  bcc?: EmailsSendRecipientInput;
+  /**
+   * The CC recipients for this personalization.
+   */
+  cc?: EmailsSendRecipientInput;
+  /**
+   * DKIM settings for this personalization.
+   */
+  dkim?: EmailsSendDkim;
+  /**
+   * Optional envelope sender for this personalization.
+   */
+  envelopeFrom?: EmailsSendRecipient | string;
+  /**
+   * Optional sender override for this personalization.
+   */
+  from?: EmailsSendRecipient | string;
+  /**
+   * Custom headers for this personalization.
+   */
+  headers?: Record<string, string>;
+  /**
+   * Reply-to override for this personalization.
+   */
+  replyTo?: EmailsSendRecipient | string;
+  /**
+   * Subject override for this personalization.
+   */
+  subject?: string;
+  /**
+   * The recipients for this personalization.
+   */
+  to: EmailsSendRecipientInput;
+  /**
+   * Template variables for this personalization.
+   */
+  mustaches?: Record<string, unknown>;
+}
+
 interface EmailsSendOptionsBase {
   /**
    * An array of attachments to be sent with the email.
@@ -64,7 +124,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'Name <email@example.com>'
    */
-  bcc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  bcc?: EmailsSendRecipientInput;
   /**
    * The CC recipients of the email. Can be an array of email addresses or an array of objects with email and name properties or a single email address string or an object with email and name properties.
    * @example
@@ -81,24 +141,11 @@ interface EmailsSendOptionsBase {
    * @example
    * 'Name <email@example.com>'
    */
-  cc?: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  cc?: EmailsSendRecipientInput;
   /**
    * The DKIM settings for the email.
    */
-  dkim?: {
-    /**
-     * Domain used for DKIM signing.
-     */
-    domain: string;
-    /**
-     * DKIM private key encoded in Base64.
-     */
-    privateKey?: string;
-    /**
-     * DKIM selector in the domain DNS records.
-     */
-    selector: string;
-  };
+  dkim?: EmailsSendDkim;
   /**
    * Optional envelope sender address. If not set, the envelope sender defaults to the `from.email` field. Can be overridden per-personalization. Only the email portion is used; the name field is ignored.
    * @example
@@ -129,6 +176,10 @@ interface EmailsSendOptionsBase {
    */
   headers?: Record<string, string>;
   /**
+   * Explicit personalization objects. Use this for advanced MailChannels payloads with multiple recipient groups or per-personalization overrides.
+   */
+  personalizations?: EmailsSendPersonalization[];
+  /**
    * The recipient of the email. Can be an array of email addresses or an array of objects with `email` and `name` properties or a single email address string or an object with `email` and `name` properties.
    * @example
    * [
@@ -144,7 +195,7 @@ interface EmailsSendOptionsBase {
    * @example
    * 'Name <email@example.com>'
    */
-  to: EmailsSendRecipient[] | EmailsSendRecipient | string[] | string;
+  to?: EmailsSendRecipientInput;
   /**
    * Adjust open and click tracking for the message. Please note that enabling tracking for your messages requires a subscription that supports open and click tracking.
    *
@@ -188,7 +239,23 @@ interface EmailsSendOptionsBase {
   transactional?: boolean;
 }
 
-export type EmailsSendOptions = EmailsSendOptionsBase & (
+type EmailsSendTargetOptions =
+  | {
+    personalizations: EmailsSendPersonalization[];
+    to?: never;
+    cc?: never;
+    bcc?: never;
+    mustaches?: never;
+  }
+  | {
+    personalizations?: never;
+    to: EmailsSendRecipientInput;
+    cc?: EmailsSendRecipientInput;
+    bcc?: EmailsSendRecipientInput;
+    mustaches?: Record<string, unknown>;
+  };
+
+export type EmailsSendOptions = EmailsSendOptionsBase & EmailsSendTargetOptions & (
   | {
     /**
      * The HTML content of the email.

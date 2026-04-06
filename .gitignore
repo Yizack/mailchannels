@@ -58,3 +58,6 @@ Temporary Items
 
 # Docs
 docs/snippets
+
+# Playwright MCP artifacts
+.playwright-mcp/
