@@ -38,6 +38,7 @@
     "parity:fixtures": "node scripts/generate-parity-fixtures.mjs",
     "prepack": "pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changelogen --release && git push --follow-tags",
+    "simulate:email-api": "node scripts/email-api-simulator.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "test": "vitest run --reporter=verbose --coverage",
