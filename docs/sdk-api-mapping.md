@@ -26,6 +26,7 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`Webhooks.getSigningKey()`](/modules/webhooks/get-signing-key) | [Retrieve Webhook Signing Key](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-signing-key) |
   | [`Webhooks.validate()`](/modules/webhooks/validate) | [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook) |
   | [`Webhooks.verify()`](/modules/webhooks/verify) | SDK only |
+  | [`Webhooks.batches()`](/modules/webhooks/batches) | [Retrieve Webhook Batches](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-batches) |
 
 ### 🪪 Sub-accounts
 
