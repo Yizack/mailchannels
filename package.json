@@ -56,17 +56,17 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.5.2",
-    "@vitest/coverage-v8": "^4.1.2",
+    "@vitest/coverage-v8": "^4.1.3",
     "changelogen": "^0.6.2",
     "jiti": "^2.6.1",
     "obuild": "^0.4.33",
-    "oxlint": "^1.58.0",
+    "oxlint": "^1.59.0",
     "scule": "^1.3.0",
     "typescript": "^6.0.2",
     "vitepress": "^2.0.0-alpha.17",
     "vitepress-plugin-group-icons": "^1.7.3",
     "vitepress-plugin-llms": "^1.12.0",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.3"
   },
   "packageManager": "pnpm@10.33.0"
 }
