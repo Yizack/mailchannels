@@ -25,11 +25,11 @@ This library provides a simple way to interact with the [MailChannels API](https
 - 🚀 [Features](#features)
 - 📏 [Requirements](#requirements)
 - 📦 [Installation](#installation)
-- 🧪 [Local simulator](#local-simulator)
 - 📚 [Usage](#usage)
 - 📐 [Naming Conventions](#naming-conventions)
 - ⚖️ [License](#license)
 - 💻 [Development](#development)
+- 🧪 [Local simulator](#local-simulator)
 
 ## <a name="features">🚀 Features</a>
 
@@ -72,60 +72,6 @@ yarn add mailchannels-sdk
 # pnpm
 pnpm add mailchannels-sdk
 ```
-
-## <a name="local-simulator">🧪 Local simulator</a>
-
-This repo includes a small local MailChannels Email API simulator at [scripts/email-api-simulator.mjs](./scripts/email-api-simulator.mjs). It keeps state in memory and emulates the SDK-supported Email API endpoints so you can test your application without calling the real MailChannels service.
-
-### Start the simulator
-
-```sh
-# default: http://127.0.0.1:8787
-pnpm simulate:email-api
-```
-
-You can override the bind address with environment variables:
-
-```sh
-MAILCHANNELS_SIMULATOR_HOST=127.0.0.1 MAILCHANNELS_SIMULATOR_PORT=8787 pnpm simulate:email-api
-```
-
-### Point the SDK at the simulator
-
-Use the optional `baseUrl` constructor option when creating the client:
-
-```ts
-import { MailChannels } from 'mailchannels-sdk'
-
-const mailchannels = new MailChannels('local-test-key', {
-  baseUrl: 'http://127.0.0.1:8787'
-})
-
-const { data, error } = await mailchannels.emails.send({
-  from: 'sender@example.com',
-  to: 'recipient@example.com',
-  subject: 'Hello from the simulator',
-  html: '<p>Local test</p>'
-})
-```
-
-### What the simulator supports today
-
-- Email sends and async sends
-- Domain checks
-- DKIM key create, list, rotate, and update
-- Webhook enrollment, listing, validation, signing key lookup, and batch inspection
-- Sub-account lifecycle, API keys, SMTP passwords, limits, and usage
-- Engagement, performance, recipient behaviour, sender, volume, and usage metrics
-- Suppression create, list, and delete
-
-### Current limitations
-
-- State is in-memory only and is reset when the process stops
-- Any non-empty `X-API-Key` is accepted, with separate in-memory state per API key
-- Webhook responses are simulated locally, but the simulator does not yet emit real webhook callbacks to your application
-
-The next planned expansion is outbound webhook delivery so client applications can test webhook ingestion flows against the simulator as well.
 
 ## <a name="usage">📚 Usage</a>
 
@@ -197,6 +143,60 @@ pnpm release
 ```
 
 </details>
+
+## <a name="local-simulator">🧪 Local simulator</a>
+
+This repo includes a small local MailChannels Email API simulator at [scripts/email-api-simulator.mjs](./scripts/email-api-simulator.mjs). It keeps state in memory and emulates the SDK-supported Email API endpoints so you can test your application without calling the real MailChannels service.
+
+### Start the simulator
+
+```sh
+# default: http://127.0.0.1:8787
+pnpm simulate:email-api
+```
+
+You can override the bind address with environment variables:
+
+```sh
+MAILCHANNELS_SIMULATOR_HOST=127.0.0.1 MAILCHANNELS_SIMULATOR_PORT=8787 pnpm simulate:email-api
+```
+
+### Point the SDK at the simulator
+
+Use the optional `baseUrl` constructor option when creating the client:
+
+```ts
+import { MailChannels } from 'mailchannels-sdk'
+
+const mailchannels = new MailChannels('local-test-key', {
+  baseUrl: 'http://127.0.0.1:8787'
+})
+
+const { data, error } = await mailchannels.emails.send({
+  from: 'sender@example.com',
+  to: 'recipient@example.com',
+  subject: 'Hello from the simulator',
+  html: '<p>Local test</p>'
+})
+```
+
+### What the simulator supports today
+
+- Email sends and async sends
+- Domain checks
+- DKIM key create, list, rotate, and update
+- Webhook enrollment, listing, validation, signing key lookup, and batch inspection
+- Sub-account lifecycle, API keys, SMTP passwords, limits, and usage
+- Engagement, performance, recipient behaviour, sender, volume, and usage metrics
+- Suppression create, list, and delete
+
+### Current limitations
+
+- State is in-memory only and is reset when the process stops
+- Any non-empty `X-API-Key` is accepted, with separate in-memory state per API key
+- Webhook responses are simulated locally, but the simulator does not yet emit real webhook callbacks to your application
+
+The next planned expansion is outbound webhook delivery so client applications can test webhook ingestion flows against the simulator as well.
 
 <!-- Badges -->
 [npm-version-src]: https://img.shields.io/npm/v/mailchannels-sdk.svg?style=flat&colorA=070a30&colorB=35a047
