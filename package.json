@@ -42,7 +42,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "test": "vitest run --reporter=verbose --coverage",
-    "test:types": "tsc --noEmit -p tsconfig.types.json",
+    "test:types": "tsc --noEmit",
     "test:watch": "vitest watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "(git fetch --unshallow -q || git fetch --all -q) && vitepress build docs",
