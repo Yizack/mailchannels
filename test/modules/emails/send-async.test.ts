@@ -42,6 +42,19 @@ describe("sendAsync", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should contain error when payload is invalid in async mode", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const options = { ...fake.options };
+    // @ts-expect-error Testing missing from in async mode
+    delete options.from;
+    const { data, error } = await emails.sendAsync(options);
+
+    expect(error).toBeTruthy();
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {
