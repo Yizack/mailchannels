@@ -54,6 +54,19 @@ describe("batches", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
+  it("should successfully retrieve webhook batches with valid date range", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-01", createdBefore: "2024-07-08" });
+
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
   it("should contain error for invalid limit (0)", async () => {
     const mockClient = {
       get: vi.fn()
@@ -89,6 +102,84 @@ describe("batches", () => {
     const { data, error } = await webhooks.batches({ ...fake.options, offset: -1 });
 
     expect(error).toStrictEqual({ message: "Offset must be greater than or equal to 0.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for too many statuses (more than 6)", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ statuses: ["1xx", "2xx", "3xx", "4xx", "5xx", "no_response", "1xx"] });
+
+    expect(error).toStrictEqual({ message: "A maximum of 6 status filters can be provided.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for duplicate statuses", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ statuses: ["2xx", "2xx"] });
+
+    expect(error).toStrictEqual({ message: "Status filters must be unique.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid createdAfter", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdAfter: "not-a-date" });
+
+    expect(error).toStrictEqual({ message: "createdAfter must be a valid date string.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error for invalid createdBefore", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdBefore: "not-a-date" });
+
+    expect(error).toStrictEqual({ message: "createdBefore must be a valid date string.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when createdBefore is not later than createdAfter", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-29", createdBefore: "2024-07-28" });
+
+    expect(error).toStrictEqual({ message: "createdBefore must be later than createdAfter.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.get).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when time range exceeds 31 days", async () => {
+    const mockClient = {
+      get: vi.fn()
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-01", createdBefore: "2024-08-02" });
+
+    expect(error).toStrictEqual({ message: "The time range between createdAfter and createdBefore must not exceed 31 days.", statusCode: null });
     expect(data).toBeNull();
     expect(mockClient.get).not.toHaveBeenCalled();
   });

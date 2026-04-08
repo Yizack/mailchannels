@@ -1,7 +1,8 @@
-import { MailChannelsClient } from "./client";
+import { MailChannelsClient, type MailChannelsClientOptions } from "./client";
 import { Domains, Emails, Lists, Metrics, Service, SubAccounts, Suppressions, Users, Webhooks } from "./modules";
 
 export { MailChannelsClient };
+export type { MailChannelsClientOptions };
 export * from "./modules";
 export type * from "./types";
 
@@ -19,7 +20,7 @@ export class MailChannels extends MailChannelsClient {
   readonly users = new Users(this);
   readonly service = new Service(this);
 
-  constructor (key: string) {
-    super(key);
+  constructor (key: string, options?: MailChannelsClientOptions) {
+    super(key, options);
   }
 }

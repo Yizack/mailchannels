@@ -102,6 +102,32 @@ describe("checkDomain", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should contain error when dkim settings exceed 10", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain({
+      ...fake.options,
+      dkim: Array.from({ length: 11 }, () => ({ domain: "example.com", selector: "mailchannels" }))
+    });
+
+    expect(error).toStrictEqual({ message: "A maximum of 10 DKIM settings can be provided.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when dkim setting has privateKey without selector", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { data, error } = await emails.checkDomain({
+      ...fake.options,
+      dkim: [{ domain: "example.com", privateKey: "private-key" }]
+    });
+
+    expect(error).toStrictEqual({ message: "DKIM settings with a privateKey must also include a selector.", statusCode: null });
+    expect(data).toBeNull();
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
   it("should contain error on api response error", async () => {
     const mockClient = {
       post: vi.fn().mockImplementationOnce(async (url, { onResponseError }) => new Promise((_, reject) => {

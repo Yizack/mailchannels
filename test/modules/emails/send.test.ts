@@ -214,6 +214,406 @@ describe("send", () => {
     expect(mockClient.post).toHaveBeenCalled();
   });
 
+  it("should contain error when attachments exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      attachments: Array.from({ length: 1001 }, () => ({ content: "data", filename: "file.txt", type: "text/plain" }))
+    });
+
+    expect(error).toStrictEqual({ message: "The maximum number of attachments is 1000.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when campaignId exceeds 48 characters", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      campaignId: "a".repeat(49)
+    });
+
+    expect(error).toStrictEqual({ message: "campaignId must be 48 characters or fewer and must not contain spaces.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when campaignId contains spaces", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      campaignId: "has space"
+    });
+
+    expect(error).toStrictEqual({ message: "campaignId must be 48 characters or fewer and must not contain spaces.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when headers includes a reserved header name", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      headers: { from: "test@example.com" }
+    });
+
+    expect(error).toStrictEqual({ message: "Root headers cannot include the reserved header 'from'.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when headers has duplicate keys case-insensitively", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      headers: { "X-Custom": "value1", "x-custom": "value2" }
+    });
+
+    expect(error).toStrictEqual({ message: "Root headers must be unique when compared case-insensitively.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when headers has non-string value", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      // @ts-expect-error Testing non-string header value
+      headers: { "x-custom": 123 }
+    });
+
+    expect(error).toStrictEqual({ message: "Root header 'x-custom' must have a string value.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when dkim has domain without selector", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      dkim: { domain: "example.com" }
+    });
+
+    expect(error).toStrictEqual({ message: "Root DKIM domain requires a selector.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when dkim has privateKey without domain", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      dkim: { privateKey: "private-key" }
+    });
+
+    expect(error).toStrictEqual({ message: "Root DKIM privateKey requires both a domain and selector.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when to recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      to: Array.from({ length: 1001 }, (_, i) => `to${i}@example.com`)
+    });
+
+    expect(error).toStrictEqual({ message: "The maximum number of `to` recipients is 1000.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when cc recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      cc: Array.from({ length: 1001 }, (_, i) => `cc${i}@example.com`)
+    });
+
+    expect(error).toStrictEqual({ message: "The maximum number of `cc` recipients is 1000.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when bcc recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      bcc: Array.from({ length: 1001 }, (_, i) => `bcc${i}@example.com`)
+    });
+
+    expect(error).toStrictEqual({ message: "The maximum number of `bcc` recipients is 1000.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when transactional is false without DKIM", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      transactional: false
+    });
+
+    expect(error).toStrictEqual({ message: "Non-transactional messages must be DKIM signed.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when transactional is false with multiple recipients", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      to: ["recipient1@example.com", "recipient2@example.com"],
+      dkim: { domain: "example.com", selector: "mailchannels" },
+      transactional: false
+    });
+
+    expect(error).toStrictEqual({ message: "Non-transactional messages must have exactly one recipient per personalization.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should successfully send a non-transactional email", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      to: "recipient@example.com",
+      dkim: { domain: "example.com", selector: "mailchannels" },
+      transactional: false
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with valid custom headers", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      headers: { "x-custom-header": "value" }
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with tracking object but no click or open defined", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { success, error } = await emails.send({
+      ...fake.options,
+      tracking: {}
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
+  it("should contain error when personalizations is empty", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: []
+    });
+
+    expect(error).toStrictEqual({ message: "At least one personalization must be provided.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalizations exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: Array.from({ length: 1001 }, () => ({ to: "recipient@example.com" }))
+    });
+
+    expect(error).toStrictEqual({ message: "The maximum number of personalizations is 1000.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization has no to recipients", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{ to: "" }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 must include at least one recipient in the `to` field.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization to recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: Array.from({ length: 1001 }, (_, i) => `to${i}@example.com`)
+      }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 cannot include more than 1000 `to` recipients.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization cc recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: "recipient@example.com",
+        cc: Array.from({ length: 1001 }, (_, i) => `cc${i}@example.com`)
+      }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 cannot include more than 1000 `cc` recipients.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization bcc recipients exceed 1000", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: "recipient@example.com",
+        bcc: Array.from({ length: 1001 }, (_, i) => `bcc${i}@example.com`)
+      }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 cannot include more than 1000 `bcc` recipients.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization headers include a reserved header", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: "recipient@example.com",
+        headers: { from: "test@example.com" }
+      }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 headers cannot include the reserved header 'from'.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should contain error when personalization dkim has domain without selector", async () => {
+    const mockClient = { post: vi.fn() } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: "recipient@example.com",
+        dkim: { domain: "example.com" }
+      }]
+    });
+
+    expect(error).toStrictEqual({ message: "Personalization at index 0 DKIM domain requires a selector.", statusCode: null });
+    expect(success).toBe(false);
+    expect(mockClient.post).not.toHaveBeenCalled();
+  });
+
+  it("should successfully send an email with personalizations and mustaches template", async () => {
+    const mockClient = {
+      post: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+    const emails = new Emails(mockClient);
+    const { from, subject, html, text, tracking } = fake.options;
+    const { success, error } = await emails.send({
+      from,
+      subject,
+      html,
+      text,
+      tracking,
+      personalizations: [{
+        to: "recipient@example.com",
+        mustaches: { name: "World" }
+      }]
+    });
+
+    expect(error).toBeNull();
+    expect(success).toBe(true);
+    expect(mockClient.post).toHaveBeenCalled();
+  });
+
   it("should handle catch block errors", async () => {
     const mockClient = {
       post: vi.fn().mockRejectedValueOnce(new Error("failure"))

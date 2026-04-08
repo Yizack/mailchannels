@@ -4,6 +4,7 @@ import { MailChannelsClient } from "../src/client";
 
 const fake = {
   baseURL: "https://api.mailchannels.net",
+  customBaseURL: "http://127.0.0.1:8787",
   path: "/test",
   apiKey: "test-api-key",
   headers: {
@@ -20,7 +21,7 @@ describe("MailChannelsClient", () => {
   it("should throw an error if no API key is provided", () => {
     // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
-    expect(client).toThrowError("Missing MailChannels API key.");
+    expect(client).toThrow("Missing MailChannels API key.");
   });
 
   it("should handle GET method correctly", async () => {
@@ -96,6 +97,24 @@ describe("MailChannelsClient", () => {
     expect($fetch).toHaveBeenCalledWith(fake.path, {
       method: "PATCH",
       baseURL: fake.baseURL,
+      headers: {
+        ...fake.headers,
+        "X-API-Key": fake.apiKey
+      }
+    });
+  });
+
+  it("should allow overriding the base url", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
+    const client = new MailChannelsClient(fake.apiKey, {
+      baseUrl: fake.customBaseURL
+    });
+    await client.get(fake.path);
+
+    expect($fetch).toHaveBeenCalledWith(fake.path, {
+      method: "GET",
+      baseURL: fake.customBaseURL,
       headers: {
         ...fake.headers,
         "X-API-Key": fake.apiKey

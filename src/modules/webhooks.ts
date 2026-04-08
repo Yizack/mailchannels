@@ -219,6 +219,36 @@ export class Webhooks {
     error = validatePagination({ ...options, max: 500 });
     if (error) return { data: null, error };
 
+    if (options?.statuses && options.statuses.length > 6) {
+      return { data: null, error: createError("A maximum of 6 status filters can be provided.") };
+    }
+
+    if (options?.statuses && new Set(options.statuses).size !== options.statuses.length) {
+      return { data: null, error: createError("Status filters must be unique.") };
+    }
+
+    if (options?.createdAfter && Number.isNaN(Date.parse(options.createdAfter))) {
+      return { data: null, error: createError("createdAfter must be a valid date string.") };
+    }
+
+    if (options?.createdBefore && Number.isNaN(Date.parse(options.createdBefore))) {
+      return { data: null, error: createError("createdBefore must be a valid date string.") };
+    }
+
+    if (options?.createdAfter && options?.createdBefore) {
+      const createdAfter = Date.parse(options.createdAfter);
+      const createdBefore = Date.parse(options.createdBefore);
+      const maxRangeMs = 31 * 24 * 60 * 60 * 1000;
+
+      if (createdBefore <= createdAfter) {
+        return { data: null, error: createError("createdBefore must be later than createdAfter.") };
+      }
+
+      if ((createdBefore - createdAfter) > maxRangeMs) {
+        return { data: null, error: createError("The time range between createdAfter and createdBefore must not exceed 31 days.") };
+      }
+    }
+
     const response = await this.mailchannels.get<WebhooksBatchesApiResponse>("/tx/v1/webhook-batch", {
       query: {
         created_after: options?.createdAfter,

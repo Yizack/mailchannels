@@ -1,0 +1,151 @@
+{
+  "version": "1.2.0",
+  "endpoints": [
+    {
+      "module": "lists",
+      "method": "listEntries",
+      "httpMethod": "GET",
+      "path": "/lists/{listname}"
+    },
+    {
+      "module": "lists",
+      "method": "addListEntry",
+      "httpMethod": "POST",
+      "path": "/lists/{listname}"
+    },
+    {
+      "module": "lists",
+      "method": "deleteListEntry",
+      "httpMethod": "DELETE",
+      "path": "/lists/{listname}"
+    },
+    {
+      "module": "domains",
+      "method": "list",
+      "httpMethod": "GET",
+      "path": "/domains"
+    },
+    {
+      "module": "domains",
+      "method": "provision",
+      "httpMethod": "POST",
+      "path": "/domains"
+    },
+    {
+      "module": "domains",
+      "method": "bulkProvision",
+      "httpMethod": "POST",
+      "path": "/domains/batch"
+    },
+    {
+      "module": "domains",
+      "method": "bulkCreateLoginLinks",
+      "httpMethod": "POST",
+      "path": "/domains/batch/login-link"
+    },
+    {
+      "module": "domains",
+      "method": "delete",
+      "httpMethod": "DELETE",
+      "path": "/domains/{domain}"
+    },
+    {
+      "module": "domains",
+      "method": "createLoginLink",
+      "httpMethod": "GET",
+      "path": "/domains/{domain}/login-link"
+    },
+    {
+      "module": "domains",
+      "method": "listEntries",
+      "httpMethod": "GET",
+      "path": "/domains/{domain}/lists/{listname}"
+    },
+    {
+      "module": "domains",
+      "method": "addListEntry",
+      "httpMethod": "POST",
+      "path": "/domains/{domain}/lists/{listname}"
+    },
+    {
+      "module": "domains",
+      "method": "deleteListEntry",
+      "httpMethod": "DELETE",
+      "path": "/domains/{domain}/lists/{listname}"
+    },
+    {
+      "module": "domains",
+      "method": "listDownstreamAddresses",
+      "httpMethod": "GET",
+      "path": "/domains/{domain}/downstream-address"
+    },
+    {
+      "module": "domains",
+      "method": "setDownstreamAddress",
+      "httpMethod": "PUT",
+      "path": "/domains/{domain}/downstream-address"
+    },
+    {
+      "module": "domains",
+      "method": "updateApiKey",
+      "httpMethod": "PUT",
+      "path": "/domains/{domain}/api-key"
+    },
+    {
+      "module": "users",
+      "method": "listEntries",
+      "httpMethod": "GET",
+      "path": "/users/{email}/lists/{listname}"
+    },
+    {
+      "module": "users",
+      "method": "addListEntry",
+      "httpMethod": "POST",
+      "path": "/users/{email}/lists/{listname}"
+    },
+    {
+      "module": "users",
+      "method": "deleteListEntry",
+      "httpMethod": "DELETE",
+      "path": "/users/{email}/lists/{listname}"
+    },
+    {
+      "module": "service",
+      "method": "subscriptions",
+      "httpMethod": "GET",
+      "path": "/subscriptions"
+    },
+    {
+      "module": "service",
+      "method": "status",
+      "httpMethod": "GET",
+      "path": "/status"
+    },
+    {
+      "module": "users",
+      "method": "create",
+      "httpMethod": "PUT",
+      "path": "/users"
+    },
+    {
+      "module": "service",
+      "method": "report",
+      "httpMethod": "POST",
+      "path": "/report"
+    }
+  ],
+  "unmapped": [
+    {
+      "httpMethod": "POST",
+      "path": "/domains/{domain}/alias/{alias}"
+    },
+    {
+      "httpMethod": "DELETE",
+      "path": "/domains/{domain}/alias/{alias}"
+    },
+    {
+      "httpMethod": "PUT",
+      "path": "/domains/{domain}/settings"
+    }
+  ]
+}
