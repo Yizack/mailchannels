@@ -46,7 +46,6 @@ Some of the things you can do with the SDK:
 - Retrieve metrics
 - Inspect webhook delivery batches
 - Handle suppressions
-- Run a local Email API simulator for development testing
 - Configure inbound domains
 - Manage account and recipient lists
 
