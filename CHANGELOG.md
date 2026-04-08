@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.7.7
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.6...v0.7.7)
+
+### 🚀 Enhancements
+
+- Add validations, email personalizations, parity fixtures + simulator ([#114](https://github.com/Yizack/mailchannels/pull/114))
+
+### 📖 Documentation
+
+- **sdk-api-mapping:** Add webhooks batches ([a209b7f](https://github.com/Yizack/mailchannels/commit/a209b7f))
+
+### ❤️ Contributors
+
+- Ken Simpson <ksimpson@ttul.org>
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.6
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.5...v0.7.6)
