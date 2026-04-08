@@ -76,7 +76,7 @@ pnpm add mailchannels-sdk
 
 ## <a name="local-simulator">🧪 Local simulator</a>
 
-This repo includes a small local MailChannels Email API simulator at [scripts/email-api-simulator.js](./scripts/email-api-simulator.js). It keeps state in memory and emulates the SDK-supported Email API endpoints so you can test your application without calling the real MailChannels service.
+This repo includes a small local MailChannels Email API simulator at [scripts/email-api-simulator.mjs](./scripts/email-api-simulator.mjs). It keeps state in memory and emulates the SDK-supported Email API endpoints so you can test your application without calling the real MailChannels service.
 
 ### Start the simulator
 
