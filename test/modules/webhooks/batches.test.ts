@@ -54,6 +54,19 @@ describe("batches", () => {
     expect(mockClient.get).toHaveBeenCalled();
   });
 
+  it("should successfully retrieve webhook batches with valid date range", async () => {
+    const mockClient = {
+      get: vi.fn().mockResolvedValueOnce(fake.apiResponse)
+    } as unknown as MailChannelsClient;
+
+    const webhooks = new Webhooks(mockClient);
+    const { data, error } = await webhooks.batches({ createdAfter: "2024-07-01", createdBefore: "2024-07-08" });
+
+    expect(data).toStrictEqual(fake.expectedResponse.data);
+    expect(error).toBeNull();
+    expect(mockClient.get).toHaveBeenCalled();
+  });
+
   it("should contain error for invalid limit (0)", async () => {
     const mockClient = {
       get: vi.fn()
