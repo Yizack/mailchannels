@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { $fetch } from "ofetch";
 import { MailChannelsClient } from "../src/client";
 
@@ -18,6 +18,10 @@ vi.mock("ofetch", () => ({
 }));
 
 describe("MailChannelsClient", () => {
+  beforeEach(() => {
+    vi.mocked($fetch).mockResolvedValue({});
+  });
+
   it("should throw an error if no API key is provided", () => {
     // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
