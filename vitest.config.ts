@@ -6,11 +6,6 @@ export default defineConfig({
     environment: "node",
     isolate: false,
     root: fileURLToPath(new URL("./", import.meta.url)),
-    server: {
-      deps: {
-        inline: ["ofetch"]
-      }
-    },
     coverage: {
       include: ["src"],
       exclude: ["src/types"]
