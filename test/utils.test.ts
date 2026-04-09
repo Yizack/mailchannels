@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { FetchResponse } from "ofetch";
-import { parseArrayRecipients, parseRecipient } from "~/utils/recipients";
-import { getStatusError } from "~/utils/errors";
-import { clean } from "~/utils/helpers";
+import { parseArrayRecipients, parseRecipient } from "../src/utils/recipients";
+import { getStatusError } from "../src/utils/errors";
+import { clean } from "../src/utils/helpers";
 
 const fake = {
   pair: "Example <name@example.com>",
