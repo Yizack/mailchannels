@@ -1,5 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
-import { $fetch } from "ofetch";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { generateKeyPairSync, subtle } from "node:crypto";
 import { Buffer } from "node:buffer";
 import type { MailChannelsClient } from "~/client";
@@ -47,11 +46,11 @@ const fake = {
   }
 };
 
-vi.mock("ofetch", () => ({
-  $fetch: vi.fn()
-}));
-
 describe("verify", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("should return true for valid webhook request", async () => {
     const mockClient = {} as MailChannelsClient;
 
@@ -146,10 +145,12 @@ describe("verify", () => {
   });
 
   it("should return true for valid webhook request with public key fetch", async () => {
-    vi.mocked($fetch).mockResolvedValueOnce({
-      id: "mckey",
-      key: fake.options.publicKey
-    });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({ id: "mckey", key: fake.options.publicKey }),
+        { status: 200, headers: { "content-type": "application/json" } }
+      )
+    ));
 
     const isValid = await Webhooks.verify({
       ...fake.options,
@@ -160,7 +161,7 @@ describe("verify", () => {
   });
 
   it("should return false if public key fetch fails", async () => {
-    vi.mocked($fetch).mockRejectedValueOnce(new Error("Failed to fetch public key"));
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Failed to fetch public key")));
 
     const isValid = await Webhooks.verify({
       ...fake.options,
