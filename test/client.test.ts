@@ -19,8 +19,8 @@ vi.mock("ofetch", () => ({
 
 describe("MailChannelsClient", () => {
   beforeEach(() => {
-    vi.mocked($fetch).mockClear();
-    vi.mocked($fetch).mockResolvedValueOnce({});
+    vi.clearAllMocks();
+    vi.mocked($fetch).mockResolvedValue({});
   });
 
   it("should throw an error if no API key is provided", () => {
