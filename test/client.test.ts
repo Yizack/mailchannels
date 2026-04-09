@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { $fetch } from "ofetch";
 import { MailChannelsClient } from "~/client";
 
@@ -18,11 +18,6 @@ vi.mock("ofetch", () => ({
 }));
 
 describe("MailChannelsClient", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked($fetch).mockResolvedValue({});
-  });
-
   it("should throw an error if no API key is provided", () => {
     // @ts-expect-error Testing missing API key
     const client = () => new MailChannelsClient();
@@ -30,6 +25,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle GET method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey);
     await client.get(fake.path);
 
@@ -44,6 +41,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle POST method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey);
     await client.post(fake.path);
 
@@ -58,6 +57,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle DELETE method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey);
     await client.delete(fake.path);
 
@@ -72,6 +73,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle PUT method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey);
     await client.put(fake.path);
 
@@ -86,6 +89,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should handle PATCH method correctly", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey);
     await client.patch(fake.path);
 
@@ -100,6 +105,8 @@ describe("MailChannelsClient", () => {
   });
 
   it("should allow overriding the base url", async () => {
+    vi.mocked($fetch).mockResolvedValueOnce({});
+
     const client = new MailChannelsClient(fake.apiKey, {
       baseUrl: fake.customBaseURL
     });
