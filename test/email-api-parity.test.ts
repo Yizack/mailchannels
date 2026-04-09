@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MailChannels } from "../src/mailchannels";
+import { MailChannels } from "~/mailchannels";
 import emailParityFixture from "./fixtures/email-api-endpoints.json";
 import inboundParityFixture from "./fixtures/inbound-api-endpoints.json";
 

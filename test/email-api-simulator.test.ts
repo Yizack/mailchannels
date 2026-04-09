@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { MailChannels } from "../src/mailchannels";
+import { MailChannels } from "~/mailchannels";
 import { createEmailApiSimulator } from "../scripts/email-api-simulator.mjs";
 
 type EmailApiSimulator = {
