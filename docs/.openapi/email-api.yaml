@@ -1283,8 +1283,11 @@ components:
           minimum: 0
           type: integer
         status:
-          description: "Status of the webhook batch.           \nno_response: no response\
-            \ returned from the webhook endpoint.\n"
+          description: 'Status of the webhook batch.
+
+            no_response: no response returned from the webhook endpoint.
+
+            '
           enum:
           - 1xx_response
           - 2xx_response
@@ -1345,6 +1348,60 @@ components:
           type: array
       required:
       - webhook_batches
+      type: object
+    WebhookResendResponse:
+      properties:
+        batch_id:
+          description: 'Unique identifier for the webhook batch
+
+            '
+          format: int64
+          minimum: 0
+          type: integer
+        created_at:
+          description: Timestamp of when the webhook batch was created
+          format: date-time
+          type: string
+        customer_handle:
+          description: Customer handle associated with the webhook batch
+          maxLength: 255
+          type: string
+        duration_in_ms:
+          description: 'Duration of the webhook batch in milliseconds, measured from
+            the time the request was sent to the webhook
+
+            endpoint until the response was received. Null indicates that no response
+            was returned from the webhook
+
+            endpoint.
+
+            '
+          minimum: 0
+          nullable: true
+          type: integer
+        event_count:
+          description: Number of events in the webhook batch
+          minimum: 0
+          type: integer
+        status_code:
+          description: 'HTTP status code returned by the webhook endpoint.
+
+            Valid values are 100-599. Null indicates that no response was returned
+            from the webhook endpoint.
+
+            '
+          maximum: 599
+          nullable: true
+          type: integer
+        webhook:
+          description: Webhook URL to which events in the batch were posted
+          type: string
+      required:
+      - batch_id
+      - customer_handle
+      - webhook
+      - created_at
+      - event_count
       type: object
     WebhookResponse:
       description: 'The HTTP response returned by the webhook, including status code
@@ -1439,7 +1496,7 @@ info:
 
     '
   title: Email API
-  version: 0.19.0
+  version: 0.20.0
 openapi: 3.0.0
 paths:
   /check-domain:
@@ -1478,12 +1535,6 @@ paths:
           description: Bad Request
         '403':
           description: User does not have access to this feature
-        '500':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          description: Internal Server Error
       summary: DKIM, SPF & Domain Lockdown Check
   /domains/{domain}/dkim-keys:
     get:
@@ -2290,14 +2341,26 @@ paths:
       summary: Send an Email
   /send-async:
     post:
-      description: "Queues an email message for asynchronous processing and returns\
-        \ immediately with a request ID.\n\nThe email will be processed in the background,\
-        \ and you'll receive webhook events \nfor all delivery status updates (e.g.\
-        \ dropped, processed, delivered, hard-bounced).\nThese webhook events are\
-        \ identical to those sent for the synchronous /send endpoint.\n\nUse this\
-        \ endpoint when you need to send emails without waiting for processing to\
-        \ complete.\nThis can improve your application's response time, especially\
-        \ when sending to multiple recipients.\n"
+      description: 'Queues an email message for asynchronous processing and returns
+        immediately with a request ID.
+
+
+        The email will be processed in the background, and you''ll receive webhook
+        events
+
+        for all delivery status updates (e.g. dropped, processed, delivered, hard-bounced).
+
+        These webhook events are identical to those sent for the synchronous /send
+        endpoint.
+
+
+        Use this endpoint when you need to send emails without waiting for processing
+        to complete.
+
+        This can improve your application''s response time, especially when sending
+        to multiple recipients.
+
+        '
       parameters:
       - in: header
         name: X-Api-Key
@@ -3298,6 +3361,48 @@ paths:
         '500':
           description: Internal Server Error
       summary: Retrieve Webhook Batches
+  /webhook-batch/{batch_id}/resend:
+    post:
+      description: 'Synchronously resend the webhook batch with the provided batch_id
+        for the customer. The result is returned in the
+
+        response.
+
+        '
+      parameters:
+      - in: header
+        name: X-Customer-Handle
+        required: true
+        schema:
+          type: string
+      - description: the ID of the batch
+        in: path
+        name: batch_id
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResendResponse'
+          description: 'Resend attempt completed. The result of the resend attempt
+            is included in the response body.
+
+            A successful response here does not mean the webhook endpoint responded
+            with a 2xx status code,
+
+            only that we were able to make the resend attempt and receive a response.
+
+            '
+        '400':
+          description: Bad Request. The batch ID is invalid.
+        '404':
+          description: The batch ID is not found for the customer.
+        '500':
+          description: Internal Server Error
+      summary: Resend Events
   /webhook/public-key:
     get:
       description: 'Retrieves the public key used to verify signatures on incoming
