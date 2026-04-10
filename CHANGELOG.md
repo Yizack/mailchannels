@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.7.8
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.7...v0.7.8)
+
+### 🚀 Enhancements
+
+- **webhooks:** Add `resendBatch` method ([#119](https://github.com/Yizack/mailchannels/pull/119))
+
+### 📖 Documentation
+
+- Bump Email API version to 0.20.0 ([#116](https://github.com/Yizack/mailchannels/pull/116))
+- **readme:** Use relative image path ([ea11e63](https://github.com/Yizack/mailchannels/commit/ea11e63))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.7
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.6...v0.7.7)
