@@ -27,6 +27,7 @@ This page provides a mapping between the MailChannels SDK module methods and the
   | [`Webhooks.validate()`](/modules/webhooks/validate) | [Validate Enrolled Webhook](https://docs.mailchannels.net/email-api/api-reference/validate-enrolled-webhook) |
   | [`Webhooks.verify()`](/modules/webhooks/verify) | SDK only |
   | [`Webhooks.batches()`](/modules/webhooks/batches) | [Retrieve Webhook Batches](https://docs.mailchannels.net/email-api/api-reference/retrieve-webhook-batches) |
+  | [`Webhooks.resendBatch()`](/modules/webhooks/resend-batch) | [Resend Events](https://docs.mailchannels.net/email-api/api-reference/resend-events) |
 
 ### 🪪 Sub-accounts
 

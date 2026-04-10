@@ -48,4 +48,9 @@ Receive notifications of your email events via webhooks.
   <<< @/snippets/webhooks-batch-response-status.ts
   <<< @/snippets/webhooks-batch.ts
   <<< @/snippets/webhooks-batches-response.ts
+
+  **Resend Batch type declarations**
+
+  <<< @/snippets/webhooks-resend-batch.ts
+  <<< @/snippets/webhooks-resend-batch-response.ts
 </details>

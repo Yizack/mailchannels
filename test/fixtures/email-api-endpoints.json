@@ -1,5 +1,5 @@
 {
-  "version": "0.19.0",
+  "version": "0.20.0",
   "endpoints": [
     {
       "module": "emails",
@@ -210,6 +210,12 @@
       "method": "batches",
       "httpMethod": "GET",
       "path": "/webhook-batch"
+    },
+    {
+      "module": "webhooks",
+      "method": "resendBatch",
+      "httpMethod": "POST",
+      "path": "/webhook-batch/{batch_id}/resend"
     },
     {
       "module": "webhooks",
