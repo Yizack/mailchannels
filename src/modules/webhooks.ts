@@ -8,7 +8,8 @@ import type { WebhooksSigningKeyResponse } from "../types/webhooks/signing-key";
 import type { WebhooksValidateResponse } from "../types/webhooks/validate";
 import type { WebhooksVerifyOptions } from "../types/webhooks/verify";
 import type { WebhooksBatchesOptions, WebhooksBatchesResponse } from "../types/webhooks/batches";
-import type { WebhooksBatchesApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
+import type { WebhooksResendBatchResponse } from "../types/webhooks/resend-batch";
+import type { WebhooksBatchesApiResponse, WebhooksResendBatchApiResponse, WebhooksValidateApiResponse } from "../types/webhooks/internal";
 
 export class Webhooks {
   constructor (protected mailchannels: MailChannelsClient) {}
@@ -280,6 +281,45 @@ export class Webhooks {
       statusCode: batch.status_code,
       webhook: batch.webhook
     })));
+
+    return { data, error: null };
+  }
+
+  /**
+   * Synchronously resends the webhook batch with the provided `batchId` for the customer. The result is returned in the response.
+   * @param batchId - The ID of the batch to resend.
+   * @example
+   * ```ts
+   * const mailchannels = new MailChannels('your-api-key')
+   * const { data, error } = await mailchannels.webhooks.resendBatch(123)
+   * ```
+   */
+  async resendBatch (batchId: number): Promise<WebhooksResendBatchResponse> {
+    let error: ErrorResponse | null = null;
+
+    const response = await this.mailchannels.post<WebhooksResendBatchApiResponse>(`/tx/v1/webhook-batch/${batchId}/resend`, {
+      onResponseError: async ({ response }) => {
+        error = getStatusError(response, {
+          [ErrorCode.BadRequest]: "Bad Request. The batch ID is invalid.",
+          [ErrorCode.NotFound]: `The batch '${batchId}' is not found for the customer.`
+        });
+      }
+    }).catch((e) => {
+      error ||= getResultError(e, "Failed to resend webhook batch.");
+      return null;
+    });
+
+    if (!response) return { data: null, error: error! };
+
+    const data = clean({
+      batchId: response.batch_id,
+      customerHandle: response.customer_handle,
+      webhook: response.webhook,
+      createdAt: response.created_at,
+      eventCount: response.event_count,
+      duration: response.duration_in_ms,
+      statusCode: response.status_code
+    });
 
     return { data, error: null };
   }

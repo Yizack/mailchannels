@@ -25,3 +25,13 @@ export interface WebhooksBatchesApiResponse {
     webhook: string;
   }[];
 }
+
+export interface WebhooksResendBatchApiResponse {
+  batch_id: number;
+  customer_handle: string;
+  webhook: string;
+  created_at: string;
+  event_count: number;
+  duration_in_ms: number | null;
+  status_code: number | null;
+}

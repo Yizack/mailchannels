@@ -50,7 +50,8 @@ const emailMethodMap = {
   "POST /webhook": { module: "webhooks", method: "enroll" },
   "GET /webhook-batch": { module: "webhooks", method: "batches" },
   "GET /webhook/public-key": { module: "webhooks", method: "getSigningKey" },
-  "POST /webhook/validate": { module: "webhooks", method: "validate" }
+  "POST /webhook/validate": { module: "webhooks", method: "validate" },
+  "POST /webhook-batch/{batch_id}/resend": { module: "webhooks", method: "resendBatch" }
 };
 
 const inboundMethodMap = {

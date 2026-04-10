@@ -47,7 +47,8 @@ export default [
               { text: "Get Signing Key", link: "/modules/webhooks/get-signing-key" },
               { text: "Validate Webhooks", link: "/modules/webhooks/validate" },
               { text: "Verify a message", link: "/modules/webhooks/verify" },
-              { text: "Retrieve Webhook Batches", link: "/modules/webhooks/batches" }
+              { text: "Retrieve Webhook Batches", link: "/modules/webhooks/batches" },
+              { text: "Resend Batch", link: "/modules/webhooks/resend-batch" }
             ]
           },
           {
