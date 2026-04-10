@@ -288,7 +288,6 @@ export class Webhooks {
   /**
    * Synchronously resends the webhook batch with the provided `batchId` for the customer. The result is returned in the response.
    * @param batchId - The ID of the batch to resend.
-   * @param customerHandle - The handle of the customer who owns the batch.
    * @example
    * ```ts
    * const mailchannels = new MailChannels('your-api-key')

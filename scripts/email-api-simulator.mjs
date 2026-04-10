@@ -512,10 +512,12 @@ export const createEmailApiSimulator = ({ host = DEFAULT_HOST, logRequests = tru
           batch_id: batch.batch_id,
           customer_handle: account.customerHandle,
           webhook: batch.webhook,
+          created_at: currentTimestamp(),
           status_code: 200,
           duration_in_ms: 25,
           event_count: batch.event_count
         });
+        return;
       }
 
       if (url.pathname === "/tx/v1/sub-account" && method === "POST") {
