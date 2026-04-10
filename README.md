@@ -1,4 +1,4 @@
-![MailChannels Node.js SDK](/docs/public/images/presentation.png)
+![MailChannels Node.js SDK](./docs/public/images/presentation.png)
 
 # MailChannels Node.js SDK
 
