@@ -503,7 +503,7 @@ export const createEmailApiSimulator = ({ host = DEFAULT_HOST, logRequests = tru
         const batchId = Number(webhookBatchResendMatch[1]);
         const batch = account.webhookBatches.find(batch => batch.batch_id === batchId);
         if (!batch) {
-          sendJson(response, 404, { error: "Specified batch not found." });
+          sendJson(response, 404, { error: "webhook not found." });
           return;
         }
 
