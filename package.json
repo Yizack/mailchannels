@@ -64,7 +64,7 @@
     "scule": "^1.3.0",
     "typescript": "^6.0.2",
     "vitepress": "^2.0.0-alpha.17",
-    "vitepress-plugin-group-icons": "^1.7.3",
+    "vitepress-plugin-group-icons": "^1.7.5",
     "vitepress-plugin-llms": "^1.12.0",
     "vitest": "^4.1.4"
   },
