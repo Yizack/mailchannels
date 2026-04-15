@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.7.9
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.8...v0.7.9)
+
+### 🚀 Enhancements
+
+- **emails:** Add SPF record response fields to `checkDomain` ([#123](https://github.com/Yizack/mailchannels/pull/123))
+
+### 📖 Documentation
+
+- Bump Email API version to 0.21.0 ([#122](https://github.com/Yizack/mailchannels/pull/122))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.8
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.7...v0.7.8)
