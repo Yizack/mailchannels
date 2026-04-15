@@ -87,6 +87,8 @@ const { data, error } = await mailchannels.emails.checkDomain({
       - `verdict` `"passed" | "failed"` <Badge>guaranteed</Badge>
   - `spf` `object` <Badge>guaranteed</Badge>
     - `reason` `string` <Badge type="info">optional</Badge>: A human-readable explanation of SPF check.
+    - `spfRecord` `string` <Badge type="info">optional</Badge>: The SPF record that was used for the check.
+    - `spfRecordError` `string` <Badge type="info">optional</Badge>: Error message if the SPF record lookup failed.
     - `verdict` `"passed" | "failed" | "soft failed" | "temporary error" | "permanent error" | "neutral" | "none" | "unknown"` <Badge>guaranteed</Badge>
   - `references` `string[]` <Badge type="info">optional</Badge>
 <!-- @include: ../_parts/error-response.md -->
