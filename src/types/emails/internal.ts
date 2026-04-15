@@ -99,6 +99,8 @@ export interface EmailsCheckDomainApiResponse {
     };
     spf: {
       reason?: string;
+      spfRecord?: string;
+      spfRecordError?: string;
       verdict: EmailsCheckDomainVerdict;
     };
   };

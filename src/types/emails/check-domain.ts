@@ -88,6 +88,14 @@ export type EmailsCheckDomainResponse = DataResponse<{
      * A human-readable explanation of SPF check.
      */
     reason?: string;
+    /**
+     * The SPF record that was used for the check.
+     */
+    spfRecord?: string;
+    /**
+     * Error message if the SPF record lookup failed.
+     */
+    spfRecordError?: string;
     verdict: EmailsCheckDomainVerdict;
   };
   references?: string[];

@@ -7,7 +7,10 @@ import type { EmailsCheckDomainResponse } from "~/types/emails/check-domain";
 const fake = {
   apiResponse: {
     check_results: {
-      spf: { verdict: "passed" },
+      spf: {
+        verdict: "passed",
+        spfRecord: "v=spf1 include:relay.mailchannels.net a mx ~all"
+      },
       domain_lockdown: { verdict: "passed" },
       sender_domain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
       dkim: [{ dkim_domain: "example.com", dkim_key_status: "provided", dkim_selector: "selector", verdict: "passed" }]
@@ -15,7 +18,10 @@ const fake = {
   },
   expectedResponse: {
     data: {
-      spf: { verdict: "passed" },
+      spf: {
+        verdict: "passed",
+        spfRecord: "v=spf1 include:relay.mailchannels.net a mx ~all"
+      },
       domainLockdown: { verdict: "passed" },
       senderDomain: { a: { verdict: "failed" }, mx: { verdict: "passed" }, verdict: "passed" },
       dkim: [{ domain: "example.com", keyStatus: "provided", selector: "selector", verdict: "passed" }]
