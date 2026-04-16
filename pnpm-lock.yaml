@@ -49,8 +49,8 @@ importers:
         specifier: ^1.7.5
         version: 1.7.5(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1))
       vitepress-plugin-llms:
-        specifier: ^1.12.0
-        version: 1.12.0
+        specifier: ^1.12.1
+        version: 1.12.1
       vitest:
         specifier: ^4.1.4
         version: 4.1.4(@types/node@25.6.0)(@vitest/coverage-v8@4.1.4)(vite@7.3.2(@types/node@25.6.0)(jiti@2.6.1))
@@ -1991,8 +1991,8 @@ packages:
       vite:
         optional: true
 
-  vitepress-plugin-llms@1.12.0:
-    resolution: {integrity: sha512-zuzL7a8UJuGl46le5cAy/QxKMGlpSylcsLjDDn6BYPc1u+eP3nzoQk9ne9XFBqrE7exoJlIYJELVN8HMgYlFKQ==}
+  vitepress-plugin-llms@1.12.1:
+    resolution: {integrity: sha512-mUbjxXbNCWIxTZPuxh1smbjRpU1j5Bw5sXKoWeU/kfWCyALE92HyiAXhOgNVAB8QOLCuXticf3Qwsj/YlWROlw==}
     engines: {node: '>=18.0.0'}
 
   vitepress@2.0.0-alpha.17:
@@ -3989,7 +3989,7 @@ snapshots:
     optionalDependencies:
       vite: 7.3.2(@types/node@25.6.0)(jiti@2.6.1)
 
-  vitepress-plugin-llms@1.12.0:
+  vitepress-plugin-llms@1.12.1:
     dependencies:
       gray-matter: 4.0.3
       markdown-it: 14.1.1
