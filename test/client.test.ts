@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { $fetch } from "ofetch";
 import { MailChannelsClient } from "../src/client";
+import { version } from "../package.json";
 
 const fake = {
   baseURL: "https://api.mailchannels.net",
@@ -9,7 +10,8 @@ const fake = {
   apiKey: "test-api-key",
   headers: {
     "Accept": "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "User-Agent": `mailchannels-node/${version}`
   }
 };
 

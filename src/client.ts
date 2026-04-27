@@ -1,4 +1,5 @@
 import { $fetch, type FetchOptions } from "ofetch";
+import { version } from "../package.json";
 
 export interface MailChannelsClientOptions {
   /**
@@ -23,7 +24,8 @@ export class MailChannelsClient {
     this.#headers = {
       "X-API-Key": key,
       "Accept": "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "User-Agent": `mailchannels-node/${version}`
     };
   }
 
