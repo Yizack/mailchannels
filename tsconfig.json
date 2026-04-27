@@ -29,7 +29,8 @@
     "playground",
     "docs",
     "docs/.vitepress/**/*",
-    "test"
+    "test",
+    "**/*.ts"
   ],
   "exclude": [
     "docs/snippets",
