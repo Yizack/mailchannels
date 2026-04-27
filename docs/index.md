@@ -51,5 +51,3 @@ features:
     details: Manage recipient users
     link: /modules/users
 ---
-
-<!-- @include: ../README.md#disclaimer -->
