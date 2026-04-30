@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.7.10
+
+[compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.9...v0.7.10)
+
+### 🚀 Enhancements
+
+- Add `User-Agent` header ([#134](https://github.com/Yizack/mailchannels/pull/134))
+
+### 📖 Documentation
+
+- Remove disclaimer ([680419b](https://github.com/Yizack/mailchannels/commit/680419b))
+- Bump Email API version to 0.21.1 ([#135](https://github.com/Yizack/mailchannels/pull/135))
+
+### 🏡 Chore
+
+- **types:** Include all .ts files in tsconfig ([abb38dd](https://github.com/Yizack/mailchannels/commit/abb38dd))
+
+### ❤️ Contributors
+
+- Yizack Rangel ([@Yizack](https://github.com/Yizack))
+
 ## v0.7.9
 
 [compare changes](https://github.com/Yizack/mailchannels/compare/v0.7.8...v0.7.9)
