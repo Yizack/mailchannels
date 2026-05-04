@@ -163,7 +163,6 @@ export default [
       {
         text: "Node.js",
         collapsed: true,
-        link: "/guides/nodejs",
         items: [
           { text: "Next.js", link: "/guides/nodejs/nextjs" },
           { text: "Nuxt", link: "/guides/nodejs/nuxt" },
@@ -176,7 +175,6 @@ export default [
       {
         text: "Serverless",
         collapsed: true,
-        link: "/guides/serverless",
         items: [
           { text: "Vercel Functions", link: "/guides/serverless/vercel-functions" },
           { text: "Cloudflare Workers", link: "/guides/serverless/cloudflare-workers" },
