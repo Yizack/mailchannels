@@ -3,7 +3,7 @@ import type { DefaultTheme } from "vitepress";
 export default [
   {
     text: "Getting Started",
-    link: "/guide"
+    link: "/getting-started"
   },
   {
     text: "SDK-API Mapping",
@@ -153,6 +153,25 @@ export default [
             ]
           }
         ]
+      }
+    ]
+  },
+  {
+    text: "Guides",
+    link: "/guides",
+    items: [
+      {
+        text: "Node.js",
+        collapsed: true,
+        link: "/guides/nodejs",
+        items: [
+          { text: "Nuxt", link: "/guides/nodejs/nuxt" }
+        ]
+      },
+      {
+        text: "Serverless",
+        collapsed: true,
+        link: "/guides/serverless"
       }
     ]
   }
