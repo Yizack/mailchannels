@@ -165,13 +165,23 @@ export default [
         collapsed: true,
         link: "/guides/nodejs",
         items: [
-          { text: "Nuxt", link: "/guides/nodejs/nuxt" }
+          { text: "Next.js", link: "/guides/nodejs/nextjs" },
+          { text: "Nuxt", link: "/guides/nodejs/nuxt" },
+          { text: "Express", link: "/guides/nodejs/express" },
+          { text: "Astro", link: "/guides/nodejs/astro" },
+          { text: "SvelteKit", link: "/guides/nodejs/sveltekit" },
+          { text: "Bun", link: "/guides/nodejs/bun" }
         ]
       },
       {
         text: "Serverless",
         collapsed: true,
-        link: "/guides/serverless"
+        link: "/guides/serverless",
+        items: [
+          { text: "Vercel Functions", link: "/guides/serverless/vercel-functions" },
+          { text: "Cloudflare Workers", link: "/guides/serverless/cloudflare-workers" },
+          { text: "Deno Deploy", link: "/guides/serverless/deno-deploy" }
+        ]
       }
     ]
   }
