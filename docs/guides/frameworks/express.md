@@ -9,7 +9,7 @@ Send emails using [Express](https://expressjs.com/) and the MailChannels Node.js
 
 ## 1. Install
 
-Add the `mailchannels-sdk` package dependency to your Next.js project.
+Add the `mailchannels-sdk` package dependency to your Express project.
 
 ::: code-group
 ```sh [npm]
@@ -57,7 +57,7 @@ process.loadEnvFile()
 const app = express()
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
-app.get('/api/send', async (req: Request, res: Response) => {
+app.post('/api/send', async (req: Request, res: Response) => {
   const { data, error } = await mailchannels.emails.send({
     from: 'Name <from@example.com>',
     to: 'to@example.com',
