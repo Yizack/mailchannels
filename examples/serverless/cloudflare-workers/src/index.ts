@@ -15,9 +15,7 @@ import { Emails, MailChannelsClient } from "mailchannels-sdk";
 
 export default {
   async fetch (request, env): Promise<Response> {
-    const mailchannels = new MailChannelsClient(env.MAILCHANNELS_API_KEY, {
-      baseUrl: "http://127.0.0.1:8787"
-    });
+    const mailchannels = new MailChannelsClient(env.MAILCHANNELS_API_KEY);
     const emails = new Emails(mailchannels);
 
     const { data, error } = await emails.send({

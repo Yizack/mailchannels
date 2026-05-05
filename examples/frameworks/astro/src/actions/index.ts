@@ -1,9 +1,7 @@
 import { ActionError, defineAction } from "astro:actions";
 import { MailChannels } from "mailchannels-sdk";
 
-const mailchannels = new MailChannels(import.meta.env.MAILCHANNELS_API_KEY, {
-  baseUrl: "http://127.0.0.1:8787"
-});
+const mailchannels = new MailChannels(import.meta.env.MAILCHANNELS_API_KEY);
 
 export const server = {
   send: defineAction({
