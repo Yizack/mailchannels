@@ -75,7 +75,7 @@ export const POST: RequestHandler = async () => {
 
 Create a form in your SvelteKit app to call the `send` API route.
 
-```svelte [src/routes/App.svelte]
+```svelte [src/routes/+page.svelte]
 <script lang="ts">
 let loading = $state(false)
 let result = $state<{ data?: unknown, error?: unknown } | null>(null)
