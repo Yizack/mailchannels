@@ -18,7 +18,7 @@ This library provides a simple way to interact with the [MailChannels API](https
 ## Contents
 
 - 🚀 [Features](#features)
-- 📏 [Requirements](#requirements)
+- 📏 [Prerequisites](#prerequisites)
 - 📦 [Installation](#installation)
 - 📚 [Usage](#usage)
 - 📐 [Naming Conventions](#naming-conventions)
@@ -48,7 +48,7 @@ Some of the things you can do with the SDK:
 > For a detailed reference mapping each SDK method to its corresponding MailChannels API endpoint reference, see the [SDK-API Mapping](https://mailchannels.yizack.com/sdk-api-mapping)
 <!-- #endregion features -->
 
-## <a name="requirements">📏 Requirements</a>
+## <a name="prerequisites">📏 Prerequisites</a>
 
 - [Create a MailChannels account](https://www.mailchannels.com/pricing/#for_devs)
 - [Create an API key](https://console.mailchannels.net/settings/accountSettings#APIKeys)

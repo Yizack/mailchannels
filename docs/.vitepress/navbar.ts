@@ -1,7 +1,7 @@
 import { version } from "../../package.json";
 
 export default [
-  { text: "Guide", link: "/guide" },
+  { text: "Get Started", link: "/getting-started" },
   { text: "Modules", link: "/modules", activeMatch: "/modules*" },
   {
     text: version,
