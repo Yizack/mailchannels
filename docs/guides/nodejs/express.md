@@ -43,7 +43,7 @@ MAILCHANNELS_API_KEY=your-api-key
 
 ## 3. Send email using HTML
 
-Register a [Route handler](https://expressjs.com/en/guide/routing.html) for your Express app.
+Register a `/api/send` [Route handler](https://expressjs.com/en/guide/routing.html) for your Express app.
 
 Use the `html` property to send an email with HTML content.
 
@@ -57,7 +57,7 @@ process.loadEnvFile()
 const app = express()
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
-app.get('/send', async (req: Request, res: Response) => {
+app.get('/api/send', async (req: Request, res: Response) => {
   const { data, error } = await mailchannels.emails.send({
     from: 'Name <from@example.com>',
     to: 'to@example.com',
