@@ -1,0 +1,23 @@
+---
+---
+
+<form id="send-form">
+  <button type="submit">Send Email</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+import { actions } from "astro:actions";
+
+const form = document.getElementById("send-form") as HTMLFormElement;
+const message = document.getElementById("message") as HTMLParagraphElement;
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const { error } = await actions.send();
+
+  message.textContent = error ? `Error: ${error.message}` : "Email sent successfully!";
+});
+</script>
