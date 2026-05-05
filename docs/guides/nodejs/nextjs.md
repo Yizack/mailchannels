@@ -51,7 +51,7 @@ Use the `html` property to send an email with HTML content.
 ```ts [app/api/send/route.ts]
 import { MailChannels } from 'mailchannels-sdk'
 
-const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY);
+const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
 export async function POST () {
   const { data, error } = await mailchannels.emails.send({
@@ -59,7 +59,7 @@ export async function POST () {
     to: 'to@example.com',
     subject: 'Test email',
     html: '<p>Hello World</p>'
-  });
+  })
 
   if (error) {
     return Response.json({ error }, {
@@ -71,10 +71,10 @@ export async function POST () {
 }
 ```
 ```ts [pages/api/send.ts]
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { MailChannels } from 'mailchannels-sdk'
 
-const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY);
+const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {
   const { data, error } = await mailchannels.emails.send({
@@ -82,13 +82,13 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
     to: 'to@example.com',
     subject: 'Test email',
     html: '<p>Hello World</p>'
-  });
+  })
 
   if (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error })
   }
 
-  return res.status(200).json(data);
+  return res.status(200).json(data)
 }
 ```
 :::
