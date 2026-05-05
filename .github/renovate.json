@@ -10,5 +10,6 @@
   "rangeStrategy": "bump",
   "npm": {
     "commitMessageTopic": "{{prettyDepType}} {{depName}}"
-  }
+  },
+  "ignorePaths": ["examples/**"]
 }
