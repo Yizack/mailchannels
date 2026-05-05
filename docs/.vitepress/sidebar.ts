@@ -3,7 +3,7 @@ import type { DefaultTheme } from "vitepress";
 export default [
   {
     text: "Getting Started",
-    link: "/guide"
+    link: "/getting-started"
   },
   {
     text: "SDK-API Mapping",
@@ -152,6 +152,33 @@ export default [
               { text: "Report", link: "/modules/service/report" }
             ]
           }
+        ]
+      }
+    ]
+  },
+  {
+    text: "Guides",
+    link: "/guides",
+    items: [
+      {
+        text: "Frameworks",
+        collapsed: true,
+        items: [
+          { text: "Next.js", link: "/guides/frameworks/nextjs" },
+          { text: "Nuxt", link: "/guides/frameworks/nuxt" },
+          { text: "Express", link: "/guides/frameworks/express" },
+          { text: "Astro", link: "/guides/frameworks/astro" },
+          { text: "SvelteKit", link: "/guides/frameworks/sveltekit" },
+          { text: "Bun", link: "/guides/frameworks/bun" }
+        ]
+      },
+      {
+        text: "Serverless",
+        collapsed: true,
+        items: [
+          { text: "Vercel Functions", link: "/guides/serverless/vercel-functions" },
+          { text: "Cloudflare Workers", link: "/guides/serverless/cloudflare-workers" },
+          { text: "Deno Deploy", link: "/guides/serverless/deno-deploy" }
         ]
       }
     ]
