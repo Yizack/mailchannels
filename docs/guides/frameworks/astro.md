@@ -100,6 +100,7 @@ const result = Astro.getActionResult(actions.send)
 {result?.error && <p>Error: {result.error.message}</p>}
 {result && !result.error && <p>Email sent successfully!</p>}
 ```
+
 ```astro [src/pages/script-tag.astro]
 ---
 ---

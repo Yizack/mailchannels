@@ -64,7 +64,7 @@ export const POST: RequestHandler = async () => {
   })
 
   if (error) {
-    return json({ error }, { status: error.statusCode || 400 })
+    return json(error, { status: error.statusCode || 400 })
   }
 
   return json(data)
