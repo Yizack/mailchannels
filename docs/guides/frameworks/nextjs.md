@@ -77,6 +77,11 @@ import { MailChannels } from 'mailchannels-sdk'
 const mailchannels = new MailChannels(process.env.MAILCHANNELS_API_KEY)
 
 export default async function handler (req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST')
+    return res.status(405).json({ error: 'Method Not Allowed' })
+  }
+
   const { data, error } = await mailchannels.emails.send({
     from: 'Name <from@example.com>',
     to: 'to@example.com',
@@ -85,7 +90,7 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
   })
 
   if (error) {
-    return res.status(400).json({ error })
+    return res.status(error.statusCode || 400).json({ error })
   }
 
   return res.status(200).json(data)

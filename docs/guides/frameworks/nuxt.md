@@ -55,11 +55,11 @@ export default defineNuxtConfig({
 
 ## 3. Send email using HTML
 
-Register a [Server handler](https://nuxt.com/docs/guide/directory-structure/server) under `server/api/send.ts`.
+Register a [Server handler](https://nuxt.com/docs/guide/directory-structure/server) under `server/api/send.post.ts`.
 
 Use the `html` property to send an email with HTML content.
 
-```ts [server/api/send.ts]
+```ts [server/api/send.post.ts]
 import { MailChannels } from 'mailchannels-sdk'
 
 export default defineEventHandler(async (event) => {
@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
 
   if (error) {
     throw createError({
-      status: 500,
+      status: error.statusCode || 400,
       message: error.message
     })
   }
