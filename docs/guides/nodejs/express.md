@@ -48,7 +48,8 @@ Register a [Route handler](https://expressjs.com/en/guide/routing.html) for your
 Use the `html` property to send an email with HTML content.
 
 ```ts [app/api/send/route.ts]
-import express, { Request, Response } from 'express'
+import express from 'express'
+import type { Request, Response } from 'express'
 import { MailChannels } from 'mailchannels-sdk'
 
 process.loadEnvFile()
