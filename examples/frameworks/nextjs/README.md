@@ -4,7 +4,7 @@ In this folder, you can find full-stack examples of how to use MailChannels with
 
 ## Getting Started
 
-Follow these steps to set up the Next.js + MailChannels example:
+Follow these steps to set up the Next.js + MailChannels examples:
 
 ### 1. Create .env File
 
