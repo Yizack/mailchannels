@@ -49,8 +49,8 @@ Use the `html` property to send an email with HTML content.
 
 ```ts [src/routes/api/send/+server.ts]
 import { json } from '@sveltejs/kit'
-import { MAILCHANNELS_API_KEY } from '$env/static/private'
 import { MailChannels } from 'mailchannels-sdk'
+import { MAILCHANNELS_API_KEY } from '$env/static/private'
 import type { RequestHandler } from './$types'
 
 const mailchannels = new MailChannels(MAILCHANNELS_API_KEY)

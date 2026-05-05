@@ -161,15 +161,15 @@ export default [
     link: "/guides",
     items: [
       {
-        text: "Node.js",
+        text: "Frameworks",
         collapsed: true,
         items: [
-          { text: "Next.js", link: "/guides/nodejs/nextjs" },
-          { text: "Nuxt", link: "/guides/nodejs/nuxt" },
-          { text: "Express", link: "/guides/nodejs/express" },
-          { text: "Astro", link: "/guides/nodejs/astro" },
-          { text: "SvelteKit", link: "/guides/nodejs/sveltekit" },
-          { text: "Bun", link: "/guides/nodejs/bun" }
+          { text: "Next.js", link: "/guides/frameworks/nextjs" },
+          { text: "Nuxt", link: "/guides/frameworks/nuxt" },
+          { text: "Express", link: "/guides/frameworks/express" },
+          { text: "Astro", link: "/guides/frameworks/astro" },
+          { text: "SvelteKit", link: "/guides/frameworks/sveltekit" },
+          { text: "Bun", link: "/guides/frameworks/bun" }
         ]
       },
       {
