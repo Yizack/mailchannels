@@ -9,7 +9,7 @@ Send emails using [Deno Deploy](https://deno.com/deploy) and the MailChannels No
 
 ## 1. Create a Deno Deploy project
 
-Go to https://deno.com/deploy and create a new Deno Deploy project.
+Go to [deno.com/deploy](https://deno.com/deploy) and create a new Deno Deploy project.
 
 ## 2. Edit the code
 
