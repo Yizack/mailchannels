@@ -180,6 +180,10 @@ export default [
           { text: "Cloudflare Workers", link: "/guides/serverless/cloudflare-workers" },
           { text: "Deno Deploy", link: "/guides/serverless/deno-deploy" }
         ]
+      },
+      {
+        text: "Examples",
+        link: "/guides/examples"
       }
     ]
   }

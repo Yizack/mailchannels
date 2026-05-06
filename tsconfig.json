@@ -33,6 +33,7 @@
     "**/*.ts"
   ],
   "exclude": [
+    "examples",
     "docs/snippets",
     "docs/.vitepress/theme"
   ]

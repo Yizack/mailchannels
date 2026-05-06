@@ -127,3 +127,13 @@ const result = Astro.getActionResult(actions.send)
 </script>
 ```
 :::
+
+## Examples
+
+<VPExamples :examples="[
+  {
+    title: 'Send',
+    description: 'Send a predefined email using the API route',
+    path: '/examples/frameworks/astro/src/actions/send.ts'
+  }
+]" />

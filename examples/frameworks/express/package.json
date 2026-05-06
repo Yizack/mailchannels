@@ -1,0 +1,18 @@
+{
+  "name": "mailchannels-express-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/app.ts"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mailchannels-sdk": "^0.7.10"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import sidebar from '../.vitepress/sidebar'
 
-const guides = sidebar.find(item => item.text === 'Guides')?.items ?? []
+const guides = sidebar.find(item => item.text === 'Guides')?.items?.filter(item => item.text !== 'Examples') ?? []
 </script>
 
 # Guides

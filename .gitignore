@@ -61,3 +61,6 @@ docs/snippets
 
 # Playwright MCP artifacts
 .playwright-mcp/
+
+# Examples
+examples/pnpm-lock.yaml

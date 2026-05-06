@@ -103,3 +103,13 @@ async function handleSubmit (event: SubmitEvent) {
   <pre>{JSON.stringify(result, null, 2)}</pre>
 {/if}
 ```
+
+## Examples
+
+<VPExamples :examples="[
+  {
+    title: 'Send',
+    description: 'Send a predefined email using the API route',
+    path: '/examples/frameworks/sveltekit/src/routes/api/send/+server.ts'
+  }
+]" />

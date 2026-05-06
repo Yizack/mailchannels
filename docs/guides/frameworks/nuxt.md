@@ -84,3 +84,13 @@ export default defineEventHandler(async (event) => {
   return data
 })
 ```
+
+## Examples
+
+<VPExamples :examples="[
+  {
+    title: 'Send',
+    description: 'Send a predefined email using the API route',
+    path: '/examples/frameworks/nuxt/server/api/send.post.ts'
+  }
+]" />

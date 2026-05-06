@@ -1,7 +1,8 @@
 import { camelCase } from "scule";
 import { getMethodLineNumber } from "./methods-line-number";
+import { SITE } from "../../site";
 
-const URL = "https://github.com/Yizack/mailchannels/blob/main";
+const URL = `${SITE.repo}/blob/main`;
 
 export const addSourceLinks = (src: string, module: string, slug: string): string => {
   let sourceUrl = `${URL}/src/modules/${module}.ts`;

@@ -63,7 +63,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [
+      // @ts-expect-error - type definition error
       groupIconVitePlugin(),
+      // @ts-expect-error - type definition error
       llmstxt({
         ignoreFiles: ["contributors.md"]
       })
@@ -76,11 +78,11 @@ export default defineConfig({
     nav: navbarConfig,
     sidebar: sidebarConfig,
     socialLinks: [
-      { icon: "github", link: "https://github.com/Yizack/mailchannels" },
+      { icon: "github", link: SITE.repo },
       { icon: "npm", link: "https://www.npmjs.com/package/mailchannels-sdk" }
     ],
     editLink: {
-      pattern: "https://github.com/Yizack/mailchannels/edit/main/docs/:path",
+      pattern: `${SITE.repo}/edit/main/docs/:path`,
       text: "Suggest changes to this page"
     },
     search: {
