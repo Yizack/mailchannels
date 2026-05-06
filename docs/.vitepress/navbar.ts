@@ -1,4 +1,5 @@
 import { version } from "../../package.json";
+import { SITE } from "./site";
 
 export default [
   { text: "Get Started", link: "/getting-started" },
@@ -7,7 +8,7 @@ export default [
   {
     text: version,
     items: [
-      { text: "Changelog", link: "https://github.com/Yizack/mailchannels/blob/main/CHANGELOG.md" }
+      { text: "Changelog", link: `${SITE.repo}/blob/main/CHANGELOG.md` }
     ]
   }
 ];

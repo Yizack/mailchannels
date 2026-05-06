@@ -1,6 +1,5 @@
 import { execSync } from "node:child_process";
-
-const REPO_URL = "https://github.com/Yizack/mailchannels";
+import { SITE } from "../../site";
 
 interface GitCommit {
   hash: string;
@@ -135,13 +134,13 @@ export const getChangelog = (filePath: string): string => {
       // Get the date of the first commit in this version
       const versionDate = commits[0]?.date || "";
       const dateFormatted = versionDate ? `<small style="color: var(--vp-c-text-2)">on ${versionDate}</small>` : "";
-      const versionHeader = `- <a href="${REPO_URL}/releases/tag/${version}" target="_blank"><Badge>${version}</Badge></a> ${dateFormatted}\n`;
+      const versionHeader = `- <a href="${SITE.repo}/releases/tag/${version}" target="_blank"><Badge>${version}</Badge></a> ${dateFormatted}\n`;
       const commitsList = commits
         .map(({ hash, message }) => {
           const formattedMessage = message.replace(/#(\d+)/g, (match, prNumber) => {
-            return `[#${prNumber}](${REPO_URL}/pull/${prNumber})`;
+            return `[#${prNumber}](${SITE.repo}/pull/${prNumber})`;
           });
-          return `   - [\`${hash}\`](${REPO_URL}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
+          return `   - [\`${hash}\`](${SITE.repo}/commit/${hash}) <span style="color: var(--vp-c-text-2)">—</span> ${formattedMessage}`;
         })
         .join("\n");
       return versionHeader + commitsList;

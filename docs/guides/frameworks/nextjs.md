@@ -97,3 +97,13 @@ export default async function handler (req: NextApiRequest, res: NextApiResponse
 }
 ```
 :::
+
+## Examples
+
+<VPExamples :examples="[
+  {
+    title: 'Send',
+    description: 'Send a predefined email using the API route',
+    path: '/examples/frameworks/nextjs/src/app/api/send/route.ts'
+  }
+]" />
