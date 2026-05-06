@@ -1,0 +1,9 @@
+packages:
+  - frameworks/*
+  - serverless/*
+
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - esbuild
+  - sharp
+  - workerd

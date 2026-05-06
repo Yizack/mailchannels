@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "mailchannels-sdk": "^0.7.10",

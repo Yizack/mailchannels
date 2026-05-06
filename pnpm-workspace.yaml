@@ -1,9 +1,5 @@
 packages:
   - .
-  - examples/**/*
 
 ignoredBuiltDependencies:
-  - '@parcel/watcher'
   - esbuild
-  - sharp
-  - workerd
