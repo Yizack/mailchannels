@@ -1,0 +1,34 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+  <h1>Send a predefined email using the API route</h1>
+
+  <form id="send-form">
+    <button type="submit" id="submit-btn">Send Email</button>
+  </form>
+
+  <pre id="result"></pre>
+</Layout>
+
+<script>
+import { actions } from "astro:actions";
+
+const form = document.getElementById("send-form") as HTMLFormElement;
+const submitBtn = document.getElementById("submit-btn") as HTMLButtonElement;
+const result = document.getElementById("result") as HTMLPreElement;
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+  result.textContent = "";
+
+  const { data, error } = await actions.send();
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Send Email";
+  result.textContent = JSON.stringify(error || data, null, 2);
+});
+</script>

@@ -8,4 +8,5 @@ let { children } = $props();
   <link rel="icon" href={favicon} />
 </svelte:head>
 
+<a href="/">Home</a>
 {@render children()}

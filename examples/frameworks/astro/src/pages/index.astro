@@ -1,23 +1,26 @@
 ---
+import Layout from "../layouts/Layout.astro";
+
+const examples = [
+  {
+    name: "Send a predefined email using the API route",
+    description: "This example demonstrates how to send an email using a predefined API route that interacts with the MailChannels SDK.",
+    path: "/send"
+  }
+];
 ---
 
-<form id="send-form">
-  <button type="submit">Send Email</button>
-</form>
+<Layout>
+  <h1>Astro + MailChannels Examples</h1>
 
-<p id="message"></p>
-
-<script>
-import { actions } from "astro:actions";
-
-const form = document.getElementById("send-form") as HTMLFormElement;
-const message = document.getElementById("message") as HTMLParagraphElement;
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const { error } = await actions.send();
-
-  message.textContent = error ? `Error: ${error.message}` : "Email sent successfully!";
-});
-</script>
+  <ul>
+    {examples.map(example => (
+      <li>
+        <a href={example.path}>
+          <strong>{example.name}</strong>
+        </a>
+        <span>: {example.description}</span>
+      </li>
+    ))}
+  </ul>
+</Layout>

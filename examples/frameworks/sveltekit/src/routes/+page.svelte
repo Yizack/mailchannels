@@ -1,26 +1,22 @@
 <script lang="ts">
-let loading = $state(false);
-let result = $state<{ data?: unknown, error?: unknown } | null>(null);
-
-async function handleSubmit (event: SubmitEvent) {
-  event.preventDefault();
-  loading = true;
-  result = null;
-
-  const response = await fetch("/api/send", { method: "POST" });
-  result = await response.json();
-  loading = false;
-}
+const examples = [
+  {
+    name: "Send a predefined email using the API route",
+    description: "This example demonstrates how to send an email using a predefined API route that interacts with the MailChannels SDK.",
+    path: "/send"
+  }
+];
 </script>
 
-<h1>MailChannels SvelteKit Example</h1>
+<h1>SvelteKit + MailChannels Examples</h1>
 
-<form onsubmit={handleSubmit}>
-  <button type="submit" disabled={loading}>
-    {loading ? 'Sending...' : 'Send Email'}
-  </button>
-</form>
-
-{#if result}
-  <pre>{JSON.stringify(result, null, 2)}</pre>
-{/if}
+<ul>
+  {#each examples as example}
+    <li>
+      <a href={example.path}>
+        <strong>{example.name}</strong>
+      </a>
+      <span>: {example.description}</span>
+    </li>
+  {/each}
+</ul>
