@@ -4,7 +4,7 @@ import { SITE } from "../../site";
 defineProps<{
   examples: {
     title: string;
-    description: string;
+    description?: string;
     path: string;
   }[];
 }>();
@@ -21,11 +21,12 @@ defineProps<{
       class="VPExample link"
     >
       <article class="box">
+        <span class="arrow-icon" style="--icon: url('https://api.iconify.design/lucide/arrow-up-right.svg');" />
         <div class="icon">
           <span class="vpi-social-github" style="--icon: url('https://api.iconify.design/simple-icons/github.svg');" />
         </div>
         <h4 class="title">{{ example.title }}</h4>
-        <p class="details">{{ example.description }}</p>
+        <p class="details" v-if="example.description">{{ example.description }}</p>
       </article>
     </a>
   </div>
@@ -66,6 +67,23 @@ defineProps<{
   flex-direction: column;
   padding: 24px;
   height: 100%;
+  position: relative;
+}
+
+.arrow-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 18px;
+  height: 18px;
+  background-color: var(--vp-c-text-3);
+  mask: var(--icon) no-repeat center / contain;
+  -webkit-mask: var(--icon) no-repeat center / contain;
+  transition: background-color 0.25s;
+}
+
+.VPExample.link:hover .arrow-icon {
+  background-color: var(--vp-c-brand-1);
 }
 
 .title {
